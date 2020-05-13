@@ -1,9 +1,11 @@
 package com.smascaro.trackmixing.ui.trackslist
 
+import android.os.Environment
 import com.smascaro.trackmixing.tracks.DownloadTrackUseCase
 import com.smascaro.trackmixing.tracks.FetchAvailableTracksUseCase
 import com.smascaro.trackmixing.tracks.Track
 import timber.log.Timber
+import java.io.File
 
 
 class TracksListController(
@@ -50,8 +52,13 @@ class TracksListController(
         Timber.i("Download of track ${track.videoKey} STARTED")
     }
 
-    override fun onDownloadTrackFinished(track: Track) {
+    override fun onDownloadTrackFinished(track: Track, path: String) {
         Timber.i("Download of track ${track.videoKey} FINISHED")
+        val downloadedFile = File(path)
+        Timber.d("List of files in path $path:")
+        File(downloadedFile.parent!!).listFiles()?.forEach {
+            Timber.d("${it?.absoluteFile}")
+        }
     }
 
     override fun onDownloadTrackError() {

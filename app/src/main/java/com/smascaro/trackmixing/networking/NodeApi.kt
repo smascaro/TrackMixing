@@ -14,7 +14,4 @@ interface NodeApi {
         @Query("limit") limit: Int?,
         @Query("offset") offset: Int?
     ): Call<AvailableTracksResponseSchema>
-
-    @GET("/fetch/{videoId}")
-    fun fetchSong(@Path("videoId") videoId: String): Call<ResponseBody>
 }
