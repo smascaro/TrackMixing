@@ -1,6 +1,7 @@
 package com.smascaro.trackmixing.ui.trackslist
 
-import android.os.Environment
+
+import com.smascaro.trackmixing.common.FilesStorageHelper
 import com.smascaro.trackmixing.tracks.DownloadTrackUseCase
 import com.smascaro.trackmixing.tracks.FetchAvailableTracksUseCase
 import com.smascaro.trackmixing.tracks.Track
@@ -10,7 +11,8 @@ import java.io.File
 
 class TracksListController(
     private val mFetchAvailableTracksUseCase: FetchAvailableTracksUseCase,
-    private val mDownloadTrackUseCase: DownloadTrackUseCase
+    private val mDownloadTrackUseCase: DownloadTrackUseCase,
+    private val mFilesStorageHelper: FilesStorageHelper
 ) : TracksListViewMvc.Listener,
     FetchAvailableTracksUseCase.Listener,
     DownloadTrackUseCase.Listener {
@@ -18,7 +20,10 @@ class TracksListController(
     override fun onTrackClicked(track: Track) {
         Timber.i("Track clicked: ${track.title}")
         Timber.i("Track clicked: ${track.title}")
-        mDownloadTrackUseCase.downloadTrackAndNotify(track)
+        mDownloadTrackUseCase.downloadTrackAndNotify(
+            track,
+            mFilesStorageHelper.getBaseDirectoryByVideoId(track.videoKey)
+        )
 
     }
 
@@ -57,7 +62,11 @@ class TracksListController(
         val downloadedFile = File(path)
         Timber.d("List of files in path $path:")
         File(downloadedFile.parent!!).listFiles()?.forEach {
-            Timber.d("${it?.absoluteFile}")
+            if (it.isDirectory) {
+                Timber.d("Dir: ${it.absolutePath}")
+            } else if (it.isFile) {
+                Timber.d("File: ${it?.absoluteFile}, size: ${it.length() / 1000}KB (${it.length() / 1000000}MB)")
+            }
         }
     }
 

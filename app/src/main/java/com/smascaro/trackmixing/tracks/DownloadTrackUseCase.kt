@@ -1,10 +1,9 @@
 package com.smascaro.trackmixing.tracks
 
-import android.content.Context
 import com.smascaro.trackmixing.data.DownloadsDao
 import com.smascaro.trackmixing.data.entities.DownloadEntity
 import com.smascaro.trackmixing.networking.NodeDownloadsApi
-import com.smascaro.trackmixing.ui.common.BaseObservableViewMvc
+import com.smascaro.trackmixing.ui.common.BaseObservable
 import kotlinx.coroutines.*
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -18,10 +17,9 @@ import java.util.*
 
 class DownloadTrackUseCase(
     private val mNodeDownloadsApi: NodeDownloadsApi,
-    private val mDao: DownloadsDao,
-    private val mContext: Context
+    private val mDao: DownloadsDao
 ) :
-    BaseObservableViewMvc<DownloadTrackUseCase.Listener>() {
+    BaseObservable<DownloadTrackUseCase.Listener>() {
     interface Listener {
         fun onDownloadTrackStarted(mTrack: Track)
         fun onDownloadTrackFinished(mTrack: Track, path: String)
@@ -29,7 +27,7 @@ class DownloadTrackUseCase(
     }
 
     private var mTrack: Track? = null
-    fun downloadTrackAndNotify(track: Track) {
+    fun downloadTrackAndNotify(track: Track, baseDirectory: String) {
         mTrack = track
         Timber.d("We currently simulate the download api call")
         var entity = DownloadEntity(
@@ -62,7 +60,11 @@ class DownloadTrackUseCase(
                     if (responseBody != null) {
                         GlobalScope.launch {
                             val downloadedFilePath =
-                                writeFileToStorage(entity.sourceVideoKey, responseBody)
+                                writeFileToStorage(
+                                    baseDirectory,
+                                    entity.sourceVideoKey,
+                                    responseBody
+                                )
                             if (downloadedFilePath.isNotEmpty()) {
                                 notifyDownloadFinished(track, downloadedFilePath)
                             } else {
@@ -86,9 +88,9 @@ class DownloadTrackUseCase(
         }
     }
 
-    fun writeFileToStorage(videoId: String, body: ResponseBody): String {
+    fun writeFileToStorage(baseDirectory: String, videoId: String, body: ResponseBody): String {
         Timber.d("Writing to storage download with id $videoId and a length of ${body.contentLength()} bytes")
-        val targetDirectoryFile = File(mContext.filesDir?.path, videoId)
+        val targetDirectoryFile = File(baseDirectory, videoId)
         targetDirectoryFile.mkdirs()
         val targetFile = File(targetDirectoryFile, "$videoId.zip")
         return try {
