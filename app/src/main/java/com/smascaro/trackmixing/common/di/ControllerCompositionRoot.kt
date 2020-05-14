@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
 import com.smascaro.trackmixing.common.FilesStorageHelper
+import com.smascaro.trackmixing.common.NavigationHelper
 import com.smascaro.trackmixing.data.DownloadsDatabase
 import com.smascaro.trackmixing.networking.NodeApi
 import com.smascaro.trackmixing.networking.NodeDownloadsApi
@@ -32,15 +33,24 @@ class ControllerCompositionRoot(
         return TracksListController(
             getFetchAvailableTracksUseCase(),
             getDownloadTrackUseCase(),
-            getFilesStorageHelper()
+            getFilesStorageHelper(),
+            getNavigationHelper()
         )
+    }
+
+    private fun getNavigationHelper(): NavigationHelper {
+        return NavigationHelper(getContext())
     }
 
     private fun getFilesStorageHelper(): FilesStorageHelper {
         return FilesStorageHelper(getContext())
     }
     private fun getDownloadTrackUseCase(): DownloadTrackUseCase {
-        return DownloadTrackUseCase(getNodeDownloadsApi(), getDatabase().getDao())
+        return DownloadTrackUseCase(
+            getNodeDownloadsApi(),
+            getDatabase().getDao(),
+            getFilesStorageHelper()
+        )
     }
 
     private fun getDatabase(): DownloadsDatabase {

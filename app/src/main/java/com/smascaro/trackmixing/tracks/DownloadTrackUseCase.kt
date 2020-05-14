@@ -1,5 +1,6 @@
 package com.smascaro.trackmixing.tracks
 
+import com.smascaro.trackmixing.common.FilesStorageHelper
 import com.smascaro.trackmixing.data.DownloadsDao
 import com.smascaro.trackmixing.data.entities.DownloadEntity
 import com.smascaro.trackmixing.networking.NodeDownloadsApi
@@ -10,14 +11,20 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import timber.log.Timber
+import java.io.BufferedInputStream
 import java.io.File
+import java.io.FileInputStream
 import java.io.InputStream
 import java.lang.Exception
 import java.util.*
+import java.util.zip.ZipEntry
+import java.util.zip.ZipFile
+import java.util.zip.ZipInputStream
 
 class DownloadTrackUseCase(
     private val mNodeDownloadsApi: NodeDownloadsApi,
-    private val mDao: DownloadsDao
+    private val mDao: DownloadsDao,
+    private val mFilesStorageHelper: FilesStorageHelper
 ) :
     BaseObservable<DownloadTrackUseCase.Listener>() {
     interface Listener {
@@ -48,7 +55,7 @@ class DownloadTrackUseCase(
                 Callback<ResponseBody> {
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                     Timber.e(t)
-                    notifyError()
+                    notifyError("Error de red en la descarga")
                 }
 
 
@@ -60,15 +67,20 @@ class DownloadTrackUseCase(
                     if (responseBody != null) {
                         GlobalScope.launch {
                             val downloadedFilePath =
-                                writeFileToStorage(
+                                mFilesStorageHelper.writeFileToStorage(
                                     baseDirectory,
                                     entity.sourceVideoKey,
                                     responseBody
                                 )
                             if (downloadedFilePath.isNotEmpty()) {
-                                notifyDownloadFinished(track, downloadedFilePath)
+                                if (unzipContent(downloadedFilePath)) {
+                                    mFilesStorageHelper.deleteFile(downloadedFilePath)
+                                    notifyDownloadFinished(track, downloadedFilePath)
+                                } else {
+                                    notifyError("Error al descomprimir el contenido")
+                                }
                             } else {
-                                notifyError()
+                                notifyError("Error en la descarga")
                             }
                         }
                     }
@@ -82,26 +94,59 @@ class DownloadTrackUseCase(
 
     }
 
-    private fun InputStream.saveToFile(file: String) = use { input ->
-        File(file).outputStream().use { output ->
-            input.copyTo(output)
-        }
-    }
+    data class ZipIO(val entry: ZipEntry, val output: File)
 
-    fun writeFileToStorage(baseDirectory: String, videoId: String, body: ResponseBody): String {
-        Timber.d("Writing to storage download with id $videoId and a length of ${body.contentLength()} bytes")
-        val targetDirectoryFile = File(baseDirectory, videoId)
-        targetDirectoryFile.mkdirs()
-        val targetFile = File(targetDirectoryFile, "$videoId.zip")
+    private fun unzipContent(pathToZipFile: String): Boolean {
+        val zipFile = File(pathToZipFile)
         return try {
-            body.byteStream()?.saveToFile(targetFile.path)
-            targetFile.path
+            ZipFile(pathToZipFile).use { zip ->
+                zip.entries().asSequence().map { entry ->
+                    val outputFile = File(zipFile.parent, entry.name)
+                    ZipIO(entry, outputFile).also { zipio ->
+                        zipio.output.parentFile?.run {
+                            if (!exists()) {
+                                mkdirs()
+                            }
+                        }
+                    }
+                }.filter {
+                    !it.entry.isDirectory
+                }.forEach { (entry, output) ->
+                    zip.getInputStream(entry).use { input ->
+                        output.outputStream().use { output ->
+                            input.copyTo(output)
+                        }
+                    }
+                }
+            }
+            true
         } catch (e: Exception) {
             Timber.e(e)
-            ""
+            false
         }
-
     }
+
+//
+//    private fun InputStream.saveToFile(file: String) = use { input ->
+//        File(file).outputStream().use { output ->
+//            input.copyTo(output)
+//        }
+//    }
+//
+//    fun writeFileToStorage(baseDirectory: String, videoId: String, body: ResponseBody): String {
+//        Timber.d("Writing to storage download with id $videoId and a length of ${body.contentLength()} bytes")
+//        val targetDirectoryFile = File(baseDirectory, videoId)
+//        targetDirectoryFile.mkdirs()
+//        val targetFile = File(targetDirectoryFile, "$videoId.zip")
+//        return try {
+//            body.byteStream()?.saveToFile(targetFile.path)
+//            targetFile.path
+//        } catch (e: Exception) {
+//            Timber.e(e)
+//            ""
+//        }
+//
+//    }
 
     private fun notifyDownloadStarted(track: Track) {
         getListeners().forEach { listener ->
@@ -118,7 +163,7 @@ class DownloadTrackUseCase(
         }
     }
 
-    private fun notifyError() {
+    private fun notifyError(s: String) {
         getListeners().forEach {
             it.onDownloadTrackError()
         }

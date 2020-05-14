@@ -1,16 +1,21 @@
 package com.smascaro.trackmixing
 
+import android.content.Context
+import android.content.Intent
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.media.SoundPool
+import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
+import java.io.File
+import java.io.FileInputStream
 
-class MainActivity : AppCompatActivity() {
+class TracksPlayerActivity : AppCompatActivity() {
 
     private lateinit var mTracksPool: SoundPool
     private var mVocalsStreamId = 0
@@ -21,18 +26,41 @@ class MainActivity : AppCompatActivity() {
     private var mOtherVolume = 1.0f
     private var mBassVolume = 1.0f
     private var mDrumsVolume = 1.0f
-    private lateinit var mVocalsPlayer: MediaPlayer
-    private lateinit var mOtherPlayer: MediaPlayer
-    private lateinit var mBassPlayer: MediaPlayer
-    private lateinit var mDrumsPlayer: MediaPlayer
+    private var mVocalsPlayer = MediaPlayer()
+    private var mOtherPlayer = MediaPlayer()
+    private var mBassPlayer = MediaPlayer()
+    private var mDrumsPlayer = MediaPlayer()
+
+    companion object {
+        fun start(context: Context, filesBasePath: String) {
+            val intent = Intent(context, TracksPlayerActivity::class.java)
+            intent.putExtra("tracks_base_directory", filesBasePath)
+            context.startActivity(intent)
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        mVocalsPlayer = MediaPlayer.create(applicationContext, R.raw.vocals)
-        mOtherPlayer = MediaPlayer.create(applicationContext, R.raw.other)
-        mBassPlayer = MediaPlayer.create(applicationContext, R.raw.bass)
-        mDrumsPlayer = MediaPlayer.create(applicationContext, R.raw.drums)
 
+
+        val tracksDir = if (intent != null && intent.hasExtra("tracks_base_directory")) {
+            intent.extras?.getString("tracks_base_directory")
+        } else ""
+        if (tracksDir != null && tracksDir.isNotEmpty()) {
+            val fisVocals = FileInputStream(File(tracksDir, "vocals.mp3"))
+            mVocalsPlayer.setDataSource(fisVocals.fd)
+            mVocalsPlayer.prepare()
+            val fisOther = FileInputStream(File(tracksDir, "other.mp3"))
+            mOtherPlayer.setDataSource(fisOther.fd)
+            mOtherPlayer.prepare()
+            val fisBass = FileInputStream(File(tracksDir, "bass.mp3"))
+            mBassPlayer.setDataSource(fisBass.fd)
+            mBassPlayer.prepare()
+            val fisDrums = FileInputStream(File(tracksDir, "drums.mp3"))
+            mDrumsPlayer.setDataSource(fisDrums.fd)
+            mDrumsPlayer.prepare()
+
+        }
         btnPlayPauseMaster.setOnClickListener {
             if (mVocalsPlayer.isPlaying || mOtherPlayer.isPlaying || mBassPlayer.isPlaying || mDrumsPlayer.isPlaying) {
                 mVocalsPlayer.pause()

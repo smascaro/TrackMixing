@@ -2,6 +2,7 @@ package com.smascaro.trackmixing.ui.trackslist
 
 
 import com.smascaro.trackmixing.common.FilesStorageHelper
+import com.smascaro.trackmixing.common.NavigationHelper
 import com.smascaro.trackmixing.tracks.DownloadTrackUseCase
 import com.smascaro.trackmixing.tracks.FetchAvailableTracksUseCase
 import com.smascaro.trackmixing.tracks.Track
@@ -12,7 +13,8 @@ import java.io.File
 class TracksListController(
     private val mFetchAvailableTracksUseCase: FetchAvailableTracksUseCase,
     private val mDownloadTrackUseCase: DownloadTrackUseCase,
-    private val mFilesStorageHelper: FilesStorageHelper
+    private val mFilesStorageHelper: FilesStorageHelper,
+    private val mNavigationHelper: NavigationHelper
 ) : TracksListViewMvc.Listener,
     FetchAvailableTracksUseCase.Listener,
     DownloadTrackUseCase.Listener {
@@ -22,7 +24,7 @@ class TracksListController(
         Timber.i("Track clicked: ${track.title}")
         mDownloadTrackUseCase.downloadTrackAndNotify(
             track,
-            mFilesStorageHelper.getBaseDirectoryByVideoId(track.videoKey)
+            mFilesStorageHelper.getBaseDirectory()
         )
 
     }
@@ -68,6 +70,7 @@ class TracksListController(
                 Timber.d("File: ${it?.absoluteFile}, size: ${it.length() / 1000}KB (${it.length() / 1000000}MB)")
             }
         }
+        mNavigationHelper.toPlayer(downloadedFile.parent!!)
     }
 
     override fun onDownloadTrackError() {
