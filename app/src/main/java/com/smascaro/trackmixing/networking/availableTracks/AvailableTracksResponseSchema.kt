@@ -1,17 +1,11 @@
 package com.smascaro.trackmixing.networking.availableTracks
 
 data class AvailableTracksResponseSchema(
-
     val items: List<Item>,
     val result: Result
 ) {
-    data class Result(
-        val code: Int,
-        val message: String
-    )
-
     data class Item(
-        val finishedTimestamp: Any?,
+        val finishedTimestamp: String?,
         val id: Int,
         val playedCount: Int,
         val progress: Int,
@@ -21,5 +15,10 @@ data class AvailableTracksResponseSchema(
         val thumbnailUrl: String?,
         val title: String,
         val videoId: String
+    )
+
+    data class Result(
+        val code: Int,
+        val message: String
     )
 }

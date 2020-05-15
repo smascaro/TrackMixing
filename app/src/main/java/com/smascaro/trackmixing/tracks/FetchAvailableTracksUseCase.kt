@@ -1,16 +1,13 @@
 package com.smascaro.trackmixing.tracks
 
-import android.util.Log
 import com.smascaro.trackmixing.data.toModel
 import com.smascaro.trackmixing.networking.NodeApi
 import com.smascaro.trackmixing.networking.availableTracks.AvailableTracksResponseSchema
 import com.smascaro.trackmixing.ui.common.BaseObservable
-import com.smascaro.trackmixing.ui.common.BaseObservableViewMvc
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import timber.log.Timber
-import java.util.ArrayList
 
 class FetchAvailableTracksUseCase(private val mNodeApi: NodeApi) :
     BaseObservable<FetchAvailableTracksUseCase.Listener>() {
