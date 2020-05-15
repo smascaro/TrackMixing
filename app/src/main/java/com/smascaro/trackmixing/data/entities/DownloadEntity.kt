@@ -20,6 +20,7 @@ data class DownloadEntity(
         companion object {
             const val PENDING: Int = 1
             const val FINISHED: Int = 2
+            const val ERROR: Int = -1
         }
     }
 }

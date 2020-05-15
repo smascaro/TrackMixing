@@ -1,9 +1,11 @@
 package com.smascaro.trackmixing.tracks
 
+import android.util.StatsLog
 import com.smascaro.trackmixing.common.FilesStorageHelper
 import com.smascaro.trackmixing.data.DownloadsDao
 import com.smascaro.trackmixing.data.entities.DownloadEntity
 import com.smascaro.trackmixing.networking.NodeDownloadsApi
+import com.smascaro.trackmixing.networking.availableTracks.AvailableTracksResponseSchema
 import com.smascaro.trackmixing.ui.common.BaseObservable
 import kotlinx.coroutines.*
 import okhttp3.ResponseBody
@@ -36,7 +38,6 @@ class DownloadTrackUseCase(
     private var mTrack: Track? = null
     fun downloadTrackAndNotify(track: Track, baseDirectory: String) {
         mTrack = track
-        Timber.d("We currently simulate the download api call")
         var entity = DownloadEntity(
             0,
             track.videoKey,
@@ -44,7 +45,7 @@ class DownloadTrackUseCase(
             track.title,
             track.thumbnailUrl,
             Calendar.getInstance().toString(),
-            "tempPath/${track.videoKey}",
+            "",
             DownloadEntity.DownloadStatus.PENDING
         )
         GlobalScope.launch {
@@ -55,6 +56,9 @@ class DownloadTrackUseCase(
                 Callback<ResponseBody> {
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                     Timber.e(t)
+                    GlobalScope.launch {
+                        setErrorStatusAndUpdate(entity)
+                    }
                     notifyError("Error de red en la descarga")
                 }
 
@@ -75,11 +79,18 @@ class DownloadTrackUseCase(
                             if (downloadedFilePath.isNotEmpty()) {
                                 if (unzipContent(downloadedFilePath)) {
                                     mFilesStorageHelper.deleteFile(downloadedFilePath)
+                                    entity.apply {
+                                        downloadPath = File(downloadedFilePath).parent ?: ""
+                                        status = DownloadEntity.DownloadStatus.FINISHED
+                                    }
+                                    mDao.update(entity)
                                     notifyDownloadFinished(track, downloadedFilePath)
                                 } else {
+                                    setErrorStatusAndUpdate(entity)
                                     notifyError("Error al descomprimir el contenido")
                                 }
                             } else {
+                                setErrorStatusAndUpdate(entity)
                                 notifyError("Error en la descarga")
                             }
                         }
@@ -88,10 +99,15 @@ class DownloadTrackUseCase(
 
 
             })
-            entity.status = DownloadEntity.DownloadStatus.FINISHED
-            mDao.update(entity)
         }
 
+    }
+
+    private suspend fun setErrorStatusAndUpdate(entity: DownloadEntity) {
+        entity.apply {
+            status = DownloadEntity.DownloadStatus.ERROR
+        }
+        mDao.update(entity)
     }
 
     data class ZipIO(val entry: ZipEntry, val output: File)
