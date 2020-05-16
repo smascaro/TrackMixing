@@ -13,7 +13,7 @@ class NavigationHelper {
     }
 
     fun navigateTo(destination: Int) {
-        if (this::mNavController.isInitialized) {
+        if (destination != mNavController.currentDestination?.id) {
             mNavController.navigate(destination)
         }
     }
