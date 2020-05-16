@@ -9,7 +9,6 @@ import com.smascaro.trackmixing.networking.NodeApi
 import com.smascaro.trackmixing.networking.NodeDownloadsApi
 import com.smascaro.trackmixing.tracks.DownloadTrackUseCase
 import com.smascaro.trackmixing.tracks.FetchAvailableTracksUseCase
-import com.smascaro.trackmixing.ui.common.BaseActivity
 import com.smascaro.trackmixing.ui.common.ViewMvcFactory
 import com.smascaro.trackmixing.ui.common.navigationhelper.NavigationHelper
 import com.smascaro.trackmixing.ui.trackslist.TracksListController
@@ -40,7 +39,7 @@ class ControllerCompositionRoot(
     }
 
     fun getNavigationHelper(): NavigationHelper {
-        return NavigationHelper(getContext())
+        return NavigationHelper()
     }
 
     private fun getFilesStorageHelper(): FilesStorageHelper {

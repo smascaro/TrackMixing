@@ -1,12 +1,11 @@
 package com.smascaro.trackmixing.ui.common.navigationhelper
 
-import android.content.Context
 import androidx.navigation.NavController
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.ui.search.SongSearchFragmentDirections
 import com.smascaro.trackmixing.ui.trackslist.TracksListFragmentDirections
 
-class NavigationHelper(private val mContext: Context) {
+class NavigationHelper {
     private lateinit var mNavController: NavController
 
     fun bindNavController(navController: NavController) {
@@ -20,8 +19,6 @@ class NavigationHelper(private val mContext: Context) {
     }
 
     fun toPlayer(path: String) {
-        TracksListFragmentDirections.actionDestinationTracksListToDestinationPlayer()
-        SongSearchFragmentDirections.actionDestinationSearchToDestinationPlayer()
         val action = when (mNavController.currentDestination?.id) {
             R.id.destination_search -> SongSearchFragmentDirections.actionDestinationSearchToDestinationPlayer(
                 path
