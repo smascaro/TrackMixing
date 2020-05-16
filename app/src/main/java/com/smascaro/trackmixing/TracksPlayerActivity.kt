@@ -11,11 +11,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.navigation.navArgs
+import com.smascaro.trackmixing.common.EXTRA_BASE_TRACKS_PATH
+import com.smascaro.trackmixing.ui.common.BaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 import java.io.FileInputStream
 
-class TracksPlayerActivity : AppCompatActivity() {
+class TracksPlayerActivity : BaseActivity() {
 
     private lateinit var mTracksPool: SoundPool
     private var mVocalsStreamId = 0
@@ -31,6 +34,7 @@ class TracksPlayerActivity : AppCompatActivity() {
     private var mBassPlayer = MediaPlayer()
     private var mDrumsPlayer = MediaPlayer()
 
+    private val navigationArgs: TracksPlayerActivityArgs by navArgs()
     companion object {
         fun start(context: Context, filesBasePath: String) {
             val intent = Intent(context, TracksPlayerActivity::class.java)
@@ -42,10 +46,7 @@ class TracksPlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
-        val tracksDir = if (intent != null && intent.hasExtra("tracks_base_directory")) {
-            intent.extras?.getString("tracks_base_directory")
-        } else ""
+        val tracksDir = navigationArgs.basePath
         if (tracksDir != null && tracksDir.isNotEmpty()) {
             val fisVocals = FileInputStream(File(tracksDir, "vocals.mp3"))
             mVocalsPlayer.setDataSource(fisVocals.fd)

@@ -2,10 +2,11 @@ package com.smascaro.trackmixing.data.entities
 
 import android.app.PendingIntent
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import java.util.*
 
-@Entity(tableName = "download")
+@Entity(tableName = "download", indices = [Index(value = ["sourceVideoKey"], unique = true)])
 data class DownloadEntity(
     @PrimaryKey(autoGenerate = true) val id: Int,
     val sourceVideoKey: String,

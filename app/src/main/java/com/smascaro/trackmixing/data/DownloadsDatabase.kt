@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.smascaro.trackmixing.data.entities.DownloadEntity
 
-@Database(entities = [DownloadEntity::class], version = 1, exportSchema = false)
+@Database(entities = [DownloadEntity::class], version = 2, exportSchema = false)
 abstract class DownloadsDatabase : RoomDatabase() {
     abstract fun getDao(): DownloadsDao
 
@@ -25,7 +25,8 @@ abstract class DownloadsDatabase : RoomDatabase() {
                     context.applicationContext,
                     DownloadsDatabase::class.java,
                     "downloads_database"
-                ).build()
+                ).fallbackToDestructiveMigration()//Change for actual migration scripts
+                    .build()
                 INSTANCE = instance
                 return instance
             }

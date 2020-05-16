@@ -1,27 +1,21 @@
 package com.smascaro.trackmixing.tracks
 
-import android.util.StatsLog
 import com.smascaro.trackmixing.common.FilesStorageHelper
 import com.smascaro.trackmixing.data.DownloadsDao
 import com.smascaro.trackmixing.data.entities.DownloadEntity
 import com.smascaro.trackmixing.networking.NodeDownloadsApi
-import com.smascaro.trackmixing.networking.availableTracks.AvailableTracksResponseSchema
 import com.smascaro.trackmixing.ui.common.BaseObservable
-import kotlinx.coroutines.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import timber.log.Timber
-import java.io.BufferedInputStream
 import java.io.File
-import java.io.FileInputStream
-import java.io.InputStream
-import java.lang.Exception
 import java.util.*
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
-import java.util.zip.ZipInputStream
 
 class DownloadTrackUseCase(
     private val mNodeDownloadsApi: NodeDownloadsApi,
@@ -31,76 +25,93 @@ class DownloadTrackUseCase(
     BaseObservable<DownloadTrackUseCase.Listener>() {
     interface Listener {
         fun onDownloadTrackStarted(mTrack: Track)
-        fun onDownloadTrackFinished(mTrack: Track, path: String)
+
+        /**
+         * Notifies when the download has been completed and is ready to be used in Player activity \
+         * @param track the track object downloaded
+         * @param path the path to the directory where the track has been downloaded
+         */
+        fun onDownloadTrackFinished(track: Track, path: String)
         fun onDownloadTrackError()
     }
 
     private var mTrack: Track? = null
     fun downloadTrackAndNotify(track: Track, baseDirectory: String) {
-        mTrack = track
-        var entity = DownloadEntity(
-            0,
-            track.videoKey,
-            "low",
-            track.title,
-            track.thumbnailUrl,
-            Calendar.getInstance().toString(),
-            "",
-            DownloadEntity.DownloadStatus.PENDING
-        )
         GlobalScope.launch {
-            mDao.insert(entity)
-            Timber.d("Downloading track with id ${track.videoKey}")
-            notifyDownloadStarted(track)
-            mNodeDownloadsApi.downloadTrack(entity.sourceVideoKey).enqueue(object :
-                Callback<ResponseBody> {
-                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    Timber.e(t)
-                    GlobalScope.launch {
-                        setErrorStatusAndUpdate(entity)
-                    }
-                    notifyError("Error de red en la descarga")
-                }
-
-
-                override fun onResponse(
-                    call: Call<ResponseBody>,
-                    response: Response<ResponseBody>
-                ) {
-                    val responseBody = response.body()
-                    if (responseBody != null) {
+            val trackFromDatabase = mDao.get(track.videoKey)
+            val filesExist = if (trackFromDatabase.isNotEmpty()) {
+                mFilesStorageHelper.checkContent(trackFromDatabase.first().downloadPath)
+            } else {
+                false
+            }
+            if (trackFromDatabase.isEmpty() || !filesExist) {
+                mTrack = track
+                var entity = DownloadEntity(
+                    0,
+                    track.videoKey,
+                    "low",
+                    track.title,
+                    track.thumbnailUrl,
+                    Calendar.getInstance().toString(),
+                    "",
+                    DownloadEntity.DownloadStatus.PENDING
+                )
+                mDao.insert(entity)
+                Timber.d("Downloading track with id ${track.videoKey}")
+                notifyDownloadStarted(track)
+                mNodeDownloadsApi.downloadTrack(entity.sourceVideoKey).enqueue(object :
+                    Callback<ResponseBody> {
+                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                        Timber.e(t)
                         GlobalScope.launch {
-                            val downloadedFilePath =
-                                mFilesStorageHelper.writeFileToStorage(
-                                    baseDirectory,
-                                    entity.sourceVideoKey,
-                                    responseBody
-                                )
-                            if (downloadedFilePath.isNotEmpty()) {
-                                if (unzipContent(downloadedFilePath)) {
-                                    mFilesStorageHelper.deleteFile(downloadedFilePath)
-                                    entity.apply {
-                                        downloadPath = File(downloadedFilePath).parent ?: ""
-                                        status = DownloadEntity.DownloadStatus.FINISHED
+                            setErrorStatusAndUpdate(entity)
+                        }
+                        notifyError("Error de red en la descarga")
+                    }
+
+
+                    override fun onResponse(
+                        call: Call<ResponseBody>,
+                        response: Response<ResponseBody>
+                    ) {
+                        val responseBody = response.body()
+                        if (responseBody != null) {
+                            GlobalScope.launch {
+                                val downloadedFilePath =
+                                    mFilesStorageHelper.writeFileToStorage(
+                                        baseDirectory,
+                                        entity.sourceVideoKey,
+                                        responseBody
+                                    )
+                                if (downloadedFilePath.isNotEmpty()) {
+                                    val downloadedBasePath = File(downloadedFilePath).parent ?: ""
+                                    if (unzipContent(downloadedFilePath)) {
+                                        mFilesStorageHelper.deleteFile(downloadedFilePath)
+                                        entity.apply {
+                                            downloadPath = downloadedBasePath
+                                            status = DownloadEntity.DownloadStatus.FINISHED
+                                        }
+                                        mDao.update(entity)
+                                        notifyDownloadFinished(track, downloadedBasePath)
+                                    } else {
+                                        setErrorStatusAndUpdate(entity)
+                                        notifyError("Error al descomprimir el contenido")
                                     }
-                                    mDao.update(entity)
-                                    notifyDownloadFinished(track, downloadedFilePath)
                                 } else {
                                     setErrorStatusAndUpdate(entity)
-                                    notifyError("Error al descomprimir el contenido")
+                                    notifyError("Error en la descarga")
                                 }
-                            } else {
-                                setErrorStatusAndUpdate(entity)
-                                notifyError("Error en la descarga")
                             }
                         }
                     }
-                }
 
 
-            })
+                })
+            } else {
+                Timber.i("Track ${track.videoKey} already in the system, omitting download")
+                notifyDownloadFinished(track, trackFromDatabase.first().downloadPath)
+            }
         }
-
     }
 
     private suspend fun setErrorStatusAndUpdate(entity: DownloadEntity) {

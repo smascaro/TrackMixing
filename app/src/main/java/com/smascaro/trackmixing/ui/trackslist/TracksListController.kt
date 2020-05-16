@@ -1,11 +1,12 @@
 package com.smascaro.trackmixing.ui.trackslist
 
 
+import androidx.navigation.NavInflater
 import com.smascaro.trackmixing.common.FilesStorageHelper
-import com.smascaro.trackmixing.common.NavigationHelper
 import com.smascaro.trackmixing.tracks.DownloadTrackUseCase
 import com.smascaro.trackmixing.tracks.FetchAvailableTracksUseCase
 import com.smascaro.trackmixing.tracks.Track
+import com.smascaro.trackmixing.ui.common.navigationhelper.NavigationHelper
 import timber.log.Timber
 import java.io.File
 
@@ -61,16 +62,16 @@ class TracksListController(
 
     override fun onDownloadTrackFinished(track: Track, path: String) {
         Timber.i("Download of track ${track.videoKey} FINISHED")
-        val downloadedFile = File(path)
+        val downloadDirectory = File(path)
         Timber.d("List of files in path $path:")
-        File(downloadedFile.parent!!).listFiles()?.forEach {
+        downloadDirectory.listFiles()?.forEach {
             if (it.isDirectory) {
                 Timber.d("Dir: ${it.absolutePath}")
             } else if (it.isFile) {
                 Timber.d("File: ${it?.absoluteFile}, size: ${it.length() / 1000}KB (${it.length() / 1000000}MB)")
             }
         }
-        mNavigationHelper.toPlayer(downloadedFile.parent!!)
+        mViewMvc.navigateToPlayer(path)
     }
 
     override fun onDownloadTrackError() {

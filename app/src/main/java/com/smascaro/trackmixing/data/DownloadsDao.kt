@@ -8,6 +8,9 @@ interface DownloadsDao {
     @Query("SELECT * FROM download")
     fun getAll(): List<DownloadEntity>
 
+    @Query("SELECT * FROM download WHERE sourceVideoKey = :videoKey")
+    fun get(videoKey: String): List<DownloadEntity>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(downloadEntity: DownloadEntity)
 

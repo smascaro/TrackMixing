@@ -4,13 +4,14 @@ import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
 import com.smascaro.trackmixing.common.FilesStorageHelper
-import com.smascaro.trackmixing.common.NavigationHelper
 import com.smascaro.trackmixing.data.DownloadsDatabase
 import com.smascaro.trackmixing.networking.NodeApi
 import com.smascaro.trackmixing.networking.NodeDownloadsApi
 import com.smascaro.trackmixing.tracks.DownloadTrackUseCase
 import com.smascaro.trackmixing.tracks.FetchAvailableTracksUseCase
+import com.smascaro.trackmixing.ui.common.BaseActivity
 import com.smascaro.trackmixing.ui.common.ViewMvcFactory
+import com.smascaro.trackmixing.ui.common.navigationhelper.NavigationHelper
 import com.smascaro.trackmixing.ui.trackslist.TracksListController
 
 class ControllerCompositionRoot(
@@ -38,7 +39,7 @@ class ControllerCompositionRoot(
         )
     }
 
-    private fun getNavigationHelper(): NavigationHelper {
+    fun getNavigationHelper(): NavigationHelper {
         return NavigationHelper(getContext())
     }
 

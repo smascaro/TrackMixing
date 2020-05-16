@@ -1,12 +1,11 @@
 package com.smascaro.trackmixing.common
 
 import android.content.Context
-import android.os.Environment
 import okhttp3.ResponseBody
 import timber.log.Timber
 import java.io.File
+import java.io.FileNotFoundException
 import java.io.InputStream
-import java.lang.Exception
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 
@@ -35,6 +34,30 @@ class FilesStorageHelper(private val mContext: Context) {
 
     }
 
+    fun checkContent(baseDirectory: String): Boolean {
+        return try {
+            val directoryToCheck = File(baseDirectory)
+            if (!directoryToCheck.exists()) {
+                throw FileNotFoundException("Directory $baseDirectory does not exist")
+            }
+            if (!directoryToCheck.isDirectory) {
+                throw IllegalArgumentException("Path supplied is not a directory: $baseDirectory")
+            }
+            val countFiles = directoryToCheck.listFiles { _, file ->
+                file.startsWith("vocals.") ||
+                        file.startsWith("bass.") ||
+                        file.startsWith("other.") ||
+                        file.startsWith("drums.")
+            }?.count()
+
+            return if (countFiles == null) {
+                false
+            } else countFiles >= 4
+        } catch (e: Exception) {
+            Timber.w(e)
+            false
+        }
+    }
 
     private fun InputStream.saveToFile(file: String) = use { input ->
         File(file).outputStream().use { output ->
