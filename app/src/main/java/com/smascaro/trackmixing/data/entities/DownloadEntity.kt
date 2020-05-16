@@ -8,7 +8,7 @@ import java.util.*
 
 @Entity(tableName = "download", indices = [Index(value = ["sourceVideoKey"], unique = true)])
 data class DownloadEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey(autoGenerate = true) var id: Int,
     val sourceVideoKey: String,
     val quality: String,
     val title: String,

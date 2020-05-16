@@ -56,7 +56,7 @@ class DownloadTrackUseCase(
                     "",
                     DownloadEntity.DownloadStatus.PENDING
                 )
-                mDao.insert(entity)
+                entity.id = mDao.insert(entity).toInt()
                 Timber.d("Downloading track with id ${track.videoKey}")
                 notifyDownloadStarted(track)
                 mNodeDownloadsApi.downloadTrack(entity.sourceVideoKey).enqueue(object :

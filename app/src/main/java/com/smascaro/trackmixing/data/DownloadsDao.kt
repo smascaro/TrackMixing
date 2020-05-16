@@ -12,7 +12,7 @@ interface DownloadsDao {
     fun get(videoKey: String): List<DownloadEntity>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(downloadEntity: DownloadEntity)
+    suspend fun insert(downloadEntity: DownloadEntity): Long
 
     @Update
     suspend fun update(downloadEntity: DownloadEntity)
