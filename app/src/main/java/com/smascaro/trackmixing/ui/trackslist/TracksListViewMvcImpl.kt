@@ -2,18 +2,14 @@ package com.smascaro.trackmixing.ui.trackslist
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.data.entities.DownloadEntity
 import com.smascaro.trackmixing.tracks.Track
 import com.smascaro.trackmixing.ui.common.BaseObservableViewMvc
 import com.smascaro.trackmixing.ui.common.ViewMvcFactory
 import com.smascaro.trackmixing.ui.common.navigationhelper.NavigationHelper
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import java.nio.file.Path
-import java.util.*
 
 class TracksListViewMvcImpl(
     inflater: LayoutInflater,
@@ -26,12 +22,14 @@ class TracksListViewMvcImpl(
     private val mRecyclerViewTracks: RecyclerView
     private val mRecyclerViewTracksAdapter: TracksListAdapter
     private lateinit var mNavigationHelper: NavigationHelper
+    private lateinit var mMotionLayout: MotionLayout
     init {
         setRootView(inflater.inflate(R.layout.fragment_tracks_list, parent, false))
         mRecyclerViewTracks = findViewById(R.id.rvTracks)
         mRecyclerViewTracks.layoutManager = LinearLayoutManager(getContext())
         mRecyclerViewTracksAdapter = TracksListAdapter(this, viewMvcFactory)
         mRecyclerViewTracks.adapter = mRecyclerViewTracksAdapter
+        mMotionLayout = findViewById(R.id.motionLayoutFloatingCard)
     }
 
     override fun bindNavigationHelper(navigationHelper: NavigationHelper) {
@@ -44,6 +42,12 @@ class TracksListViewMvcImpl(
 
     override fun navigateToPlayer(path: String) {
         mNavigationHelper.toPlayer(path)
+    }
+
+    override fun displayFloatingCard() {
+        if (mMotionLayout.progress == 0.0f) {
+            mMotionLayout.transitionToEnd()
+        }
     }
 
 

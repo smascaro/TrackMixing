@@ -1,12 +1,16 @@
 package com.smascaro.trackmixing.ui.main
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.navigation.findNavController
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.ui.common.BaseActivity
 import com.smascaro.trackmixing.ui.common.navigationhelper.BottomNavigationViewMvc
 import com.smascaro.trackmixing.ui.common.navigationhelper.NavigationHelper
+import timber.log.Timber
 
 class MainActivity : BaseActivity(), BottomNavigationViewMvc.Listener {
 
@@ -25,6 +29,15 @@ class MainActivity : BaseActivity(), BottomNavigationViewMvc.Listener {
         setContentView(mViewMvc.getRootView())
         val navController = findNavController(R.id.nav_host_fragment)
         mNavigationHelper.bindNavController(navController)
+
+        if (intent.action == Intent.ACTION_SEND) {
+            val url = if (intent.clipData != null && intent.clipData!!.itemCount > 0) {
+                intent.clipData?.getItemAt(0)!!.text
+            } else ""
+            Toast.makeText(this, url, Toast.LENGTH_LONG).show()
+            Timber.d(intent.toString())
+
+        }
     }
 
     override fun onStart() {

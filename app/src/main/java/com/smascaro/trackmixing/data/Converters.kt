@@ -4,5 +4,5 @@ import com.smascaro.trackmixing.networking.availableTracks.AvailableTracksRespon
 import com.smascaro.trackmixing.tracks.Track
 
 fun AvailableTracksResponseSchema.Item.toModel(): Track {
-    return Track(title, videoId, thumbnailUrl ?: "", secondsLong)
+    return Track(title, videoId, thumbnailUrl ?: "", secondsLong, this.requestedTimestamp)
 }

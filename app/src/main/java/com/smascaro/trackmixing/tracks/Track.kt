@@ -5,5 +5,6 @@ data class Track(
     val videoKey: String,
     //val quality: String,
     val thumbnailUrl: String,
-    val secondsLong: Int
+    val secondsLong: Int,
+    val requestedTimestamp: String
 )

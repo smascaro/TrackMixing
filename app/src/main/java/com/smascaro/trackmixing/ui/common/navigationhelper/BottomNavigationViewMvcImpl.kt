@@ -12,17 +12,10 @@ import com.smascaro.trackmixing.ui.common.BaseObservableViewMvc
 class BottomNavigationViewMvcImpl(inflater: LayoutInflater, parent: ViewGroup?) :
     BaseObservableViewMvc<BottomNavigationViewMvc.Listener>(),
     BottomNavigationViewMvc {
-    private val mBottomNavigationView: BottomNavigationView
 
-    //TODO: no fer-ho view mvc sino helper
     init {
         setRootView(inflater.inflate(R.layout.layout_main, parent, false))
-        mBottomNavigationView = findViewById(R.id.nav_view)
-        mBottomNavigationView.setOnNavigationItemSelectedListener { item ->
-            getListeners().forEach { listener ->
-                listener.onNavigationItemSelected(item)
-            }
             true
-        }
+
     }
 }

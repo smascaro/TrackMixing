@@ -13,4 +13,5 @@ interface TracksListViewMvc : ObservableViewMvc<TracksListViewMvc.Listener> {
     fun bindNavigationHelper(navigationHelper: NavigationHelper)
     fun bindTracks(tracks: List<Track>)
     fun navigateToPlayer(path: String)
+    fun displayFloatingCard()
 }

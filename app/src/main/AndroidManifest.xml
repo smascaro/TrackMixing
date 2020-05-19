@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.smascaro.trackmixing">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -26,13 +25,17 @@
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
 
-                <data android:mimeType="application/*" />
-                <data android:mimeType="audio/*" />
-                <data android:mimeType="image/*" />
-                <data android:mimeType="message/*" />
-                <data android:mimeType="multipart/*" />
-                <data android:mimeType="text/*" />
-                <data android:mimeType="video/*" />
+                <data
+                    android:host="m.youtube.com"
+                    android:mimeType="text/plain" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:host="www.youtube.com"
+                    android:mimeType="text/*" />
             </intent-filter>
         </activity>
         <activity android:name=".TracksPlayerActivity" />

@@ -22,12 +22,12 @@ class TracksListController(
     private lateinit var mViewMvc: TracksListViewMvc
     override fun onTrackClicked(track: Track) {
         Timber.i("Track clicked: ${track.title}")
-        Timber.i("Track clicked: ${track.title}")
         mDownloadTrackUseCase.downloadTrackAndNotify(
             track,
             mFilesStorageHelper.getBaseDirectory()
         )
 
+//        mViewMvc.displayFloatingCard()
     }
 
     fun bindView(mvcView: TracksListViewMvc) {
