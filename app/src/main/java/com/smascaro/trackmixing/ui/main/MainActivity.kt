@@ -18,7 +18,7 @@ class MainActivity : BaseActivity(), BottomNavigationViewMvc.Listener {
     private lateinit var mViewMvc: BottomNavigationViewMvc
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //setContentView(R.layout.layout_main)
+        //setContentView(R.layout.activity_main)
         mViewMvc = getCompositionRoot().getViewMvcFactory().getBottomNavigationViewMvc(null)
         mNavigationHelper = getCompositionRoot().getNavigationHelper()
 

@@ -38,7 +38,7 @@
                     android:mimeType="text/*" />
             </intent-filter>
         </activity>
-        <activity android:name=".TracksPlayerActivity" />
+        <activity android:name=".ui.player.TracksPlayerActivity" />
     </application>
 
 

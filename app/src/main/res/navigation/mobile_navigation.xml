@@ -25,9 +25,9 @@
     </fragment>
     <activity
         android:id="@+id/destination_player"
-        android:name="com.smascaro.trackmixing.TracksPlayerActivity"
+        android:name="com.smascaro.trackmixing.ui.player.TracksPlayerActivity"
         android:label="TracksPlayerActivity"
-        tools:layout="@layout/activity_main">
+        tools:layout="@layout/activity_track_player">
         <argument
             android:name="basePath"
             app:argType="string"

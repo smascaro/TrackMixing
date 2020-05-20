@@ -1,23 +1,22 @@
-package com.smascaro.trackmixing
+package com.smascaro.trackmixing.ui.player
 
 import android.content.Context
 import android.content.Intent
-import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.media.SoundPool
-import android.net.Uri
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.navigation.navArgs
-import com.smascaro.trackmixing.common.EXTRA_BASE_TRACKS_PATH
+import com.smascaro.trackmixing.R
+import com.smascaro.trackmixing.ui.player.TracksPlayerActivityArgs
 import com.smascaro.trackmixing.ui.common.BaseActivity
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_track_player.*
 import java.io.File
 import java.io.FileInputStream
 
+/**
+ * TODO: Mvcify and design UI
+ */
 class TracksPlayerActivity : BaseActivity() {
 
     private lateinit var mTracksPool: SoundPool
@@ -35,6 +34,7 @@ class TracksPlayerActivity : BaseActivity() {
     private var mDrumsPlayer = MediaPlayer()
 
     private val navigationArgs: TracksPlayerActivityArgs by navArgs()
+
     companion object {
         fun start(context: Context, filesBasePath: String) {
             val intent = Intent(context, TracksPlayerActivity::class.java)
@@ -42,9 +42,10 @@ class TracksPlayerActivity : BaseActivity() {
             context.startActivity(intent)
         }
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_track_player)
 
         val tracksDir = navigationArgs.basePath
         if (tracksDir != null && tracksDir.isNotEmpty()) {

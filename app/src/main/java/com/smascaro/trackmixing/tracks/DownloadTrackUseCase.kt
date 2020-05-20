@@ -153,27 +153,6 @@ class DownloadTrackUseCase(
         }
     }
 
-//
-//    private fun InputStream.saveToFile(file: String) = use { input ->
-//        File(file).outputStream().use { output ->
-//            input.copyTo(output)
-//        }
-//    }
-//
-//    fun writeFileToStorage(baseDirectory: String, videoId: String, body: ResponseBody): String {
-//        Timber.d("Writing to storage download with id $videoId and a length of ${body.contentLength()} bytes")
-//        val targetDirectoryFile = File(baseDirectory, videoId)
-//        targetDirectoryFile.mkdirs()
-//        val targetFile = File(targetDirectoryFile, "$videoId.zip")
-//        return try {
-//            body.byteStream()?.saveToFile(targetFile.path)
-//            targetFile.path
-//        } catch (e: Exception) {
-//            Timber.e(e)
-//            ""
-//        }
-//
-//    }
 
     private fun notifyDownloadStarted(track: Track) {
         getListeners().forEach { listener ->
@@ -190,7 +169,7 @@ class DownloadTrackUseCase(
         }
     }
 
-    private fun notifyError(s: String) {
+    private fun notifyError(error: String) {
         getListeners().forEach {
             it.onDownloadTrackError()
         }

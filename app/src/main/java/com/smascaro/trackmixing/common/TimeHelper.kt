@@ -18,6 +18,7 @@ fun Int.toMinutesAndSecondsRepresentation(): String {
     }
 }
 
+//TODO pass timestamp to millis
 fun Instant.elapsed(): String {
     return this.toString()
 }

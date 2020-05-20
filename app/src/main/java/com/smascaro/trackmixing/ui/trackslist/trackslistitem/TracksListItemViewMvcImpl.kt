@@ -21,8 +21,6 @@ class TracksListItemViewMvcImpl(inflater: LayoutInflater, parent: ViewGroup?) :
     private lateinit var mTrack: Track
     private lateinit var mTrackTitleTxt: TextView
     private lateinit var mTrackThumbnailImg: ImageView
-    private val mCollapsedItemHeight = (120 * Resources.getSystem().displayMetrics.density).toInt()
-    private val mExpandedItemHeight = (240 * Resources.getSystem().displayMetrics.density).toInt()
     init {
         setRootView(inflater.inflate(R.layout.item_track, parent, false))
         mTrackTitleTxt = findViewById(R.id.trackTitle)
