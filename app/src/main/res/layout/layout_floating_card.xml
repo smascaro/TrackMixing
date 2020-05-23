@@ -9,15 +9,13 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent">
 
-    <TextView
-        android:id="@+id/txtHeaderFloatingCard"
+    <ImageView
+        android:id="@+id/ivArrowFloatingCard"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_floating_card_header"
         android:paddingLeft="8dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
-        android:text="Swipe up"
+        android:rotation="0"
+        android:src="@drawable/ic_keyboard_arrow_up_gray_32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -31,5 +29,5 @@
         android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin nec enim rutrum quam luctus elementum eget in augue. Aenean rhoncus ante sit amet euismod ornare. Donec et eros eget odio gravida pretium. Sed non mi gravida, faucibus sem ac, lacinia tellus. Praesent hendrerit bibendum ligula. Nam ut tristique leo. Praesent sit amet vulputate leo, congue aliquet lorem. In accumsan lacinia risus sit amet dapibus. Morbi ut augue quis dolor eleifend malesuada. In iaculis ante ac aliquam suscipit. Suspendisse ut rhoncus lectus, vel imperdiet nisi. Suspendisse in lorem venenatis, congue arcu quis, aliquet turpis. In aliquet enim arcu, at pellentesque diam posuere rhoncus."
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txtHeaderFloatingCard" />
+        app:layout_constraintTop_toBottomOf="@id/ivArrowFloatingCard" />
 </androidx.constraintlayout.motion.widget.MotionLayout>

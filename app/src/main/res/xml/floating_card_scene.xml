@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <Transition
         app:constraintSetStart="@+id/start"
-        app:constraintSetEnd="@+id/end">
+        app:constraintSetEnd="@+id/end"
+        app:duration="1000">
         <OnSwipe
             app:dragDirection="dragUp"
             app:touchAnchorSide="top" />
@@ -11,9 +12,10 @@
 
     <ConstraintSet android:id="@+id/start">
         <Constraint
-            android:id="@+id/txtHeaderFloatingCard"
+            android:id="@+id/ivArrowFloatingCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:rotation="0"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -21,24 +23,25 @@
             android:id="@+id/txtDetailFloatingCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/txtHeaderFloatingCard"
+            app:layout_constraintTop_toBottomOf="@id/ivArrowFloatingCard"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/end">
         <Constraint
-            android:id="@+id/txtHeaderFloatingCard"
+            android:id="@+id/ivArrowFloatingCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
+            android:rotation="180"
+            app:layout_constraintTop_toTopOf="@id/txtDetailFloatingCard"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
         <Constraint
             android:id="@+id/txtDetailFloatingCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/txtHeaderFloatingCard"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
     </ConstraintSet>
