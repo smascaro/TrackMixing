@@ -1,6 +1,5 @@
 package com.smascaro.trackmixing.common
 
-import org.threeten.bp.Instant
 import java.time.LocalDateTime
 import java.util.*
 
@@ -19,6 +18,6 @@ fun Int.toMinutesAndSecondsRepresentation(): String {
 }
 
 //TODO pass timestamp to millis
-fun Instant.elapsed(): String {
+fun Long.elapsed(): String {
     return this.toString()
 }

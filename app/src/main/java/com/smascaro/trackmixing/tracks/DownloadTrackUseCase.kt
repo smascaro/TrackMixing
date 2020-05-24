@@ -54,7 +54,8 @@ class DownloadTrackUseCase(
                     track.thumbnailUrl,
                     Calendar.getInstance().toString(),
                     "",
-                    DownloadEntity.DownloadStatus.PENDING
+                    DownloadEntity.DownloadStatus.PENDING,
+                    track.secondsLong
                 )
                 entity.id = mDao.insert(entity).toInt()
                 Timber.d("Downloading track with id ${track.videoKey}")

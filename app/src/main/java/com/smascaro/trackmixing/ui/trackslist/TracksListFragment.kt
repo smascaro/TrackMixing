@@ -4,12 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.view.menu.MenuView
+import androidx.core.app.SharedElementCallback
 import androidx.fragment.app.Fragment
-import androidx.navigation.Navigation.findNavController
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.transition.MaterialContainerTransform
+import com.google.android.material.transition.MaterialFadeThrough
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.ui.common.BaseFragment
-import com.smascaro.trackmixing.ui.common.navigationhelper.NavigationHelper
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,9 +26,18 @@ private const val ARG_PARAM2 = "param2"
 class TracksListFragment : BaseFragment() {
 
     private lateinit var mTracksListController: TracksListController
-    private lateinit var mNavigationHelper: NavigationHelper
 
     init {
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enterTransition = MaterialFadeThrough.create()
+        exitTransition = MaterialContainerTransform().apply {
+            duration = 375
+            interpolator = FastOutSlowInInterpolator()
+            startDelay = 25
+        }
     }
 
     override fun onCreateView(
@@ -34,12 +45,15 @@ class TracksListFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         val viewMvc = getCompositionRoot().getViewMvcFactory().getTracksListViewMvc(null)
-        mTracksListController = getCompositionRoot().getTracksListController()
+        viewMvc.bindNavigationHelper(
+            getCompositionRoot().getNavigationHelper(
+                getNavigationController()
+            )
+        )
+        mTracksListController =
+            getCompositionRoot().getTracksListController(getNavigationController())
         mTracksListController.bindView(viewMvc)
-        mNavigationHelper = getCompositionRoot().getNavigationHelper()
-        val navController = findNavController(requireActivity(), R.id.nav_host_fragment)
-        mNavigationHelper.bindNavController(navController)
-        viewMvc.bindNavigationHelper(mNavigationHelper)
+
         return viewMvc.getRootView()
     }
 

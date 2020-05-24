@@ -1,5 +1,7 @@
 package com.smascaro.trackmixing.tracks
 
+import java.io.Serializable
+
 data class Track(
     val title: String,
     val videoKey: String,
@@ -7,4 +9,4 @@ data class Track(
     val thumbnailUrl: String,
     val secondsLong: Int,
     val requestedTimestamp: String
-)
+) : Serializable

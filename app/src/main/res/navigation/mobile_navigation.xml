@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_destination_tracks_list_to_destination_player"
             app:destination="@id/destination_player" />
+        <action
+            android:id="@+id/action_destination_tracks_list_to_destination_track_details"
+            app:destination="@id/destination_track_details" />
     </fragment>
     <fragment
         android:id="@+id/destination_search"
@@ -35,5 +38,17 @@
             app:nullable="false" />
 
     </activity>
+    <fragment
+        android:id="@+id/destination_track_details"
+        android:name="com.smascaro.trackmixing.ui.details.TrackDetailsFragment"
+        android:label="fragment_track_details"
+        tools:layout="@layout/fragment_track_details">
+        <argument
+            android:name="track"
+            app:argType="com.smascaro.trackmixing.tracks.Track" />
+        <action
+            android:id="@+id/action_destination_track_details_to_destination_player"
+            app:destination="@id/destination_player" />
+    </fragment>
 
 </navigation>

@@ -15,7 +15,8 @@ data class DownloadEntity(
     val thumbnailUrl: String,
     val downloadTimestamp: String,//TODO pasar a millis
     var downloadPath: String,
-    var status: Int
+    var status: Int,
+    var secondsLong: Int
 ) {
     class DownloadStatus {
         companion object {

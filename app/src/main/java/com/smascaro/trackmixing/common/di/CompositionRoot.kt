@@ -1,5 +1,6 @@
 package com.smascaro.trackmixing.common.di
 
+import androidx.navigation.NavController
 import com.smascaro.trackmixing.common.NODE_BASE_URL
 import com.smascaro.trackmixing.networking.NodeApi
 import com.smascaro.trackmixing.networking.NodeDownloadsApi
@@ -9,6 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class CompositionRoot {
     private lateinit var mRetrofit: Retrofit
     private lateinit var mRetrofitForBinaryFiles: Retrofit
+
 
     private fun getRetrofit(): Retrofit {
         if (!this::mRetrofit.isInitialized) {
@@ -28,7 +30,6 @@ class CompositionRoot {
         }
         return mRetrofitForBinaryFiles
     }
-
     fun getNodeApi(): NodeApi {
         return getRetrofit().create(NodeApi::class.java)
     }

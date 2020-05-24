@@ -3,14 +3,17 @@ package com.smascaro.trackmixing.common.di
 import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
+import androidx.navigation.NavController
 import com.smascaro.trackmixing.common.FilesStorageHelper
 import com.smascaro.trackmixing.data.DownloadsDatabase
 import com.smascaro.trackmixing.networking.NodeApi
 import com.smascaro.trackmixing.networking.NodeDownloadsApi
 import com.smascaro.trackmixing.tracks.DownloadTrackUseCase
 import com.smascaro.trackmixing.tracks.FetchAvailableTracksUseCase
+import com.smascaro.trackmixing.tracks.FetchDownloadedTracks
 import com.smascaro.trackmixing.ui.common.ViewMvcFactory
 import com.smascaro.trackmixing.ui.common.navigationhelper.NavigationHelper
+import com.smascaro.trackmixing.ui.details.TrackDetailsController
 import com.smascaro.trackmixing.ui.trackslist.TracksListController
 
 class ControllerCompositionRoot(
@@ -29,28 +32,34 @@ class ControllerCompositionRoot(
         return ViewMvcFactory(getLayoutInflater())
     }
 
-    fun getTracksListController(): TracksListController {
+    fun getTracksListController(navController: NavController): TracksListController {
         return TracksListController(
             getFetchAvailableTracksUseCase(),
             getDownloadTrackUseCase(),
+            getFetchDownloadedTracksUseCase(),
             getFilesStorageHelper(),
-            getNavigationHelper()
+            getNavigationHelper(navController)
         )
     }
 
-    fun getNavigationHelper(): NavigationHelper {
-        return NavigationHelper()
+    fun getNavigationHelper(navController: NavController): NavigationHelper {
+        return NavigationHelper(navController)
     }
 
     private fun getFilesStorageHelper(): FilesStorageHelper {
         return FilesStorageHelper(getContext())
     }
+
     private fun getDownloadTrackUseCase(): DownloadTrackUseCase {
         return DownloadTrackUseCase(
             getNodeDownloadsApi(),
             getDatabase().getDao(),
             getFilesStorageHelper()
         )
+    }
+
+    private fun getFetchDownloadedTracksUseCase(): FetchDownloadedTracks {
+        return FetchDownloadedTracks(getDatabase().getDao())
     }
 
     private fun getDatabase(): DownloadsDatabase {
@@ -67,6 +76,15 @@ class ControllerCompositionRoot(
 
     private fun getNodeDownloadsApi(): NodeDownloadsApi {
         return mCompositionRoot.getNodeDownloadsApi()
+    }
+
+    fun getTrackDetailsController(navController: NavController): TrackDetailsController {
+        return TrackDetailsController(
+            getDownloadTrackUseCase(),
+            getFilesStorageHelper(),
+            getNavigationHelper(navController)
+
+        )
     }
 
 

@@ -8,10 +8,18 @@ import com.smascaro.trackmixing.ui.common.navigationhelper.NavigationHelper
 interface TracksListViewMvc : ObservableViewMvc<TracksListViewMvc.Listener> {
     interface Listener {
         fun onTrackClicked(track: Track)
+        fun onCurrentDataSourceRequest(dataSource: TracksDataSource)
     }
 
-    fun bindNavigationHelper(navigationHelper: NavigationHelper)
+    enum class TracksDataSource {
+        SERVER, DATABASE
+    }
+
     fun bindTracks(tracks: List<Track>)
     fun navigateToPlayer(path: String)
     fun displayFloatingCard()
+    fun showDetails(track: Track)
+    fun bindNavigationHelper(navigationHelper: NavigationHelper)
+
+    fun getCurrentDataSource(): TracksDataSource
 }

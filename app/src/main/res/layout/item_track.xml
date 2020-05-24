@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cardViewContainer"
     android:layout_width="match_parent"
@@ -17,6 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="120dp"
             android:scaleType="centerCrop"
+            android:src="@drawable/test_thumbnail_1280x720"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -28,24 +29,22 @@
             android:background="@drawable/bg_gradient_black"
             app:layout_constraintBottom_toBottomOf="@+id/thumbnailImg" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/trackTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="16dp"
-            android:layout_marginLeft="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
             android:layout_marginBottom="8dp"
             android:ellipsize="end"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
+            android:paddingRight="8dp"
             android:singleLine="true"
             android:text="Desakato - Nueva Religión (Bonus Track 100% Real) - 2019 Remastered edition"
             android:textColor="#fff"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="@id/gradientView"
-            app:layout_constraintEnd_toEndOf="@id/gradientView"
             app:layout_constraintStart_toStartOf="@id/gradientView" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

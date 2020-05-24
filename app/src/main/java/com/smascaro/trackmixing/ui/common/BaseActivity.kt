@@ -4,9 +4,14 @@ import com.smascaro.trackmixing.common.CustomApplication
 import com.smascaro.trackmixing.common.di.CompositionRoot
 import com.smascaro.trackmixing.common.di.ControllerCompositionRoot
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
+import com.smascaro.trackmixing.R
+import kotlinx.android.synthetic.main.activity_main.*
 
 open class BaseActivity : AppCompatActivity() {
     private var mControllerCompositionRoot: ControllerCompositionRoot? = null
+    private lateinit var mNavigationController: NavController
 
     protected fun getCompositionRoot(): ControllerCompositionRoot {
         if (mControllerCompositionRoot == null) {
@@ -16,5 +21,12 @@ open class BaseActivity : AppCompatActivity() {
             )
         }
         return mControllerCompositionRoot!!
+    }
+
+    protected fun getNavigationController(): NavController {
+        if (!this::mNavigationController.isInitialized) {
+            mNavigationController = findNavController(R.id.nav_host_fragment)
+        }
+        return mNavigationController
     }
 }

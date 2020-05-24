@@ -2,16 +2,23 @@ package com.smascaro.trackmixing.ui.trackslist
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
 import com.smascaro.trackmixing.tracks.Track
-import com.smascaro.trackmixing.ui.trackslist.trackslistitem.TracksListItemViewMvc
 import com.smascaro.trackmixing.ui.common.ViewMvcFactory
+import com.smascaro.trackmixing.ui.trackslist.trackslistitem.TracksListItemViewMvc
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class TracksListAdapter(
     private val mListener: Listener,
     private val mViewMvcFactory: ViewMvcFactory
 ) : RecyclerView.Adapter<TracksListAdapter.ViewHolder>(), TracksListItemViewMvc.Listener {
     interface Listener {
-        fun onTrackClicked(track: Track)
+        fun onTrackClicked(
+            track: Track,
+            card: MaterialCardView
+        )
     }
 
     class ViewHolder(val mViewMvc: TracksListItemViewMvc) :
@@ -27,7 +34,9 @@ class TracksListAdapter(
 
     fun bindTracks(tracks: List<Track>) {
         mTracks = tracks.toMutableList()
-        notifyDataSetChanged()
+        CoroutineScope(Dispatchers.Main).launch {
+            notifyDataSetChanged()
+        }
     }
 
 
@@ -35,8 +44,8 @@ class TracksListAdapter(
         holder.mViewMvc.bindTrack(mTracks[position])
     }
 
-    override fun onTrackClicked(track: Track) {
-        mListener.onTrackClicked(track)
+    override fun onTrackClicked(track: Track, card: MaterialCardView) {
+        mListener.onTrackClicked(track, card)
     }
 
     override fun getItemCount(): Int {
