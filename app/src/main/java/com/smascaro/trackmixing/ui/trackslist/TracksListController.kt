@@ -88,7 +88,7 @@ class TracksListController(
                 Timber.d("File: ${it?.absoluteFile}, size: ${it.length() / 1000}KB (${it.length() / 1000000}MB)")
             }
         }
-        mViewMvc.navigateToPlayer(path)
+        mViewMvc.navigateToPlayer(track)
     }
 
     override fun onDownloadTrackError() {

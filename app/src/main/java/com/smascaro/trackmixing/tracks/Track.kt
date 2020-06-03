@@ -8,5 +8,6 @@ data class Track(
     //val quality: String,
     val thumbnailUrl: String,
     val secondsLong: Int,
-    val requestedTimestamp: String
+    val requestedTimestamp: String,
+    val downloadPath: String
 ) : Serializable

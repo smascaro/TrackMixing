@@ -32,10 +32,8 @@
         android:label="TracksPlayerActivity"
         tools:layout="@layout/activity_track_player">
         <argument
-            android:name="basePath"
-            app:argType="string"
-            android:defaultValue="invalid_path"
-            app:nullable="false" />
+            android:name="track"
+            app:argType="com.smascaro.trackmixing.tracks.Track" />
 
     </activity>
     <fragment

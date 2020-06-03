@@ -40,7 +40,7 @@ class TrackDetailsController(
     }
 
     override fun onDownloadTrackFinished(track: Track, path: String) {
-        mNavigationHelper.toPlayer(path)
+        mNavigationHelper.toPlayer(track)
     }
 
     override fun onDownloadTrackError() {

@@ -30,6 +30,7 @@ class TracksListViewMvcImpl(
     private lateinit var mMotionLayout: MotionLayout
     private var currentDataSource: TracksListViewMvc.TracksDataSource =
         TracksListViewMvc.TracksDataSource.DATABASE
+
     init {
         setRootView(inflater.inflate(R.layout.fragment_tracks_list, parent, false))
         mRecyclerViewTracks = findViewById(R.id.rvTracks)
@@ -62,8 +63,8 @@ class TracksListViewMvcImpl(
         return currentDataSource
     }
 
-    override fun navigateToPlayer(path: String) {
-        mNavigationHelper.toPlayer(path)
+    override fun navigateToPlayer(track: Track) {
+        mNavigationHelper.toPlayer(track)
     }
 
     override fun displayFloatingCard() {

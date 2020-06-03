@@ -32,16 +32,16 @@ class NavigationHelper(private val mNavController: NavController) {
         }
     }
 
-    fun toPlayer(path: String) {
+    fun toPlayer(track: Track) {
         val action = when (mNavController.currentDestination?.id) {
             R.id.destination_search -> SongSearchFragmentDirections.actionDestinationSearchToDestinationPlayer(
-                path
+                track
             )
             R.id.destination_tracks_list -> TracksListFragmentDirections.actionDestinationTracksListToDestinationPlayer(
-                path
+                track
             )
             R.id.destination_track_details -> TrackDetailsFragmentDirections.actionDestinationTrackDetailsToDestinationPlayer(
-                path
+                track
             )
             else -> null
         }

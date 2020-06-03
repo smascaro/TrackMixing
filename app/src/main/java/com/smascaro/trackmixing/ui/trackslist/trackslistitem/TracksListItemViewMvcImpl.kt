@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.card.MaterialCardView
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.tracks.Track
@@ -32,7 +33,11 @@ class TracksListItemViewMvcImpl(inflater: LayoutInflater, parent: ViewGroup?) :
     override fun bindTrack(track: Track) {
         mTrack = track
         mTrackTitleTxt.text = track.title
-        Glide.with(getRootView().context).load(mTrack.thumbnailUrl).into(mTrackThumbnailImg)
+        Glide
+            .with(getRootView().context)
+            .load(mTrack.thumbnailUrl)
+            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+            .into(mTrackThumbnailImg)
         mCard.transitionName = track.videoKey
         mTrackTitleTxt.transitionName = track.title
     }

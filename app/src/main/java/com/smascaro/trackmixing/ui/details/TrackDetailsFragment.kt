@@ -86,7 +86,7 @@ class TrackDetailsFragment : BaseFragment() {
             drawingViewId = R.id.nav_host_fragment
             interpolator = FastOutSlowInInterpolator()
             fadeMode = MaterialContainerTransform.FADE_MODE_OUT
-            duration = 2000
+            duration = 300
         }
     }
 

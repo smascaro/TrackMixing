@@ -3,6 +3,7 @@ package com.smascaro.trackmixing.tracks
 import com.smascaro.trackmixing.common.FilesStorageHelper
 import com.smascaro.trackmixing.data.DownloadsDao
 import com.smascaro.trackmixing.data.entities.DownloadEntity
+import com.smascaro.trackmixing.data.toModel
 import com.smascaro.trackmixing.networking.NodeDownloadsApi
 import com.smascaro.trackmixing.ui.common.BaseObservable
 import kotlinx.coroutines.GlobalScope
@@ -93,7 +94,7 @@ class DownloadTrackUseCase(
                                             status = DownloadEntity.DownloadStatus.FINISHED
                                         }
                                         mDao.update(entity)
-                                        notifyDownloadFinished(track, downloadedBasePath)
+                                        notifyDownloadFinished(entity.toModel(), downloadedBasePath)
                                     } else {
                                         setErrorStatusAndUpdate(entity)
                                         notifyError("Error al descomprimir el contenido")

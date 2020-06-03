@@ -3,13 +3,11 @@ package com.smascaro.trackmixing.ui.details
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textview.MaterialTextView
 import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.common.FilesStorageHelper
-import com.smascaro.trackmixing.tracks.DownloadTrackUseCase
 import com.smascaro.trackmixing.tracks.Track
 import com.smascaro.trackmixing.ui.common.BaseObservableViewMvc
 
@@ -32,7 +30,11 @@ class TrackDetailsViewMvcImpl(
         mTrackTitleTxt = findViewById(R.id.track_title_detail)
         getRootView().transitionName = mTrack.videoKey
         mTrackTitleTxt.transitionName = mTrack.title
-        Glide.with(getRootView().context).load(mTrack.thumbnailUrl).into(mImageThumbnail)
+        Glide
+            .with(getRootView().context)
+            .load(mTrack.thumbnailUrl)
+            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+            .into(mImageThumbnail)
         mTrackTitleTxt.text = mTrack.title
     }
 

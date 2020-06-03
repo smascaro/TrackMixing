@@ -5,9 +5,9 @@ import com.smascaro.trackmixing.networking.availableTracks.AvailableTracksRespon
 import com.smascaro.trackmixing.tracks.Track
 
 fun AvailableTracksResponseSchema.Item.toModel(): Track {
-    return Track(title, videoId, thumbnailUrl ?: "", secondsLong, this.requestedTimestamp)
+    return Track(title, videoId, thumbnailUrl ?: "", secondsLong, this.requestedTimestamp, "")
 }
 
 fun DownloadEntity.toModel(): Track {
-    return Track(title, sourceVideoKey, thumbnailUrl, secondsLong, downloadTimestamp)
+    return Track(title, sourceVideoKey, thumbnailUrl, secondsLong, downloadTimestamp, downloadPath)
 }
