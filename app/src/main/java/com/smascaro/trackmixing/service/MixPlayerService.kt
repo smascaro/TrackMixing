@@ -2,9 +2,7 @@ package com.smascaro.trackmixing.service
 
 import android.content.Intent
 import android.os.IBinder
-import com.smascaro.trackmixing.common.NOTIFICATION_ACTION_PAUSE_MASTER
-import com.smascaro.trackmixing.common.NOTIFICATION_ACTION_PLAY_MASTER
-import com.smascaro.trackmixing.common.NOTIFICATION_ID
+import com.smascaro.trackmixing.common.*
 import com.smascaro.trackmixing.service.common.BaseService
 import com.smascaro.trackmixing.tracks.Track
 import com.smascaro.trackmixing.ui.notification.NotificationHelper
@@ -26,6 +24,7 @@ class MixPlayerService : BaseService(), PlayingHelper.Listener {
         fun pause() {
             this@MixPlayerService.mPlayingHelper.pauseMaster()
         }
+
     }
 
     private lateinit var mPlayingHelper: PlayingHelper
@@ -43,6 +42,12 @@ class MixPlayerService : BaseService(), PlayingHelper.Listener {
 
     }
 
+    fun stopService() {
+        mPlayingHelper.finalize()
+        stopForeground(true)
+        stopSelf()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         mPlayingHelper.unregisterListener(this)
@@ -52,10 +57,10 @@ class MixPlayerService : BaseService(), PlayingHelper.Listener {
         mNotificationHelper.createNotification(
             mPlayingHelper.getTrack(),
             mPlayingHelper.isPlaying(),
-            true,
-            true,
-            true,
-            true
+            mPlayingHelper.isInstrumentPlaying(TrackInstrument.VOCALS),
+            mPlayingHelper.isInstrumentPlaying(TrackInstrument.OTHER),
+            mPlayingHelper.isInstrumentPlaying(TrackInstrument.BASS),
+            mPlayingHelper.isInstrumentPlaying(TrackInstrument.DRUMS)
         )
     }
 
@@ -65,6 +70,14 @@ class MixPlayerService : BaseService(), PlayingHelper.Listener {
             when (action) {
                 NOTIFICATION_ACTION_PLAY_MASTER -> mPlayingHelper.playMaster()
                 NOTIFICATION_ACTION_PAUSE_MASTER -> mPlayingHelper.pauseMaster()
+                NOTIFICATION_ACTION_MUTE_VOCALS -> mPlayingHelper.muteTrack(TrackInstrument.VOCALS)
+                NOTIFICATION_ACTION_UNMUTE_VOCALS -> mPlayingHelper.unmuteTrack(TrackInstrument.VOCALS)
+                NOTIFICATION_ACTION_MUTE_OTHER -> mPlayingHelper.muteTrack(TrackInstrument.OTHER)
+                NOTIFICATION_ACTION_UNMUTE_OTHER -> mPlayingHelper.unmuteTrack(TrackInstrument.OTHER)
+                NOTIFICATION_ACTION_MUTE_BASS -> mPlayingHelper.muteTrack(TrackInstrument.BASS)
+                NOTIFICATION_ACTION_UNMUTE_BASS -> mPlayingHelper.unmuteTrack(TrackInstrument.BASS)
+                NOTIFICATION_ACTION_MUTE_DRUMS -> mPlayingHelper.muteTrack(TrackInstrument.DRUMS)
+                NOTIFICATION_ACTION_UNMUTE_DRUMS -> mPlayingHelper.unmuteTrack(TrackInstrument.DRUMS)
             }
         }
 
@@ -79,5 +92,9 @@ class MixPlayerService : BaseService(), PlayingHelper.Listener {
 
     override fun onMediaStateChange() {
         createOrUpdateNotification()
+    }
+
+    override fun onSongFinished() {
+        stopService()
     }
 }

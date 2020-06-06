@@ -12,6 +12,7 @@ class PlayingHelper : BaseObservable<PlayingHelper.Listener>(), PlayingTrackStat
     interface Listener {
         fun onInitializtionFinished()
         fun onMediaStateChange()
+        fun onSongFinished()
     }
 
     private lateinit var mVocalsState: PlayingTrackState
@@ -103,11 +104,44 @@ class PlayingHelper : BaseObservable<PlayingHelper.Listener>(), PlayingTrackStat
         }
     }
 
+    fun muteTrack(instrument: TrackInstrument) {
+        when (instrument) {
+            TrackInstrument.VOCALS -> mVocalsState.mute()
+            TrackInstrument.OTHER -> mOtherState.mute()
+            TrackInstrument.BASS -> mBassState.mute()
+            TrackInstrument.DRUMS -> mDrumsState.mute()
+        }
+        getListeners().forEach {
+            it.onMediaStateChange()
+        }
+    }
+
+    fun unmuteTrack(instrument: TrackInstrument) {
+        when (instrument) {
+            TrackInstrument.VOCALS -> mVocalsState.unmute()
+            TrackInstrument.OTHER -> mOtherState.unmute()
+            TrackInstrument.BASS -> mBassState.unmute()
+            TrackInstrument.DRUMS -> mDrumsState.unmute()
+        }
+        getListeners().forEach {
+            it.onMediaStateChange()
+        }
+    }
+
     fun pauseMaster() {
         if (mCurrentState == State.PLAYING) {
             pauseAll()
             mCurrentState = State.PAUSED
             getListeners().forEach { it.onMediaStateChange() }
+        }
+    }
+
+    fun isInstrumentPlaying(instrument: TrackInstrument): Boolean {
+        return when (instrument) {
+            TrackInstrument.VOCALS -> mVocalsState.isPlaying()
+            TrackInstrument.OTHER -> mOtherState.isPlaying()
+            TrackInstrument.BASS -> mBassState.isPlaying()
+            TrackInstrument.DRUMS -> mDrumsState.isPlaying()
         }
     }
 
@@ -137,6 +171,9 @@ class PlayingHelper : BaseObservable<PlayingHelper.Listener>(), PlayingTrackStat
 
     override fun onPlayerCompletion(instrument: TrackInstrument) {
         Timber.i("Track $instrument has completed")
+        getListeners().forEach {
+            it.onSongFinished()
+        }
     }
 
     override fun onPlayerError(instrument: TrackInstrument, errorMessage: String) {

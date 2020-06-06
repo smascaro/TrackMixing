@@ -15,9 +15,18 @@ class PlayingTrackState(
         fun onPlayerError(instrument: TrackInstrument, errorMessage: String)
     }
 
+    enum class LogicMediaState {
+        MUTED, PLAYING
+    }
+
+    private var mCurrentMediaState: LogicMediaState = LogicMediaState.PLAYING
     private var mIsPrepared: Boolean = false
     private lateinit var mPlayer: MediaPlayer
     private var mVolume = 1.0f
+    fun isPlaying(): Boolean {
+        return mCurrentMediaState == LogicMediaState.PLAYING
+    }
+
     var readyToPlay: Boolean = mIsPrepared
         get() = mIsPrepared
         private set
@@ -47,11 +56,13 @@ class PlayingTrackState(
     fun mute() {
         mVolume = 0.0f
         updateVolume()
+        mCurrentMediaState = LogicMediaState.MUTED
     }
 
     fun unmute() {
         mVolume = 1.0f
         updateVolume()
+        mCurrentMediaState = LogicMediaState.PLAYING
     }
 
     /**
@@ -60,12 +71,14 @@ class PlayingTrackState(
     fun play() {
         if (mIsPrepared && !mPlayer.isPlaying) {
             mPlayer.start()
+//            mCurrentMediaState = LogicMediaState.PLAYING
         }
     }
 
     fun pause() {
         if (mPlayer.isPlaying) {
             mPlayer.pause()
+//            mCurrentMediaState = LogicMediaState.PAUSED
         }
     }
 
@@ -76,6 +89,11 @@ class PlayingTrackState(
 
     private fun updateVolume() {
         mPlayer.setVolume(mVolume, mVolume)
+        if (mVolume == 0.0f) {
+            mCurrentMediaState = LogicMediaState.MUTED
+        } else if (mVolume > 0.0f && mCurrentMediaState == LogicMediaState.MUTED) {
+            mCurrentMediaState = LogicMediaState.PLAYING
+        }
     }
 
     override fun onPrepared(mp: MediaPlayer?) {

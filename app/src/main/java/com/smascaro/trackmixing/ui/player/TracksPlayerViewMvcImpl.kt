@@ -32,6 +32,7 @@ class TracksPlayerViewMvcImpl(
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as MixPlayerService.Binder
+            Timber.d("Service bound successfully")
             mMixPlayerServiceBinder = binder
             mIsServiceConnected = true
             getListeners().forEach {
@@ -52,6 +53,7 @@ class TracksPlayerViewMvcImpl(
     override fun startService() {
         if (mServiceIntent == null) {
             mServiceIntent = Intent(getContext(), MixPlayerService::class.java)
+            Timber.d("Binding to service")
             getContext()?.bindService(
                 mServiceIntent,
                 mPlayerServiceConnection,
