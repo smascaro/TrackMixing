@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import com.smascaro.trackmixing.R
+import com.smascaro.trackmixing.common.TrackMixingApplication
 import com.smascaro.trackmixing.ui.common.BaseActivity
 import timber.log.Timber
 

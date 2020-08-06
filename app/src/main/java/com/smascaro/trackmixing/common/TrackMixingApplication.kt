@@ -4,7 +4,7 @@ import android.app.Application
 import com.smascaro.trackmixing.common.di.CompositionRoot
 import timber.log.Timber
 
-class CustomApplication : Application() {
+class TrackMixingApplication : Application() {
     private var mCompositionRoot = CompositionRoot()
 
     override fun onCreate() {
