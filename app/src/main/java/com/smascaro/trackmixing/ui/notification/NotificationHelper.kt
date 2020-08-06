@@ -19,9 +19,10 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.*
+import com.smascaro.trackmixing.errorhandling.NonExistentInstrumentException
+import com.smascaro.trackmixing.service.MixPlaybackState
 import com.smascaro.trackmixing.service.MixPlayerService
 import com.smascaro.trackmixing.service.TrackInstrument
-import com.smascaro.trackmixing.tracks.Track
 
 class NotificationHelper(private val mContext: Context) {
     private var mNotificationManager: NotificationManagerCompat
@@ -48,20 +49,13 @@ class NotificationHelper(private val mContext: Context) {
         }
     }
 
-    fun createNotification(
-        track: Track,
-        masterPlaying: Boolean,
-        vocalsPlaying: Boolean,
-        otherPlaying: Boolean,
-        bassPlaying: Boolean,
-        drumsPlaying: Boolean
-    ) {
+    fun updateForegroundNotification(playbackState: MixPlaybackState) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
             Glide
                 .with(mContext)
                 .asBitmap()
-                .load(track.thumbnailUrl)
+                .load(playbackState.trackThumbnailUrl)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .into(object : CustomTarget<Bitmap>() {
                     override fun onLoadCleared(placeholder: Drawable?) {
@@ -85,36 +79,30 @@ class NotificationHelper(private val mContext: Context) {
                 })
 
 
-            val actionPlayPause = createIntentMaster(masterPlaying)
-            val drawablePlayPause = if (masterPlaying) {
+            val actionPlayPause = createIntentMaster(playbackState.isMasterPlaying)
+            val drawablePlayPause = if (playbackState.isMasterPlaying) {
                 R.drawable.ic_pause
             } else {
                 R.drawable.ic_play
             }
-            val actionOther = createIntentTrack(TrackInstrument.OTHER, otherPlaying)
-            val drawableMuteUnmuteOther = if (otherPlaying) {
-                R.drawable.ic_guitar_unmute
-            } else {
-                R.drawable.ic_guitar_mute
-            }
-            val actionVocals = createIntentTrack(TrackInstrument.VOCALS, vocalsPlaying)
-            val drawableMuteUnmuteVocals = if (vocalsPlaying) {
-                R.drawable.ic_vocals_unmute
-            } else {
-                R.drawable.ic_vocals_mute
-            }
-            val actionBass = createIntentTrack(TrackInstrument.BASS, bassPlaying)
-            val drawableMuteUnmuteBass = if (bassPlaying) {
-                R.drawable.ic_bass_unmute
-            } else {
-                R.drawable.ic_bass_mute
-            }
-            val actionDrums = createIntentTrack(TrackInstrument.DRUMS, drumsPlaying)
-            val drawableMuteUnmuteDrums = if (drumsPlaying) {
-                R.drawable.ic_drums_unmute
-            } else {
-                R.drawable.ic_drums_mute
-            }
+
+            val actionVocals =
+                createIntentTrack(TrackInstrument.VOCALS, playbackState.isVocalsPlaying)
+            val drawableMuteUnmuteVocals =
+                getTrackDrawableId(TrackInstrument.VOCALS, playbackState.isVocalsPlaying)
+
+            val actionOther = createIntentTrack(TrackInstrument.OTHER, playbackState.isOtherPlaying)
+            val drawableMuteUnmuteOther =
+                getTrackDrawableId(TrackInstrument.OTHER, playbackState.isOtherPlaying)
+
+            val actionBass = createIntentTrack(TrackInstrument.BASS, playbackState.isBassPlaying)
+            val drawableMuteUnmuteBass =
+                getTrackDrawableId(TrackInstrument.BASS, playbackState.isBassPlaying)
+
+            val actionDrums = createIntentTrack(TrackInstrument.DRUMS, playbackState.isDrumsPlaying)
+            val drawableMuteUnmuteDrums =
+                getTrackDrawableId(TrackInstrument.DRUMS, playbackState.isDrumsPlaying)
+
             if (mMediaSession == null) {
                 mMediaSession =
                     MediaSessionCompat(mContext, NOTIFICATION_MEDIA_SESSION_TAG)
@@ -122,7 +110,7 @@ class NotificationHelper(private val mContext: Context) {
             mNotificationBuilder =
                 NotificationCompat.Builder(mContext, NOTIFICATION_CHANNEL_ID).apply {
                     setSmallIcon(R.drawable.ic_note)
-                    setContentTitle(track.title)
+                    setContentTitle(playbackState.trackTitle)
                     setOnlyAlertOnce(true)
                     setShowWhen(false)
                     addAction(drawablePlayPause, "Play/Pause", actionPlayPause)
@@ -144,6 +132,31 @@ class NotificationHelper(private val mContext: Context) {
             mNotificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.build())
         } else {
             //Do nothing
+        }
+    }
+
+    private fun getTrackDrawableId(
+        trackInstrument: TrackInstrument,
+        isPlaying: Boolean
+    ): Int {
+        return if (trackInstrument == TrackInstrument.VOCALS && isPlaying) {
+            R.drawable.ic_vocals_mute
+        } else if (trackInstrument == TrackInstrument.VOCALS && !isPlaying) {
+            R.drawable.ic_vocals_unmute
+        } else if (trackInstrument == TrackInstrument.OTHER && isPlaying) {
+            R.drawable.ic_guitar_mute
+        } else if (trackInstrument == TrackInstrument.OTHER && !isPlaying) {
+            R.drawable.ic_guitar_unmute
+        } else if (trackInstrument == TrackInstrument.BASS && isPlaying) {
+            R.drawable.ic_bass_mute
+        } else if (trackInstrument == TrackInstrument.BASS && !isPlaying) {
+            R.drawable.ic_bass_unmute
+        } else if (trackInstrument == TrackInstrument.DRUMS && isPlaying) {
+            R.drawable.ic_drums_mute
+        } else if (trackInstrument == TrackInstrument.DRUMS && !isPlaying) {
+            R.drawable.ic_drums_unmute
+        } else {
+            throw NonExistentInstrumentException("Instrument $trackInstrument does not exist or is not supported")
         }
     }
 

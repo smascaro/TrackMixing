@@ -1,5 +1,6 @@
 package com.smascaro.trackmixing.service
 
+import com.smascaro.trackmixing.errorhandling.NoLoadedTrackException
 import com.smascaro.trackmixing.tracks.Track
 import com.smascaro.trackmixing.ui.common.BaseObservable
 import timber.log.Timber
@@ -29,12 +30,23 @@ class PlaybackHelper : BaseObservable<PlaybackHelper.Listener>(), PlayingTrackSt
     private var mCurrentState: State = State.PAUSED
     fun isPlaying(): Boolean = mCurrentState == State.PLAYING
 
-    fun getTrack(): Track? {
-        return if (this::mCurrentPlayingTrack.isInitialized) {
-            mCurrentPlayingTrack
-        } else {
-            null
+    fun getPlaybackState(): MixPlaybackState {
+        return MixPlaybackState().apply {
+            trackTitle = getTrack().title
+            trackThumbnailUrl = getTrack().thumbnailUrl
+            isMasterPlaying = isPlaying()
+            isVocalsPlaying = isInstrumentPlaying(TrackInstrument.VOCALS)
+            isOtherPlaying = isInstrumentPlaying(TrackInstrument.OTHER)
+            isBassPlaying = isInstrumentPlaying(TrackInstrument.BASS)
+            isDrumsPlaying = isInstrumentPlaying(TrackInstrument.DRUMS)
         }
+    }
+
+    fun getTrack(): Track {
+        if (!this::mCurrentPlayingTrack.isInitialized) {
+            throw NoLoadedTrackException()
+        }
+        return mCurrentPlayingTrack
     }
 
     fun initialize(track: Track) {

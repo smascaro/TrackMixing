@@ -37,14 +37,7 @@ class MixPlayerService : BaseService(), PlaybackHelper.Listener {
     }
 
     fun createOrUpdateNotification() {
-        mNotificationHelper.createNotification(
-            mPlaybackHelper.getTrack()!!,
-            mPlaybackHelper.isPlaying(),
-            mPlaybackHelper.isInstrumentPlaying(TrackInstrument.VOCALS),
-            mPlaybackHelper.isInstrumentPlaying(TrackInstrument.OTHER),
-            mPlaybackHelper.isInstrumentPlaying(TrackInstrument.BASS),
-            mPlaybackHelper.isInstrumentPlaying(TrackInstrument.DRUMS)
-        )
+        mNotificationHelper.updateForegroundNotification(mPlaybackHelper.getPlaybackState())
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
