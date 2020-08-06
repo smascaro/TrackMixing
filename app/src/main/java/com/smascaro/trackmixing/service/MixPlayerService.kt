@@ -7,27 +7,30 @@ import com.smascaro.trackmixing.service.common.BaseService
 import com.smascaro.trackmixing.tracks.Track
 import com.smascaro.trackmixing.ui.notification.NotificationHelper
 
-class MixPlayerService : BaseService(), PlayingHelper.Listener {
+class MixPlayerService : BaseService(), PlaybackHelper.Listener {
     inner class Binder : android.os.Binder() {
         fun getService(): MixPlayerService {
             return this@MixPlayerService
         }
 
         fun loadTrack(track: Track) {
-            this@MixPlayerService.mPlayingHelper.initialize(track)
+            if (track != mPlaybackHelper.getTrack()) {
+                mPlaybackHelper.initialize(track)
+            }
         }
 
         fun play() {
-            this@MixPlayerService.mPlayingHelper.playMaster()
+            this@MixPlayerService.mPlaybackHelper.playMaster()
         }
 
         fun pause() {
-            this@MixPlayerService.mPlayingHelper.pauseMaster()
+            this@MixPlayerService.mPlaybackHelper.pauseMaster()
         }
 
     }
 
-    private lateinit var mPlayingHelper: PlayingHelper
+
+    private lateinit var mPlaybackHelper: PlaybackHelper
     private lateinit var mNotificationHelper: NotificationHelper
     private val mBinder = Binder()
     override fun onBind(intent: Intent?): IBinder? {
@@ -36,31 +39,31 @@ class MixPlayerService : BaseService(), PlayingHelper.Listener {
 
     override fun onCreate() {
         super.onCreate()
-        mPlayingHelper = getCompositionRoot().getPlayingHelper()
-        mPlayingHelper.registerListener(this)
+        mPlaybackHelper = getCompositionRoot().getPlayingHelper()
+        mPlaybackHelper.registerListener(this)
         mNotificationHelper = getCompositionRoot().getNotificationHelper()
 
     }
 
     fun stopService() {
-        mPlayingHelper.finalize()
+        mPlaybackHelper.finalize()
         stopForeground(true)
         stopSelf()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mPlayingHelper.unregisterListener(this)
+        mPlaybackHelper.unregisterListener(this)
     }
 
     fun createOrUpdateNotification() {
         mNotificationHelper.createNotification(
-            mPlayingHelper.getTrack(),
-            mPlayingHelper.isPlaying(),
-            mPlayingHelper.isInstrumentPlaying(TrackInstrument.VOCALS),
-            mPlayingHelper.isInstrumentPlaying(TrackInstrument.OTHER),
-            mPlayingHelper.isInstrumentPlaying(TrackInstrument.BASS),
-            mPlayingHelper.isInstrumentPlaying(TrackInstrument.DRUMS)
+            mPlaybackHelper.getTrack()!!,
+            mPlaybackHelper.isPlaying(),
+            mPlaybackHelper.isInstrumentPlaying(TrackInstrument.VOCALS),
+            mPlaybackHelper.isInstrumentPlaying(TrackInstrument.OTHER),
+            mPlaybackHelper.isInstrumentPlaying(TrackInstrument.BASS),
+            mPlaybackHelper.isInstrumentPlaying(TrackInstrument.DRUMS)
         )
     }
 
@@ -68,23 +71,40 @@ class MixPlayerService : BaseService(), PlayingHelper.Listener {
         if (intent != null) {
             val action = intent.action
             when (action) {
-                NOTIFICATION_ACTION_PLAY_MASTER -> mPlayingHelper.playMaster()
-                NOTIFICATION_ACTION_PAUSE_MASTER -> mPlayingHelper.pauseMaster()
-                NOTIFICATION_ACTION_MUTE_VOCALS -> mPlayingHelper.muteTrack(TrackInstrument.VOCALS)
-                NOTIFICATION_ACTION_UNMUTE_VOCALS -> mPlayingHelper.unmuteTrack(TrackInstrument.VOCALS)
-                NOTIFICATION_ACTION_MUTE_OTHER -> mPlayingHelper.muteTrack(TrackInstrument.OTHER)
-                NOTIFICATION_ACTION_UNMUTE_OTHER -> mPlayingHelper.unmuteTrack(TrackInstrument.OTHER)
-                NOTIFICATION_ACTION_MUTE_BASS -> mPlayingHelper.muteTrack(TrackInstrument.BASS)
-                NOTIFICATION_ACTION_UNMUTE_BASS -> mPlayingHelper.unmuteTrack(TrackInstrument.BASS)
-                NOTIFICATION_ACTION_MUTE_DRUMS -> mPlayingHelper.muteTrack(TrackInstrument.DRUMS)
-                NOTIFICATION_ACTION_UNMUTE_DRUMS -> mPlayingHelper.unmuteTrack(TrackInstrument.DRUMS)
+                NOTIFICATION_ACTION_PLAY_MASTER -> playMaster()
+                NOTIFICATION_ACTION_PAUSE_MASTER -> pauseMaster()
+                NOTIFICATION_ACTION_MUTE_VOCALS -> mPlaybackHelper.muteTrack(TrackInstrument.VOCALS)
+                NOTIFICATION_ACTION_UNMUTE_VOCALS -> mPlaybackHelper.unmuteTrack(TrackInstrument.VOCALS)
+                NOTIFICATION_ACTION_MUTE_OTHER -> mPlaybackHelper.muteTrack(TrackInstrument.OTHER)
+                NOTIFICATION_ACTION_UNMUTE_OTHER -> mPlaybackHelper.unmuteTrack(TrackInstrument.OTHER)
+                NOTIFICATION_ACTION_MUTE_BASS -> mPlaybackHelper.muteTrack(TrackInstrument.BASS)
+                NOTIFICATION_ACTION_UNMUTE_BASS -> mPlaybackHelper.unmuteTrack(TrackInstrument.BASS)
+                NOTIFICATION_ACTION_MUTE_DRUMS -> mPlaybackHelper.muteTrack(TrackInstrument.DRUMS)
+                NOTIFICATION_ACTION_UNMUTE_DRUMS -> mPlaybackHelper.unmuteTrack(TrackInstrument.DRUMS)
+                NOTIFICATION_ACTION_STOP_SERVICE -> {
+                    stopService()
+                }
             }
         }
 
         return START_NOT_STICKY
     }
 
-    override fun onInitializtionFinished() {
+    private fun playMaster() {
+        createOrUpdateNotification()
+        startForeground(NOTIFICATION_ID, mNotificationHelper.getNotification())
+        mPlaybackHelper.playMaster()
+        createOrUpdateNotification()
+        startForeground(NOTIFICATION_ID, mNotificationHelper.getNotification())
+    }
+
+    private fun pauseMaster() {
+        mPlaybackHelper.pauseMaster()
+        stopForeground(false)
+        stopSelf()
+    }
+
+    override fun onInitializationFinished() {
         mNotificationHelper.createNotificationChannel()
         createOrUpdateNotification()
         startForeground(NOTIFICATION_ID, mNotificationHelper.getNotification())

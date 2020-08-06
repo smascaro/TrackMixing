@@ -1,6 +1,7 @@
 package com.smascaro.trackmixing.service
 
 import android.media.MediaPlayer
+import com.smascaro.trackmixing.tracks.Track
 import com.smascaro.trackmixing.ui.common.BaseObservable
 import java.io.File
 import java.io.FileInputStream
@@ -13,6 +14,25 @@ class PlayingTrackState(
         fun onPlayerPrepared(instrument: TrackInstrument)
         fun onPlayerCompletion(instrument: TrackInstrument)
         fun onPlayerError(instrument: TrackInstrument, errorMessage: String)
+    }
+
+    companion object {
+        private val VOCALS_FILENAME = "vocals.mp3"
+        private val OTHER_FILENAME = "other.mp3"
+        private val BASS_FILENAME = "bass.mp3"
+        private val DRUMS_FILENAME = "drums.mp3"
+        fun create(track: Track, instrument: TrackInstrument): PlayingTrackState {
+            val filename = when (instrument) {
+                TrackInstrument.VOCALS -> VOCALS_FILENAME
+                TrackInstrument.OTHER -> OTHER_FILENAME
+                TrackInstrument.BASS -> BASS_FILENAME
+                TrackInstrument.DRUMS -> DRUMS_FILENAME
+            }
+            val playingTrackState = PlayingTrackState(instrument).apply {
+                initialize("${track.downloadPath}/$filename")
+            }
+            return playingTrackState
+        }
     }
 
     enum class LogicMediaState {

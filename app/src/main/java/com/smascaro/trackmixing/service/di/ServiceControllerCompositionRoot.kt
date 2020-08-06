@@ -2,7 +2,7 @@ package com.smascaro.trackmixing.service.di
 
 import android.content.Context
 import com.smascaro.trackmixing.common.di.CompositionRoot
-import com.smascaro.trackmixing.service.PlayingHelper
+import com.smascaro.trackmixing.service.PlaybackHelper
 import com.smascaro.trackmixing.ui.notification.NotificationHelper
 
 class ServiceControllerCompositionRoot(
@@ -13,8 +13,8 @@ class ServiceControllerCompositionRoot(
         return mContext
     }
 
-    fun getPlayingHelper(): PlayingHelper {
-        return PlayingHelper()
+    fun getPlayingHelper(): PlaybackHelper {
+        return PlaybackHelper()
     }
 
     fun getNotificationHelper(): NotificationHelper {

@@ -9,7 +9,6 @@ import android.os.IBinder
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.common.NOTIFICATION_ACTION_START_SERVICE
 import com.smascaro.trackmixing.service.MixPlayerService
 import com.smascaro.trackmixing.tracks.Track
 import com.smascaro.trackmixing.ui.common.BaseObservableViewMvc
@@ -59,11 +58,11 @@ class TracksPlayerViewMvcImpl(
                 mPlayerServiceConnection,
                 Context.BIND_AUTO_CREATE
             )
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                getContext()?.startForegroundService(mServiceIntent)
-            } else {
-                getContext()?.startService(mServiceIntent)
-            }
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                getContext()?.startForegroundService(mServiceIntent)
+//            } else {
+//                getContext()?.startService(mServiceIntent)
+//            }
         }
     }
 

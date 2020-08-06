@@ -3,13 +3,15 @@ package com.smascaro.trackmixing.ui.common
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.Nullable
-import com.smascaro.trackmixing.ui.player.TracksPlayerViewMvc
-import com.smascaro.trackmixing.ui.player.TracksPlayerViewMvcImpl
 import com.smascaro.trackmixing.tracks.Track
 import com.smascaro.trackmixing.ui.common.navigationhelper.BottomNavigationViewMvc
 import com.smascaro.trackmixing.ui.common.navigationhelper.BottomNavigationViewMvcImpl
 import com.smascaro.trackmixing.ui.details.TrackDetailsViewMvc
 import com.smascaro.trackmixing.ui.details.TrackDetailsViewMvcImpl
+import com.smascaro.trackmixing.ui.main.MainActivityViewMvc
+import com.smascaro.trackmixing.ui.main.MainActivityViewMvcImpl
+import com.smascaro.trackmixing.ui.player.TracksPlayerViewMvc
+import com.smascaro.trackmixing.ui.player.TracksPlayerViewMvcImpl
 import com.smascaro.trackmixing.ui.trackslist.TracksListViewMvc
 import com.smascaro.trackmixing.ui.trackslist.TracksListViewMvcImpl
 import com.smascaro.trackmixing.ui.trackslist.trackslistitem.TracksListItemViewMvc
@@ -47,5 +49,9 @@ class ViewMvcFactory(private val mLayoutInflater: LayoutInflater) {
             getLayoutInflater(),
             parent
         )
+    }
+
+    fun getMainActivityViewMvc(parent: ViewGroup?): MainActivityViewMvc {
+        return MainActivityViewMvcImpl(getLayoutInflater(), parent)
     }
 }

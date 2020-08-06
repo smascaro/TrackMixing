@@ -1,9 +1,9 @@
 package com.smascaro.trackmixing.networking
 
 import com.smascaro.trackmixing.networking.availableTracks.AvailableTracksResponseSchema
-import retrofit2.http.GET
+import com.smascaro.trackmixing.networking.requestTrack.RequestTrackResponseSchema
 import retrofit2.Call
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface NodeApi {
     @GET("/availableTracks")
@@ -12,4 +12,9 @@ interface NodeApi {
         @Query("limit") limit: Int?,
         @Query("offset") offset: Int?
     ): Call<AvailableTracksResponseSchema>
+
+    @POST("/demucs/{videoUrl}")
+    fun requestTrack(
+        @Path("videoUrl") videoUrl: String
+    ): Call<RequestTrackResponseSchema>
 }

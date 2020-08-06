@@ -1,7 +1,6 @@
 package com.smascaro.trackmixing.common
 
 import android.app.Application
-import android.os.Build
 import com.smascaro.trackmixing.common.di.CompositionRoot
 import timber.log.Timber
 

@@ -135,6 +135,7 @@ class NotificationHelper(private val mContext: Context) {
                             .setShowActionsInCompactView(0)
                             .setMediaSession(mMediaSession?.sessionToken)
                     )
+                    setDeleteIntent(createDeleteIntent())
                     priority = NotificationCompat.PRIORITY_HIGH
                 }
             if (mThumbnailBitmap != null) {
@@ -144,6 +145,19 @@ class NotificationHelper(private val mContext: Context) {
         } else {
             //Do nothing
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun createDeleteIntent(): PendingIntent? {
+        val intent = Intent(mContext, MixPlayerService::class.java)
+        intent.action = NOTIFICATION_ACTION_STOP_SERVICE
+        val pendingIntent = PendingIntent.getForegroundService(
+            mContext,
+            2,
+            intent,
+            PendingIntent.FLAG_CANCEL_CURRENT
+        )
+        return pendingIntent
     }
 
 

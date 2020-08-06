@@ -1,50 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/cardViewContainer"
+    android:id="@+id/parentItemLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayoutContainer"
+    <com.google.android.material.card.MaterialCardView
+
+        android:id="@+id/cardViewContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/thumbnailImg"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayoutContainer"
             android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/test_thumbnail_1280x720"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="wrap_content">
 
-        <View
-            android:id="@+id/gradientView"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="@drawable/bg_gradient_black"
-            app:layout_constraintBottom_toBottomOf="@+id/thumbnailImg" />
+            <ImageView
+                android:id="@+id/thumbnailImg"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/test_thumbnail_1280x720"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/gradientView"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/bg_gradient_black"
+                app:layout_constraintBottom_toBottomOf="@+id/thumbnailImg" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/trackTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginBottom="8dp"
+                android:ellipsize="end"
+                android:paddingRight="8dp"
+                android:singleLine="true"
+                android:text="Desakato - Nueva Religión (Bonus Track 100% Real) - 2019 Remastered edition"
+                android:textColor="#fff"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="@id/gradientView"
+                app:layout_constraintStart_toStartOf="@id/gradientView" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <LinearLayout
+        android:id="@+id/expandedView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible">
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/trackTitle"
+            android:id="@+id/expandedTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginBottom="8dp"
             android:ellipsize="end"
-            android:paddingRight="8dp"
+            android:paddingVertical="64dp"
             android:singleLine="true"
-            android:text="Desakato - Nueva Religión (Bonus Track 100% Real) - 2019 Remastered edition"
+            android:text="This is just a test"
+            android:textAlignment="center"
             android:textColor="#fff"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="@id/gradientView"
-            app:layout_constraintStart_toStartOf="@id/gradientView" />
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</com.google.android.material.card.MaterialCardView>
+            android:textSize="20sp" />
+    </LinearLayout>
+</LinearLayout>

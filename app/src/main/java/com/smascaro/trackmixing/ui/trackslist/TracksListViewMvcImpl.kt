@@ -7,6 +7,7 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textview.MaterialTextView
@@ -35,6 +36,8 @@ class TracksListViewMvcImpl(
         setRootView(inflater.inflate(R.layout.fragment_tracks_list, parent, false))
         mRecyclerViewTracks = findViewById(R.id.rvTracks)
         mRecyclerViewTracks.layoutManager = LinearLayoutManager(getContext())
+        (mRecyclerViewTracks.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+        mRecyclerViewTracks.setHasFixedSize(true)
         mRecyclerViewTracksAdapter = TracksListAdapter(this, viewMvcFactory)
         mRecyclerViewTracks.adapter = mRecyclerViewTracksAdapter
         mMotionLayout = findViewById(R.id.motionLayoutFloatingCard)
@@ -93,5 +96,6 @@ class TracksListViewMvcImpl(
         )
         mNavigationHelper.toDetails(track, extras)
     }
+
 
 }

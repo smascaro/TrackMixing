@@ -1,9 +1,11 @@
 package com.smascaro.trackmixing.ui.trackslist
 
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import com.smascaro.trackmixing.tracks.Track
+import com.smascaro.trackmixing.ui.animation.Animations
 import com.smascaro.trackmixing.ui.common.ViewMvcFactory
 import com.smascaro.trackmixing.ui.trackslist.trackslistitem.TracksListItemViewMvc
 import kotlinx.coroutines.CoroutineScope
@@ -42,10 +44,22 @@ class TracksListAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.mViewMvc.bindTrack(mTracks[position])
+        holder.mViewMvc.bindPosition(holder.adapterPosition)
     }
 
     override fun onTrackClicked(track: Track, card: MaterialCardView) {
         mListener.onTrackClicked(track, card)
+    }
+
+    override fun onExpandOrCollapseDetailsRequest(
+        itemPosition: Int
+    ) {
+//        if(expandRequest) {
+//            Animations.expandDetails(layoutToExpand)
+//        } else {
+//            Animations.collapseDetails(layoutToExpand)
+//        }
+        notifyItemChanged(itemPosition)
     }
 
     override fun getItemCount(): Int {

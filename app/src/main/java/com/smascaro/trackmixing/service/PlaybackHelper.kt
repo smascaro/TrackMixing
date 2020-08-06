@@ -4,13 +4,13 @@ import com.smascaro.trackmixing.tracks.Track
 import com.smascaro.trackmixing.ui.common.BaseObservable
 import timber.log.Timber
 
-class PlayingHelper : BaseObservable<PlayingHelper.Listener>(), PlayingTrackState.Listener {
+class PlaybackHelper : BaseObservable<PlaybackHelper.Listener>(), PlayingTrackState.Listener {
     enum class State {
         PLAYING, PAUSED
     }
 
     interface Listener {
-        fun onInitializtionFinished()
+        fun onInitializationFinished()
         fun onMediaStateChange()
         fun onSongFinished()
     }
@@ -28,35 +28,41 @@ class PlayingHelper : BaseObservable<PlayingHelper.Listener>(), PlayingTrackStat
 
     private var mCurrentState: State = State.PAUSED
     fun isPlaying(): Boolean = mCurrentState == State.PLAYING
-    fun getTrack(): Track {
-        return mCurrentPlayingTrack
+    fun getTrack(): Track? {
+        return if (this::mCurrentPlayingTrack.isInitialized) {
+            mCurrentPlayingTrack
+        } else {
+            null
+        }
     }
+
 
     fun initialize(track: Track) {
         resetPlayersIfInitialized()
+        mIsInitialized = false
         mCurrentPlayingTrack = track
-        mVocalsState = PlayingTrackState(TrackInstrument.VOCALS).apply {
-            registerListener(this@PlayingHelper)
-            initialize("$mBasePath/vocals.mp3")
+        mVocalsState = PlayingTrackState.create(track, TrackInstrument.VOCALS).apply {
+            registerListener(this@PlaybackHelper)
+        }
+        mVocalsState = PlayingTrackState.create(track, TrackInstrument.VOCALS).apply {
+            registerListener(this@PlaybackHelper)
         }
 
-        mOtherState = PlayingTrackState(TrackInstrument.OTHER).apply {
-            registerListener(this@PlayingHelper)
-            initialize("$mBasePath/other.mp3")
+        mOtherState = PlayingTrackState.create(track, TrackInstrument.OTHER).apply {
+            registerListener(this@PlaybackHelper)
         }
 
-        mBassState = PlayingTrackState(TrackInstrument.BASS).apply {
-            registerListener(this@PlayingHelper)
-            initialize("$mBasePath/bass.mp3")
+        mBassState = PlayingTrackState.create(track, TrackInstrument.BASS).apply {
+            registerListener(this@PlaybackHelper)
         }
 
         mDrumsState = PlayingTrackState(TrackInstrument.DRUMS).apply {
-            registerListener(this@PlayingHelper)
+            registerListener(this@PlaybackHelper)
             initialize("$mBasePath/drums.mp3")
         }
         mIsInitialized = true
         getListeners().forEach {
-            it.onInitializtionFinished()
+            it.onInitializationFinished()
         }
     }
 
@@ -68,19 +74,19 @@ class PlayingHelper : BaseObservable<PlayingHelper.Listener>(), PlayingTrackStat
 
     fun finalize() {
         mVocalsState.apply {
-            unregisterListener(this@PlayingHelper)
+            unregisterListener(this@PlaybackHelper)
             finalize()
         }
         mOtherState.apply {
-            unregisterListener(this@PlayingHelper)
+            unregisterListener(this@PlaybackHelper)
             finalize()
         }
         mBassState.apply {
-            unregisterListener(this@PlayingHelper)
+            unregisterListener(this@PlaybackHelper)
             finalize()
         }
         mDrumsState.apply {
-            unregisterListener(this@PlayingHelper)
+            unregisterListener(this@PlaybackHelper)
             finalize()
         }
     }
@@ -99,7 +105,7 @@ class PlayingHelper : BaseObservable<PlayingHelper.Listener>(), PlayingTrackStat
             } else {
                 playAll()
                 mCurrentState = State.PLAYING
-                getListeners().forEach { it.onMediaStateChange() }
+                notifyMediaStateChange()
             }
         }
     }
@@ -111,9 +117,7 @@ class PlayingHelper : BaseObservable<PlayingHelper.Listener>(), PlayingTrackStat
             TrackInstrument.BASS -> mBassState.mute()
             TrackInstrument.DRUMS -> mDrumsState.mute()
         }
-        getListeners().forEach {
-            it.onMediaStateChange()
-        }
+        notifyMediaStateChange()
     }
 
     fun unmuteTrack(instrument: TrackInstrument) {
@@ -123,16 +127,20 @@ class PlayingHelper : BaseObservable<PlayingHelper.Listener>(), PlayingTrackStat
             TrackInstrument.BASS -> mBassState.unmute()
             TrackInstrument.DRUMS -> mDrumsState.unmute()
         }
-        getListeners().forEach {
-            it.onMediaStateChange()
-        }
+        notifyMediaStateChange()
     }
 
     fun pauseMaster() {
         if (mCurrentState == State.PLAYING) {
             pauseAll()
             mCurrentState = State.PAUSED
-            getListeners().forEach { it.onMediaStateChange() }
+            notifyMediaStateChange()
+        }
+    }
+
+    private fun notifyMediaStateChange() {
+        getListeners().forEach {
+            it.onMediaStateChange()
         }
     }
 

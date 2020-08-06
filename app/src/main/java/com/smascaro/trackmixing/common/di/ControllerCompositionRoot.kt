@@ -16,6 +16,7 @@ import com.smascaro.trackmixing.tracks.Track
 import com.smascaro.trackmixing.ui.common.ViewMvcFactory
 import com.smascaro.trackmixing.ui.common.navigationhelper.NavigationHelper
 import com.smascaro.trackmixing.ui.details.TrackDetailsController
+import com.smascaro.trackmixing.ui.main.MainActivityController
 import com.smascaro.trackmixing.ui.trackslist.TracksListController
 
 class ControllerCompositionRoot(
@@ -91,6 +92,10 @@ class ControllerCompositionRoot(
 
     fun getTracksPlayerController(track: Track): TracksPlayerController {
         return TracksPlayerController(track)
+    }
+
+    fun getMainActivityController(): MainActivityController {
+        return MainActivityController(getNodeApi())
     }
 
 
