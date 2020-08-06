@@ -6,35 +6,15 @@ import com.smascaro.trackmixing.common.*
 import com.smascaro.trackmixing.service.common.BaseService
 import com.smascaro.trackmixing.tracks.Track
 import com.smascaro.trackmixing.ui.notification.NotificationHelper
+import timber.log.Timber
 
 class MixPlayerService : BaseService(), PlaybackHelper.Listener {
-    inner class Binder : android.os.Binder() {
-        fun getService(): MixPlayerService {
-            return this@MixPlayerService
-        }
-
-        fun loadTrack(track: Track) {
-            if (track != mPlaybackHelper.getTrack()) {
-                mPlaybackHelper.initialize(track)
-            }
-        }
-
-        fun play() {
-            this@MixPlayerService.mPlaybackHelper.playMaster()
-        }
-
-        fun pause() {
-            this@MixPlayerService.mPlaybackHelper.pauseMaster()
-        }
-
-    }
-
 
     private lateinit var mPlaybackHelper: PlaybackHelper
     private lateinit var mNotificationHelper: NotificationHelper
-    private val mBinder = Binder()
+
     override fun onBind(intent: Intent?): IBinder? {
-        return mBinder
+        return null
     }
 
     override fun onCreate() {
@@ -81,13 +61,29 @@ class MixPlayerService : BaseService(), PlaybackHelper.Listener {
                 NOTIFICATION_ACTION_UNMUTE_BASS -> mPlaybackHelper.unmuteTrack(TrackInstrument.BASS)
                 NOTIFICATION_ACTION_MUTE_DRUMS -> mPlaybackHelper.muteTrack(TrackInstrument.DRUMS)
                 NOTIFICATION_ACTION_UNMUTE_DRUMS -> mPlaybackHelper.unmuteTrack(TrackInstrument.DRUMS)
-                NOTIFICATION_ACTION_STOP_SERVICE -> {
-                    stopService()
-                }
+                NOTIFICATION_ACTION_LOAD_TRACK -> loadTrackFromIntent(intent, action)
+                NOTIFICATION_ACTION_STOP_SERVICE -> stopService()
             }
         }
 
-        return START_NOT_STICKY
+        return START_STICKY
+    }
+
+    private fun loadTrackFromIntent(intent: Intent, action: String?) {
+        if (intent.extras != null &&
+            intent.extras!!.containsKey(NOTIFICATION_EXTRA_LOAD_TRACK_PARAM_KEY)
+        ) {
+            val track = intent.extras!!.get(NOTIFICATION_EXTRA_LOAD_TRACK_PARAM_KEY) as Track
+            loadTrack(track)
+        } else {
+            Timber.w("$action action called but no track parameter supplied")
+        }
+    }
+
+    fun loadTrack(track: Track) {
+        if (track != mPlaybackHelper.getTrack()) {
+            mPlaybackHelper.initialize(track)
+        }
     }
 
     private fun playMaster() {
@@ -101,7 +97,6 @@ class MixPlayerService : BaseService(), PlaybackHelper.Listener {
     private fun pauseMaster() {
         mPlaybackHelper.pauseMaster()
         stopForeground(false)
-        stopSelf()
     }
 
     override fun onInitializationFinished() {
@@ -115,6 +110,6 @@ class MixPlayerService : BaseService(), PlaybackHelper.Listener {
     }
 
     override fun onSongFinished() {
-        stopService()
+        //No action
     }
 }

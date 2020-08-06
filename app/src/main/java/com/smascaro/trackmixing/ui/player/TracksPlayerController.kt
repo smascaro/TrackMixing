@@ -27,6 +27,7 @@ class TracksPlayerController(private var mTrack: Track) :
 
     fun startService() {
         mViewMvc.startService()
+        loadTrack()
     }
 
     fun playMaster() {

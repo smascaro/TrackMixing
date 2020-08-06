@@ -28,6 +28,7 @@ class PlaybackHelper : BaseObservable<PlaybackHelper.Listener>(), PlayingTrackSt
 
     private var mCurrentState: State = State.PAUSED
     fun isPlaying(): Boolean = mCurrentState == State.PLAYING
+
     fun getTrack(): Track? {
         return if (this::mCurrentPlayingTrack.isInitialized) {
             mCurrentPlayingTrack
@@ -36,14 +37,12 @@ class PlaybackHelper : BaseObservable<PlaybackHelper.Listener>(), PlayingTrackSt
         }
     }
 
-
     fun initialize(track: Track) {
         resetPlayersIfInitialized()
         mIsInitialized = false
+        mCurrentState = State.PAUSED
         mCurrentPlayingTrack = track
-        mVocalsState = PlayingTrackState.create(track, TrackInstrument.VOCALS).apply {
-            registerListener(this@PlaybackHelper)
-        }
+
         mVocalsState = PlayingTrackState.create(track, TrackInstrument.VOCALS).apply {
             registerListener(this@PlaybackHelper)
         }
@@ -56,10 +55,10 @@ class PlaybackHelper : BaseObservable<PlaybackHelper.Listener>(), PlayingTrackSt
             registerListener(this@PlaybackHelper)
         }
 
-        mDrumsState = PlayingTrackState(TrackInstrument.DRUMS).apply {
+        mDrumsState = PlayingTrackState.create(track, TrackInstrument.DRUMS).apply {
             registerListener(this@PlaybackHelper)
-            initialize("$mBasePath/drums.mp3")
         }
+
         mIsInitialized = true
         getListeners().forEach {
             it.onInitializationFinished()
@@ -172,6 +171,7 @@ class PlaybackHelper : BaseObservable<PlaybackHelper.Listener>(), PlayingTrackSt
         if (mPlayRequested) {
             if (isAllReady()) {
                 playAll()
+                mCurrentState = State.PLAYING
                 mPlayRequested = false
             }
         }
@@ -179,6 +179,8 @@ class PlaybackHelper : BaseObservable<PlaybackHelper.Listener>(), PlayingTrackSt
 
     override fun onPlayerCompletion(instrument: TrackInstrument) {
         Timber.i("Track $instrument has completed")
+        mCurrentState = State.PAUSED
+        notifyMediaStateChange()
         getListeners().forEach {
             it.onSongFinished()
         }
