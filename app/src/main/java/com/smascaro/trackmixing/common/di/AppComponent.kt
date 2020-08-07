@@ -9,7 +9,7 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [AppModule::class, MainModule::class, ViewMvcBuildersModule::class, AppSubcomponents::class])
+@Component(modules = [AppModule::class, ViewMvcBuildersModule::class, AppSubcomponents::class])
 interface AppComponent {
 
     @Component.Factory
@@ -18,5 +18,4 @@ interface AppComponent {
     }
 
     fun mainComponent(): MainComponent.Factory
-    fun inject(mainActivity: MainActivity)
 }

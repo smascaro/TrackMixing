@@ -10,21 +10,4 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
-class AppModule {
-    @Singleton
-    @Provides
-    @RetrofitForJsonData
-    fun provideRetrofitInstanceWithJson(): Retrofit {
-        return Retrofit.Builder().apply {
-            baseUrl(NODE_BASE_URL)
-            addConverterFactory(GsonConverterFactory.create())
-            build()
-        }.build()
-    }
-
-    @Singleton
-    @Provides
-    fun provideNodeApi(@RetrofitForJsonData retrofit: Retrofit): NodeApi {
-        return retrofit.create(NodeApi::class.java)
-    }
-}
+class AppModule
