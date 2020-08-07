@@ -5,12 +5,13 @@ import timber.log.Timber
 
 class TracksPlayerController(private var mTrack: Track) :
     TracksPlayerViewMvc.Listener {
+
     private lateinit var mViewMvc: TracksPlayerViewMvc
+
     fun bindView(viewMvc: TracksPlayerViewMvc) {
         mViewMvc = viewMvc
         mViewMvc.registerListener(this)
     }
-
 
     fun loadTrack() {
         mViewMvc.loadTrack(mTrack)
@@ -25,7 +26,7 @@ class TracksPlayerController(private var mTrack: Track) :
         mViewMvc.onDestroy()
     }
 
-    fun startService() {
+    fun onCreate() {
         mViewMvc.startService()
         loadTrack()
     }
