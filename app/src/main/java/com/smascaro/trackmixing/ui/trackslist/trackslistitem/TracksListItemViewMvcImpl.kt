@@ -12,10 +12,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textview.MaterialTextView
 import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.common.di.DaggerAppComponent
 import com.smascaro.trackmixing.tracks.Track
 import com.smascaro.trackmixing.ui.common.BaseObservableViewMvc
-import javax.inject.Inject
 
 class TracksListItemViewMvcImpl(inflater: LayoutInflater, parent: ViewGroup?) :
     BaseObservableViewMvc<TracksListItemViewMvc.Listener>(), TracksListItemViewMvc {
@@ -35,7 +33,7 @@ class TracksListItemViewMvcImpl(inflater: LayoutInflater, parent: ViewGroup?) :
     private var mIsExpanded: Boolean = false
 
     init {
-        setRootView(inflater.inflate(R.layout.item_track, parent, false))
+        bindRootView(inflater.inflate(R.layout.item_track, parent, false))
         glideRequestManager = Glide.with(getContext()!!)
         mCard = findViewById(R.id.cardViewContainer)
         mTrackTitleTxt = findViewById(R.id.trackTitle)

@@ -39,7 +39,7 @@ class TracksPlayerViewMvcImpl(
 //    }
 
     init {
-        setRootView(layoutInflater.inflate(R.layout.activity_track_player, parent, false))
+        bindRootView(layoutInflater.inflate(R.layout.activity_track_player, parent, false))
     }
 
     override fun isServiceConnected(): Boolean {

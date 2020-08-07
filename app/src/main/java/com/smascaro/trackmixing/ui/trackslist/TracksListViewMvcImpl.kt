@@ -33,7 +33,7 @@ class TracksListViewMvcImpl(
         TracksListViewMvc.TracksDataSource.DATABASE
 
     init {
-        setRootView(inflater.inflate(R.layout.fragment_tracks_list, parent, false))
+        bindRootView(inflater.inflate(R.layout.fragment_tracks_list, parent, false))
         mRecyclerViewTracks = findViewById(R.id.rvTracks)
         mRecyclerViewTracks.layoutManager = LinearLayoutManager(getContext())
         (mRecyclerViewTracks.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
