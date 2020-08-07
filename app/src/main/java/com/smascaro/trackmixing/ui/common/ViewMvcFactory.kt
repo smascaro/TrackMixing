@@ -8,8 +8,6 @@ import com.smascaro.trackmixing.ui.common.navigationhelper.BottomNavigationViewM
 import com.smascaro.trackmixing.ui.common.navigationhelper.BottomNavigationViewMvcImpl
 import com.smascaro.trackmixing.ui.details.TrackDetailsViewMvc
 import com.smascaro.trackmixing.ui.details.TrackDetailsViewMvcImpl
-import com.smascaro.trackmixing.ui.main.MainActivityViewMvc
-import com.smascaro.trackmixing.ui.main.MainActivityViewMvcImpl
 import com.smascaro.trackmixing.ui.player.TracksPlayerViewMvc
 import com.smascaro.trackmixing.ui.player.TracksPlayerViewMvcImpl
 import com.smascaro.trackmixing.ui.trackslist.TracksListViewMvc
@@ -49,9 +47,5 @@ class ViewMvcFactory(private val mLayoutInflater: LayoutInflater) {
             getLayoutInflater(),
             parent
         )
-    }
-
-    fun getMainActivityViewMvc(parent: ViewGroup?): MainActivityViewMvc {
-        return MainActivityViewMvcImpl(getLayoutInflater(), parent)
     }
 }

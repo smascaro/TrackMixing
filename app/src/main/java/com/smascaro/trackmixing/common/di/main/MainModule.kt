@@ -1,16 +1,12 @@
 package com.smascaro.trackmixing.common.di.main
 
-import com.smascaro.trackmixing.networking.NodeApi
+import com.smascaro.trackmixing.ui.main.MainActivityViewMvc
+import com.smascaro.trackmixing.ui.main.MainActivityViewMvcImpl
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
-import retrofit2.Retrofit
-import javax.inject.Singleton
 
 @Module
-class MainModule {
-    @Singleton
-    @Provides
-    fun provideNodeApi(@RetrofitForJsonData retrofit: Retrofit): NodeApi {
-        return retrofit.create(NodeApi::class.java)
-    }
+abstract class MainModule {
+    @Binds
+    abstract fun provideMainActivityViewMvc(mainActivityViewMvcImpl: MainActivityViewMvcImpl): MainActivityViewMvc
 }
