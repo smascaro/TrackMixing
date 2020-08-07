@@ -6,7 +6,4 @@ import dagger.Binds
 import dagger.Module
 
 @Module
-abstract class MainModule {
-    @Binds
-    abstract fun provideMainActivityViewMvc(mainActivityViewMvcImpl: MainActivityViewMvcImpl): MainActivityViewMvc
-}
+abstract class MainModule
