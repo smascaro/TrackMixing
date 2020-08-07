@@ -90,10 +90,6 @@ class ControllerCompositionRoot(
         )
     }
 
-    fun getTracksPlayerController(track: Track): TracksPlayerController {
-        return TracksPlayerController(track)
-    }
-
     fun getMainActivityController(): MainActivityController {
         return MainActivityController(getNodeApi())
     }

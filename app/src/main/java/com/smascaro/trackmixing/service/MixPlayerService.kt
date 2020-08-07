@@ -74,8 +74,17 @@ class MixPlayerService : BaseService(), PlaybackHelper.Listener {
     }
 
     fun loadTrack(track: Track) {
-        if (track != mPlaybackHelper.getTrack()) {
-            mPlaybackHelper.initialize(track)
+        try {
+            if (mPlaybackHelper.isInitialized()) {
+                if (track != mPlaybackHelper.getTrack()) {
+                    mPlaybackHelper.initialize(track)
+                }
+            } else {
+                mPlaybackHelper.initialize(track)
+            }
+        } catch (e: Exception) {
+            //Ignore petition
+            Timber.w(e)
         }
     }
 
