@@ -42,6 +42,10 @@ class PlaybackHelper : BaseObservable<PlaybackHelper.Listener>(), PlayingTrackSt
         }
     }
 
+    fun isInitialized(): Boolean {
+        return mIsInitialized
+    }
+
     fun getTrack(): Track {
         if (!this::mCurrentPlayingTrack.isInitialized) {
             throw NoLoadedTrackException()
