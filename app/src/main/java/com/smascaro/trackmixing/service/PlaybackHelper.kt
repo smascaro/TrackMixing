@@ -4,8 +4,11 @@ import com.smascaro.trackmixing.errorhandling.NoLoadedTrackException
 import com.smascaro.trackmixing.tracks.Track
 import com.smascaro.trackmixing.ui.common.BaseObservable
 import timber.log.Timber
+import javax.inject.Inject
 
-class PlaybackHelper : BaseObservable<PlaybackHelper.Listener>(), PlayingTrackState.Listener {
+class PlaybackHelper @Inject constructor() :
+    BaseObservable<PlaybackHelper.Listener>(),
+    PlayingTrackState.Listener {
     enum class State {
         PLAYING, PAUSED
     }

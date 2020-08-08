@@ -2,60 +2,47 @@ package com.smascaro.trackmixing.service
 
 import android.content.Intent
 import android.os.IBinder
-import com.smascaro.trackmixing.common.*
+import com.smascaro.trackmixing.common.NOTIFICATION_ACTION_LOAD_TRACK
+import com.smascaro.trackmixing.common.NOTIFICATION_EXTRA_LOAD_TRACK_PARAM_KEY
+import com.smascaro.trackmixing.common.TrackMixingApplication
 import com.smascaro.trackmixing.service.common.BaseService
 import com.smascaro.trackmixing.tracks.Track
-import com.smascaro.trackmixing.ui.notification.NotificationHelper
 import timber.log.Timber
+import javax.inject.Inject
 
-class MixPlayerService : BaseService(), PlaybackHelper.Listener {
+class MixPlayerService : BaseService(),
+    MixPlayerServiceController.ServiceActionsDelegate {
 
-    private lateinit var mPlaybackHelper: PlaybackHelper
-    private lateinit var mNotificationHelper: NotificationHelper
+    @Inject
+    lateinit var controller: MixPlayerServiceController
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }
 
     override fun onCreate() {
+        (application as TrackMixingApplication).appComponent.playerComponent().create().inject(this)
         super.onCreate()
-        mPlaybackHelper = getCompositionRoot().getPlayingHelper()
-        mPlaybackHelper.registerListener(this)
-        mNotificationHelper = getCompositionRoot().getNotificationHelper()
-
+        controller.onCreate()
+        controller.registerListener(this)
     }
 
     fun stopService() {
-        mPlaybackHelper.finalize()
-        stopForeground(true)
-        stopSelf()
+        controller.stopService()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mPlaybackHelper.unregisterListener(this)
-    }
-
-    fun createOrUpdateNotification() {
-        mNotificationHelper.updateForegroundNotification(mPlaybackHelper.getPlaybackState())
+        controller.onDestroy()
+        controller.unregisterListener(this)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent != null) {
             val action = intent.action
             when (action) {
-                NOTIFICATION_ACTION_PLAY_MASTER -> playMaster()
-                NOTIFICATION_ACTION_PAUSE_MASTER -> pauseMaster()
-                NOTIFICATION_ACTION_MUTE_VOCALS -> mPlaybackHelper.muteTrack(TrackInstrument.VOCALS)
-                NOTIFICATION_ACTION_UNMUTE_VOCALS -> mPlaybackHelper.unmuteTrack(TrackInstrument.VOCALS)
-                NOTIFICATION_ACTION_MUTE_OTHER -> mPlaybackHelper.muteTrack(TrackInstrument.OTHER)
-                NOTIFICATION_ACTION_UNMUTE_OTHER -> mPlaybackHelper.unmuteTrack(TrackInstrument.OTHER)
-                NOTIFICATION_ACTION_MUTE_BASS -> mPlaybackHelper.muteTrack(TrackInstrument.BASS)
-                NOTIFICATION_ACTION_UNMUTE_BASS -> mPlaybackHelper.unmuteTrack(TrackInstrument.BASS)
-                NOTIFICATION_ACTION_MUTE_DRUMS -> mPlaybackHelper.muteTrack(TrackInstrument.DRUMS)
-                NOTIFICATION_ACTION_UNMUTE_DRUMS -> mPlaybackHelper.unmuteTrack(TrackInstrument.DRUMS)
                 NOTIFICATION_ACTION_LOAD_TRACK -> loadTrackFromIntent(intent, action)
-                NOTIFICATION_ACTION_STOP_SERVICE -> stopService()
+                else -> controller.executeAction(action)
             }
         }
 
@@ -74,37 +61,26 @@ class MixPlayerService : BaseService(), PlaybackHelper.Listener {
     }
 
     private fun loadTrack(track: Track) {
-        val isInitialized = mPlaybackHelper.isInitialized()
-        val isTrackDifferentFromCurrent = isInitialized && track != mPlaybackHelper.getTrack()
-        if (!isInitialized || (isInitialized && isTrackDifferentFromCurrent)) {
-            mPlaybackHelper.initialize(track)
-        }
+        controller.loadTrack(track)
     }
 
     private fun playMaster() {
-        createOrUpdateNotification()
-        startForeground(NOTIFICATION_ID, mNotificationHelper.getNotification())
-        mPlaybackHelper.playMaster()
-        createOrUpdateNotification()
-        startForeground(NOTIFICATION_ID, mNotificationHelper.getNotification())
+        controller.playMaster()
     }
 
     private fun pauseMaster() {
-        mPlaybackHelper.pauseMaster()
-        stopForeground(false)
+        controller.pauseMaster()
     }
 
-    override fun onInitializationFinished() {
-        mNotificationHelper.createNotificationChannel()
-        createOrUpdateNotification()
-        startForeground(NOTIFICATION_ID, mNotificationHelper.getNotification())
+    override fun onStopService() {
+        stopService()
     }
 
-    override fun onMediaStateChange() {
-        createOrUpdateNotification()
+    override fun onStartForeground(notification: ForegroundNotification) {
+        startForeground(notification.id, notification.notification)
     }
 
-    override fun onSongFinished() {
-        //No action
+    override fun onStopForeground(removeNotification: Boolean) {
+        stopForeground(removeNotification)
     }
 }

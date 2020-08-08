@@ -23,8 +23,9 @@ import com.smascaro.trackmixing.errorhandling.NonExistentInstrumentException
 import com.smascaro.trackmixing.service.MixPlaybackState
 import com.smascaro.trackmixing.service.MixPlayerService
 import com.smascaro.trackmixing.service.TrackInstrument
+import javax.inject.Inject
 
-class NotificationHelper(private val mContext: Context) {
+class NotificationHelper @Inject constructor(val mContext: Context) {
     private var mNotificationManager: NotificationManagerCompat
     private lateinit var mNotificationBuilder: NotificationCompat.Builder
     private var mThumbnailBitmap: Bitmap? = null

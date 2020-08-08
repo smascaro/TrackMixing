@@ -1,5 +1,6 @@
 package com.smascaro.trackmixing.common.di.player
 
+import com.smascaro.trackmixing.service.MixPlayerService
 import com.smascaro.trackmixing.ui.player.TracksPlayerActivity
 import dagger.Subcomponent
 
@@ -12,4 +13,5 @@ interface PlayerComponent {
     }
 
     fun inject(tracksPlayerActivity: TracksPlayerActivity)
+    fun inject(mixPlayerService: MixPlayerService)
 }
