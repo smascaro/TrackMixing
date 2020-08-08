@@ -214,7 +214,7 @@ class NotificationHelper(private val mContext: Context) {
         }
 
         intent.action = action
-        val pendingIntent = PendingIntent.getForegroundService(
+        val pendingIntent = PendingIntent.getService(
             mContext,
             2,
             intent,
