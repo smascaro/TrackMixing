@@ -40,6 +40,11 @@ class NotificationHelper @Inject constructor(val mContext: Context) {
         return mNotificationBuilder.build()
     }
 
+    fun getUpdatedNotification(playbackState: MixPlaybackState): Notification {
+        updateForegroundNotification(playbackState)
+        return getNotification()
+    }
+
     fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationChannel = NotificationChannel(
@@ -106,7 +111,10 @@ class NotificationHelper @Inject constructor(val mContext: Context) {
 
             if (mMediaSession == null) {
                 mMediaSession =
-                    MediaSessionCompat(mContext, NOTIFICATION_MEDIA_SESSION_TAG)
+                    MediaSessionCompat(
+                        mContext,
+                        NOTIFICATION_MEDIA_SESSION_TAG
+                    )
             }
             mNotificationBuilder =
                 NotificationCompat.Builder(mContext, NOTIFICATION_CHANNEL_ID).apply {
