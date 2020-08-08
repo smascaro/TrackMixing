@@ -26,10 +26,6 @@ class TracksPlayerController @Inject constructor() :
         mViewMvc.loadTrack(mTrack)
     }
 
-    fun togglePlayPause() {
-
-    }
-
     fun onDestroy() {
         mViewMvc.unregisterListener(this)
         mViewMvc.onDestroy()
@@ -41,7 +37,7 @@ class TracksPlayerController @Inject constructor() :
     }
 
     fun playMaster() {
-        if (mViewMvc.isServiceConnected()) {
+        if (mViewMvc.isServiceStarted()) {
             mViewMvc.playMaster()
         } else {
             Timber.w("Can't play master because service is not connected yet.")

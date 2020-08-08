@@ -3,18 +3,22 @@ package com.smascaro.trackmixing.ui.player
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import androidx.navigation.navArgs
+import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.TrackMixingApplication
 import com.smascaro.trackmixing.common.di.player.PlayerComponent
 import com.smascaro.trackmixing.ui.common.BaseActivity
 import kotlinx.android.synthetic.main.activity_track_player.*
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
  * TODO: Mvcify and design UI
  */
 class TracksPlayerActivity : BaseActivity() {
+
+    @Inject
+    lateinit var viewMvc: TracksPlayerViewMvc
 
     @Inject
     lateinit var mTracksPlayerController: TracksPlayerController
@@ -37,7 +41,10 @@ class TracksPlayerActivity : BaseActivity() {
         playerComponent.inject(this)
         super.onCreate(savedInstanceState)
         val track = navigationArgs.track
-        val viewMvc = getCompositionRoot().getViewMvcFactory().getTracksPlayerViewMvc(null)
+
+        val rootView =
+            LayoutInflater.from(this).inflate(R.layout.activity_track_player, null, false)
+        viewMvc.bindRootView(rootView)
 
         mTracksPlayerController.bindTrack(track)
         mTracksPlayerController.bindView(viewMvc)
