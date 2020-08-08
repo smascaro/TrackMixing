@@ -164,7 +164,7 @@ class NotificationHelper(private val mContext: Context) {
     private fun createDeleteIntent(): PendingIntent? {
         val intent = Intent(mContext, MixPlayerService::class.java)
         intent.action = NOTIFICATION_ACTION_STOP_SERVICE
-        val pendingIntent = PendingIntent.getForegroundService(
+        val pendingIntent = PendingIntent.getService(
             mContext,
             2,
             intent,
@@ -196,7 +196,7 @@ class NotificationHelper(private val mContext: Context) {
             }
         }
         intent.action = action
-        val pendingIntent = PendingIntent.getForegroundService(
+        val pendingIntent = PendingIntent.getService(
             mContext,
             1,
             intent,
