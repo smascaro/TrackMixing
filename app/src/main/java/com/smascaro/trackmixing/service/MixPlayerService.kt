@@ -73,7 +73,7 @@ class MixPlayerService : BaseService(),
     }
 
     override fun onStopService() {
-        stopService()
+        stopService(Intent(this, MixPlayerService::class.java))
     }
 
     override fun onStartForeground(notification: ForegroundNotification) {

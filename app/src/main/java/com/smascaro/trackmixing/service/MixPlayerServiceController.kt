@@ -23,7 +23,6 @@ class MixPlayerServiceController @Inject constructor(
     fun stopService() {
         playbackHelper.finalize()
         getListeners().forEach {
-            it.onStopForeground(true)
             it.onStopService()
         }
     }
