@@ -32,7 +32,6 @@ class NotificationHelper(private val mContext: Context) {
 
     init {
         mNotificationManager = NotificationManagerCompat.from(mContext)
-
     }
 
     fun getNotification(): Notification {
@@ -50,8 +49,6 @@ class NotificationHelper(private val mContext: Context) {
     }
 
     fun updateForegroundNotification(playbackState: MixPlaybackState) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
             Glide
                 .with(mContext)
                 .asBitmap()
@@ -77,7 +74,6 @@ class NotificationHelper(private val mContext: Context) {
                     }
 
                 })
-
 
             val actionPlayPause = createIntentMaster(playbackState.isMasterPlaying)
             val drawablePlayPause = if (playbackState.isMasterPlaying) {
@@ -130,9 +126,6 @@ class NotificationHelper(private val mContext: Context) {
                 mNotificationBuilder.setLargeIcon(mThumbnailBitmap)
             }
             mNotificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.build())
-        } else {
-            //Do nothing
-        }
     }
 
     private fun getTrackDrawableId(
@@ -160,7 +153,6 @@ class NotificationHelper(private val mContext: Context) {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun createDeleteIntent(): PendingIntent? {
         val intent = Intent(mContext, MixPlayerService::class.java)
         intent.action = NOTIFICATION_ACTION_STOP_SERVICE
@@ -173,8 +165,6 @@ class NotificationHelper(private val mContext: Context) {
         return pendingIntent
     }
 
-
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun createIntentTrack(instrument: TrackInstrument, isPlaying: Boolean): PendingIntent {
         val intent = Intent(mContext, MixPlayerService::class.java)
         val action = when (instrument) {
@@ -205,7 +195,6 @@ class NotificationHelper(private val mContext: Context) {
         return pendingIntent
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun createIntentMaster(isPlaying: Boolean): PendingIntent {
         val intent = Intent(mContext, MixPlayerService::class.java)
         val action = when (isPlaying) {
@@ -222,6 +211,4 @@ class NotificationHelper(private val mContext: Context) {
         )
         return pendingIntent
     }
-
-
 }
