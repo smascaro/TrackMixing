@@ -23,9 +23,6 @@ class TrackDetailsViewMvcImpl(
 
     init {
         bindRootView(inflater.inflate(R.layout.fragment_track_details, parent, false))
-//        val root: ConstraintLayout = findViewById(R.id.container_details)
-//        getRootView().transitionName=mTrack.videoKey
-//        root.transitionName=mTrack.videoKey
         mImageThumbnail = findViewById(R.id.thumbnail_detail)
         mTrackTitleTxt = findViewById(R.id.track_title_detail)
         getRootView().transitionName = mTrack.videoKey
@@ -46,6 +43,4 @@ class TrackDetailsViewMvcImpl(
             }
         }
     }
-
-
 }

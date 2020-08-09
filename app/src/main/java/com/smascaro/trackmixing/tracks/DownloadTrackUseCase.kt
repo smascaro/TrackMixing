@@ -17,11 +17,12 @@ import java.io.File
 import java.util.*
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
+import javax.inject.Inject
 
-class DownloadTrackUseCase(
-    private val mNodeDownloadsApi: NodeDownloadsApi,
-    private val mDao: DownloadsDao,
-    private val mFilesStorageHelper: FilesStorageHelper
+class DownloadTrackUseCase @Inject constructor(
+    val mNodeDownloadsApi: NodeDownloadsApi,
+    val mDao: DownloadsDao,
+    val mFilesStorageHelper: FilesStorageHelper
 ) :
     BaseObservable<DownloadTrackUseCase.Listener>() {
     interface Listener {

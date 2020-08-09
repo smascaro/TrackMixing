@@ -8,8 +8,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import timber.log.Timber
+import javax.inject.Inject
 
-class FetchAvailableTracksUseCase(private val mNodeApi: NodeApi) :
+class FetchAvailableTracksUseCase @Inject constructor(private val mNodeApi: NodeApi) :
     BaseObservable<FetchAvailableTracksUseCase.Listener>() {
 
     interface Listener {

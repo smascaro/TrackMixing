@@ -1,22 +1,19 @@
 package com.smascaro.trackmixing.ui.trackslist
 
 
-import com.smascaro.trackmixing.common.FilesStorageHelper
 import com.smascaro.trackmixing.tracks.DownloadTrackUseCase
 import com.smascaro.trackmixing.tracks.FetchAvailableTracksUseCase
 import com.smascaro.trackmixing.tracks.FetchDownloadedTracks
 import com.smascaro.trackmixing.tracks.Track
-import com.smascaro.trackmixing.ui.common.navigationhelper.NavigationHelper
 import timber.log.Timber
 import java.io.File
+import javax.inject.Inject
 
 
-class TracksListController(
+class TracksListController @Inject constructor(
     private val mFetchAvailableTracksUseCase: FetchAvailableTracksUseCase,
     private val mDownloadTrackUseCase: DownloadTrackUseCase,
-    private val mFetchDownloadedTracks: FetchDownloadedTracks,
-    private val mFilesStorageHelper: FilesStorageHelper,
-    private val mNavigationHelper: NavigationHelper
+    private val mFetchDownloadedTracks: FetchDownloadedTracks
 ) : TracksListViewMvc.Listener,
     FetchAvailableTracksUseCase.Listener,
     DownloadTrackUseCase.Listener, FetchDownloadedTracks.Listener {

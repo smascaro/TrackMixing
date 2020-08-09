@@ -39,9 +39,7 @@ class ControllerCompositionRoot(
         return TracksListController(
             getFetchAvailableTracksUseCase(),
             getDownloadTrackUseCase(),
-            getFetchDownloadedTracksUseCase(),
-            getFilesStorageHelper(),
-            getNavigationHelper(navController)
+            getFetchDownloadedTracksUseCase()
         )
     }
 

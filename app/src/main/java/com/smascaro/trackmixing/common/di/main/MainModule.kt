@@ -2,11 +2,11 @@ package com.smascaro.trackmixing.common.di.main
 
 import com.smascaro.trackmixing.common.NODE_BASE_URL
 import com.smascaro.trackmixing.networking.NodeApi
+import com.smascaro.trackmixing.networking.NodeDownloadsApi
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Singleton
 
 @Module
 class MainModule {
@@ -17,7 +17,6 @@ class MainModule {
         return Retrofit.Builder().apply {
             baseUrl(NODE_BASE_URL)
             addConverterFactory(GsonConverterFactory.create())
-            build()
         }.build()
     }
 
@@ -25,5 +24,20 @@ class MainModule {
     @Provides
     fun provideNodeApi(@RetrofitForJsonData retrofit: Retrofit): NodeApi {
         return retrofit.create(NodeApi::class.java)
+    }
+
+    @MainScope
+    @Provides
+    @RetrofitForBinaryData
+    fun provideRetrofitInstanceForBinaryData(): Retrofit {
+        return Retrofit.Builder().apply {
+            baseUrl(NODE_BASE_URL)
+        }.build()
+    }
+
+    @MainScope
+    @Provides
+    fun provideNodeApiForBinaryDownloads(@RetrofitForBinaryData retrofit: Retrofit): NodeDownloadsApi {
+        return retrofit.create(NodeDownloadsApi::class.java)
     }
 }
