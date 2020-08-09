@@ -34,12 +34,6 @@ class MixPlayerServiceController @Inject constructor(
     override fun onInitializationFinished() {
         notificationHelper.createNotificationChannel()
         createOrUpdateNotification()
-        startForeground(
-            ForegroundNotification(
-                NOTIFICATION_ID,
-                notificationHelper.getNotification()
-            )
-        )
     }
 
     override fun onMediaStateChange() {
