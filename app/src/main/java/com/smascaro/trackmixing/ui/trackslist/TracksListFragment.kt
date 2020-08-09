@@ -32,7 +32,7 @@ class TracksListFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enterTransition = MaterialFadeThrough.create()
+        enterTransition = MaterialFadeThrough()
         exitTransition = MaterialContainerTransform().apply {
             duration = 375
             interpolator = FastOutSlowInInterpolator()
