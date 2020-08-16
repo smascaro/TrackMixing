@@ -9,7 +9,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTracks"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         tools:itemCount="6"
         tools:listitem="@layout/item_track"
         app:layout_constraintStart_toStartOf="parent"
