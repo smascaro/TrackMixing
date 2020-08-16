@@ -10,6 +10,6 @@ interface TrackDetailsViewMvc : ObservableViewMvc<TrackDetailsViewMvc.Listener> 
         fun onGoToPlayerButtonClicked(track: Track)
     }
 
+    fun bindTrack(track: Track)
     fun initUI()
-
 }

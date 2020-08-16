@@ -1,6 +1,7 @@
 package com.smascaro.trackmixing.common.di.main
 
 import com.smascaro.trackmixing.ui.common.BaseActivity
+import com.smascaro.trackmixing.ui.details.TrackDetailsFragment
 import com.smascaro.trackmixing.ui.main.MainActivity
 import com.smascaro.trackmixing.ui.trackslist.TracksListFragment
 import dagger.BindsInstance
@@ -16,4 +17,5 @@ interface MainComponent {
 
     fun inject(mainActivity: MainActivity)
     fun inject(tracksListFragment: TracksListFragment)
+    fun inject(trackDetailsFragment: TrackDetailsFragment)
 }

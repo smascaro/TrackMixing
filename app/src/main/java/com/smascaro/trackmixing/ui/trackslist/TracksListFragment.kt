@@ -11,7 +11,6 @@ import com.google.android.material.transition.MaterialFadeThrough
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.ui.common.BaseFragment
 import com.smascaro.trackmixing.ui.main.MainActivity
-import timber.log.Timber
 import javax.inject.Inject
 
 class TracksListFragment : BaseFragment() {
@@ -27,7 +26,6 @@ class TracksListFragment : BaseFragment() {
         super.onAttach(context)
 
         (activity as MainActivity).mainComponent.inject(this)
-        Timber.d("Tracks list controller: $mTracksListController")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

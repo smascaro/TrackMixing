@@ -7,6 +7,8 @@ import com.smascaro.trackmixing.common.NODE_BASE_URL
 import com.smascaro.trackmixing.networking.NodeApi
 import com.smascaro.trackmixing.networking.NodeDownloadsApi
 import com.smascaro.trackmixing.ui.common.BaseActivity
+import com.smascaro.trackmixing.ui.details.TrackDetailsViewMvc
+import com.smascaro.trackmixing.ui.details.TrackDetailsViewMvcImpl
 import com.smascaro.trackmixing.ui.trackslist.TracksListViewMvc
 import com.smascaro.trackmixing.ui.trackslist.TracksListViewMvcImpl
 import dagger.Binds
@@ -59,5 +61,9 @@ class MainModule {
         @MainScope
         @Binds
         fun provideTracksListViewMvc(tracksListViewMvcImpl: TracksListViewMvcImpl): TracksListViewMvc
+
+        @MainScope
+        @Binds
+        fun provideTrackDetailsViewMvcImpl(trackDetailsViewMvcImpl: TrackDetailsViewMvcImpl): TrackDetailsViewMvc
     }
 }
