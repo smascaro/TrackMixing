@@ -1,23 +1,32 @@
 package com.smascaro.trackmixing.ui.main
 
-import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
+import android.view.LayoutInflater
 import com.smascaro.trackmixing.R
+import com.smascaro.trackmixing.common.TrackMixingApplication
+import com.smascaro.trackmixing.common.di.main.MainComponent
 import com.smascaro.trackmixing.ui.common.BaseActivity
-import timber.log.Timber
+import javax.inject.Inject
 
 class MainActivity : BaseActivity() {
-    private lateinit var mController: MainActivityController
+    @Inject
+    lateinit var mainActivityController: MainActivityController
+
+    @Inject
+    lateinit var viewMvc: MainActivityViewMvc
+
+    lateinit var mainComponent: MainComponent
     override fun onCreate(savedInstanceState: Bundle?) {
+        mainComponent =
+            (application as TrackMixingApplication).appComponent.mainComponent().create(this)
+        mainComponent.inject(this)
         super.onCreate(savedInstanceState)
 
-        val viewMvc = getCompositionRoot().getViewMvcFactory().getMainActivityViewMvc(null)
-        mController = getCompositionRoot().getMainActivityController()
+        val rootView = LayoutInflater.from(this).inflate(R.layout.activity_main, null, false)
+        viewMvc.bindRootView(rootView)
+        mainActivityController.bindViewMvc(viewMvc)
+        mainActivityController.handleIntent(intent)
 
-        mController.bindViewMvc(viewMvc)
-        mController.handleIntent(intent)
-
-        setContentView(viewMvc.getRootView())
+        setContentView(rootView)
     }
 }

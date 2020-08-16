@@ -7,8 +7,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import timber.log.Timber
+import javax.inject.Inject
 
-class MainActivityController(val mNodeApi: NodeApi) {
+class MainActivityController @Inject constructor(val mNodeApi: NodeApi) {
     private lateinit var mViewMvc: MainActivityViewMvc
     fun bindViewMvc(viewMvc: MainActivityViewMvc) {
         mViewMvc = viewMvc

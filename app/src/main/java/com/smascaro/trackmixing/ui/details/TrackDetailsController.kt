@@ -5,8 +5,9 @@ import com.smascaro.trackmixing.tracks.DownloadTrackUseCase
 import com.smascaro.trackmixing.tracks.Track
 import com.smascaro.trackmixing.ui.common.navigationhelper.NavigationHelper
 import timber.log.Timber
+import javax.inject.Inject
 
-class TrackDetailsController(
+class TrackDetailsController @Inject constructor(
     private val mDownloadTrackUseCase: DownloadTrackUseCase,
     private val mFilesStorageHelper: FilesStorageHelper,
     private val mNavigationHelper: NavigationHelper

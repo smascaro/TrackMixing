@@ -10,10 +10,9 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.support.v4.media.session.MediaSessionCompat
-import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
@@ -23,8 +22,9 @@ import com.smascaro.trackmixing.errorhandling.NonExistentInstrumentException
 import com.smascaro.trackmixing.service.MixPlaybackState
 import com.smascaro.trackmixing.service.MixPlayerService
 import com.smascaro.trackmixing.service.TrackInstrument
+import javax.inject.Inject
 
-class NotificationHelper(private val mContext: Context) {
+class NotificationHelper @Inject constructor(val mContext: Context, val glide: RequestManager) {
     private var mNotificationManager: NotificationManagerCompat
     private lateinit var mNotificationBuilder: NotificationCompat.Builder
     private var mThumbnailBitmap: Bitmap? = null
@@ -38,6 +38,11 @@ class NotificationHelper(private val mContext: Context) {
         return mNotificationBuilder.build()
     }
 
+    fun getUpdatedNotification(playbackState: MixPlaybackState): Notification {
+        updateForegroundNotification(playbackState)
+        return getNotification()
+    }
+
     fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationChannel = NotificationChannel(
@@ -49,83 +54,85 @@ class NotificationHelper(private val mContext: Context) {
     }
 
     fun updateForegroundNotification(playbackState: MixPlaybackState) {
-            Glide
-                .with(mContext)
-                .asBitmap()
-                .load(playbackState.trackThumbnailUrl)
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                .into(object : CustomTarget<Bitmap>() {
-                    override fun onLoadCleared(placeholder: Drawable?) {
-                        if (mThumbnailBitmap != null) {
-                            mThumbnailBitmap!!.recycle()
-                        }
+        glide
+            .asBitmap()
+            .load(playbackState.trackThumbnailUrl)
+            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+            .into(object : CustomTarget<Bitmap>() {
+                override fun onLoadCleared(placeholder: Drawable?) {
+                    if (mThumbnailBitmap != null) {
+                        mThumbnailBitmap!!.recycle()
                     }
-
-                    override fun onResourceReady(
-                        resource: Bitmap,
-                        transition: Transition<in Bitmap>?
-                    ) {
-                        mThumbnailBitmap = resource
-                        mNotificationBuilder.setLargeIcon(mThumbnailBitmap)
-                        mNotificationManager.notify(
-                            NOTIFICATION_ID,
-                            mNotificationBuilder.build()
-                        )
-                    }
-
-                })
-
-            val actionPlayPause = createIntentMaster(playbackState.isMasterPlaying)
-            val drawablePlayPause = if (playbackState.isMasterPlaying) {
-                R.drawable.ic_pause
-            } else {
-                R.drawable.ic_play
-            }
-
-            val actionVocals =
-                createIntentTrack(TrackInstrument.VOCALS, playbackState.isVocalsPlaying)
-            val drawableMuteUnmuteVocals =
-                getTrackDrawableId(TrackInstrument.VOCALS, playbackState.isVocalsPlaying)
-
-            val actionOther = createIntentTrack(TrackInstrument.OTHER, playbackState.isOtherPlaying)
-            val drawableMuteUnmuteOther =
-                getTrackDrawableId(TrackInstrument.OTHER, playbackState.isOtherPlaying)
-
-            val actionBass = createIntentTrack(TrackInstrument.BASS, playbackState.isBassPlaying)
-            val drawableMuteUnmuteBass =
-                getTrackDrawableId(TrackInstrument.BASS, playbackState.isBassPlaying)
-
-            val actionDrums = createIntentTrack(TrackInstrument.DRUMS, playbackState.isDrumsPlaying)
-            val drawableMuteUnmuteDrums =
-                getTrackDrawableId(TrackInstrument.DRUMS, playbackState.isDrumsPlaying)
-
-            if (mMediaSession == null) {
-                mMediaSession =
-                    MediaSessionCompat(mContext, NOTIFICATION_MEDIA_SESSION_TAG)
-            }
-            mNotificationBuilder =
-                NotificationCompat.Builder(mContext, NOTIFICATION_CHANNEL_ID).apply {
-                    setSmallIcon(R.drawable.ic_note)
-                    setContentTitle(playbackState.trackTitle)
-                    setOnlyAlertOnce(true)
-                    setShowWhen(false)
-                    addAction(drawablePlayPause, "Play/Pause", actionPlayPause)
-                    addAction(drawableMuteUnmuteVocals, "Mute/Unmute vocals", actionVocals)
-                    addAction(drawableMuteUnmuteOther, "Mute/Unmute guitar", actionOther)
-                    addAction(drawableMuteUnmuteBass, "Mute/Unmute bass", actionBass)
-                    addAction(drawableMuteUnmuteDrums, "Mute/Unmute drums", actionDrums)
-                    setStyle(
-                        androidx.media.app.NotificationCompat.MediaStyle()
-                            .setShowActionsInCompactView(0)
-                            .setMediaSession(mMediaSession?.sessionToken)
-                    )
-                    setDeleteIntent(createDeleteIntent())
-                    priority = NotificationCompat.PRIORITY_HIGH
                 }
-            if (mThumbnailBitmap != null) {
-                mNotificationBuilder.setLargeIcon(mThumbnailBitmap)
+
+                override fun onResourceReady(
+                    resource: Bitmap,
+                    transition: Transition<in Bitmap>?
+                ) {
+                    mThumbnailBitmap = resource
+                    mNotificationBuilder.setLargeIcon(mThumbnailBitmap)
+                    mNotificationManager.notify(
+                        NOTIFICATION_ID,
+                        mNotificationBuilder.build()
+                    )
+                }
+
+            })
+
+        val actionPlayPause = createIntentMaster(playbackState.isMasterPlaying)
+        val drawablePlayPause = if (playbackState.isMasterPlaying) {
+            R.drawable.ic_pause
+        } else {
+            R.drawable.ic_play
+        }
+
+        val actionVocals =
+            createIntentTrack(TrackInstrument.VOCALS, playbackState.isVocalsPlaying)
+        val drawableMuteUnmuteVocals =
+            getTrackDrawableId(TrackInstrument.VOCALS, playbackState.isVocalsPlaying)
+
+        val actionOther = createIntentTrack(TrackInstrument.OTHER, playbackState.isOtherPlaying)
+        val drawableMuteUnmuteOther =
+            getTrackDrawableId(TrackInstrument.OTHER, playbackState.isOtherPlaying)
+
+        val actionBass = createIntentTrack(TrackInstrument.BASS, playbackState.isBassPlaying)
+        val drawableMuteUnmuteBass =
+            getTrackDrawableId(TrackInstrument.BASS, playbackState.isBassPlaying)
+
+        val actionDrums = createIntentTrack(TrackInstrument.DRUMS, playbackState.isDrumsPlaying)
+        val drawableMuteUnmuteDrums =
+            getTrackDrawableId(TrackInstrument.DRUMS, playbackState.isDrumsPlaying)
+
+        if (mMediaSession == null) {
+            mMediaSession =
+                MediaSessionCompat(
+                    mContext,
+                    NOTIFICATION_MEDIA_SESSION_TAG
+                )
+        }
+        mNotificationBuilder =
+            NotificationCompat.Builder(mContext, NOTIFICATION_CHANNEL_ID).apply {
+                setSmallIcon(R.drawable.ic_note)
+                setContentTitle(playbackState.trackTitle)
+                setOnlyAlertOnce(true)
+                setShowWhen(false)
+                addAction(drawablePlayPause, "Play/Pause", actionPlayPause)
+                addAction(drawableMuteUnmuteVocals, "Mute/Unmute vocals", actionVocals)
+                addAction(drawableMuteUnmuteOther, "Mute/Unmute guitar", actionOther)
+                addAction(drawableMuteUnmuteBass, "Mute/Unmute bass", actionBass)
+                addAction(drawableMuteUnmuteDrums, "Mute/Unmute drums", actionDrums)
+                setStyle(
+                    androidx.media.app.NotificationCompat.MediaStyle()
+                        .setShowActionsInCompactView(0)
+                        .setMediaSession(mMediaSession?.sessionToken)
+                )
+                setDeleteIntent(createDeleteIntent())
+                priority = NotificationCompat.PRIORITY_HIGH
             }
-            mNotificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.build())
+        if (mThumbnailBitmap != null) {
+            mNotificationBuilder.setLargeIcon(mThumbnailBitmap)
+        }
+        mNotificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.build())
     }
 
     private fun getTrackDrawableId(

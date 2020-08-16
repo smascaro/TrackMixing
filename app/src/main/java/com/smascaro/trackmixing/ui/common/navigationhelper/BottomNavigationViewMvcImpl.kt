@@ -11,8 +11,9 @@ class BottomNavigationViewMvcImpl(inflater: LayoutInflater, parent: ViewGroup?) 
     BottomNavigationViewMvc {
 
     init {
-        setRootView(inflater.inflate(R.layout.activity_main, parent, false))
+        bindRootView(inflater.inflate(R.layout.activity_main, parent, false))
             true
 
     }
+
 }

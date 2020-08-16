@@ -3,12 +3,11 @@ package com.smascaro.trackmixing.tracks
 import com.smascaro.trackmixing.data.DownloadsDao
 import com.smascaro.trackmixing.data.toModel
 import com.smascaro.trackmixing.ui.common.BaseObservable
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FetchDownloadedTracks(private val mDao: DownloadsDao) :
+class FetchDownloadedTracks @Inject constructor(private val mDao: DownloadsDao) :
     BaseObservable<FetchDownloadedTracks.Listener>() {
     interface Listener {
         fun onTracksFetched(tracks: List<Track>)

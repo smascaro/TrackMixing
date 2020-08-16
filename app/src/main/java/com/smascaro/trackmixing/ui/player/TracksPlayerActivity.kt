@@ -3,18 +3,29 @@ package com.smascaro.trackmixing.ui.player
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import androidx.navigation.navArgs
+import com.smascaro.trackmixing.R
+import com.smascaro.trackmixing.common.TrackMixingApplication
+import com.smascaro.trackmixing.common.di.player.PlayerComponent
 import com.smascaro.trackmixing.ui.common.BaseActivity
 import kotlinx.android.synthetic.main.activity_track_player.*
+import javax.inject.Inject
 
 /**
  * TODO: Mvcify and design UI
  */
 class TracksPlayerActivity : BaseActivity() {
 
-    private lateinit var mTracksPlayerController: TracksPlayerController
+    @Inject
+    lateinit var viewMvc: TracksPlayerViewMvc
+
+    @Inject
+    lateinit var mTracksPlayerController: TracksPlayerController
 
     private val navigationArgs: TracksPlayerActivityArgs by navArgs()
+
+    private lateinit var playerComponent: PlayerComponent
 
     companion object {
         fun start(context: Context, filesBasePath: String) {
@@ -25,11 +36,17 @@ class TracksPlayerActivity : BaseActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        playerComponent =
+            (application as TrackMixingApplication).appComponent.playerComponent().create()
+        playerComponent.inject(this)
         super.onCreate(savedInstanceState)
+        val track = navigationArgs.track
 
-        val tracksDir = navigationArgs.track
-        val viewMvc = getCompositionRoot().getViewMvcFactory().getTracksPlayerViewMvc(null)
-        mTracksPlayerController = getCompositionRoot().getTracksPlayerController(tracksDir)
+        val rootView =
+            LayoutInflater.from(this).inflate(R.layout.activity_track_player, null, false)
+        viewMvc.bindRootView(rootView)
+
+        mTracksPlayerController.bindTrack(track)
         mTracksPlayerController.bindView(viewMvc)
         mTracksPlayerController.onCreate()
 

@@ -8,8 +8,9 @@ import java.io.FileNotFoundException
 import java.io.InputStream
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
+import javax.inject.Inject
 
-class FilesStorageHelper(private val mContext: Context) {
+class FilesStorageHelper @Inject constructor(private val mContext: Context) {
 
     fun getBaseDirectory(): String {
         return mContext.filesDir.path
@@ -25,7 +26,7 @@ class FilesStorageHelper(private val mContext: Context) {
         targetDirectoryFile.mkdirs()
         val targetFile = File(targetDirectoryFile, "$videoId.zip")
         return try {
-            body.byteStream()?.saveToFile(targetFile.path)
+            body.byteStream().saveToFile(targetFile.path)
             targetFile.path
         } catch (e: Exception) {
             Timber.e(e)

@@ -3,46 +3,20 @@ package com.smascaro.trackmixing.ui.player
 import android.app.PendingIntent
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.*
 import com.smascaro.trackmixing.service.MixPlayerService
 import com.smascaro.trackmixing.tracks.Track
 import com.smascaro.trackmixing.ui.common.BaseObservableViewMvc
+import javax.inject.Inject
 
-class TracksPlayerViewMvcImpl(
-    layoutInflater: LayoutInflater,
-    parent: ViewGroup?
-) :
+class TracksPlayerViewMvcImpl @Inject constructor() :
     BaseObservableViewMvc<TracksPlayerViewMvc.Listener>(),
     TracksPlayerViewMvc {
-    //    private lateinit var mMixPlayerServiceBinder: MixPlayerService.Binder
+
     private var mServiceIntent: Intent? = null
     private var mIsServiceStarted: Boolean = false
-//    private val mPlayerServiceConnection = object : ServiceConnection {
-//        override fun onServiceDisconnected(name: ComponentName?) {
-//            mIsServiceConnected = false
-//            Timber.d("Service $name disconnected")
-//        }
-//
-//        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-//            val binder = service as MixPlayerService.Binder
-//            Timber.d("Service bound successfully")
-//            mMixPlayerServiceBinder = binder
-//            mIsServiceConnected = true
-//            getListeners().forEach {
-//                it.onServiceConnected()
-//            }
-//        }
-//
-//    }
 
-    init {
-        setRootView(layoutInflater.inflate(R.layout.activity_track_player, parent, false))
-    }
-
-    override fun isServiceConnected(): Boolean {
+    override fun isServiceStarted(): Boolean {
         return mIsServiceStarted
     }
 

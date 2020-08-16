@@ -1,36 +1,34 @@
 package com.smascaro.trackmixing.ui.details
 
-import android.graphics.Color
+import android.content.Context
 import android.os.Bundle
-import android.transition.ChangeBounds
-import android.transition.TransitionInflater
-import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.transition.MaterialContainerTransform
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.ui.common.BaseFragment
+import com.smascaro.trackmixing.ui.main.MainActivity
+import javax.inject.Inject
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [TrackDetailsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class TrackDetailsFragment : BaseFragment() {
 
     private val args: TrackDetailsFragmentArgs by navArgs()
-    private var mTrack = null
-    private lateinit var mTrackDetailsController: TrackDetailsController
+
+    @Inject
+    lateinit var controller: TrackDetailsController
+
+    @Inject
+    lateinit var viewMvc: TrackDetailsViewMvc
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (activity as MainActivity).mainComponent.inject(this)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        sharedElementEnterTransition = MaterialContainerTransform().apply {
@@ -56,12 +54,11 @@ class TrackDetailsFragment : BaseFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val viewMvc =
-            getCompositionRoot().getViewMvcFactory().getTrackDetailsViewMvc(null, args.track)
-        mTrackDetailsController =
-            getCompositionRoot().getTrackDetailsController(getNavigationController())
-        mTrackDetailsController.bindView(viewMvc)
-        mTrackDetailsController.initUI()
+        viewMvc.bindRootView(inflater.inflate(R.layout.fragment_track_details, null, false))
+        viewMvc.bindTrack(args.track)
+        controller.bindView(viewMvc)
+
+        controller.initUI()
         return viewMvc.getRootView()
     }
 
@@ -72,13 +69,13 @@ class TrackDetailsFragment : BaseFragment() {
 
     override fun onStart() {
         super.onStart()
-        mTrackDetailsController.onStart()
+        controller.onStart()
         Toast.makeText(context, "Video key: ${args.track.videoKey}", Toast.LENGTH_SHORT).show()
     }
 
     override fun onStop() {
         super.onStop()
-        mTrackDetailsController.onStop()
+        controller.onStop()
     }
 
     private fun buildContainerTransform(): MaterialContainerTransform {

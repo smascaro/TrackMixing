@@ -10,8 +10,10 @@ abstract class BaseViewMvc : ViewMvc {
         return mRootView
     }
 
-    protected fun setRootView(rootView: View) {
-        mRootView = rootView
+    override fun bindRootView(rootView: View?) {
+        if (rootView != null) {
+            mRootView = rootView
+        }
     }
 
     protected fun getContext(): Context? {

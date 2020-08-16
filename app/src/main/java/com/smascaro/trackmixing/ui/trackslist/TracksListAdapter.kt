@@ -1,20 +1,21 @@
 package com.smascaro.trackmixing.ui.trackslist
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
+import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.tracks.Track
-import com.smascaro.trackmixing.ui.animation.Animations
-import com.smascaro.trackmixing.ui.common.ViewMvcFactory
+import com.smascaro.trackmixing.ui.common.DaggerViewMvcFactory
 import com.smascaro.trackmixing.ui.trackslist.trackslistitem.TracksListItemViewMvc
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class TracksListAdapter(
-    private val mListener: Listener,
-    private val mViewMvcFactory: ViewMvcFactory
+class TracksListAdapter @Inject constructor(
+    private val viewMvcFactory: DaggerViewMvcFactory,
+    val viewMvc: TracksListItemViewMvc
 ) : RecyclerView.Adapter<TracksListAdapter.ViewHolder>(), TracksListItemViewMvc.Listener {
     interface Listener {
         fun onTrackClicked(
@@ -26,8 +27,22 @@ class TracksListAdapter(
     class ViewHolder(val mViewMvc: TracksListItemViewMvc) :
         RecyclerView.ViewHolder(mViewMvc.getRootView())
 
+    private var listener: Listener? = null
+
+
+    fun setOnTrackClickedListener(listener: Listener) {
+        this.listener = listener
+    }
+
+    fun removeOnTrackClickedListener() {
+        this.listener = null
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val viewMvc = mViewMvcFactory.getTracksListItemViewMvc(parent)
+        val viewMvc = viewMvcFactory.getTracksListItemViewMvc()
+        viewMvc.bindRootView(
+            LayoutInflater.from(parent.context).inflate(R.layout.item_track, parent, false)
+        )
         viewMvc.registerListener(this)
         return ViewHolder(viewMvc)
     }
@@ -48,7 +63,7 @@ class TracksListAdapter(
     }
 
     override fun onTrackClicked(track: Track, card: MaterialCardView) {
-        mListener.onTrackClicked(track, card)
+        listener?.onTrackClicked(track, card)
     }
 
     override fun onExpandOrCollapseDetailsRequest(
