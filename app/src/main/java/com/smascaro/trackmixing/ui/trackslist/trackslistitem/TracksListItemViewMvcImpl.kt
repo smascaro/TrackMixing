@@ -1,12 +1,9 @@
 package com.smascaro.trackmixing.ui.trackslist.trackslistitem
 
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.card.MaterialCardView
@@ -14,8 +11,9 @@ import com.google.android.material.textview.MaterialTextView
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.tracks.Track
 import com.smascaro.trackmixing.ui.common.BaseObservableViewMvc
+import javax.inject.Inject
 
-class TracksListItemViewMvcImpl(inflater: LayoutInflater, parent: ViewGroup?) :
+class TracksListItemViewMvcImpl @Inject constructor(val glide: RequestManager) :
     BaseObservableViewMvc<TracksListItemViewMvc.Listener>(), TracksListItemViewMvc {
     private lateinit var mTrack: Track
     private lateinit var mCard: MaterialCardView
@@ -27,21 +25,21 @@ class TracksListItemViewMvcImpl(inflater: LayoutInflater, parent: ViewGroup?) :
 
     private var mPosition: Int = -1
 
-    lateinit var glideRequestManager: RequestManager
-
-    //    private lateinit var mParentLayout: LinearLayout
     private var mIsExpanded: Boolean = false
 
-    init {
-        bindRootView(inflater.inflate(R.layout.item_track, parent, false))
-        glideRequestManager = Glide.with(getContext()!!)
+
+    override fun bindRootView(rootView: View?) {
+        super.bindRootView(rootView)
+        initialize()
+    }
+
+    private fun initialize() {
         mCard = findViewById(R.id.cardViewContainer)
         mTrackTitleTxt = findViewById(R.id.trackTitle)
         mTrackThumbnailImg = findViewById(R.id.thumbnailImg)
         mExpandView = findViewById(R.id.expandedView)
         mExpandTitle = findViewById(R.id.expandedTitle)
 
-//        mParentLayout=findViewById(R.id.parentItemLayout)
         getRootView().setOnClickListener {
             mIsExpanded = !mIsExpanded
             getListeners().forEach { listener ->
@@ -66,7 +64,7 @@ class TracksListItemViewMvcImpl(inflater: LayoutInflater, parent: ViewGroup?) :
         } else {
             View.GONE
         }
-        glideRequestManager
+        glide
             .asBitmap()
             .load(mTrack.thumbnailUrl)
             .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)

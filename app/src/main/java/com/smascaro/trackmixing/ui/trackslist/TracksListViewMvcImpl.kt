@@ -1,7 +1,6 @@
 package com.smascaro.trackmixing.ui.trackslist
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
+import android.view.View
 import android.widget.ImageView
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.navigation.fragment.FragmentNavigatorExtras
@@ -14,32 +13,34 @@ import com.google.android.material.textview.MaterialTextView
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.tracks.Track
 import com.smascaro.trackmixing.ui.common.BaseObservableViewMvc
-import com.smascaro.trackmixing.ui.common.ViewMvcFactory
 import com.smascaro.trackmixing.ui.common.navigationhelper.NavigationHelper
+import javax.inject.Inject
 
-class TracksListViewMvcImpl(
-    inflater: LayoutInflater,
-    val parent: ViewGroup?,
-    viewMvcFactory: ViewMvcFactory
+class TracksListViewMvcImpl @Inject constructor(
+    private val tracksListAdapter: TracksListAdapter,
+    private val navigationHelper: NavigationHelper
 ) : BaseObservableViewMvc<TracksListViewMvc.Listener>(),
     TracksListAdapter.Listener,
     TracksListViewMvc {
 
-    private val mRecyclerViewTracks: RecyclerView
-    private val mRecyclerViewTracksAdapter: TracksListAdapter
-    private lateinit var mNavigationHelper: NavigationHelper
+    private lateinit var mRecyclerViewTracks: RecyclerView
+
     private lateinit var mMotionLayout: MotionLayout
     private var currentDataSource: TracksListViewMvc.TracksDataSource =
         TracksListViewMvc.TracksDataSource.DATABASE
 
-    init {
-        bindRootView(inflater.inflate(R.layout.fragment_tracks_list, parent, false))
+    override fun bindRootView(rootView: View?) {
+        super.bindRootView(rootView)
+        initialize()
+    }
+
+    private fun initialize() {
         mRecyclerViewTracks = findViewById(R.id.rvTracks)
         mRecyclerViewTracks.layoutManager = LinearLayoutManager(getContext())
         (mRecyclerViewTracks.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         mRecyclerViewTracks.setHasFixedSize(true)
-        mRecyclerViewTracksAdapter = TracksListAdapter(this, viewMvcFactory)
-        mRecyclerViewTracks.adapter = mRecyclerViewTracksAdapter
+        tracksListAdapter.setOnTrackClickedListener(this)
+        mRecyclerViewTracks.adapter = this.tracksListAdapter
         mMotionLayout = findViewById(R.id.motionLayoutFloatingCard)
         val fab = findViewById<FloatingActionButton>(R.id.fabTempMode)
         fab.setOnClickListener {
@@ -55,11 +56,7 @@ class TracksListViewMvcImpl(
     }
 
     override fun bindTracks(tracks: List<Track>) {
-        mRecyclerViewTracksAdapter.bindTracks(tracks)
-    }
-
-    override fun bindNavigationHelper(navigationHelper: NavigationHelper) {
-        mNavigationHelper = navigationHelper
+        this.tracksListAdapter.bindTracks(tracks)
     }
 
     override fun getCurrentDataSource(): TracksListViewMvc.TracksDataSource {
@@ -67,7 +64,7 @@ class TracksListViewMvcImpl(
     }
 
     override fun navigateToPlayer(track: Track) {
-        mNavigationHelper.toPlayer(track)
+        this.navigationHelper.toPlayer(track)
     }
 
     override fun displayFloatingCard() {
@@ -94,7 +91,7 @@ class TracksListViewMvcImpl(
             card to track.videoKey,
             title to track.title
         )
-        mNavigationHelper.toDetails(track, extras)
+        this.navigationHelper.toDetails(track, extras)
     }
 
 

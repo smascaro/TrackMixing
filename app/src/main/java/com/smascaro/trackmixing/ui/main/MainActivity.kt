@@ -18,7 +18,7 @@ class MainActivity : BaseActivity() {
     lateinit var mainComponent: MainComponent
     override fun onCreate(savedInstanceState: Bundle?) {
         mainComponent =
-            (application as TrackMixingApplication).appComponent.mainComponent().create()
+            (application as TrackMixingApplication).appComponent.mainComponent().create(this)
         mainComponent.inject(this)
         super.onCreate(savedInstanceState)
 

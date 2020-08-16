@@ -1,11 +1,11 @@
 package com.smascaro.trackmixing.ui.common
 
-import com.smascaro.trackmixing.common.TrackMixingApplication
-import com.smascaro.trackmixing.common.di.ControllerCompositionRoot
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.smascaro.trackmixing.R
+import com.smascaro.trackmixing.common.TrackMixingApplication
+import com.smascaro.trackmixing.common.di.ControllerCompositionRoot
 
 open class BaseFragment : Fragment() {
     private var mControllerCompositionRoot: ControllerCompositionRoot? = null

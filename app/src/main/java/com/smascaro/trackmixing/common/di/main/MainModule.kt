@@ -1,8 +1,15 @@
 package com.smascaro.trackmixing.common.di.main
 
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
+import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.NODE_BASE_URL
 import com.smascaro.trackmixing.networking.NodeApi
 import com.smascaro.trackmixing.networking.NodeDownloadsApi
+import com.smascaro.trackmixing.ui.common.BaseActivity
+import com.smascaro.trackmixing.ui.trackslist.TracksListViewMvc
+import com.smascaro.trackmixing.ui.trackslist.TracksListViewMvcImpl
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -39,5 +46,18 @@ class MainModule {
     @Provides
     fun provideNodeApiForBinaryDownloads(@RetrofitForBinaryData retrofit: Retrofit): NodeDownloadsApi {
         return retrofit.create(NodeDownloadsApi::class.java)
+    }
+
+    @MainScope
+    @Provides
+    fun provideNavController(baseActivity: BaseActivity): NavController {
+        return baseActivity.findNavController(R.id.nav_host_fragment)
+    }
+
+    @Module
+    interface ViewMvcBindings {
+        @MainScope
+        @Binds
+        fun provideTracksListViewMvc(tracksListViewMvcImpl: TracksListViewMvcImpl): TracksListViewMvc
     }
 }

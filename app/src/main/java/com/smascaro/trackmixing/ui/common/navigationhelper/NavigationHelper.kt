@@ -7,13 +7,9 @@ import com.smascaro.trackmixing.tracks.Track
 import com.smascaro.trackmixing.ui.details.TrackDetailsFragmentDirections
 import com.smascaro.trackmixing.ui.search.SongSearchFragmentDirections
 import com.smascaro.trackmixing.ui.trackslist.TracksListFragmentDirections
+import javax.inject.Inject
 
-class NavigationHelper(private val mNavController: NavController) {
-//    private lateinit var mNavController: NavController
-
-//    fun bindNavController(navController: NavController) {
-//        mNavController = navController
-//    }
+class NavigationHelper @Inject constructor(private val mNavController: NavController) {
 
     fun navigateTo(destination: Int) {
         if (destination != mNavController.currentDestination?.id) {
