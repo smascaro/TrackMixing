@@ -18,12 +18,12 @@ class MainActivityViewMvcImpl @Inject constructor(private val playbackStateManag
         val currentPlaybackState = playbackStateManager.getPlayingState()
         if (currentPlaybackState is PlaybackState.Playing || currentPlaybackState is PlaybackState.Paused) {
             val songId = playbackStateManager.getCurrentSong()
-            if (currentPlaybackState is PlaybackState.Playing) {
-                showMessage("Currently playing song with id $songId")
-
-            } else {
-                showMessage("Song with id $songId is currently paused")
-            }
+//            if (currentPlaybackState is PlaybackState.Playing) {
+//                showMessage("Currently playing song with id $songId")
+//            } else {
+//                showMessage("Song with id $songId is currently paused")
+//            }
+//
         } else {
             showMessage("Playback is stopped")
         }

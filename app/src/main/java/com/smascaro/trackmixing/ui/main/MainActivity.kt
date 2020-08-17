@@ -13,7 +13,13 @@ class MainActivity : BaseActivity() {
     lateinit var mainActivityController: MainActivityController
 
     @Inject
+    lateinit var bottomPlayerController: BottomPlayerController
+
+    @Inject
     lateinit var viewMvc: MainActivityViewMvc
+
+    @Inject
+    lateinit var bottomPlayerViewMvc: BottomPlayerViewMvc
 
     lateinit var mainComponent: MainComponent
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +33,10 @@ class MainActivity : BaseActivity() {
         mainActivityController.bindViewMvc(viewMvc)
         mainActivityController.handleIntent(intent)
 
-        mainActivityController.onCreate()
+        bottomPlayerViewMvc.bindRootView(rootView)
+        bottomPlayerController.bindViewMvc(bottomPlayerViewMvc)
+
+        bottomPlayerController.onCreate()
         setContentView(rootView)
     }
 }
