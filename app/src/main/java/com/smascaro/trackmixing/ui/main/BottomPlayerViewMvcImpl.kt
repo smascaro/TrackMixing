@@ -1,6 +1,5 @@
 package com.smascaro.trackmixing.ui.main
 
-import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
@@ -10,13 +9,16 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import com.google.android.material.textview.MaterialTextView
 import com.smascaro.trackmixing.R
+import com.smascaro.trackmixing.tracks.Track
 import com.smascaro.trackmixing.ui.common.BaseObservableViewMvc
 import com.smascaro.trackmixing.ui.common.UiUtils
+import com.smascaro.trackmixing.ui.common.navigationhelper.NavigationHelper
 import javax.inject.Inject
 
 class BottomPlayerViewMvcImpl @Inject constructor(
     private val uiUtils: UiUtils,
-    private val glide: RequestManager
+    private val glide: RequestManager,
+    private val navigationHelper: NavigationHelper
 ) :
     BaseObservableViewMvc<BottomPlayerViewMvc.Listener>(),
     BottomPlayerViewMvc {
@@ -65,6 +67,10 @@ class BottomPlayerViewMvcImpl @Inject constructor(
         layoutParams.height = 0
         bottomBar.layoutParams = layoutParams
         bottomBar.visibility = View.GONE
+    }
+
+    override fun navigateToPlayer(track: Track) {
+        navigationHelper.toPlayer(track)
     }
 
 }

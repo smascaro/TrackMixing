@@ -23,12 +23,15 @@ class MainActivity : BaseActivity() {
 
     lateinit var mainComponent: MainComponent
     override fun onCreate(savedInstanceState: Bundle?) {
-        mainComponent =
-            (application as TrackMixingApplication).appComponent.mainComponent().create(this)
-        mainComponent.inject(this)
         super.onCreate(savedInstanceState)
 
         val rootView = LayoutInflater.from(this).inflate(R.layout.activity_main, null, false)
+        setContentView(rootView)
+
+        mainComponent =
+            (application as TrackMixingApplication).appComponent.mainComponent().create(this)
+        mainComponent.inject(this)
+
         viewMvc.bindRootView(rootView)
         mainActivityController.bindViewMvc(viewMvc)
         mainActivityController.handleIntent(intent)
@@ -37,6 +40,10 @@ class MainActivity : BaseActivity() {
         bottomPlayerController.bindViewMvc(bottomPlayerViewMvc)
 
         bottomPlayerController.onCreate()
-        setContentView(rootView)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        bottomPlayerController.onDestroy()
     }
 }

@@ -1,7 +1,5 @@
 package com.smascaro.trackmixing.common.di
 
-import com.smascaro.trackmixing.ui.main.BottomPlayerViewMvc
-import com.smascaro.trackmixing.ui.main.BottomPlayerViewMvcImpl
 import com.smascaro.trackmixing.ui.main.MainActivityViewMvc
 import com.smascaro.trackmixing.ui.main.MainActivityViewMvcImpl
 import com.smascaro.trackmixing.ui.player.TracksPlayerViewMvc
@@ -17,10 +15,6 @@ abstract class ViewMvcBuildersModule {
     @Singleton
     @Binds
     abstract fun provideMainActivityViewMvc(mainActivityViewMvcImpl: MainActivityViewMvcImpl): MainActivityViewMvc
-
-    @Singleton
-    @Binds
-    abstract fun provideBottomPlayerViewMvc(bottomPlayerViewMvcImpl: BottomPlayerViewMvcImpl): BottomPlayerViewMvc
 
     @Singleton
     @Binds
