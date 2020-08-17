@@ -103,7 +103,7 @@ class PlayingTrackState(
     }
 
     fun finalize() {
-        mPlayer.reset()
+//        mPlayer.reset()
         mPlayer.release()
         mIsPrepared = false
     }

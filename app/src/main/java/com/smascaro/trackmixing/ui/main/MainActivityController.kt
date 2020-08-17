@@ -29,18 +29,22 @@ class MainActivityController @Inject constructor(val mNodeApi: NodeApi) {
                             call: Call<RequestTrackResponseSchema>,
                             t: Throwable
                         ) {
-                            mViewMvc.displayRequestError(t.message ?: "Unknown throwable message")
+                            mViewMvc.showMessage(t.message ?: "Unknown throwable message")
                         }
 
                         override fun onResponse(
                             call: Call<RequestTrackResponseSchema>,
                             response: Response<RequestTrackResponseSchema>
                         ) {
-                            mViewMvc.displayRequestError("Request was a success. Code ${response.body()?.status?.message ?: "Unkown"}")
+                            mViewMvc.showMessage("Request was a success. Code ${response.body()?.status?.message ?: "Unkown"}")
                         }
 
                     })
             }
         }
+    }
+
+    fun onCreate() {
+        mViewMvc.checkPlaybackState()
     }
 }

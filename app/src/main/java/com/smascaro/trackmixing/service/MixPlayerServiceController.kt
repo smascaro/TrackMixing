@@ -1,6 +1,8 @@
 package com.smascaro.trackmixing.service
 
 import com.smascaro.trackmixing.common.*
+import com.smascaro.trackmixing.data.PlaybackStateManager
+import com.smascaro.trackmixing.data.PlaybackStateManager.*
 import com.smascaro.trackmixing.tracks.Track
 import com.smascaro.trackmixing.ui.common.BaseObservable
 import com.smascaro.trackmixing.ui.notification.NotificationHelper
@@ -8,7 +10,8 @@ import javax.inject.Inject
 
 class MixPlayerServiceController @Inject constructor(
     val playbackHelper: PlaybackHelper,
-    val notificationHelper: NotificationHelper
+    val notificationHelper: NotificationHelper,
+    val playbackStateManager: PlaybackStateManager
 ) : BaseObservable<MixPlayerServiceController.ServiceActionsDelegate>(), PlaybackHelper.Listener {
     interface ServiceActionsDelegate {
         fun onStopService()
@@ -25,6 +28,7 @@ class MixPlayerServiceController @Inject constructor(
         getListeners().forEach {
             it.onStopService()
         }
+        playbackStateManager.setPlayingStateFlag(PlaybackState.Stopped())
     }
 
     fun createOrUpdateNotification() {
@@ -41,7 +45,7 @@ class MixPlayerServiceController @Inject constructor(
     }
 
     override fun onSongFinished() {
-        //No action
+        playbackStateManager.setPlayingStateFlag(PlaybackState.Paused())
     }
 
     fun onDestroy() {
@@ -72,11 +76,16 @@ class MixPlayerServiceController @Inject constructor(
                 notificationHelper.getNotification()
             )
         )
+        if (playbackStateManager.getCurrentSong() != playbackHelper.getTrack().videoKey) {
+            playbackStateManager.setCurrentSongIdPlaying(playbackHelper.getTrack().videoKey)
+        }
+        playbackStateManager.setPlayingStateFlag(PlaybackState.Playing())
     }
 
     fun pauseMaster() {
         playbackHelper.pauseMaster()
         stopForeground(false)
+        playbackStateManager.setPlayingStateFlag(PlaybackState.Paused())
     }
 
     private fun startForeground(foregroundNotification: ForegroundNotification) {

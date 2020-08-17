@@ -27,6 +27,7 @@ class MainActivity : BaseActivity() {
         mainActivityController.bindViewMvc(viewMvc)
         mainActivityController.handleIntent(intent)
 
+        mainActivityController.onCreate()
         setContentView(rootView)
     }
 }

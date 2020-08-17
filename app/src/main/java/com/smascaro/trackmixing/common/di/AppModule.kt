@@ -1,11 +1,14 @@
 package com.smascaro.trackmixing.common.di
 
 import android.content.Context
+import android.content.SharedPreferences
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.smascaro.trackmixing.common.FilesStorageHelper
+import com.smascaro.trackmixing.common.SHARED_PREFERENCES_PLAYBACK
 import com.smascaro.trackmixing.data.DownloadsDao
 import com.smascaro.trackmixing.data.DownloadsDatabase
+import com.smascaro.trackmixing.data.PlaybackStateManager
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -36,4 +39,16 @@ class AppModule {
         return FilesStorageHelper(context)
     }
 
+    @Singleton
+    @Provides
+    @PlaybackSharedPreferences
+    fun providePlaybackSharedPreferences(context: Context): SharedPreferences {
+        return context.getSharedPreferences(SHARED_PREFERENCES_PLAYBACK, Context.MODE_PRIVATE)
+    }
+
+    @Singleton
+    @Provides
+    fun providePlaybackStateManager(@PlaybackSharedPreferences sharedPreferences: SharedPreferences): PlaybackStateManager {
+        return PlaybackStateManager(sharedPreferences)
+    }
 }
