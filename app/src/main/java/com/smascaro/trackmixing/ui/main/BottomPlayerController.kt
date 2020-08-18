@@ -3,10 +3,14 @@ package com.smascaro.trackmixing.ui.main
 import com.smascaro.trackmixing.data.DownloadsDao
 import com.smascaro.trackmixing.data.PlaybackStateManager
 import com.smascaro.trackmixing.data.toModel
+import com.smascaro.trackmixing.service.events.PauseMasterEvent
+import com.smascaro.trackmixing.service.events.PlayMasterEvent
 import com.smascaro.trackmixing.tracks.Track
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import org.greenrobot.eventbus.EventBus
+import timber.log.Timber
 import javax.inject.Inject
 
 class BottomPlayerController @Inject constructor(
@@ -61,7 +65,14 @@ class BottomPlayerController @Inject constructor(
     }
 
     override fun onActionButtonClicked() {
-//        TODO("Not yet implemented")
+        val currentState = playbackStateManager.getPlayingState()
+        if (currentState is PlaybackStateManager.PlaybackState.Playing) {
+            EventBus.getDefault().post(PauseMasterEvent())
+            Timber.d("Sent a PauseMasterEvent")
+        } else if (currentState is PlaybackStateManager.PlaybackState.Paused) {
+            EventBus.getDefault().post(PlayMasterEvent())
+            Timber.d("Sent a PlayMasterEvent")
+        }
     }
 
     override fun onPlayerStateChanged() {

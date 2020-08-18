@@ -43,6 +43,7 @@
             android:textSize="18sp" />
 
         <ImageView
+            android:id="@+id/iv_action_button_player_bottom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.2"

@@ -2,10 +2,17 @@ package com.smascaro.trackmixing.service
 
 import com.smascaro.trackmixing.common.*
 import com.smascaro.trackmixing.data.PlaybackStateManager
-import com.smascaro.trackmixing.data.PlaybackStateManager.*
+import com.smascaro.trackmixing.data.PlaybackStateManager.PlaybackState
+import com.smascaro.trackmixing.service.events.PauseMasterEvent
+import com.smascaro.trackmixing.service.events.PlayMasterEvent
+import com.smascaro.trackmixing.service.events.StartServiceEvent
 import com.smascaro.trackmixing.tracks.Track
 import com.smascaro.trackmixing.ui.common.BaseObservable
 import com.smascaro.trackmixing.ui.notification.NotificationHelper
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
+import timber.log.Timber
 import javax.inject.Inject
 
 class MixPlayerServiceController @Inject constructor(
@@ -21,6 +28,7 @@ class MixPlayerServiceController @Inject constructor(
 
     fun onCreate() {
         playbackHelper.registerListener(this)
+        EventBus.getDefault().register(this)
     }
 
     fun stopService() {
@@ -29,6 +37,7 @@ class MixPlayerServiceController @Inject constructor(
             it.onStopService()
         }
         playbackStateManager.setPlayingStateFlag(PlaybackState.Stopped())
+        EventBus.getDefault().unregister(this)
     }
 
     fun createOrUpdateNotification() {
@@ -114,5 +123,22 @@ class MixPlayerServiceController @Inject constructor(
             NOTIFICATION_ACTION_UNMUTE_DRUMS -> playbackHelper.unmuteTrack(TrackInstrument.DRUMS)
             NOTIFICATION_ACTION_STOP_SERVICE -> stopService()
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(startServiceEvent: StartServiceEvent) {
+        Timber.d("Event of type StartServiceEvent received")
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(playMasterEvent: PlayMasterEvent) {
+        Timber.d("Event of type PlayMasterEvent received")
+        playMaster()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(pauseMasterEvent: PauseMasterEvent) {
+        Timber.d("Event of type PauseMasterEvent received")
+        pauseMaster()
     }
 }

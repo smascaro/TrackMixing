@@ -1,8 +1,10 @@
 package com.smascaro.trackmixing.service
 
+import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import com.smascaro.trackmixing.common.NOTIFICATION_ACTION_LOAD_TRACK
+import com.smascaro.trackmixing.common.NOTIFICATION_ACTION_START_SERVICE
 import com.smascaro.trackmixing.common.NOTIFICATION_EXTRA_LOAD_TRACK_PARAM_KEY
 import com.smascaro.trackmixing.common.TrackMixingApplication
 import com.smascaro.trackmixing.service.common.BaseService
@@ -12,6 +14,16 @@ import javax.inject.Inject
 
 class MixPlayerService : BaseService(),
     MixPlayerServiceController.ServiceActionsDelegate {
+
+    companion object {
+        fun start(context: Context): Boolean {
+            val intent = Intent(context, MixPlayerService::class.java).apply {
+                action = NOTIFICATION_ACTION_START_SERVICE
+            }
+            val startedComponentName = context.startService(intent)
+            return startedComponentName != null
+        }
+    }
 
     @Inject
     lateinit var controller: MixPlayerServiceController
@@ -83,4 +95,5 @@ class MixPlayerService : BaseService(),
     override fun onStopForeground(removeNotification: Boolean) {
         stopForeground(removeNotification)
     }
+
 }

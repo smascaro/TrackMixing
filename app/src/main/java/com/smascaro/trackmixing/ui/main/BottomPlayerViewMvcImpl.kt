@@ -32,11 +32,13 @@ class BottomPlayerViewMvcImpl @Inject constructor(
     private lateinit var bottomBar: ConstraintLayout
     private lateinit var bottomBarTextView: MaterialTextView
     private lateinit var bottomBarBackgroundImageView: ImageView
+    private lateinit var bottomBarActionButton: ImageView
 
     private var isBottomBarShown = false
     private val bottomBarHeight = uiUtils.DpToPixels(80f)
 
     private lateinit var sharedPreferences: SharedPreferences
+
     override fun bindRootView(rootView: View?) {
         super.bindRootView(rootView)
         initialize()
@@ -50,11 +52,21 @@ class BottomPlayerViewMvcImpl @Inject constructor(
         bottomBarTextView = bottomBarWrapper.findViewById(R.id.tv_track_title_player_bottom)
         bottomBarBackgroundImageView =
             bottomBarWrapper.findViewById(R.id.iv_background_player_bottom)
+        bottomBarActionButton = bottomBarWrapper.findViewById(R.id.iv_action_button_player_bottom)
+        bottomBarActionButton.setOnClickListener {
+            getListeners().forEach {
+                it.onActionButtonClicked()
+            }
+        }
         bottomBar.setOnClickListener {
             getListeners().forEach {
                 it.onLayoutClick()
             }
         }
+        setupSharedPreferences()
+    }
+
+    private fun setupSharedPreferences() {
         sharedPreferences =
             SharedPreferencesFactory.getPlaybackSharedPreferencesFactory(getContext()!!)
         sharedPreferences.registerOnSharedPreferenceChangeListener(this)
@@ -62,23 +74,33 @@ class BottomPlayerViewMvcImpl @Inject constructor(
 
     override fun showPlayerBar(data: BottomPlayerData) {
         bottomBarTextView.text = data.title
-        glide
-            .asBitmap()
-            .load(data.thumbnailUrl)
-            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-            .into(BitmapImageViewTarget(bottomBarBackgroundImageView))
-        bottomBar.visibility = View.VISIBLE
-        val layoutParams = bottomBar.layoutParams
-        layoutParams.height = bottomBarHeight.toInt()
-        bottomBar.layoutParams = layoutParams
+        renderBottomBarBackground(data.thumbnailUrl)
+        setBottomBarVisibility(View.VISIBLE)
+        setBottomBarHeight(bottomBarHeight.toInt())
         isBottomBarShown = true
     }
 
-    override fun hidePlayerBar() {
+    private fun renderBottomBarBackground(imageUrl: String) {
+        glide
+            .asBitmap()
+            .load(imageUrl)
+            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+            .into(BitmapImageViewTarget(bottomBarBackgroundImageView))
+    }
+
+    private fun setBottomBarVisibility(visibility: Int) {
+        bottomBar.visibility = visibility
+    }
+
+    private fun setBottomBarHeight(height: Int) {
         val layoutParams = bottomBar.layoutParams
-        layoutParams.height = 0
+        layoutParams.height = height
         bottomBar.layoutParams = layoutParams
-        bottomBar.visibility = View.GONE
+    }
+
+    override fun hidePlayerBar() {
+        setBottomBarHeight(0)
+        setBottomBarVisibility(View.GONE)
         isBottomBarShown = false
     }
 

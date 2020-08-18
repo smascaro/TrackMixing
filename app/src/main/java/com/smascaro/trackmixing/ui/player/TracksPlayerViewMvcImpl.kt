@@ -3,10 +3,16 @@ package com.smascaro.trackmixing.ui.player
 import android.app.PendingIntent
 import android.content.Intent
 import android.os.Bundle
-import com.smascaro.trackmixing.common.*
+import com.smascaro.trackmixing.common.NOTIFICATION_ACTION_LOAD_TRACK
+import com.smascaro.trackmixing.common.NOTIFICATION_ACTION_PAUSE_MASTER
+import com.smascaro.trackmixing.common.NOTIFICATION_ACTION_PLAY_MASTER
+import com.smascaro.trackmixing.common.NOTIFICATION_EXTRA_LOAD_TRACK_PARAM_KEY
 import com.smascaro.trackmixing.service.MixPlayerService
+import com.smascaro.trackmixing.service.events.PlayMasterEvent
+import com.smascaro.trackmixing.service.events.StartServiceEvent
 import com.smascaro.trackmixing.tracks.Track
 import com.smascaro.trackmixing.ui.common.BaseObservableViewMvc
+import org.greenrobot.eventbus.EventBus
 import javax.inject.Inject
 
 class TracksPlayerViewMvcImpl @Inject constructor() :
@@ -21,12 +27,9 @@ class TracksPlayerViewMvcImpl @Inject constructor() :
     }
 
     override fun startService() {
-        if (mServiceIntent == null) {
-            mServiceIntent = Intent(getContext(), MixPlayerService::class.java).apply {
-                action = NOTIFICATION_ACTION_START_SERVICE
-            }
-            val startedComponentName = getContext()?.startService(mServiceIntent)
-            mIsServiceStarted = startedComponentName != null
+        if (getContext() != null) {
+            mIsServiceStarted = MixPlayerService.start(getContext()!!)
+            EventBus.getDefault().post(StartServiceEvent())
         }
     }
 
@@ -43,6 +46,7 @@ class TracksPlayerViewMvcImpl @Inject constructor() :
 
     override fun playMaster() {
         sendActionToService(NOTIFICATION_ACTION_PLAY_MASTER)
+        EventBus.getDefault().post(PlayMasterEvent())
     }
 
     override fun pauseMaster() {
