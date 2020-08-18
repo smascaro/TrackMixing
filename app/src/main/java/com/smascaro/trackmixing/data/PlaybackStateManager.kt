@@ -1,10 +1,14 @@
 package com.smascaro.trackmixing.data
 
-import android.content.SharedPreferences
+import android.content.Context
 import com.smascaro.trackmixing.common.SHARED_PREFERENCES_PLAYBACK_IS_PLAYING
 import com.smascaro.trackmixing.common.SHARED_PREFERENCES_PLAYBACK_SONG_PLAYING
+import javax.inject.Inject
 
-class PlaybackStateManager(private val sharedPreferences: SharedPreferences) {
+class PlaybackStateManager @Inject constructor(context: Context) {
+    private val sharedPreferences =
+        SharedPreferencesFactory.getPlaybackSharedPreferencesFactory(context)
+
     sealed class PlaybackState(protected val value: Int) {
         companion object {
             val PLAYBACK_STATE_PLAYING: Int = 0

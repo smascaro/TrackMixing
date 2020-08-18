@@ -5,8 +5,8 @@ import com.smascaro.trackmixing.data.PlaybackStateManager
 import com.smascaro.trackmixing.data.toModel
 import com.smascaro.trackmixing.tracks.Track
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class BottomPlayerController @Inject constructor(
@@ -20,23 +20,33 @@ class BottomPlayerController @Inject constructor(
         this.viewMvc.registerListener(this)
     }
 
-    fun onCreate() = runBlocking {
+    fun onCreate() {
+        updateCurrentPlayingTrack()
+    }
+
+    private fun updateCurrentPlayingTrack() = runBlocking {
         val playingState = playbackStateManager.getPlayingState()
         if (playingState is PlaybackStateManager.PlaybackState.Playing || playingState is PlaybackStateManager.PlaybackState.Paused) {
             val songId = playbackStateManager.getCurrentSong()
-            launch(Dispatchers.Default) {
-                val foundTracks = downloadsDao.get(songId)
-                if (foundTracks.isNotEmpty()) {
-                    currentTrack = foundTracks.first().toModel()
-                    viewMvc.showPlayerBar(
-                        BottomPlayerData(
-                            currentTrack!!.title,
-                            playingState,
-                            currentTrack!!.thumbnailUrl
-                        )
-                    )
-                }
-            }
+            currentTrack = fetchTrackByVideoId(songId)
+            viewMvc.showPlayerBar(
+                BottomPlayerData(
+                    currentTrack!!.title,
+                    playingState,
+                    currentTrack!!.thumbnailUrl
+                )
+            )
+        } else if (playingState is PlaybackStateManager.PlaybackState.Stopped) {
+            viewMvc.hidePlayerBar()
+        }
+    }
+
+    private suspend fun fetchTrackByVideoId(videoId: String): Track = withContext(Dispatchers.IO) {
+        val foundTracks = downloadsDao.get(videoId)
+        if (foundTracks.isNotEmpty()) {
+            foundTracks.first().toModel()
+        } else {
+            throw Exception("Track with Id $videoId not found in database")
         }
     }
 
@@ -52,5 +62,9 @@ class BottomPlayerController @Inject constructor(
 
     override fun onActionButtonClicked() {
 //        TODO("Not yet implemented")
+    }
+
+    override fun onPlayerStateChanged() {
+        updateCurrentPlayingTrack()
     }
 }

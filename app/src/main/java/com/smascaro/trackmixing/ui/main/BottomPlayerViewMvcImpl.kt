@@ -1,5 +1,7 @@
 package com.smascaro.trackmixing.ui.main
 
+//import com.smascaro.trackmixing.common.di.PlaybackSharedPreferences
+import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
@@ -9,6 +11,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import com.google.android.material.textview.MaterialTextView
 import com.smascaro.trackmixing.R
+import com.smascaro.trackmixing.common.SHARED_PREFERENCES_PLAYBACK_IS_PLAYING
+import com.smascaro.trackmixing.common.SHARED_PREFERENCES_PLAYBACK_SONG_PLAYING
+import com.smascaro.trackmixing.data.SharedPreferencesFactory
 import com.smascaro.trackmixing.tracks.Track
 import com.smascaro.trackmixing.ui.common.BaseObservableViewMvc
 import com.smascaro.trackmixing.ui.common.UiUtils
@@ -21,14 +26,17 @@ class BottomPlayerViewMvcImpl @Inject constructor(
     private val navigationHelper: NavigationHelper
 ) :
     BaseObservableViewMvc<BottomPlayerViewMvc.Listener>(),
-    BottomPlayerViewMvc {
+    BottomPlayerViewMvc,
+    SharedPreferences.OnSharedPreferenceChangeListener {
 
     private lateinit var bottomBar: ConstraintLayout
     private lateinit var bottomBarTextView: MaterialTextView
     private lateinit var bottomBarBackgroundImageView: ImageView
 
+    private var isBottomBarShown = false
     private val bottomBarHeight = uiUtils.DpToPixels(80f)
 
+    private lateinit var sharedPreferences: SharedPreferences
     override fun bindRootView(rootView: View?) {
         super.bindRootView(rootView)
         initialize()
@@ -47,6 +55,9 @@ class BottomPlayerViewMvcImpl @Inject constructor(
                 it.onLayoutClick()
             }
         }
+        sharedPreferences =
+            SharedPreferencesFactory.getPlaybackSharedPreferencesFactory(getContext()!!)
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this)
     }
 
     override fun showPlayerBar(data: BottomPlayerData) {
@@ -60,6 +71,7 @@ class BottomPlayerViewMvcImpl @Inject constructor(
         val layoutParams = bottomBar.layoutParams
         layoutParams.height = bottomBarHeight.toInt()
         bottomBar.layoutParams = layoutParams
+        isBottomBarShown = true
     }
 
     override fun hidePlayerBar() {
@@ -67,10 +79,19 @@ class BottomPlayerViewMvcImpl @Inject constructor(
         layoutParams.height = 0
         bottomBar.layoutParams = layoutParams
         bottomBar.visibility = View.GONE
+        isBottomBarShown = false
     }
 
     override fun navigateToPlayer(track: Track) {
         navigationHelper.toPlayer(track)
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        if (key != null && key == SHARED_PREFERENCES_PLAYBACK_SONG_PLAYING || key == SHARED_PREFERENCES_PLAYBACK_IS_PLAYING) {
+            getListeners().forEach {
+                it.onPlayerStateChanged()
+            }
+        }
     }
 
 }

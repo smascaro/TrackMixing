@@ -7,6 +7,7 @@ interface BottomPlayerViewMvc : ObservableViewMvc<BottomPlayerViewMvc.Listener> 
     interface Listener {
         fun onLayoutClick()
         fun onActionButtonClicked()
+        fun onPlayerStateChanged()
     }
 
     fun showPlayerBar(data: BottomPlayerData)
