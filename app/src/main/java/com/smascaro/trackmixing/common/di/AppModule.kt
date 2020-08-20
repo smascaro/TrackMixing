@@ -3,14 +3,24 @@ package com.smascaro.trackmixing.common.di
 import android.content.Context
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
-import com.smascaro.trackmixing.common.utils.FilesStorageHelper
 import com.smascaro.trackmixing.common.data.datasource.dao.DownloadsDao
 import com.smascaro.trackmixing.common.data.datasource.dao.DownloadsDatabase
+import com.smascaro.trackmixing.common.data.datasource.network.NodeApi
+import com.smascaro.trackmixing.common.data.datasource.network.NodeDownloadsApi
+import com.smascaro.trackmixing.common.di.main.RetrofitForBinaryData
+import com.smascaro.trackmixing.common.di.main.RetrofitForJsonData
+import com.smascaro.trackmixing.common.utils.FilesStorageHelper
+import com.smascaro.trackmixing.common.utils.NODE_BASE_URL
+import com.smascaro.trackmixing.common.utils.NotificationHelper
 import com.smascaro.trackmixing.playbackservice.utils.PlaybackSession
 import com.smascaro.trackmixing.playbackservice.utils.PlaybackSessionImpl
+import com.smascaro.trackmixing.playbackservice.utils.PlayerNotificationHelper
+import com.smascaro.trackmixing.player.business.downloadtrack.utils.DownloadNotificationHelper
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -39,10 +49,69 @@ class AppModule {
         return FilesStorageHelper(context)
     }
 
+    @Singleton
+    @Provides
+    @RetrofitForJsonData
+    fun provideRetrofitInstanceWithJson(): Retrofit {
+        return Retrofit.Builder().apply {
+            baseUrl(NODE_BASE_URL)
+            addConverterFactory(GsonConverterFactory.create())
+        }.build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideNodeApi(@RetrofitForJsonData retrofit: Retrofit): NodeApi {
+        return retrofit.create(NodeApi::class.java)
+    }
+
+    @Singleton
+    @Provides
+    @RetrofitForBinaryData
+    fun provideRetrofitInstanceForBinaryData(): Retrofit {
+        return Retrofit.Builder().apply {
+            baseUrl(NODE_BASE_URL)
+        }.build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideNodeApiForBinaryDownloads(@RetrofitForBinaryData retrofit: Retrofit): NodeDownloadsApi {
+        return retrofit.create(NodeDownloadsApi::class.java)
+    }
+
+    @Singleton
+    @Provides
+    @DownloadNotificationHelperImplementation
+    fun provideDownloadNotificationHelper(context: Context): NotificationHelper {
+        return DownloadNotificationHelper(context)
+    }
+
+    @Singleton
+    @Provides
+    @PlayerNotificationHelperImplementation
+    fun providePlayerNotificationHelper(
+        context: Context,
+        requestManager: RequestManager
+    ): NotificationHelper {
+        return PlayerNotificationHelper(context, requestManager)
+    }
+
+
     @Module
     interface StaticBindings {
         @Singleton
         @Binds
         fun providePlaybackSession(playbackSessionImpl: PlaybackSessionImpl): PlaybackSession
+
+//        @Singleton
+//        @Binds
+//        @Named("PlayerNotificationHelper")
+//        fun providePlayerNotificationHelper(playerNotificationHelper: PlayerNotificationHelper): NotificationHelper
+//
+//        @Singleton
+//        @Binds
+//        @Named("DownloadNotificationHelper")
+//        fun provideDownloadNotificationHelper(playerNotificationHelper: DownloadNotificationHelper): NotificationHelper
     }
 }

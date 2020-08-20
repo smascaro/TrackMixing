@@ -8,4 +8,5 @@ interface MainActivityViewMvc :
 
     fun showMessage(text: String)
     fun checkPlaybackState()
+    fun startProcessingRequest(url: String)
 }

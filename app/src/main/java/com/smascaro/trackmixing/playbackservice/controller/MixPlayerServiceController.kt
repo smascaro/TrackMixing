@@ -1,15 +1,15 @@
 package com.smascaro.trackmixing.playbackservice.controller
 
-import com.smascaro.trackmixing.common.utils.PlaybackStateManager
-import com.smascaro.trackmixing.common.utils.PlaybackStateManager.PlaybackState
-import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
+import com.smascaro.trackmixing.common.data.model.ForegroundNotification
 import com.smascaro.trackmixing.common.data.model.Track
+import com.smascaro.trackmixing.common.di.PlayerNotificationHelperImplementation
 import com.smascaro.trackmixing.common.utils.*
-import com.smascaro.trackmixing.playbackservice.model.ForegroundNotification
-import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
-import com.smascaro.trackmixing.playbackservice.utils.NotificationHelper
-import com.smascaro.trackmixing.playbackservice.utils.PlaybackHelper
+import com.smascaro.trackmixing.common.utils.PlaybackStateManager.PlaybackState
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable
+import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
+import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
+import com.smascaro.trackmixing.common.utils.NotificationHelper
+import com.smascaro.trackmixing.playbackservice.utils.PlaybackHelper
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 class MixPlayerServiceController @Inject constructor(
     val playbackHelper: PlaybackHelper,
-    val notificationHelper: NotificationHelper,
+    @PlayerNotificationHelperImplementation val notificationHelper: NotificationHelper,
     val playbackStateManager: PlaybackStateManager
 ) : BaseObservable<MixPlayerServiceController.ServiceActionsDelegate>(),
     PlaybackHelper.Listener {
@@ -45,7 +45,7 @@ class MixPlayerServiceController @Inject constructor(
     }
 
     fun createOrUpdateNotification() {
-        notificationHelper.updateForegroundNotification(playbackHelper.getPlaybackState())
+        notificationHelper.updateNotification(playbackHelper.getPlaybackState())
     }
 
     override fun onInitializationFinished() {
@@ -77,7 +77,7 @@ class MixPlayerServiceController @Inject constructor(
         createOrUpdateNotification()
         startForeground(
             ForegroundNotification(
-                NOTIFICATION_ID,
+                PLAYER_NOTIFICATION_ID,
                 notificationHelper.getNotification()
             )
         )
@@ -85,7 +85,7 @@ class MixPlayerServiceController @Inject constructor(
         createOrUpdateNotification()
         startForeground(
             ForegroundNotification(
-                NOTIFICATION_ID,
+                PLAYER_NOTIFICATION_ID,
                 notificationHelper.getNotification()
             )
         )
@@ -115,18 +115,18 @@ class MixPlayerServiceController @Inject constructor(
 
     fun executeAction(action: String?) {
         when (action) {
-            NOTIFICATION_ACTION_PLAY_MASTER -> playMaster()
-            NOTIFICATION_ACTION_PAUSE_MASTER -> pauseMaster()
-            NOTIFICATION_ACTION_MUTE_VOCALS -> playbackHelper.muteTrack(TrackInstrument.VOCALS)
-            NOTIFICATION_ACTION_UNMUTE_VOCALS -> playbackHelper.unmuteTrack(TrackInstrument.VOCALS)
-            NOTIFICATION_ACTION_MUTE_OTHER -> playbackHelper.muteTrack(TrackInstrument.OTHER)
-            NOTIFICATION_ACTION_UNMUTE_OTHER -> playbackHelper.unmuteTrack(TrackInstrument.OTHER)
-            NOTIFICATION_ACTION_MUTE_BASS -> playbackHelper.muteTrack(TrackInstrument.BASS)
-            NOTIFICATION_ACTION_UNMUTE_BASS -> playbackHelper.unmuteTrack(TrackInstrument.BASS)
-            NOTIFICATION_ACTION_MUTE_DRUMS -> playbackHelper.muteTrack(TrackInstrument.DRUMS)
-            NOTIFICATION_ACTION_UNMUTE_DRUMS -> playbackHelper.unmuteTrack(TrackInstrument.DRUMS)
-            NOTIFICATION_ACTION_START_SERVICE -> onStart()
-            NOTIFICATION_ACTION_STOP_SERVICE -> stopService()
+            PLAYER_NOTIFICATION_ACTION_PLAY_MASTER -> playMaster()
+            PLAYER_NOTIFICATION_ACTION_PAUSE_MASTER -> pauseMaster()
+            PLAYER_NOTIFICATION_ACTION_MUTE_VOCALS -> playbackHelper.muteTrack(TrackInstrument.VOCALS)
+            PLAYER_NOTIFICATION_ACTION_UNMUTE_VOCALS -> playbackHelper.unmuteTrack(TrackInstrument.VOCALS)
+            PLAYER_NOTIFICATION_ACTION_MUTE_OTHER -> playbackHelper.muteTrack(TrackInstrument.OTHER)
+            PLAYER_NOTIFICATION_ACTION_UNMUTE_OTHER -> playbackHelper.unmuteTrack(TrackInstrument.OTHER)
+            PLAYER_NOTIFICATION_ACTION_MUTE_BASS -> playbackHelper.muteTrack(TrackInstrument.BASS)
+            PLAYER_NOTIFICATION_ACTION_UNMUTE_BASS -> playbackHelper.unmuteTrack(TrackInstrument.BASS)
+            PLAYER_NOTIFICATION_ACTION_MUTE_DRUMS -> playbackHelper.muteTrack(TrackInstrument.DRUMS)
+            PLAYER_NOTIFICATION_ACTION_UNMUTE_DRUMS -> playbackHelper.unmuteTrack(TrackInstrument.DRUMS)
+            PLAYER_NOTIFICATION_ACTION_START_SERVICE -> onStart()
+            PLAYER_NOTIFICATION_ACTION_STOP_SERVICE -> stopService()
         }
     }
 

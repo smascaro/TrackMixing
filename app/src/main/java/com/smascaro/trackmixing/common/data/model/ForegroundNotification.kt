@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.playbackservice.model
+package com.smascaro.trackmixing.common.data.model
 
 import android.app.Notification
 

@@ -1,59 +1,45 @@
 package com.smascaro.trackmixing.playbackservice.utils
 
 import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.support.v4.media.session.MediaSessionCompat
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.common.utils.*
+import com.smascaro.trackmixing.common.data.model.NotificationData
 import com.smascaro.trackmixing.common.error.NonExistentInstrumentException
-import com.smascaro.trackmixing.playbackservice.model.MixPlaybackState
+import com.smascaro.trackmixing.common.error.WrongArgumentType
+import com.smascaro.trackmixing.common.utils.*
 import com.smascaro.trackmixing.playbackservice.MixPlayerService
+import com.smascaro.trackmixing.playbackservice.model.MixPlaybackState
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
 import javax.inject.Inject
 
-class NotificationHelper @Inject constructor(val mContext: Context, val glide: RequestManager) {
-    private var mNotificationManager: NotificationManagerCompat
-    private lateinit var mNotificationBuilder: NotificationCompat.Builder
+class PlayerNotificationHelper @Inject constructor(
+    context: Context,
+    val glide: RequestManager
+) : NotificationHelper(context) {
+    //    private var mNotificationManager: NotificationManagerCompat
     private var mThumbnailBitmap: Bitmap? = null
     private var mMediaSession: MediaSessionCompat? = null
 
-    init {
-        mNotificationManager = NotificationManagerCompat.from(mContext)
-    }
-
-    fun getNotification(): Notification {
-        return mNotificationBuilder.build()
-    }
-
     fun getUpdatedNotification(playbackState: MixPlaybackState): Notification {
-        updateForegroundNotification(playbackState)
+        updateNotification(playbackState)
         return getNotification()
     }
 
-    fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val notificationChannel = NotificationChannel(
-                NOTIFICATION_CHANNEL_ID,
-                "TrackMixing player notification", NotificationManager.IMPORTANCE_LOW
-            )
-            mNotificationManager.createNotificationChannel(notificationChannel)
+    override fun updateNotification(data: NotificationData) {
+        if (data !is MixPlaybackState) {
+            throw WrongArgumentType("Argument for player notification must be of type MixPlaybackState")
         }
-    }
-
-    fun updateForegroundNotification(playbackState: MixPlaybackState) {
+        val playbackState = data
         glide
             .asBitmap()
             .load(playbackState.trackThumbnailUrl)
@@ -70,10 +56,10 @@ class NotificationHelper @Inject constructor(val mContext: Context, val glide: R
                     transition: Transition<in Bitmap>?
                 ) {
                     mThumbnailBitmap = resource
-                    mNotificationBuilder.setLargeIcon(mThumbnailBitmap)
-                    mNotificationManager.notify(
-                        NOTIFICATION_ID,
-                        mNotificationBuilder.build()
+                    notificationBuilder.setLargeIcon(mThumbnailBitmap)
+                    notificationManager.notify(
+                        PLAYER_NOTIFICATION_ID,
+                        notificationBuilder.build()
                     )
                 }
 
@@ -106,12 +92,13 @@ class NotificationHelper @Inject constructor(val mContext: Context, val glide: R
         if (mMediaSession == null) {
             mMediaSession =
                 MediaSessionCompat(
-                    mContext,
-                    NOTIFICATION_MEDIA_SESSION_TAG
+                    context,
+                    PLAYER_NOTIFICATION_MEDIA_SESSION_TAG
                 )
         }
-        mNotificationBuilder =
-            NotificationCompat.Builder(mContext,
+        notificationBuilder =
+            NotificationCompat.Builder(
+                context,
                 NOTIFICATION_CHANNEL_ID
             ).apply {
                 setSmallIcon(R.drawable.ic_note)
@@ -132,9 +119,9 @@ class NotificationHelper @Inject constructor(val mContext: Context, val glide: R
                 priority = NotificationCompat.PRIORITY_HIGH
             }
         if (mThumbnailBitmap != null) {
-            mNotificationBuilder.setLargeIcon(mThumbnailBitmap)
+            notificationBuilder.setLargeIcon(mThumbnailBitmap)
         }
-        mNotificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.build())
+        notificationManager.notify(PLAYER_NOTIFICATION_ID, notificationBuilder.build())
     }
 
     private fun getTrackDrawableId(
@@ -165,11 +152,11 @@ class NotificationHelper @Inject constructor(val mContext: Context, val glide: R
     }
 
     private fun createDeleteIntent(): PendingIntent? {
-        val intent = Intent(mContext, MixPlayerService::class.java)
+        val intent = Intent(context, MixPlayerService::class.java)
         intent.action =
-            NOTIFICATION_ACTION_STOP_SERVICE
+            PLAYER_NOTIFICATION_ACTION_STOP_SERVICE
         val pendingIntent = PendingIntent.getService(
-            mContext,
+            context,
             2,
             intent,
             PendingIntent.FLAG_CANCEL_CURRENT
@@ -178,28 +165,28 @@ class NotificationHelper @Inject constructor(val mContext: Context, val glide: R
     }
 
     private fun createIntentTrack(instrument: TrackInstrument, isPlaying: Boolean): PendingIntent {
-        val intent = Intent(mContext, MixPlayerService::class.java)
+        val intent = Intent(context, MixPlayerService::class.java)
         val action = when (instrument) {
             TrackInstrument.VOCALS -> when (isPlaying) {
-                true -> NOTIFICATION_ACTION_MUTE_VOCALS
-                false -> NOTIFICATION_ACTION_UNMUTE_VOCALS
+                true -> PLAYER_NOTIFICATION_ACTION_MUTE_VOCALS
+                false -> PLAYER_NOTIFICATION_ACTION_UNMUTE_VOCALS
             }
             TrackInstrument.OTHER -> when (isPlaying) {
-                true -> NOTIFICATION_ACTION_MUTE_OTHER
-                false -> NOTIFICATION_ACTION_UNMUTE_OTHER
+                true -> PLAYER_NOTIFICATION_ACTION_MUTE_OTHER
+                false -> PLAYER_NOTIFICATION_ACTION_UNMUTE_OTHER
             }
             TrackInstrument.BASS -> when (isPlaying) {
-                true -> NOTIFICATION_ACTION_MUTE_BASS
-                false -> NOTIFICATION_ACTION_UNMUTE_BASS
+                true -> PLAYER_NOTIFICATION_ACTION_MUTE_BASS
+                false -> PLAYER_NOTIFICATION_ACTION_UNMUTE_BASS
             }
             TrackInstrument.DRUMS -> when (isPlaying) {
-                true -> NOTIFICATION_ACTION_MUTE_DRUMS
-                false -> NOTIFICATION_ACTION_UNMUTE_DRUMS
+                true -> PLAYER_NOTIFICATION_ACTION_MUTE_DRUMS
+                false -> PLAYER_NOTIFICATION_ACTION_UNMUTE_DRUMS
             }
         }
         intent.action = action
         val pendingIntent = PendingIntent.getService(
-            mContext,
+            context,
             1,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT
@@ -208,15 +195,15 @@ class NotificationHelper @Inject constructor(val mContext: Context, val glide: R
     }
 
     private fun createIntentMaster(isPlaying: Boolean): PendingIntent {
-        val intent = Intent(mContext, MixPlayerService::class.java)
+        val intent = Intent(context, MixPlayerService::class.java)
         val action = when (isPlaying) {
-            true -> NOTIFICATION_ACTION_PAUSE_MASTER
-            false -> NOTIFICATION_ACTION_PLAY_MASTER
+            true -> PLAYER_NOTIFICATION_ACTION_PAUSE_MASTER
+            false -> PLAYER_NOTIFICATION_ACTION_PLAY_MASTER
         }
 
         intent.action = action
         val pendingIntent = PendingIntent.getService(
-            mContext,
+            context,
             2,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT

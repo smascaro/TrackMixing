@@ -1,6 +1,8 @@
 package com.smascaro.trackmixing.playbackservice.model
 
-class MixPlaybackState {
+import com.smascaro.trackmixing.common.data.model.NotificationData
+
+class MixPlaybackState : NotificationData {
     var trackTitle: String = ""
     var trackThumbnailUrl = ""
     var isMasterPlaying: Boolean = false

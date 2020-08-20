@@ -21,36 +21,36 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 @Module
 class MainModule {
-    @MainScope
-    @Provides
-    @RetrofitForJsonData
-    fun provideRetrofitInstanceWithJson(): Retrofit {
-        return Retrofit.Builder().apply {
-            baseUrl(NODE_BASE_URL)
-            addConverterFactory(GsonConverterFactory.create())
-        }.build()
-    }
-
-    @MainScope
-    @Provides
-    fun provideNodeApi(@RetrofitForJsonData retrofit: Retrofit): NodeApi {
-        return retrofit.create(NodeApi::class.java)
-    }
-
-    @MainScope
-    @Provides
-    @RetrofitForBinaryData
-    fun provideRetrofitInstanceForBinaryData(): Retrofit {
-        return Retrofit.Builder().apply {
-            baseUrl(NODE_BASE_URL)
-        }.build()
-    }
-
-    @MainScope
-    @Provides
-    fun provideNodeApiForBinaryDownloads(@RetrofitForBinaryData retrofit: Retrofit): NodeDownloadsApi {
-        return retrofit.create(NodeDownloadsApi::class.java)
-    }
+//    @MainScope
+//    @Provides
+//    @RetrofitForJsonData
+//    fun provideRetrofitInstanceWithJson(): Retrofit {
+//        return Retrofit.Builder().apply {
+//            baseUrl(NODE_BASE_URL)
+//            addConverterFactory(GsonConverterFactory.create())
+//        }.build()
+//    }
+//
+//    @MainScope
+//    @Provides
+//    fun provideNodeApi(@RetrofitForJsonData retrofit: Retrofit): NodeApi {
+//        return retrofit.create(NodeApi::class.java)
+//    }
+//
+//    @MainScope
+//    @Provides
+//    @RetrofitForBinaryData
+//    fun provideRetrofitInstanceForBinaryData(): Retrofit {
+//        return Retrofit.Builder().apply {
+//            baseUrl(NODE_BASE_URL)
+//        }.build()
+//    }
+//
+//    @MainScope
+//    @Provides
+//    fun provideNodeApiForBinaryDownloads(@RetrofitForBinaryData retrofit: Retrofit): NodeDownloadsApi {
+//        return retrofit.create(NodeDownloadsApi::class.java)
+//    }
 
     @MainScope
     @Provides

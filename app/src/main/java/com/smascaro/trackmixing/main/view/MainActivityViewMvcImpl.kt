@@ -4,7 +4,7 @@ import android.widget.Toast
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager.PlaybackState
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
-import com.smascaro.trackmixing.main.view.MainActivityViewMvc
+import com.smascaro.trackmixing.player.business.downloadtrack.TrackDownloadService
 import javax.inject.Inject
 
 class MainActivityViewMvcImpl @Inject constructor(private val playbackStateManager: PlaybackStateManager) :
@@ -27,6 +27,12 @@ class MainActivityViewMvcImpl @Inject constructor(private val playbackStateManag
 //
         } else {
             showMessage("Playback is stopped")
+        }
+    }
+
+    override fun startProcessingRequest(url: String) {
+        if (getContext() != null) {
+            TrackDownloadService.start(getContext()!!, url)
         }
     }
 

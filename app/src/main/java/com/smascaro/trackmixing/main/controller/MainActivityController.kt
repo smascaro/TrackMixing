@@ -4,6 +4,7 @@ import android.content.Intent
 import com.smascaro.trackmixing.common.data.datasource.network.NodeApi
 import com.smascaro.trackmixing.common.data.network.RequestTrackResponseSchema
 import com.smascaro.trackmixing.main.view.MainActivityViewMvc
+import com.smascaro.trackmixing.player.business.downloadtrack.TrackDownloadService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -23,24 +24,24 @@ class MainActivityController @Inject constructor(val mNodeApi: NodeApi) {
             } else ""
             Timber.d(intent.toString())
             if (url.contains("youtube") || url.contains("youtu.be")) {
-
-                mNodeApi.requestTrack(url.toString())
-                    .enqueue(object : Callback<RequestTrackResponseSchema> {
-                        override fun onFailure(
-                            call: Call<RequestTrackResponseSchema>,
-                            t: Throwable
-                        ) {
-                            mViewMvc.showMessage(t.message ?: "Unknown throwable message")
-                        }
-
-                        override fun onResponse(
-                            call: Call<RequestTrackResponseSchema>,
-                            response: Response<RequestTrackResponseSchema>
-                        ) {
-                            mViewMvc.showMessage("Request was a success. Code ${response.body()?.status?.message ?: "Unkown"}")
-                        }
-
-                    })
+                mViewMvc.startProcessingRequest(url.toString())
+//                mNodeApi.requestTrack(url.toString())
+//                    .enqueue(object : Callback<RequestTrackResponseSchema> {
+//                        override fun onFailure(
+//                            call: Call<RequestTrackResponseSchema>,
+//                            t: Throwable
+//                        ) {
+//                            mViewMvc.showMessage(t.message ?: "Unknown throwable message")
+//                        }
+//
+//                        override fun onResponse(
+//                            call: Call<RequestTrackResponseSchema>,
+//                            response: Response<RequestTrackResponseSchema>
+//                        ) {
+//                            mViewMvc.showMessage("Request was a success. Code ${response.body()?.status?.message ?: "Unkown"}")
+//                        }
+//
+//                    })
             }
         }
     }

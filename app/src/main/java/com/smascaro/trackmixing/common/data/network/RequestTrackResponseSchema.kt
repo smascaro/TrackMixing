@@ -9,7 +9,9 @@ data class RequestTrackResponseSchema(
         val message: String
     )
 
-    class Body
+    data class Body(
+        val track_id: String
+    )
 
 }
 

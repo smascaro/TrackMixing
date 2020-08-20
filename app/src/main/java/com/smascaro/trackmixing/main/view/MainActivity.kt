@@ -8,6 +8,9 @@ import com.smascaro.trackmixing.common.di.main.MainComponent
 import com.smascaro.trackmixing.common.view.ui.BaseActivity
 import com.smascaro.trackmixing.main.controller.BottomPlayerController
 import com.smascaro.trackmixing.main.controller.MainActivityController
+import com.smascaro.trackmixing.player.business.downloadtrack.model.ApplicationEvent
+import com.smascaro.trackmixing.player.business.downloadtrack.model.ApplicationEvent.*
+import org.greenrobot.eventbus.EventBus
 import javax.inject.Inject
 
 class MainActivity : BaseActivity() {
@@ -42,6 +45,11 @@ class MainActivity : BaseActivity() {
         bottomPlayerController.bindViewMvc(bottomPlayerViewMvc)
 
         bottomPlayerController.onCreate()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().post(ApplicationEvent(AppState.Background()))
     }
 
     override fun onDestroy() {
