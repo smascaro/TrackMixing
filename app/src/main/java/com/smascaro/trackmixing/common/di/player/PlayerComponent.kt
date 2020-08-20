@@ -1,7 +1,7 @@
 package com.smascaro.trackmixing.common.di.player
 
-import com.smascaro.trackmixing.service.MixPlayerService
-import com.smascaro.trackmixing.ui.player.TracksPlayerActivity
+import com.smascaro.trackmixing.playbackservice.MixPlayerService
+import com.smascaro.trackmixing.player.view.TracksPlayerActivity
 import dagger.Subcomponent
 
 @Subcomponent(modules = [PlayerModule::class])

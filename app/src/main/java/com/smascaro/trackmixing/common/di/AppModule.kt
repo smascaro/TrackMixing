@@ -3,11 +3,11 @@ package com.smascaro.trackmixing.common.di
 import android.content.Context
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
-import com.smascaro.trackmixing.common.FilesStorageHelper
-import com.smascaro.trackmixing.data.DownloadsDao
-import com.smascaro.trackmixing.data.DownloadsDatabase
-import com.smascaro.trackmixing.service.PlaybackSession
-import com.smascaro.trackmixing.service.PlaybackSessionImpl
+import com.smascaro.trackmixing.common.utils.FilesStorageHelper
+import com.smascaro.trackmixing.common.data.datasource.dao.DownloadsDao
+import com.smascaro.trackmixing.common.data.datasource.dao.DownloadsDatabase
+import com.smascaro.trackmixing.playbackservice.utils.PlaybackSession
+import com.smascaro.trackmixing.playbackservice.utils.PlaybackSessionImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides

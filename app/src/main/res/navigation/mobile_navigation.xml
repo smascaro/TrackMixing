@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/destination_tracks_list"
-        android:name="com.smascaro.trackmixing.ui.trackslist.TracksListFragment"
+        android:name="com.smascaro.trackmixing.trackslist.view.TracksListFragment"
         android:label="fragment_tracks_list"
         tools:layout="@layout/fragment_tracks_list">
         <action
@@ -19,7 +19,7 @@
     </fragment>
     <fragment
         android:id="@+id/destination_search"
-        android:name="com.smascaro.trackmixing.ui.search.SongSearchFragment"
+        android:name="com.smascaro.trackmixing.search.view.SongSearchFragment"
         android:label="fragment_song_search"
         tools:layout="@layout/fragment_song_search">
         <action
@@ -28,7 +28,7 @@
     </fragment>
     <activity
         android:id="@+id/destination_player"
-        android:name="com.smascaro.trackmixing.ui.player.TracksPlayerActivity"
+        android:name="com.smascaro.trackmixing.player.view.TracksPlayerActivity"
         android:label="TracksPlayerActivity"
         tools:layout="@layout/activity_track_player">
         <argument
@@ -38,7 +38,7 @@
     </activity>
     <fragment
         android:id="@+id/destination_track_details"
-        android:name="com.smascaro.trackmixing.ui.details.TrackDetailsFragment"
+        android:name="com.smascaro.trackmixing.details.view.TrackDetailsFragment"
         android:label="fragment_track_details"
         tools:layout="@layout/fragment_track_details">
         <argument

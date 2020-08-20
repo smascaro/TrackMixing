@@ -1,11 +1,11 @@
 package com.smascaro.trackmixing.common.di
 
-import com.smascaro.trackmixing.ui.main.MainActivityViewMvc
-import com.smascaro.trackmixing.ui.main.MainActivityViewMvcImpl
-import com.smascaro.trackmixing.ui.player.TracksPlayerViewMvc
-import com.smascaro.trackmixing.ui.player.TracksPlayerViewMvcImpl
-import com.smascaro.trackmixing.ui.trackslist.trackslistitem.TracksListItemViewMvc
-import com.smascaro.trackmixing.ui.trackslist.trackslistitem.TracksListItemViewMvcImpl
+import com.smascaro.trackmixing.main.view.MainActivityViewMvc
+import com.smascaro.trackmixing.main.view.MainActivityViewMvcImpl
+import com.smascaro.trackmixing.player.view.TracksPlayerViewMvc
+import com.smascaro.trackmixing.player.view.TracksPlayerViewMvcImpl
+import com.smascaro.trackmixing.trackslist.view.listitem.TracksListItemViewMvc
+import com.smascaro.trackmixing.trackslist.view.listitem.TracksListItemViewMvcImpl
 import dagger.Binds
 import dagger.Module
 import javax.inject.Singleton
