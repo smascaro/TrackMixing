@@ -32,7 +32,6 @@ class TracksPlayerController @Inject constructor() :
     }
 
     fun onCreate() {
-        mViewMvc.startService()
         loadTrack()
     }
 

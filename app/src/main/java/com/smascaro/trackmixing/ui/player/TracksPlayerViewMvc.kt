@@ -9,7 +9,6 @@ interface TracksPlayerViewMvc : ObservableViewMvc<TracksPlayerViewMvc.Listener> 
     }
 
     fun isServiceStarted(): Boolean
-    fun startService()
     fun onDestroy()
     fun loadTrack(track: Track)
     fun playMaster()

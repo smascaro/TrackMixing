@@ -3,9 +3,7 @@ package com.smascaro.trackmixing.service
 import com.smascaro.trackmixing.common.*
 import com.smascaro.trackmixing.data.PlaybackStateManager
 import com.smascaro.trackmixing.data.PlaybackStateManager.PlaybackState
-import com.smascaro.trackmixing.service.events.PauseMasterEvent
-import com.smascaro.trackmixing.service.events.PlayMasterEvent
-import com.smascaro.trackmixing.service.events.StartServiceEvent
+import com.smascaro.trackmixing.service.events.PlaybackEvent
 import com.smascaro.trackmixing.tracks.Track
 import com.smascaro.trackmixing.ui.common.BaseObservable
 import com.smascaro.trackmixing.ui.notification.NotificationHelper
@@ -29,6 +27,7 @@ class MixPlayerServiceController @Inject constructor(
     fun onCreate() {
         playbackHelper.registerListener(this)
         EventBus.getDefault().register(this)
+        Timber.d("Registered controller to default event bus")
     }
 
     fun stopService() {
@@ -38,6 +37,7 @@ class MixPlayerServiceController @Inject constructor(
         }
         playbackStateManager.setPlayingStateFlag(PlaybackState.Stopped())
         EventBus.getDefault().unregister(this)
+        Timber.d("Unregistered controller from default event bus")
     }
 
     fun createOrUpdateNotification() {
@@ -121,24 +121,35 @@ class MixPlayerServiceController @Inject constructor(
             NOTIFICATION_ACTION_UNMUTE_BASS -> playbackHelper.unmuteTrack(TrackInstrument.BASS)
             NOTIFICATION_ACTION_MUTE_DRUMS -> playbackHelper.muteTrack(TrackInstrument.DRUMS)
             NOTIFICATION_ACTION_UNMUTE_DRUMS -> playbackHelper.unmuteTrack(TrackInstrument.DRUMS)
+            NOTIFICATION_ACTION_START_SERVICE -> onStart()
             NOTIFICATION_ACTION_STOP_SERVICE -> stopService()
         }
     }
 
+    private fun onStart() {
+        EventBus.getDefault().register(this)
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(startServiceEvent: StartServiceEvent) {
+    fun onMessageEvent(startServiceEvent: PlaybackEvent.StartServiceEvent) {
         Timber.d("Event of type StartServiceEvent received")
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(playMasterEvent: PlayMasterEvent) {
+    fun onMessageEvent(playMasterEvent: PlaybackEvent.PlayMasterEvent) {
         Timber.d("Event of type PlayMasterEvent received")
         playMaster()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(pauseMasterEvent: PauseMasterEvent) {
+    fun onMessageEvent(pauseMasterEvent: PlaybackEvent.PauseMasterEvent) {
         Timber.d("Event of type PauseMasterEvent received")
         pauseMaster()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(loadTrackEvent: PlaybackEvent.LoadTrackEvent) {
+        Timber.d("Event of type LoadTrackEvent received")
+        loadTrack(loadTrackEvent.track)
     }
 }

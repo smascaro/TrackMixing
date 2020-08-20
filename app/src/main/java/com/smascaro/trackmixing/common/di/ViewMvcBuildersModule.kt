@@ -1,8 +1,5 @@
 package com.smascaro.trackmixing.common.di
 
-import com.smascaro.trackmixing.common.di.main.MainScope
-import com.smascaro.trackmixing.ui.main.BottomPlayerViewMvc
-import com.smascaro.trackmixing.ui.main.BottomPlayerViewMvcImpl
 import com.smascaro.trackmixing.ui.main.MainActivityViewMvc
 import com.smascaro.trackmixing.ui.main.MainActivityViewMvcImpl
 import com.smascaro.trackmixing.ui.player.TracksPlayerViewMvc

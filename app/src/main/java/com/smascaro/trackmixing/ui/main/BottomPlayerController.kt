@@ -3,8 +3,7 @@ package com.smascaro.trackmixing.ui.main
 import com.smascaro.trackmixing.data.DownloadsDao
 import com.smascaro.trackmixing.data.PlaybackStateManager
 import com.smascaro.trackmixing.data.toModel
-import com.smascaro.trackmixing.service.events.PauseMasterEvent
-import com.smascaro.trackmixing.service.events.PlayMasterEvent
+import com.smascaro.trackmixing.service.events.PlaybackEvent
 import com.smascaro.trackmixing.tracks.Track
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -67,10 +66,10 @@ class BottomPlayerController @Inject constructor(
     override fun onActionButtonClicked() {
         val currentState = playbackStateManager.getPlayingState()
         if (currentState is PlaybackStateManager.PlaybackState.Playing) {
-            EventBus.getDefault().post(PauseMasterEvent())
+            EventBus.getDefault().post(PlaybackEvent.PauseMasterEvent())
             Timber.d("Sent a PauseMasterEvent")
         } else if (currentState is PlaybackStateManager.PlaybackState.Paused) {
-            EventBus.getDefault().post(PlayMasterEvent())
+            EventBus.getDefault().post(PlaybackEvent.PlayMasterEvent())
             Timber.d("Sent a PlayMasterEvent")
         }
     }

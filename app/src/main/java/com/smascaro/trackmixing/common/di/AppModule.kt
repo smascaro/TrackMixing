@@ -6,6 +6,9 @@ import com.bumptech.glide.RequestManager
 import com.smascaro.trackmixing.common.FilesStorageHelper
 import com.smascaro.trackmixing.data.DownloadsDao
 import com.smascaro.trackmixing.data.DownloadsDatabase
+import com.smascaro.trackmixing.service.PlaybackSession
+import com.smascaro.trackmixing.service.PlaybackSessionImpl
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -34,5 +37,12 @@ class AppModule {
     @Provides
     fun provideFileStorageHelper(context: Context): FilesStorageHelper {
         return FilesStorageHelper(context)
+    }
+
+    @Module
+    interface StaticBindings {
+        @Singleton
+        @Binds
+        fun providePlaybackSession(playbackSessionImpl: PlaybackSessionImpl): PlaybackSession
     }
 }
