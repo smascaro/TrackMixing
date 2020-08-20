@@ -4,9 +4,9 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.FragmentNavigator
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.data.model.Track
-import com.smascaro.trackmixing.ui.details.TrackDetailsFragmentDirections
-import com.smascaro.trackmixing.ui.search.SongSearchFragmentDirections
-import com.smascaro.trackmixing.ui.trackslist.TracksListFragmentDirections
+import com.smascaro.trackmixing.details.view.TrackDetailsFragmentDirections
+import com.smascaro.trackmixing.search.view.SongSearchFragmentDirections
+import com.smascaro.trackmixing.trackslist.view.TracksListFragmentDirections
 import javax.inject.Inject
 
 class NavigationHelper @Inject constructor(private val mNavController: NavController) {

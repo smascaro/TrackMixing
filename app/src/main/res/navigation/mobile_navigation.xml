@@ -33,7 +33,7 @@
         tools:layout="@layout/activity_track_player">
         <argument
             android:name="track"
-            app:argType="com.smascaro.trackmixing.tracks.Track" />
+            app:argType="com.smascaro.trackmixing.common.data.model.Track" />
 
     </activity>
     <fragment
@@ -43,7 +43,7 @@
         tools:layout="@layout/fragment_track_details">
         <argument
             android:name="track"
-            app:argType="com.smascaro.trackmixing.tracks.Track" />
+            app:argType="com.smascaro.trackmixing.common.data.model.Track" />
         <action
             android:id="@+id/action_destination_track_details_to_destination_player"
             app:destination="@id/destination_player" />

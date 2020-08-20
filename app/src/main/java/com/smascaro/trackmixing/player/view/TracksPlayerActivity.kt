@@ -9,7 +9,6 @@ import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.TrackMixingApplication
 import com.smascaro.trackmixing.common.di.player.PlayerComponent
 import com.smascaro.trackmixing.common.view.ui.BaseActivity
-import com.smascaro.trackmixing.ui.player.TracksPlayerActivityArgs
 import com.smascaro.trackmixing.player.controller.TracksPlayerController
 import kotlinx.android.synthetic.main.activity_track_player.*
 import javax.inject.Inject

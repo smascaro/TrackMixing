@@ -13,7 +13,6 @@ import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.view.ui.BaseFragment
 import com.smascaro.trackmixing.details.controller.TrackDetailsController
 import com.smascaro.trackmixing.main.view.MainActivity
-import com.smascaro.trackmixing.ui.details.TrackDetailsFragmentArgs
 import javax.inject.Inject
 
 class TrackDetailsFragment : BaseFragment() {
