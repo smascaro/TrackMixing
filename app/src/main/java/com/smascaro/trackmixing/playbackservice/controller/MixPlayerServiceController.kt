@@ -59,6 +59,7 @@ class MixPlayerServiceController @Inject constructor(
 
     override fun onSongFinished() {
         playbackStateManager.setPlayingStateFlag(PlaybackState.Paused())
+        stopForeground(false)
     }
 
     fun onDestroy() {
