@@ -6,7 +6,8 @@
     android:orientation="horizontal"
     android:background="#bb66dd22"
     android:layout_gravity="bottom"
-    android:layout_weight="1">
+    android:layout_weight="1"
+    android:visibility="visible">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_progress_value"
