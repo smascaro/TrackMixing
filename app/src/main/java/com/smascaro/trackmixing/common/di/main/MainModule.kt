@@ -3,21 +3,18 @@ package com.smascaro.trackmixing.common.di.main
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.common.utils.NODE_BASE_URL
-import com.smascaro.trackmixing.common.data.datasource.network.NodeApi
-import com.smascaro.trackmixing.common.data.datasource.network.NodeDownloadsApi
 import com.smascaro.trackmixing.common.view.ui.BaseActivity
 import com.smascaro.trackmixing.details.view.TrackDetailsViewMvc
 import com.smascaro.trackmixing.details.view.TrackDetailsViewMvcImpl
 import com.smascaro.trackmixing.main.view.BottomPlayerViewMvc
 import com.smascaro.trackmixing.main.view.BottomPlayerViewMvcImpl
+import com.smascaro.trackmixing.main.view.BottomProgressViewMvc
+import com.smascaro.trackmixing.main.view.BottomProgressViewMvcImpl
 import com.smascaro.trackmixing.trackslist.view.TracksListViewMvc
 import com.smascaro.trackmixing.trackslist.view.TracksListViewMvcImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 @Module
 class MainModule {
@@ -71,5 +68,9 @@ class MainModule {
         @MainScope
         @Binds
         fun provideBottomPlayerViewMvc(bottomPlayerViewMvcImpl: BottomPlayerViewMvcImpl): BottomPlayerViewMvc
+
+        @MainScope
+        @Binds
+        fun provideBottomProgressViewMvc(bottomProgressViewMvcImpl: BottomProgressViewMvcImpl): BottomProgressViewMvc
     }
 }

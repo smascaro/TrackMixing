@@ -6,6 +6,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <include
+        android:id="@+id/layout_progress_container"
+        layout="@layout/layout_download_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/layout_player_actions_bottom"
+        android:layout_marginBottom="3dp" />
 
     <include
         android:id="@+id/layout_player_actions_bottom"
@@ -16,7 +23,7 @@
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/layout_player_actions_bottom"
+        android:layout_above="@id/layout_progress_container"
         app:defaultNavHost="true"
         app:navGraph="@navigation/mobile_navigation" />
 </RelativeLayout>

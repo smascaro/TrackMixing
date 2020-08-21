@@ -7,6 +7,7 @@ import com.smascaro.trackmixing.TrackMixingApplication
 import com.smascaro.trackmixing.common.di.main.MainComponent
 import com.smascaro.trackmixing.common.view.ui.BaseActivity
 import com.smascaro.trackmixing.main.controller.BottomPlayerController
+import com.smascaro.trackmixing.main.controller.BottomProgressController
 import com.smascaro.trackmixing.main.controller.MainActivityController
 import com.smascaro.trackmixing.player.business.downloadtrack.model.ApplicationEvent
 import com.smascaro.trackmixing.player.business.downloadtrack.model.ApplicationEvent.*
@@ -18,13 +19,19 @@ class MainActivity : BaseActivity() {
     lateinit var mainActivityController: MainActivityController
 
     @Inject
+    lateinit var mainViewMvc: MainActivityViewMvc
+
+    @Inject
     lateinit var bottomPlayerController: BottomPlayerController
 
     @Inject
-    lateinit var viewMvc: MainActivityViewMvc
+    lateinit var bottomPlayerViewMvc: BottomPlayerViewMvc
 
     @Inject
-    lateinit var bottomPlayerViewMvc: BottomPlayerViewMvc
+    lateinit var bottomProgressController: BottomProgressController
+
+    @Inject
+    lateinit var bottomProgressViewMvc: BottomProgressViewMvc
 
     lateinit var mainComponent: MainComponent
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,13 +44,17 @@ class MainActivity : BaseActivity() {
             (application as TrackMixingApplication).appComponent.mainComponent().create(this)
         mainComponent.inject(this)
 
-        viewMvc.bindRootView(rootView)
-        mainActivityController.bindViewMvc(viewMvc)
+        mainViewMvc.bindRootView(rootView)
+        mainActivityController.bindViewMvc(mainViewMvc)
         mainActivityController.handleIntent(intent)
 
         bottomPlayerViewMvc.bindRootView(rootView)
         bottomPlayerController.bindViewMvc(bottomPlayerViewMvc)
 
+        bottomProgressViewMvc.bindRootView(rootView)
+        bottomProgressController.bindViewMvc(bottomProgressViewMvc)
+
+        bottomProgressController.onCreate()
         bottomPlayerController.onCreate()
     }
 
