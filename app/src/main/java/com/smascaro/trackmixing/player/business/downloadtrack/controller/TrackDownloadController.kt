@@ -3,8 +3,10 @@ package com.smascaro.trackmixing.player.business.downloadtrack.controller
 import com.smascaro.trackmixing.common.data.datasource.network.NodeApi
 import com.smascaro.trackmixing.common.data.model.ForegroundNotification
 import com.smascaro.trackmixing.common.di.DownloadNotificationHelperImplementation
-import com.smascaro.trackmixing.common.view.architecture.BaseObservable
+import com.smascaro.trackmixing.common.utils.DOWNLOAD_NOTIFICATION_ID
 import com.smascaro.trackmixing.common.utils.NotificationHelper
+import com.smascaro.trackmixing.common.view.architecture.BaseObservable
+import com.smascaro.trackmixing.main.model.UiProgressEvent
 import com.smascaro.trackmixing.player.business.DownloadTrackUseCase
 import com.smascaro.trackmixing.player.business.downloadtrack.business.RequestTrackUseCase
 import com.smascaro.trackmixing.player.business.downloadtrack.model.ApplicationEvent
@@ -31,26 +33,31 @@ class TrackDownloadController @Inject constructor(
     }
 
     private var applicationState: AppState = AppState.Foreground()
+    private var lastProgressEvent: DownloadEvents.ProgressUpdate =
+        DownloadEvents.ProgressUpdate("Waiting for data...", 0, "")
 
     fun onCreate() {
         EventBus.getDefault().register(this)
-    }
-
-    private fun goBackground() {
-        applicationState = AppState.Background()
-//        TODO("Not yet implemented")
-    }
-
-    private fun goForeground() {
-        applicationState = AppState.Foreground()
-//        TODO("Not yet implemented")
     }
 
     fun startRequest(videoUrl: String) {
         requestTrackUseCase.execute(videoUrl)
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    private fun goBackground() {
+        applicationState = AppState.Background()
+        notificationHelper.updateNotification(lastProgressEvent.toNotificationData())
+        notifyStartForeground()
+    }
+
+    private fun goForeground() {
+        applicationState = AppState.Foreground()
+//        notificationHelper.removeNotification()
+        notifyStopForeground(true)
+        EventBus.getDefault().post(lastProgressEvent)
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onMessageEvent(applicationEvent: ApplicationEvent) {
         Timber.d("Application is now in ${applicationEvent.state}")
         when (applicationEvent.state) {
@@ -66,40 +73,62 @@ class TrackDownloadController @Inject constructor(
             is AppState.Background -> handleProgressBackground(progressUpdate)
             is AppState.Foreground -> handleProgressForeground(progressUpdate)
         }
+        lastProgressEvent = progressUpdate
     }
 
-
     private fun handleProgressBackground(progressUpdate: DownloadEvents.ProgressUpdate) {
-        notificationHelper.updateNotification(
-            DownloadProgressState(
-                progressUpdate.trackTitle,
-                progressUpdate.progress,
-                progressUpdate.message
-            )
-        )
+        notificationHelper.updateNotification(progressUpdate.toNotificationData())
     }
 
     private fun handleProgressForeground(progressUpdate: DownloadEvents.ProgressUpdate) {
-//        TODO("Not yet implemented")
+        EventBus.getDefault()
+            .post(UiProgressEvent.ProgressUpdate(progressUpdate.progress, progressUpdate.message))
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onMessageEvent(finishedProcessing: DownloadEvents.FinishedProcessing) {
         Timber.d("Received event of type FinishedProcessing")
-        EventBus.getDefault().unregister(this)
-        getListeners().forEach {
-            it.onStopService()
+        if (applicationState is AppState.Foreground) {
+            EventBus.getDefault().post(UiProgressEvent.ProgressFinished())
         }
+        EventBus.getDefault().unregister(this)
+        notifyStopForeground(true)
+        notifyStopService()
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onMessageEvent(errorOccurred: DownloadEvents.ErrorOccurred) {
         Timber.d("Received event of type ErrorOccurred")
         Timber.w(errorOccurred.message)
+        EventBus.getDefault().post(UiProgressEvent.ErrorOccurred(errorOccurred.message))
         EventBus.getDefault().unregister(this)
+        notifyStopService()
+    }
+
+    private fun notifyStopForeground(removeNotification: Boolean) {
+        getListeners().forEach {
+            it.onStopForeground(removeNotification)
+        }
+    }
+
+    private fun notifyStopService() {
         getListeners().forEach {
             it.onStopService()
         }
     }
 
+    private fun notifyStartForeground() {
+        getListeners().forEach {
+            it.onStartForeground(
+                ForegroundNotification(
+                    DOWNLOAD_NOTIFICATION_ID,
+                    notificationHelper.getNotification()
+                )
+            )
+        }
+    }
+}
+
+fun DownloadEvents.ProgressUpdate.toNotificationData(): DownloadProgressState {
+    return DownloadProgressState(trackTitle, progress, message)
 }

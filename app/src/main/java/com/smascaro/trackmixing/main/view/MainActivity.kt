@@ -10,7 +10,7 @@ import com.smascaro.trackmixing.main.controller.BottomPlayerController
 import com.smascaro.trackmixing.main.controller.BottomProgressController
 import com.smascaro.trackmixing.main.controller.MainActivityController
 import com.smascaro.trackmixing.player.business.downloadtrack.model.ApplicationEvent
-import com.smascaro.trackmixing.player.business.downloadtrack.model.ApplicationEvent.*
+import com.smascaro.trackmixing.player.business.downloadtrack.model.ApplicationEvent.AppState
 import org.greenrobot.eventbus.EventBus
 import javax.inject.Inject
 
@@ -58,8 +58,15 @@ class MainActivity : BaseActivity() {
         bottomPlayerController.onCreate()
     }
 
+    override fun onStart() {
+        super.onStart()
+        bottomProgressController.onStart()
+        EventBus.getDefault().post(ApplicationEvent(AppState.Foreground()))
+    }
+
     override fun onStop() {
         super.onStop()
+        bottomProgressController.onStop()
         EventBus.getDefault().post(ApplicationEvent(AppState.Background()))
     }
 

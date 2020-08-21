@@ -1,12 +1,12 @@
 package com.smascaro.trackmixing.main.controller
 
 import com.smascaro.trackmixing.common.data.datasource.dao.DownloadsDao
-import com.smascaro.trackmixing.common.utils.PlaybackStateManager
 import com.smascaro.trackmixing.common.data.datasource.dao.toModel
-import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
 import com.smascaro.trackmixing.common.data.model.Track
+import com.smascaro.trackmixing.common.utils.PlaybackStateManager
 import com.smascaro.trackmixing.main.model.BottomPlayerData
 import com.smascaro.trackmixing.main.view.BottomPlayerViewMvc
+import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext

@@ -8,7 +8,6 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.smascaro.trackmixing.common.data.model.NotificationData
-import com.smascaro.trackmixing.common.utils.NOTIFICATION_CHANNEL_ID
 
 abstract class NotificationHelper(protected val context: Context) {
     protected val notificationManager: NotificationManagerCompat
@@ -16,6 +15,7 @@ abstract class NotificationHelper(protected val context: Context) {
 
     init {
         notificationManager = NotificationManagerCompat.from(context)
+        createNotificationChannel()
     }
 
     fun createNotificationChannel() {

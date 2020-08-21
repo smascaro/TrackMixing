@@ -1,11 +1,11 @@
 package com.smascaro.trackmixing.player.business
 
-import com.smascaro.trackmixing.common.utils.FilesStorageHelper
-import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.data.datasource.dao.DownloadsDao
-import com.smascaro.trackmixing.common.data.model.DownloadEntity
 import com.smascaro.trackmixing.common.data.datasource.dao.toModel
 import com.smascaro.trackmixing.common.data.datasource.network.NodeDownloadsApi
+import com.smascaro.trackmixing.common.data.model.DownloadEntity
+import com.smascaro.trackmixing.common.data.model.Track
+import com.smascaro.trackmixing.common.utils.FilesStorageHelper
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -57,7 +57,7 @@ class DownloadTrackUseCase @Inject constructor(
                         track.title,
                         track.thumbnailUrl,
                         Calendar.getInstance().toString(),
-                        "",
+                        mFilesStorageHelper.getBaseDirectoryByVideoId(track.videoKey),
                         DownloadEntity.DownloadStatus.PENDING,
                         track.secondsLong
                     )
@@ -93,7 +93,6 @@ class DownloadTrackUseCase @Inject constructor(
                                     if (unzipContent(downloadedFilePath)) {
                                         mFilesStorageHelper.deleteFile(downloadedFilePath)
                                         entity.apply {
-                                            downloadPath = downloadedBasePath
                                             status = DownloadEntity.DownloadStatus.FINISHED
                                         }
                                         mDao.update(entity)
@@ -160,7 +159,6 @@ class DownloadTrackUseCase @Inject constructor(
             false
         }
     }
-
 
     private fun notifyDownloadStarted(track: Track) {
         getListeners().forEach { listener ->

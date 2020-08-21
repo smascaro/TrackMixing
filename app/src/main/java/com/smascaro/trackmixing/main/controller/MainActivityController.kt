@@ -25,28 +25,8 @@ class MainActivityController @Inject constructor(val mNodeApi: NodeApi) {
             Timber.d(intent.toString())
             if (url.contains("youtube") || url.contains("youtu.be")) {
                 mViewMvc.startProcessingRequest(url.toString())
-//                mNodeApi.requestTrack(url.toString())
-//                    .enqueue(object : Callback<RequestTrackResponseSchema> {
-//                        override fun onFailure(
-//                            call: Call<RequestTrackResponseSchema>,
-//                            t: Throwable
-//                        ) {
-//                            mViewMvc.showMessage(t.message ?: "Unknown throwable message")
-//                        }
-//
-//                        override fun onResponse(
-//                            call: Call<RequestTrackResponseSchema>,
-//                            response: Response<RequestTrackResponseSchema>
-//                        ) {
-//                            mViewMvc.showMessage("Request was a success. Code ${response.body()?.status?.message ?: "Unkown"}")
-//                        }
-//
-//                    })
             }
         }
     }
 
-    fun onCreate() {
-        mViewMvc.checkPlaybackState()
-    }
 }

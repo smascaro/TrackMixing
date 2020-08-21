@@ -19,8 +19,10 @@ import com.smascaro.trackmixing.player.business.downloadtrack.utils.DownloadNoti
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -69,8 +71,12 @@ class AppModule {
     @Provides
     @RetrofitForBinaryData
     fun provideRetrofitInstanceForBinaryData(): Retrofit {
+        val client = OkHttpClient.Builder().apply {
+            readTimeout(30L, TimeUnit.SECONDS)
+        }.build()
         return Retrofit.Builder().apply {
             baseUrl(NODE_BASE_URL)
+            client(client)
         }.build()
     }
 
@@ -103,15 +109,5 @@ class AppModule {
         @Singleton
         @Binds
         fun providePlaybackSession(playbackSessionImpl: PlaybackSessionImpl): PlaybackSession
-
-//        @Singleton
-//        @Binds
-//        @Named("PlayerNotificationHelper")
-//        fun providePlayerNotificationHelper(playerNotificationHelper: PlayerNotificationHelper): NotificationHelper
-//
-//        @Singleton
-//        @Binds
-//        @Named("DownloadNotificationHelper")
-//        fun provideDownloadNotificationHelper(playerNotificationHelper: DownloadNotificationHelper): NotificationHelper
     }
 }

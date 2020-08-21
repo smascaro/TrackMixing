@@ -3,7 +3,6 @@ package com.smascaro.trackmixing.player.business.downloadtrack
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.os.bundleOf
 import com.smascaro.trackmixing.TrackMixingApplication
 import com.smascaro.trackmixing.common.data.model.ForegroundNotification
 import com.smascaro.trackmixing.common.utils.DOWNLOAD_NOTIFICATION_ACTION_START_DOWNLOAD
@@ -21,7 +20,6 @@ class TrackDownloadService : BaseService(), TrackDownloadController.ServiceActio
                 putString(DOWNLOAD_NOTIFICATION_EXTRA_START_SERVICE_PARAM_KEY, youtubeUrl)
             }
             intent.putExtras(extras)
-//            intent.putExtras(bundleOf(DOWNLOAD_NOTIFICATION_EXTRA_START_SERVICE_PARAM_KEY to youtubeUrl))
             val componentName = context.startService(intent)
             return componentName != null
         }
@@ -37,7 +35,6 @@ class TrackDownloadService : BaseService(), TrackDownloadController.ServiceActio
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-//        return super.onStartCommand(intent, flags, startId)
         val action = intent?.action
         if (action != null) {
             when (action) {
@@ -54,6 +51,7 @@ class TrackDownloadService : BaseService(), TrackDownloadController.ServiceActio
 
     private fun startDownload(videoUrl: String?) {
         if (videoUrl != null) {
+            controller.registerListener(this)
             controller.startRequest(videoUrl)
         }
     }
@@ -68,5 +66,6 @@ class TrackDownloadService : BaseService(), TrackDownloadController.ServiceActio
 
     override fun onStopService() {
         stopService(Intent(this, TrackDownloadService::class.java))
+        controller.unregisterListener(this)
     }
 }

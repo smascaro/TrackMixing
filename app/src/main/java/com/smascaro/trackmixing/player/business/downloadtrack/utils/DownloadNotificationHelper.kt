@@ -24,7 +24,11 @@ class DownloadNotificationHelper(context: Context) : NotificationHelper(context)
                     setContentTitle(progressState.trackTitle)
                     setOnlyAlertOnce(true)
                     setShowWhen(true)
-                    setContentText("${progressState.statusMessage} - ${progressState.progress}%")
+                    setOngoing(true)
+                    setStyle(
+                        NotificationCompat.BigTextStyle()
+                            .bigText("${progressState.statusMessage} - ${progressState.progress}%")
+                    )
                     priority = NotificationCompat.PRIORITY_HIGH
                 }
         notificationManager.notify(DOWNLOAD_NOTIFICATION_ID, notificationBuilder.build())
