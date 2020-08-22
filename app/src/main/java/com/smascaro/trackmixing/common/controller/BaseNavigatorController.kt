@@ -6,7 +6,7 @@ import com.smascaro.trackmixing.common.view.architecture.ViewMvc
 
 abstract class BaseNavigatorController<VIEW_MVC : ViewMvc>(protected val navigationHelper: NavigationHelper) :
     BaseController<VIEW_MVC>() {
-    protected fun bindNavController(navController: NavController) {
+    fun bindNavController(navController: NavController) {
         navigationHelper.bindNavController(navController)
     }
 }
