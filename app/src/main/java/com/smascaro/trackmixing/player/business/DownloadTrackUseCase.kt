@@ -1,9 +1,10 @@
 package com.smascaro.trackmixing.player.business
 
-import com.smascaro.trackmixing.common.data.datasource.dao.DownloadsDao
 import com.smascaro.trackmixing.common.data.datasource.dao.toModel
 import com.smascaro.trackmixing.common.data.datasource.network.NodeApi
 import com.smascaro.trackmixing.common.data.datasource.network.NodeDownloadsApi
+import com.smascaro.trackmixing.common.data.datasource.repository.TrackNotFoundException
+import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepository
 import com.smascaro.trackmixing.common.data.model.DownloadEntity
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.utils.FilesStorageHelper
@@ -29,8 +30,8 @@ import javax.inject.Inject
 class DownloadTrackUseCase @Inject constructor(
     val nodeApi: NodeApi,
     val mNodeDownloadsApi: NodeDownloadsApi,
-    val mDao: DownloadsDao,
-    val mFilesStorageHelper: FilesStorageHelper
+    val mFilesStorageHelper: FilesStorageHelper,
+    val tracksRepository: TracksRepository
 ) :
     BaseObservable<DownloadTrackUseCase.Listener>() {
     interface Listener {
@@ -71,13 +72,17 @@ class DownloadTrackUseCase @Inject constructor(
     private fun downloadTrackAndNotify(baseDirectory: String) {
         if (mTrack != null) {
             GlobalScope.launch {
-                val trackFromDatabase = mDao.get(mTrack!!.videoKey)
-                val filesExist = if (trackFromDatabase.isNotEmpty()) {
-                    mFilesStorageHelper.checkContent(trackFromDatabase.first().downloadPath)
+                val trackFromDatabase = try {
+                    tracksRepository.get(mTrack!!.videoKey)
+                } catch (tnfe: TrackNotFoundException) {
+                    null
+                }
+                val filesExist = if (trackFromDatabase != null) {
+                    mFilesStorageHelper.checkContent(trackFromDatabase.downloadPath)
                 } else {
                     false
                 }
-                if (trackFromDatabase.isEmpty() || !filesExist) {
+                if (trackFromDatabase == null || !filesExist) {
                     this@DownloadTrackUseCase.mTrack = mTrack
                     var entity =
                         DownloadEntity(
@@ -91,7 +96,7 @@ class DownloadTrackUseCase @Inject constructor(
                             DownloadEntity.DownloadStatus.PENDING,
                             mTrack!!.secondsLong
                         )
-                    entity.id = mDao.insert(entity).toInt()
+                    entity.id = tracksRepository.insert(entity).toInt()
                     Timber.d("Downloading track with id ${mTrack!!.videoKey}")
                     notifyDownloadStarted(mTrack!!)
                     EventBus.getDefault().post(
@@ -150,7 +155,7 @@ class DownloadTrackUseCase @Inject constructor(
                                             entity.apply {
                                                 status = DownloadEntity.DownloadStatus.FINISHED
                                             }
-                                            mDao.update(entity)
+                                            tracksRepository.update(entity)
                                             notifyDownloadFinished(
                                                 entity.toModel(),
                                                 downloadedBasePath
@@ -171,7 +176,7 @@ class DownloadTrackUseCase @Inject constructor(
                     })
                 } else {
                     Timber.i("Track ${mTrack!!.videoKey} already in the system, omitting download")
-                    notifyDownloadFinished(mTrack!!, trackFromDatabase.first().downloadPath)
+                    notifyDownloadFinished(mTrack!!, trackFromDatabase.downloadPath)
                 }
             }
         }
@@ -181,7 +186,7 @@ class DownloadTrackUseCase @Inject constructor(
         entity.apply {
             status = DownloadEntity.DownloadStatus.ERROR
         }
-        mDao.update(entity)
+        tracksRepository.update(entity)
     }
 
     data class ZipIO(val entry: ZipEntry, val output: File)

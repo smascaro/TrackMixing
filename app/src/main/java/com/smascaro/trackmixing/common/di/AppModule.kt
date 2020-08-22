@@ -7,6 +7,8 @@ import com.smascaro.trackmixing.common.data.datasource.dao.DownloadsDao
 import com.smascaro.trackmixing.common.data.datasource.dao.DownloadsDatabase
 import com.smascaro.trackmixing.common.data.datasource.network.NodeApi
 import com.smascaro.trackmixing.common.data.datasource.network.NodeDownloadsApi
+import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepository
+import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepositoryImpl
 import com.smascaro.trackmixing.common.di.main.RetrofitForBinaryData
 import com.smascaro.trackmixing.common.di.main.RetrofitForJsonData
 import com.smascaro.trackmixing.common.utils.FilesStorageHelper
@@ -109,5 +111,9 @@ class AppModule {
         @Singleton
         @Binds
         fun providePlaybackSession(playbackSessionImpl: PlaybackSessionImpl): PlaybackSession
+
+        @Singleton
+        @Binds
+        fun provideTracksRepository(tracksRepositoryImpl: TracksRepositoryImpl): TracksRepository
     }
 }
