@@ -4,6 +4,7 @@ import com.smascaro.trackmixing.common.data.datasource.network.NodeApi
 import com.smascaro.trackmixing.common.data.network.FetchProgressResponseSchema
 import com.smascaro.trackmixing.common.data.network.RequestTrackResponseSchema
 import com.smascaro.trackmixing.player.business.downloadtrack.model.DownloadEvents
+import com.smascaro.trackmixing.player.business.downloadtrack.model.FetchSteps
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 import retrofit2.Call
@@ -67,7 +68,8 @@ class RequestTrackUseCase @Inject constructor(private val nodeApi: NodeApi) {
                                 val progressUpdateEvent = DownloadEvents.ProgressUpdate(
                                     title,
                                     progress,
-                                    status
+                                    status,
+                                    FetchSteps.ServerProcessStep()
                                 )
                                 if (progressUpdateEvent != lastProgressState) {
                                     EventBus.getDefault().post(progressUpdateEvent)
@@ -98,5 +100,9 @@ class RequestTrackUseCase @Inject constructor(private val nodeApi: NodeApi) {
 
     private fun notifyFailure(message: String) {
         EventBus.getDefault().post(DownloadEvents.ErrorOccurred(message))
+    }
+
+    fun getTrackId(): String {
+        return videoId ?: ""
     }
 }

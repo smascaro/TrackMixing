@@ -1,10 +1,10 @@
 package com.smascaro.trackmixing.details.controller
 
-import com.smascaro.trackmixing.common.utils.FilesStorageHelper
-import com.smascaro.trackmixing.player.business.DownloadTrackUseCase
 import com.smascaro.trackmixing.common.data.model.Track
+import com.smascaro.trackmixing.common.utils.FilesStorageHelper
 import com.smascaro.trackmixing.common.utils.NavigationHelper
 import com.smascaro.trackmixing.details.view.TrackDetailsViewMvc
+import com.smascaro.trackmixing.player.business.DownloadTrackUseCase
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -34,7 +34,7 @@ class TrackDetailsController @Inject constructor(
     }
 
     override fun onGoToPlayerButtonClicked(track: Track) {
-        mDownloadTrackUseCase.downloadTrackAndNotify(track, mFilesStorageHelper.getBaseDirectory())
+        mNavigationHelper.toPlayer(track)
     }
 
     override fun onDownloadTrackStarted(mTrack: Track) {

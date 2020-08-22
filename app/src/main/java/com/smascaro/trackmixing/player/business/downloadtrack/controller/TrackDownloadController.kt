@@ -9,10 +9,8 @@ import com.smascaro.trackmixing.common.view.architecture.BaseObservable
 import com.smascaro.trackmixing.main.model.UiProgressEvent
 import com.smascaro.trackmixing.player.business.DownloadTrackUseCase
 import com.smascaro.trackmixing.player.business.downloadtrack.business.RequestTrackUseCase
-import com.smascaro.trackmixing.player.business.downloadtrack.model.ApplicationEvent
+import com.smascaro.trackmixing.player.business.downloadtrack.model.*
 import com.smascaro.trackmixing.player.business.downloadtrack.model.ApplicationEvent.AppState
-import com.smascaro.trackmixing.player.business.downloadtrack.model.DownloadEvents
-import com.smascaro.trackmixing.player.business.downloadtrack.model.DownloadProgressState
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -34,7 +32,7 @@ class TrackDownloadController @Inject constructor(
 
     private var applicationState: AppState = AppState.Foreground()
     private var lastProgressEvent: DownloadEvents.ProgressUpdate =
-        DownloadEvents.ProgressUpdate("Waiting for data...", 0, "")
+        DownloadEvents.ProgressUpdate("Waiting for data...", 0, "", FetchSteps.ServerProcessStep())
 
     fun onCreate() {
         EventBus.getDefault().register(this)
@@ -52,7 +50,6 @@ class TrackDownloadController @Inject constructor(
 
     private fun goForeground() {
         applicationState = AppState.Foreground()
-//        notificationHelper.removeNotification()
         notifyStopForeground(true)
         EventBus.getDefault().post(lastProgressEvent)
     }
@@ -81,13 +78,26 @@ class TrackDownloadController @Inject constructor(
     }
 
     private fun handleProgressForeground(progressUpdate: DownloadEvents.ProgressUpdate) {
+        val progress = progressUpdate.evaluateOverallProgress()
+        Timber.d("Overall progress: $progress")
         EventBus.getDefault()
-            .post(UiProgressEvent.ProgressUpdate(progressUpdate.progress, progressUpdate.message))
+            .post(UiProgressEvent.ProgressUpdate(progress, progressUpdate.message))
+    }
+
+    private fun downloadAndUnzipTrack() {
+        downloadTrackUseCase.execute(requestTrackUseCase.getTrackId())
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onMessageEvent(finishedProcessing: DownloadEvents.FinishedProcessing) {
         Timber.d("Received event of type FinishedProcessing")
+        downloadAndUnzipTrack()
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    fun onMessageEvent(finishedDownloading: DownloadEvents.FinishedDownloading) {
+        Timber.d("Received event of type FinishedDownloading")
+
         if (applicationState is AppState.Foreground) {
             EventBus.getDefault().post(UiProgressEvent.ProgressFinished())
         }
@@ -127,8 +137,4 @@ class TrackDownloadController @Inject constructor(
             )
         }
     }
-}
-
-fun DownloadEvents.ProgressUpdate.toNotificationData(): DownloadProgressState {
-    return DownloadProgressState(trackTitle, progress, message)
 }

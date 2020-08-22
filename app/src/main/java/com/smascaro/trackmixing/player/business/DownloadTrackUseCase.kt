@@ -2,14 +2,20 @@ package com.smascaro.trackmixing.player.business
 
 import com.smascaro.trackmixing.common.data.datasource.dao.DownloadsDao
 import com.smascaro.trackmixing.common.data.datasource.dao.toModel
+import com.smascaro.trackmixing.common.data.datasource.network.NodeApi
 import com.smascaro.trackmixing.common.data.datasource.network.NodeDownloadsApi
 import com.smascaro.trackmixing.common.data.model.DownloadEntity
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.utils.FilesStorageHelper
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable
+import com.smascaro.trackmixing.player.business.downloadtrack.model.DownloadEvents
+import com.smascaro.trackmixing.player.business.downloadtrack.model.FetchSteps
+import com.smascaro.trackmixing.player.business.downloadtrack.model.FetchTrackDetailsResponseSchema
+import com.smascaro.trackmixing.player.business.downloadtrack.model.toModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
+import org.greenrobot.eventbus.EventBus
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -21,6 +27,7 @@ import java.util.zip.ZipFile
 import javax.inject.Inject
 
 class DownloadTrackUseCase @Inject constructor(
+    val nodeApi: NodeApi,
     val mNodeDownloadsApi: NodeDownloadsApi,
     val mDao: DownloadsDao,
     val mFilesStorageHelper: FilesStorageHelper
@@ -28,92 +35,144 @@ class DownloadTrackUseCase @Inject constructor(
     BaseObservable<DownloadTrackUseCase.Listener>() {
     interface Listener {
         fun onDownloadTrackStarted(mTrack: Track)
-
-        /**
-         * Notifies when the download has been completed and is ready to be used in Player activity \
-         * @param track the track object downloaded
-         * @param path the path to the directory where the track has been downloaded
-         */
         fun onDownloadTrackFinished(track: Track, path: String)
         fun onDownloadTrackError()
     }
 
     private var mTrack: Track? = null
-    fun downloadTrackAndNotify(track: Track, baseDirectory: String) {
-        GlobalScope.launch {
-            val trackFromDatabase = mDao.get(track.videoKey)
-            val filesExist = if (trackFromDatabase.isNotEmpty()) {
-                mFilesStorageHelper.checkContent(trackFromDatabase.first().downloadPath)
-            } else {
-                false
+
+    fun execute(videoId: String) {
+        EventBus.getDefault().post(
+            DownloadEvents.ProgressUpdate(
+                "",
+                5,
+                "Fetching details",
+                FetchSteps.DownloadStep()
+            )
+        )
+        nodeApi.fetchDetails(videoId).enqueue(object : Callback<FetchTrackDetailsResponseSchema> {
+            override fun onResponse(
+                call: Call<FetchTrackDetailsResponseSchema>,
+                response: Response<FetchTrackDetailsResponseSchema>
+            ) {
+                val responseBody = response.body()
+                if (responseBody != null) {
+                    mTrack = responseBody.toModel()
+                    downloadTrackAndNotify(mFilesStorageHelper.getBaseDirectory())
+                }
             }
-            if (trackFromDatabase.isEmpty() || !filesExist) {
-                mTrack = track
-                var entity =
-                    DownloadEntity(
-                        0,
-                        track.videoKey,
-                        "low",
-                        track.title,
-                        track.thumbnailUrl,
-                        Calendar.getInstance().toString(),
-                        mFilesStorageHelper.getBaseDirectoryByVideoId(track.videoKey),
-                        DownloadEntity.DownloadStatus.PENDING,
-                        track.secondsLong
+
+            override fun onFailure(call: Call<FetchTrackDetailsResponseSchema>, t: Throwable) {
+                notifyError(t.message ?: "Unknown error")
+            }
+        })
+    }
+
+    private fun downloadTrackAndNotify(baseDirectory: String) {
+        if (mTrack != null) {
+            GlobalScope.launch {
+                val trackFromDatabase = mDao.get(mTrack!!.videoKey)
+                val filesExist = if (trackFromDatabase.isNotEmpty()) {
+                    mFilesStorageHelper.checkContent(trackFromDatabase.first().downloadPath)
+                } else {
+                    false
+                }
+                if (trackFromDatabase.isEmpty() || !filesExist) {
+                    this@DownloadTrackUseCase.mTrack = mTrack
+                    var entity =
+                        DownloadEntity(
+                            0,
+                            mTrack!!.videoKey,
+                            "low",
+                            mTrack!!.title,
+                            mTrack!!.thumbnailUrl,
+                            Calendar.getInstance().toString(),
+                            mFilesStorageHelper.getBaseDirectoryByVideoId(mTrack!!.videoKey),
+                            DownloadEntity.DownloadStatus.PENDING,
+                            mTrack!!.secondsLong
+                        )
+                    entity.id = mDao.insert(entity).toInt()
+                    Timber.d("Downloading track with id ${mTrack!!.videoKey}")
+                    notifyDownloadStarted(mTrack!!)
+                    EventBus.getDefault().post(
+                        DownloadEvents.ProgressUpdate(
+                            mTrack!!.title,
+                            30,
+                            "Downloading files",
+                            FetchSteps.DownloadStep()
+                        )
                     )
-                entity.id = mDao.insert(entity).toInt()
-                Timber.d("Downloading track with id ${track.videoKey}")
-                notifyDownloadStarted(track)
-                mNodeDownloadsApi.downloadTrack(entity.sourceVideoKey).enqueue(object :
-                    Callback<ResponseBody> {
-                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                        Timber.e(t)
-                        GlobalScope.launch {
-                            setErrorStatusAndUpdate(entity)
-                        }
-                        notifyError("Error de red en la descarga")
-                    }
-
-
-                    override fun onResponse(
-                        call: Call<ResponseBody>,
-                        response: Response<ResponseBody>
-                    ) {
-                        val responseBody = response.body()
-                        if (responseBody != null) {
+                    mNodeDownloadsApi.downloadTrack(entity.sourceVideoKey).enqueue(object :
+                        Callback<ResponseBody> {
+                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                            Timber.e(t)
                             GlobalScope.launch {
-                                val downloadedFilePath =
-                                    mFilesStorageHelper.writeFileToStorage(
-                                        baseDirectory,
-                                        entity.sourceVideoKey,
-                                        responseBody
+                                setErrorStatusAndUpdate(entity)
+                            }
+                            notifyError("Error de red en la descarga")
+                        }
+
+
+                        override fun onResponse(
+                            call: Call<ResponseBody>,
+                            response: Response<ResponseBody>
+                        ) {
+                            val responseBody = response.body()
+                            if (responseBody != null) {
+                                GlobalScope.launch {
+                                    val downloadedFilePath =
+                                        mFilesStorageHelper.writeFileToStorage(
+                                            baseDirectory,
+                                            entity.sourceVideoKey,
+                                            responseBody
+                                        )
+                                    EventBus.getDefault().post(
+                                        DownloadEvents.ProgressUpdate(
+                                            mTrack!!.title,
+                                            80,
+                                            "Unzipping contents",
+                                            FetchSteps.DownloadStep()
+                                        )
                                     )
-                                if (downloadedFilePath.isNotEmpty()) {
-                                    val downloadedBasePath = File(downloadedFilePath).parent ?: ""
-                                    if (unzipContent(downloadedFilePath)) {
-                                        mFilesStorageHelper.deleteFile(downloadedFilePath)
-                                        entity.apply {
-                                            status = DownloadEntity.DownloadStatus.FINISHED
+                                    if (downloadedFilePath.isNotEmpty()) {
+                                        val downloadedBasePath =
+                                            File(downloadedFilePath).parent ?: ""
+                                        if (unzipContent(downloadedFilePath)) {
+                                            EventBus.getDefault().post(
+                                                DownloadEvents.ProgressUpdate(
+                                                    mTrack!!.title,
+                                                    95,
+                                                    "Cleaning unneeded files",
+                                                    FetchSteps.DownloadStep()
+                                                )
+                                            )
+                                            mFilesStorageHelper.deleteFile(downloadedFilePath)
+                                            entity.apply {
+                                                status = DownloadEntity.DownloadStatus.FINISHED
+                                            }
+                                            mDao.update(entity)
+                                            notifyDownloadFinished(
+                                                entity.toModel(),
+                                                downloadedBasePath
+                                            )
+                                        } else {
+                                            setErrorStatusAndUpdate(entity)
+                                            notifyError("Error al descomprimir el contenido")
                                         }
-                                        mDao.update(entity)
-                                        notifyDownloadFinished(entity.toModel(), downloadedBasePath)
                                     } else {
                                         setErrorStatusAndUpdate(entity)
-                                        notifyError("Error al descomprimir el contenido")
+                                        notifyError("Error en la descarga")
                                     }
-                                } else {
-                                    setErrorStatusAndUpdate(entity)
-                                    notifyError("Error en la descarga")
                                 }
                             }
                         }
-                    }
 
 
-                })
-            } else {
-                Timber.i("Track ${track.videoKey} already in the system, omitting download")
-                notifyDownloadFinished(track, trackFromDatabase.first().downloadPath)
+                    })
+                } else {
+                    Timber.i("Track ${mTrack!!.videoKey} already in the system, omitting download")
+                    notifyDownloadFinished(mTrack!!, trackFromDatabase.first().downloadPath)
+                }
             }
         }
     }
@@ -170,6 +229,7 @@ class DownloadTrackUseCase @Inject constructor(
         track: Track,
         path: String
     ) {
+        EventBus.getDefault().post(DownloadEvents.FinishedDownloading())
         getListeners().forEach {
             it.onDownloadTrackFinished(track, path)
         }
