@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.transition.MaterialContainerTransform
 import com.google.android.material.transition.MaterialFadeThrough
 import com.smascaro.trackmixing.R
@@ -45,7 +46,7 @@ class TracksListFragment : BaseFragment() {
     ): View? {
         viewMvc.bindRootView(inflater.inflate(R.layout.fragment_tracks_list, null, false))
         mTracksListController.bindViewMvc(viewMvc)
-
+        mTracksListController.bindNavController(findNavController())
         return viewMvc.getRootView()
     }
 

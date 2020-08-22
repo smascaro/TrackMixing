@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.transition.MaterialContainerTransform
 import com.smascaro.trackmixing.R
@@ -57,8 +58,9 @@ class TrackDetailsFragment : BaseFragment() {
     ): View? {
         viewMvc.bindRootView(inflater.inflate(R.layout.fragment_track_details, null, false))
         viewMvc.bindTrack(args.track)
-        controller.bindViewMvc(viewMvc)
 
+        controller.bindViewMvc(viewMvc)
+        controller.bindNavController(findNavController())
         controller.initUI()
         return viewMvc.getRootView()
     }

@@ -9,12 +9,16 @@ import com.smascaro.trackmixing.search.view.SongSearchFragmentDirections
 import com.smascaro.trackmixing.trackslist.view.TracksListFragmentDirections
 import javax.inject.Inject
 
-class NavigationHelper @Inject constructor(private val mNavController: NavController) {
-
+class NavigationHelper @Inject constructor() {
+    private var mNavController: NavController? = null
     fun navigateTo(destination: Int) {
-        if (destination != mNavController.currentDestination?.id) {
-            mNavController.navigate(destination)
+        if (destination != mNavController?.currentDestination?.id) {
+            mNavController?.navigate(destination)
         }
+    }
+
+    fun bindNavController(navController: NavController) {
+        mNavController = navController
     }
 
     fun toDetails(
@@ -24,12 +28,12 @@ class NavigationHelper @Inject constructor(private val mNavController: NavContro
         val action =
             TracksListFragmentDirections.actionDestinationTracksListToDestinationTrackDetails(track)
         if (action != null) {
-            mNavController.navigate(action, extras)
+            mNavController?.navigate(action, extras)
         }
     }
 
     fun toPlayer(track: Track) {
-        val action = when (mNavController.currentDestination?.id) {
+        val action = when (mNavController?.currentDestination?.id) {
             R.id.destination_search -> SongSearchFragmentDirections.actionDestinationSearchToDestinationPlayer(
                 track
             )
@@ -42,7 +46,7 @@ class NavigationHelper @Inject constructor(private val mNavController: NavContro
             else -> null
         }
         if (action != null) {
-            mNavController.navigate(action)
+            mNavController?.navigate(action)
         }
     }
 }

@@ -12,13 +12,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textview.MaterialTextView
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.data.model.Track
-import com.smascaro.trackmixing.common.utils.NavigationHelper
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
 import javax.inject.Inject
 
 class TracksListViewMvcImpl @Inject constructor(
-    private val tracksListAdapter: TracksListAdapter,
-    private val navigationHelper: NavigationHelper
+    private val tracksListAdapter: TracksListAdapter
+//    private val navigationHelper: NavigationHelper
 ) : BaseObservableViewMvc<TracksListViewMvc.Listener>(),
     TracksListAdapter.Listener,
     TracksListViewMvc {
@@ -63,9 +62,9 @@ class TracksListViewMvcImpl @Inject constructor(
         return currentDataSource
     }
 
-    override fun navigateToPlayer(track: Track) {
-        this.navigationHelper.toPlayer(track)
-    }
+//    override fun navigateToPlayer(track: Track) {
+//        this.navigationHelper.toPlayer(track)
+//    }
 
     override fun displayFloatingCard() {
         if (mMotionLayout.progress == 0.0f) {
@@ -91,7 +90,10 @@ class TracksListViewMvcImpl @Inject constructor(
             card to track.videoKey,
             title to track.title
         )
-        this.navigationHelper.toDetails(track, extras)
+//        this.navigationHelper.toDetails(track, extras)
+        getListeners().forEach {
+            it.onTrackClicked(track)
+        }
     }
 
 

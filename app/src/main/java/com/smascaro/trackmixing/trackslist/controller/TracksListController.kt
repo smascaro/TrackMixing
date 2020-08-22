@@ -1,8 +1,10 @@
 package com.smascaro.trackmixing.trackslist.controller
 
 
-import com.smascaro.trackmixing.common.controller.BaseController
+import androidx.navigation.fragment.FragmentNavigatorExtras
+import com.smascaro.trackmixing.common.controller.BaseNavigatorController
 import com.smascaro.trackmixing.common.data.model.Track
+import com.smascaro.trackmixing.common.utils.NavigationHelper
 import com.smascaro.trackmixing.player.business.DownloadTrackUseCase
 import com.smascaro.trackmixing.trackslist.business.FetchAvailableTracksUseCase
 import com.smascaro.trackmixing.trackslist.business.FetchDownloadedTracks
@@ -15,14 +17,12 @@ import javax.inject.Inject
 class TracksListController @Inject constructor(
     private val mFetchAvailableTracksUseCase: FetchAvailableTracksUseCase,
     private val mDownloadTrackUseCase: DownloadTrackUseCase,
-    private val mFetchDownloadedTracks: FetchDownloadedTracks
-) : BaseController<TracksListViewMvc>(),
+    private val mFetchDownloadedTracks: FetchDownloadedTracks,
+    navigationHelper: NavigationHelper
+) : BaseNavigatorController<TracksListViewMvc>(navigationHelper),
     TracksListViewMvc.Listener,
     FetchAvailableTracksUseCase.Listener,
     DownloadTrackUseCase.Listener, FetchDownloadedTracks.Listener {
-    override fun onTrackClicked(track: Track) {
-        Timber.i("Track clicked: ${track.title}")
-    }
 
     override fun onCurrentDataSourceRequest(dataSource: TracksListViewMvc.TracksDataSource) {
         loadTracksFrom(dataSource)
@@ -52,6 +52,10 @@ class TracksListController @Inject constructor(
         mFetchDownloadedTracks.unregisterListener(this)
     }
 
+    override fun onTrackClicked(track: Track) {
+        navigateToDetails(track)
+    }
+
     override fun onAvailableTracksFetched(tracks: List<Track>) {
         viewMvc.bindTracks(tracks)
     }
@@ -75,7 +79,16 @@ class TracksListController @Inject constructor(
                 Timber.d("File: ${it?.absoluteFile}, size: ${it.length() / 1000}KB (${it.length() / 1000000}MB)")
             }
         }
-        viewMvc.navigateToPlayer(track)
+//        viewMvc.navigateToPlayer(track)
+        navigateToPlayer(track)
+    }
+
+    fun navigateToPlayer(track: Track) {
+        navigationHelper.toPlayer(track)
+    }
+
+    fun navigateToDetails(track: Track) {
+        navigationHelper.toDetails(track, FragmentNavigatorExtras())
     }
 
     override fun onDownloadTrackError() {

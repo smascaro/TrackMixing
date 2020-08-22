@@ -1,5 +1,6 @@
 package com.smascaro.trackmixing.main.components.progress.view
 
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextSwitcher
@@ -12,6 +13,7 @@ import javax.inject.Inject
 
 class BottomProgressViewMvcImpl @Inject constructor(private val uiUtils: UiUtils) : BaseViewMvc(),
     BottomProgressViewMvc {
+    private lateinit var progressBarWrapper: LinearLayout
     private lateinit var progressBar: LinearLayout
     private var currentProgressValue: Int = -1
     private var currentProgressMessage: String = ""
@@ -27,9 +29,12 @@ class BottomProgressViewMvcImpl @Inject constructor(private val uiUtils: UiUtils
     }
 
     private fun initialize() {
-        progressBar = findViewById(R.id.layout_progress_container)
-        textSwitcherProgressValue = findViewById(R.id.ts_progress_value)
-        textSwitcherProgressText = findViewById(R.id.ts_progress_message)
+        progressBarWrapper = findViewById(R.id.layout_progress_container)
+        LayoutInflater.from(getContext())
+            .inflate(R.layout.layout_download_progress, progressBarWrapper, false)
+        progressBar = progressBarWrapper.findViewById(R.id.layout_progress_container)
+        textSwitcherProgressValue = progressBarWrapper.findViewById(R.id.ts_progress_value)
+        textSwitcherProgressText = progressBarWrapper.findViewById(R.id.ts_progress_message)
 
         textSwitcherProgressValue.setInAnimation(getContext(), R.anim.slide_in_bottom)
         textSwitcherProgressValue.setOutAnimation(getContext(), R.anim.slide_out_top)
@@ -46,19 +51,33 @@ class BottomProgressViewMvcImpl @Inject constructor(private val uiUtils: UiUtils
 
     override fun showProgressBar() {
         if (!isProgressBarVisible) {
-            setProgressBarVisibility(View.VISIBLE)
-            setProgressBarHeight(progressBarHeight.toInt())
+            displayProgressBar()
             isProgressBarVisible = true
         }
     }
 
+    private fun displayProgressBar() {
+        val animation = ResizeAnimation(progressBar, progressBarHeight.toInt()).apply {
+            duration = 200
+        }
+        progressBar.requestLayout()
+        progressBar.startAnimation(animation)
+    }
+
     override fun hideProgressBar() {
         if (isProgressBarVisible) {
-            setProgressBarHeight(0)
-            setProgressBarVisibility(View.GONE)
+            removeProgressBar()
             isProgressBarVisible = false
         }
     }
+
+    private fun removeProgressBar() {
+        val animation = ResizeAnimation(progressBar, 0).apply {
+            duration = 200
+        }
+        progressBar.startAnimation(animation)
+    }
+
 
     private fun setProgressBarVisibility(visibility: Int) {
         progressBar.visibility = visibility
@@ -79,5 +98,13 @@ class BottomProgressViewMvcImpl @Inject constructor(private val uiUtils: UiUtils
             textSwitcherProgressText.setText(status)
             currentProgressMessage = status
         }
+    }
+
+    override fun onCreate() {
+        val lp = progressBar.layoutParams
+        lp.height = 0
+        progressBar.layoutParams = lp
+        progressBar.visibility = View.VISIBLE
+        progressBar.requestLayout()
     }
 }

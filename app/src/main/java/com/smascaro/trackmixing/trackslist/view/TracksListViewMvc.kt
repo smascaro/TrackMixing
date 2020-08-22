@@ -16,7 +16,8 @@ interface TracksListViewMvc :
     }
 
     fun bindTracks(tracks: List<Track>)
-    fun navigateToPlayer(track: Track)
+
+    //    fun navigateToPlayer(track: Track)
     fun displayFloatingCard()
     fun showDetails(track: Track)
     fun getCurrentDataSource(): TracksDataSource

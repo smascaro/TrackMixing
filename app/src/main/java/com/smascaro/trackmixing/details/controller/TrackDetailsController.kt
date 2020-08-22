@@ -1,6 +1,6 @@
 package com.smascaro.trackmixing.details.controller
 
-import com.smascaro.trackmixing.common.controller.BaseController
+import com.smascaro.trackmixing.common.controller.BaseNavigatorController
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.utils.FilesStorageHelper
 import com.smascaro.trackmixing.common.utils.NavigationHelper
@@ -12,8 +12,8 @@ import javax.inject.Inject
 class TrackDetailsController @Inject constructor(
     private val mDownloadTrackUseCase: DownloadTrackUseCase,
     private val mFilesStorageHelper: FilesStorageHelper,
-    private val mNavigationHelper: NavigationHelper
-) : BaseController<TrackDetailsViewMvc>(), TrackDetailsViewMvc.Listener,
+    mNavigationHelper: NavigationHelper
+) : BaseNavigatorController<TrackDetailsViewMvc>(mNavigationHelper), TrackDetailsViewMvc.Listener,
     DownloadTrackUseCase.Listener {
 
     fun onStart() {
@@ -31,7 +31,7 @@ class TrackDetailsController @Inject constructor(
     }
 
     override fun onGoToPlayerButtonClicked(track: Track) {
-        mNavigationHelper.toPlayer(track)
+        navigationHelper.toPlayer(track)
     }
 
     override fun onDownloadTrackStarted(mTrack: Track) {
@@ -39,7 +39,7 @@ class TrackDetailsController @Inject constructor(
     }
 
     override fun onDownloadTrackFinished(track: Track, path: String) {
-        mNavigationHelper.toPlayer(track)
+        navigationHelper.toPlayer(track)
     }
 
     override fun onDownloadTrackError() {

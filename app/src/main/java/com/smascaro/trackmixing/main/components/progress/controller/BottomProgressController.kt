@@ -17,6 +17,7 @@ class BottomProgressController @Inject constructor() : BaseController<BottomProg
 
     fun onCreate() {
         ensureViewMvcBound()
+        viewMvc.onCreate()
         viewMvc.startMarquee()
     }
 

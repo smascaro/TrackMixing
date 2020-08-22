@@ -2,6 +2,7 @@ package com.smascaro.trackmixing.main.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import androidx.navigation.findNavController
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.TrackMixingApplication
 import com.smascaro.trackmixing.common.di.main.MainComponent
@@ -37,14 +38,13 @@ class MainActivity : BaseActivity() {
 
     lateinit var mainComponent: MainComponent
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val rootView = LayoutInflater.from(this).inflate(R.layout.activity_main, null, false)
-        setContentView(rootView)
-
         mainComponent =
             (application as TrackMixingApplication).appComponent.mainComponent().create(this)
         mainComponent.inject(this)
+        super.onCreate(savedInstanceState)
+
+        val rootView = LayoutInflater.from(this).inflate(R.layout.activity_main, null, false)
+
 
         mainViewMvc.bindRootView(rootView)
         mainActivityController.bindViewMvc(mainViewMvc)
@@ -58,6 +58,9 @@ class MainActivity : BaseActivity() {
 
         bottomProgressController.onCreate()
         bottomPlayerController.onCreate()
+
+        setContentView(rootView)
+        bottomPlayerController.bindNavController(findNavController(R.id.nav_host_fragment))
     }
 
     override fun onStart() {
@@ -71,6 +74,16 @@ class MainActivity : BaseActivity() {
         bottomProgressController.onStop()
         EventBus.getDefault().post(ApplicationEvent(AppState.Background()))
     }
+//
+//    private var showAnim = true
+//    override fun onBackPressed() {
+//        if (showAnim) {
+//            EventBus.getDefault().post(UiProgressEvent.ProgressUpdate(26, "Testing animation"))
+//        } else {
+//            EventBus.getDefault().post(UiProgressEvent.ProgressFinished())
+//        }
+//        showAnim = !showAnim
+//    }
 
     override fun onDestroy() {
         super.onDestroy()

@@ -11,16 +11,18 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import com.google.android.material.textview.MaterialTextView
 import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.common.data.model.Track
-import com.smascaro.trackmixing.common.utils.*
+import com.smascaro.trackmixing.common.utils.SHARED_PREFERENCES_PLAYBACK_IS_PLAYING
+import com.smascaro.trackmixing.common.utils.SHARED_PREFERENCES_PLAYBACK_SONG_PLAYING
+import com.smascaro.trackmixing.common.utils.SharedPreferencesFactory
+import com.smascaro.trackmixing.common.utils.UiUtils
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
 import com.smascaro.trackmixing.main.components.bottomplayer.model.BottomPlayerData
+import com.smascaro.trackmixing.main.components.progress.view.ResizeAnimation
 import javax.inject.Inject
 
 class BottomPlayerViewMvcImpl @Inject constructor(
     private val uiUtils: UiUtils,
-    private val glide: RequestManager,
-    private val navigationHelper: NavigationHelper
+    private val glide: RequestManager
 ) :
     BaseObservableViewMvc<BottomPlayerViewMvc.Listener>(),
     BottomPlayerViewMvc,
@@ -74,8 +76,10 @@ class BottomPlayerViewMvcImpl @Inject constructor(
         if (shouldReloadBottomBar(data)) {
             bottomBarTextView.text = data.title
             renderBottomBarBackground(data.thumbnailUrl)
-            setBottomBarVisibility(View.VISIBLE)
-            setBottomBarHeight(bottomBarHeight.toInt())
+            val animation = ResizeAnimation(bottomBar, bottomBarHeight.toInt()).apply {
+                duration = 200
+            }
+            bottomBar.startAnimation(animation)
             isBottomBarShown = true
             currentShownData = data
         }
@@ -104,8 +108,10 @@ class BottomPlayerViewMvcImpl @Inject constructor(
 
     override fun hidePlayerBar() {
         if (isBottomBarShown) {
-            setBottomBarHeight(0)
-            setBottomBarVisibility(View.GONE)
+            val animation = ResizeAnimation(bottomBar, 0).apply {
+                duration = 200
+            }
+            bottomBar.startAnimation(animation)
             isBottomBarShown = false
         }
     }
@@ -118,9 +124,6 @@ class BottomPlayerViewMvcImpl @Inject constructor(
         bottomBarActionButton.setImageResource(R.drawable.ic_pause)
     }
 
-    override fun navigateToPlayer(track: Track) {
-        navigationHelper.toPlayer(track)
-    }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         if (key != null && key == SHARED_PREFERENCES_PLAYBACK_SONG_PLAYING || key == SHARED_PREFERENCES_PLAYBACK_IS_PLAYING) {

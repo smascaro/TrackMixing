@@ -1,9 +1,10 @@
 package com.smascaro.trackmixing.main.components.bottomplayer.controller
 
-import com.smascaro.trackmixing.common.controller.BaseController
+import com.smascaro.trackmixing.common.controller.BaseNavigatorController
 import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepository
 import com.smascaro.trackmixing.common.data.datasource.repository.toModel
 import com.smascaro.trackmixing.common.data.model.Track
+import com.smascaro.trackmixing.common.utils.NavigationHelper
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager
 import com.smascaro.trackmixing.main.components.bottomplayer.model.BottomPlayerData
 import com.smascaro.trackmixing.main.components.bottomplayer.view.BottomPlayerViewMvc
@@ -15,8 +16,9 @@ import javax.inject.Inject
 
 class BottomPlayerController @Inject constructor(
     private val playbackStateManager: PlaybackStateManager,
-    private val tracksRepository: TracksRepository
-) : BaseController<BottomPlayerViewMvc>(),
+    private val tracksRepository: TracksRepository,
+    navigationHelper: NavigationHelper
+) : BaseNavigatorController<BottomPlayerViewMvc>(navigationHelper),
     BottomPlayerViewMvc.Listener {
 
     private var currentTrack: Track? = null
@@ -54,9 +56,11 @@ class BottomPlayerController @Inject constructor(
     }
 
     override fun onLayoutClick() {
-        if (currentTrack != null) {
-            viewMvc.navigateToPlayer(currentTrack!!)
-        }
+        navigateToPlayer()
+    }
+
+    fun navigateToPlayer() {
+        navigationHelper.toPlayer(currentTrack!!)
     }
 
     override fun onActionButtonClicked() {
