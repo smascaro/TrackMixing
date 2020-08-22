@@ -18,6 +18,7 @@ import com.smascaro.trackmixing.common.utils.SharedPreferencesFactory
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
 import com.smascaro.trackmixing.main.components.bottomplayer.model.BottomPlayerData
 import com.smascaro.trackmixing.main.components.progress.view.ResizeAnimation
+import com.smascaro.trackmixing.playbackservice.MixPlayerService
 import javax.inject.Inject
 
 class BottomPlayerViewMvcImpl @Inject constructor(
@@ -41,6 +42,13 @@ class BottomPlayerViewMvcImpl @Inject constructor(
         resources.getLong(R.integer.animation_slide_out_top_duration)
     private var currentShownData: BottomPlayerData? = null
     private lateinit var sharedPreferences: SharedPreferences
+
+    override fun onCreate() {
+        val isServiceRunning = MixPlayerService.ping(getContext()!!)
+        getListeners().forEach {
+            it.onServiceRunningCheck(isServiceRunning)
+        }
+    }
 
     override fun bindRootView(rootView: View?) {
         super.bindRootView(rootView)
@@ -99,16 +107,6 @@ class BottomPlayerViewMvcImpl @Inject constructor(
             .into(BitmapImageViewTarget(bottomBarBackgroundImageView))
     }
 
-    private fun setBottomBarVisibility(visibility: Int) {
-        bottomBar.visibility = visibility
-    }
-
-    private fun setBottomBarHeight(height: Int) {
-        val layoutParams = bottomBar.layoutParams
-        layoutParams.height = height
-        bottomBar.layoutParams = layoutParams
-    }
-
     override fun hidePlayerBar() {
         if (isBottomBarShown) {
             val animation = ResizeAnimation(bottomBar, 0).apply {
@@ -135,5 +133,4 @@ class BottomPlayerViewMvcImpl @Inject constructor(
             }
         }
     }
-
 }

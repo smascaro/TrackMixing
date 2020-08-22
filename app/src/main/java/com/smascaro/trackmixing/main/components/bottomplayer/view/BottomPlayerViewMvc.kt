@@ -9,8 +9,10 @@ interface BottomPlayerViewMvc :
         fun onLayoutClick()
         fun onActionButtonClicked()
         fun onPlayerStateChanged()
+        fun onServiceRunningCheck(running: Boolean)
     }
 
+    fun onCreate()
     fun showPlayerBar(data: BottomPlayerData)
     fun hidePlayerBar()
     fun showPlayButton()

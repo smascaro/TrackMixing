@@ -63,6 +63,7 @@ class MixPlayerServiceController @Inject constructor(
 
     fun onDestroy() {
         playbackHelper.unregisterListener(this)
+        playbackStateManager.setPlayingStateFlag(PlaybackState.Stopped())
     }
 
     fun loadTrack(track: Track) {

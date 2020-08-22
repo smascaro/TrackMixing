@@ -22,34 +22,39 @@ class BottomPlayerController @Inject constructor(
     BottomPlayerViewMvc.Listener {
 
     private var currentTrack: Track? = null
+    private var currentState: PlaybackStateManager.PlaybackState? = null
 
     fun onCreate() {
         ensureViewMvcBound()
         viewMvc.registerListener(this)
-        updateCurrentPlayingTrack()
+        viewMvc.onCreate()
     }
 
     private fun updateCurrentPlayingTrack() =
         runBlocking {
-            val playingState = playbackStateManager.getPlayingState()
-            if (playingState is PlaybackStateManager.PlaybackState.Playing || playingState is PlaybackStateManager.PlaybackState.Paused) {
+            currentState = playbackStateManager.getPlayingState()
+            if (currentState is PlaybackStateManager.PlaybackState.Playing || currentState is PlaybackStateManager.PlaybackState.Paused) {
                 val songId = playbackStateManager.getCurrentSong()
                 currentTrack = tracksRepository.get(songId).toModel()
-                when (playingState) {
+                when (currentState) {
                     is PlaybackStateManager.PlaybackState.Playing -> viewMvc.showPauseButton()
                     is PlaybackStateManager.PlaybackState.Paused -> viewMvc.showPlayButton()
                 }
                 viewMvc.showPlayerBar(
-                    BottomPlayerData(
-                        currentTrack!!.title,
-                        playingState,
-                        currentTrack!!.thumbnailUrl
-                    )
+                    makeBottomPlayerData()
                 )
-            } else if (playingState is PlaybackStateManager.PlaybackState.Stopped) {
+            } else if (currentState is PlaybackStateManager.PlaybackState.Stopped) {
                 viewMvc.hidePlayerBar()
             }
         }
+
+    private fun makeBottomPlayerData(): BottomPlayerData {
+        return BottomPlayerData(
+            currentTrack!!.title,
+            currentState!!,
+            currentTrack!!.thumbnailUrl
+        )
+    }
 
     fun onDestroy() {
         viewMvc.unregisterListener(this)
@@ -76,5 +81,11 @@ class BottomPlayerController @Inject constructor(
 
     override fun onPlayerStateChanged() {
         updateCurrentPlayingTrack()
+    }
+
+    override fun onServiceRunningCheck(running: Boolean) {
+        if (running) {
+            updateCurrentPlayingTrack()
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.smascaro.trackmixing.playbackservice
 
+import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -28,6 +29,14 @@ class MixPlayerService : BaseService(),
             intent.putExtras(extras)
             val startedComponentName = context.startService(intent)
             return startedComponentName != null
+        }
+
+        fun ping(context: Context): Boolean {
+            val activityManager =
+                context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+            return activityManager.getRunningServices(Int.MAX_VALUE).any {
+                it.service.className == MixPlayerService::class.java.name
+            }
         }
     }
 
