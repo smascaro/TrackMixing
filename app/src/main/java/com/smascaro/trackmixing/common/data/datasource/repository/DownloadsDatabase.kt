@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.common.data.datasource.dao
+package com.smascaro.trackmixing.common.data.datasource.repository
 
 import android.content.Context
 import androidx.room.Database

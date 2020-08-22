@@ -1,8 +1,8 @@
 package com.smascaro.trackmixing.main.controller
 
 import com.smascaro.trackmixing.common.controller.BaseController
-import com.smascaro.trackmixing.common.data.datasource.dao.toModel
 import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepository
+import com.smascaro.trackmixing.common.data.datasource.repository.toModel
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager
 import com.smascaro.trackmixing.main.model.BottomPlayerData

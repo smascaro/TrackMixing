@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.common.data.datasource.dao
+package com.smascaro.trackmixing.common.data.datasource.repository
 
 import androidx.room.*
 import com.smascaro.trackmixing.common.data.model.DownloadEntity

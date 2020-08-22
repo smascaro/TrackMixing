@@ -1,6 +1,5 @@
 package com.smascaro.trackmixing.common.data.datasource.repository
 
-import com.smascaro.trackmixing.common.data.datasource.dao.DownloadsDao
 import com.smascaro.trackmixing.common.data.model.DownloadEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

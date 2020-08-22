@@ -1,9 +1,9 @@
 package com.smascaro.trackmixing.trackslist.business
 
-import com.smascaro.trackmixing.common.data.datasource.dao.toModel
 import com.smascaro.trackmixing.common.data.datasource.network.NodeApi
-import com.smascaro.trackmixing.common.data.network.AvailableTracksResponseSchema
+import com.smascaro.trackmixing.common.data.datasource.repository.toModel
 import com.smascaro.trackmixing.common.data.model.Track
+import com.smascaro.trackmixing.common.data.network.AvailableTracksResponseSchema
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable
 import retrofit2.Call
 import retrofit2.Callback

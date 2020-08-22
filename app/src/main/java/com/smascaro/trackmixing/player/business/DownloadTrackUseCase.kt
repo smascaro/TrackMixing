@@ -1,10 +1,10 @@
 package com.smascaro.trackmixing.player.business
 
-import com.smascaro.trackmixing.common.data.datasource.dao.toModel
 import com.smascaro.trackmixing.common.data.datasource.network.NodeApi
 import com.smascaro.trackmixing.common.data.datasource.network.NodeDownloadsApi
 import com.smascaro.trackmixing.common.data.datasource.repository.TrackNotFoundException
 import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepository
+import com.smascaro.trackmixing.common.data.datasource.repository.toModel
 import com.smascaro.trackmixing.common.data.model.DownloadEntity
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.utils.FilesStorageHelper

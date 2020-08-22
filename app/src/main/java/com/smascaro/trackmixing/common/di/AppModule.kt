@@ -3,10 +3,10 @@ package com.smascaro.trackmixing.common.di
 import android.content.Context
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
-import com.smascaro.trackmixing.common.data.datasource.dao.DownloadsDao
-import com.smascaro.trackmixing.common.data.datasource.dao.DownloadsDatabase
 import com.smascaro.trackmixing.common.data.datasource.network.NodeApi
 import com.smascaro.trackmixing.common.data.datasource.network.NodeDownloadsApi
+import com.smascaro.trackmixing.common.data.datasource.repository.DownloadsDao
+import com.smascaro.trackmixing.common.data.datasource.repository.DownloadsDatabase
 import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepository
 import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepositoryImpl
 import com.smascaro.trackmixing.common.di.main.RetrofitForBinaryData
