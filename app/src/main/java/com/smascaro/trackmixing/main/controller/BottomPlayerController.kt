@@ -33,6 +33,10 @@ class BottomPlayerController @Inject constructor(
             if (playingState is PlaybackStateManager.PlaybackState.Playing || playingState is PlaybackStateManager.PlaybackState.Paused) {
                 val songId = playbackStateManager.getCurrentSong()
                 currentTrack = tracksRepository.get(songId).toModel()
+                when (playingState) {
+                    is PlaybackStateManager.PlaybackState.Playing -> viewMvc.showPauseButton()
+                    is PlaybackStateManager.PlaybackState.Paused -> viewMvc.showPlayButton()
+                }
                 viewMvc.showPlayerBar(
                     BottomPlayerData(
                         currentTrack!!.title,

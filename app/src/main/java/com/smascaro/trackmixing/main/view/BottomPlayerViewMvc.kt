@@ -14,5 +14,7 @@ interface BottomPlayerViewMvc :
 
     fun showPlayerBar(data: BottomPlayerData)
     fun hidePlayerBar()
+    fun showPlayButton()
+    fun showPauseButton()
     fun navigateToPlayer(track: Track)
 }

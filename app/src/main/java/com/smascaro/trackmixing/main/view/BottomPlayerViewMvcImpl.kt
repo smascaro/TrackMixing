@@ -110,6 +110,14 @@ class BottomPlayerViewMvcImpl @Inject constructor(
         }
     }
 
+    override fun showPlayButton() {
+        bottomBarActionButton.setImageResource(R.drawable.ic_play)
+    }
+
+    override fun showPauseButton() {
+        bottomBarActionButton.setImageResource(R.drawable.ic_pause)
+    }
+
     override fun navigateToPlayer(track: Track) {
         navigationHelper.toPlayer(track)
     }
