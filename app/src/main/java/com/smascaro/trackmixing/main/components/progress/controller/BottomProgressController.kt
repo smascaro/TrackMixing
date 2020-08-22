@@ -1,6 +1,8 @@
 package com.smascaro.trackmixing.main.components.progress.controller
 
+import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.controller.BaseController
+import com.smascaro.trackmixing.common.utils.ResourcesWrapper
 import com.smascaro.trackmixing.main.components.progress.model.UiProgressEvent
 import com.smascaro.trackmixing.main.components.progress.view.BottomProgressViewMvc
 import kotlinx.coroutines.CoroutineScope
@@ -13,7 +15,11 @@ import org.greenrobot.eventbus.ThreadMode
 import timber.log.Timber
 import javax.inject.Inject
 
-class BottomProgressController @Inject constructor() : BaseController<BottomProgressViewMvc>() {
+class BottomProgressController @Inject constructor(resources: ResourcesWrapper) :
+    BaseController<BottomProgressViewMvc>() {
+
+    private val delayBeforeHidingMillis =
+        resources.getLong(R.integer.download_progress_delay_before_hiding_millis)
 
     fun onCreate() {
         ensureViewMvcBound()
@@ -51,7 +57,7 @@ class BottomProgressController @Inject constructor() : BaseController<BottomProg
     private fun delayedHideProgress(progress: Int, message: String) {
         viewMvc.updateProgress(progress, message)
         CoroutineScope(Dispatchers.Main).launch {
-            delay(1000)
+            delay(delayBeforeHidingMillis)
             viewMvc.hideProgressBar()
         }
     }

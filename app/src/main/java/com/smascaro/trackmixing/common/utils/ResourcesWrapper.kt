@@ -20,4 +20,8 @@ class ResourcesWrapper @Inject constructor(private val context: Context) {
         return context.resources.getInteger(id)
     }
 
+    fun getLong(id: Int): Long {
+        return getInteger(id).toLong()
+    }
+
 }

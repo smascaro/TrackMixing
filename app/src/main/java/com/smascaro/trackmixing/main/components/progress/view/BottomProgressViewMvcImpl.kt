@@ -6,12 +6,12 @@ import android.widget.LinearLayout
 import android.widget.TextSwitcher
 import androidx.core.view.children
 import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.common.utils.UiUtils
+import com.smascaro.trackmixing.common.utils.ResourcesWrapper
 import com.smascaro.trackmixing.common.view.architecture.BaseViewMvc
 import timber.log.Timber
 import javax.inject.Inject
 
-class BottomProgressViewMvcImpl @Inject constructor(private val uiUtils: UiUtils) : BaseViewMvc(),
+class BottomProgressViewMvcImpl @Inject constructor(resources: ResourcesWrapper) : BaseViewMvc(),
     BottomProgressViewMvc {
     private lateinit var progressBarWrapper: LinearLayout
     private lateinit var progressBar: LinearLayout
@@ -20,8 +20,10 @@ class BottomProgressViewMvcImpl @Inject constructor(private val uiUtils: UiUtils
     private lateinit var textSwitcherProgressValue: TextSwitcher
     private lateinit var textSwitcherProgressText: TextSwitcher
 
-    private val progressBarHeight = uiUtils.DpToPixels(26f)
-
+    private val progressBarHeight = resources.getDimension(R.dimen.download_progress_layout_height)
+    private val inAnimationDuration =
+        resources.getLong(R.integer.animation_slide_in_bottom_duration)
+    private val outAnimationDuration = resources.getLong(R.integer.animation_slide_out_top_duration)
     private var isProgressBarVisible: Boolean = false
     override fun bindRootView(rootView: View?) {
         super.bindRootView(rootView)
@@ -58,7 +60,7 @@ class BottomProgressViewMvcImpl @Inject constructor(private val uiUtils: UiUtils
 
     private fun displayProgressBar() {
         val animation = ResizeAnimation(progressBar, progressBarHeight.toInt()).apply {
-            duration = 200
+            duration = inAnimationDuration
         }
         progressBar.requestLayout()
         progressBar.startAnimation(animation)
@@ -73,7 +75,7 @@ class BottomProgressViewMvcImpl @Inject constructor(private val uiUtils: UiUtils
 
     private fun removeProgressBar() {
         val animation = ResizeAnimation(progressBar, 0).apply {
-            duration = 200
+            duration = outAnimationDuration
         }
         progressBar.startAnimation(animation)
     }

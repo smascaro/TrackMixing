@@ -36,9 +36,9 @@ class BottomPlayerViewMvcImpl @Inject constructor(
     private var isBottomBarShown = false
     private val bottomBarHeight = resources.getDimension(R.dimen.actions_bottom_layout_height)
     private val inAnimationDuration =
-        resources.getInteger(R.integer.animation_slide_in_bottom_duration).toLong()
+        resources.getLong(R.integer.animation_slide_in_bottom_duration)
     private val outAnimationDuration =
-        resources.getInteger(R.integer.animation_slide_out_top_duration).toLong()
+        resources.getLong(R.integer.animation_slide_out_top_duration)
     private var currentShownData: BottomPlayerData? = null
     private lateinit var sharedPreferences: SharedPreferences
 

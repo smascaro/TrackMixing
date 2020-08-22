@@ -17,6 +17,7 @@
     <dimen name="actions_bottom_title_padding_horizontal">10dp</dimen>
     <dimen name="actions_bottom_title_text_size">18sp</dimen>
     <dimen name="download_progress_layout_height">26dp</dimen>
+    <integer name="download_progress_delay_before_hiding_millis">1000</integer>
     <integer name="animation_slide_in_bottom_duration">200</integer>
     <integer name="animation_slide_out_top_duration">200</integer>
 </resources>
