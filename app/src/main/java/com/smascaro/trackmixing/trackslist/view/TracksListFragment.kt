@@ -44,7 +44,7 @@ class TracksListFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         viewMvc.bindRootView(inflater.inflate(R.layout.fragment_tracks_list, null, false))
-        mTracksListController.bindView(viewMvc)
+        mTracksListController.bindViewMvc(viewMvc)
 
         return viewMvc.getRootView()
     }

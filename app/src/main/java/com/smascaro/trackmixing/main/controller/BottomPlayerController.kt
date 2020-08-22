@@ -1,5 +1,6 @@
 package com.smascaro.trackmixing.main.controller
 
+import com.smascaro.trackmixing.common.controller.BaseController
 import com.smascaro.trackmixing.common.data.datasource.dao.DownloadsDao
 import com.smascaro.trackmixing.common.data.datasource.dao.toModel
 import com.smascaro.trackmixing.common.data.model.Track
@@ -17,15 +18,14 @@ import javax.inject.Inject
 class BottomPlayerController @Inject constructor(
     private val playbackStateManager: PlaybackStateManager,
     private val downloadsDao: DownloadsDao
-) : BottomPlayerViewMvc.Listener {
-    private lateinit var viewMvc: BottomPlayerViewMvc
+) : BaseController<BottomPlayerViewMvc>(),
+    BottomPlayerViewMvc.Listener {
+
     private var currentTrack: Track? = null
-    fun bindViewMvc(viewMvc: BottomPlayerViewMvc) {
-        this.viewMvc = viewMvc
-        this.viewMvc.registerListener(this)
-    }
 
     fun onCreate() {
+        ensureViewMvcBound()
+        viewMvc.registerListener(this)
         updateCurrentPlayingTrack()
     }
 

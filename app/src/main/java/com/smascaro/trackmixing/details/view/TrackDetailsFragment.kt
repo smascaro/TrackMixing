@@ -57,7 +57,7 @@ class TrackDetailsFragment : BaseFragment() {
     ): View? {
         viewMvc.bindRootView(inflater.inflate(R.layout.fragment_track_details, null, false))
         viewMvc.bindTrack(args.track)
-        controller.bindView(viewMvc)
+        controller.bindViewMvc(viewMvc)
 
         controller.initUI()
         return viewMvc.getRootView()

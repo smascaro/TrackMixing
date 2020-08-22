@@ -48,7 +48,7 @@ class TracksPlayerActivity : BaseActivity() {
         viewMvc.bindRootView(rootView)
 
         mTracksPlayerController.bindTrack(track)
-        mTracksPlayerController.bindView(viewMvc)
+        mTracksPlayerController.bindViewMvc(viewMvc)
         mTracksPlayerController.onCreate()
 
         setContentView(viewMvc.getRootView())

@@ -1,10 +1,11 @@
 package com.smascaro.trackmixing.trackslist.controller
 
 
+import com.smascaro.trackmixing.common.controller.BaseController
+import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.player.business.DownloadTrackUseCase
 import com.smascaro.trackmixing.trackslist.business.FetchAvailableTracksUseCase
 import com.smascaro.trackmixing.trackslist.business.FetchDownloadedTracks
-import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.trackslist.view.TracksListViewMvc
 import timber.log.Timber
 import java.io.File
@@ -15,19 +16,12 @@ class TracksListController @Inject constructor(
     private val mFetchAvailableTracksUseCase: FetchAvailableTracksUseCase,
     private val mDownloadTrackUseCase: DownloadTrackUseCase,
     private val mFetchDownloadedTracks: FetchDownloadedTracks
-) : TracksListViewMvc.Listener,
+) : BaseController<TracksListViewMvc>(),
+    TracksListViewMvc.Listener,
     FetchAvailableTracksUseCase.Listener,
     DownloadTrackUseCase.Listener, FetchDownloadedTracks.Listener {
-    private lateinit var mViewMvc: TracksListViewMvc
     override fun onTrackClicked(track: Track) {
         Timber.i("Track clicked: ${track.title}")
-//        mDownloadTrackUseCase.downloadTrackAndNotify(
-//            track,
-//            mFilesStorageHelper.getBaseDirectory()
-//        )
-
-        //mViewMvc.showDetails(track)
-//        mViewMvc.displayFloatingCard()
     }
 
     override fun onCurrentDataSourceRequest(dataSource: TracksListViewMvc.TracksDataSource) {
@@ -43,28 +37,23 @@ class TracksListController @Inject constructor(
 
     }
 
-    fun bindView(mvcView: TracksListViewMvc) {
-        mViewMvc = mvcView
-    }
-
     fun onStart() {
-        mViewMvc.registerListener(this)
+        viewMvc.registerListener(this)
         mFetchAvailableTracksUseCase.registerListener(this)
         mDownloadTrackUseCase.registerListener(this)
         mFetchDownloadedTracks.registerListener(this)
-        loadTracksFrom(mViewMvc.getCurrentDataSource())
-//        mFetchAvailableTracksUseCase.fetchAvailableTracksAndNotify()
+        loadTracksFrom(viewMvc.getCurrentDataSource())
     }
 
     fun onStop() {
-        mViewMvc.unregisterListener(this)
+        viewMvc.unregisterListener(this)
         mFetchAvailableTracksUseCase.unregisterListener(this)
         mDownloadTrackUseCase.unregisterListener(this)
         mFetchDownloadedTracks.unregisterListener(this)
     }
 
     override fun onAvailableTracksFetched(tracks: List<Track>) {
-        mViewMvc.bindTracks(tracks)
+        viewMvc.bindTracks(tracks)
     }
 
     override fun onAvailableTracksFetchFailed() {
@@ -86,7 +75,7 @@ class TracksListController @Inject constructor(
                 Timber.d("File: ${it?.absoluteFile}, size: ${it.length() / 1000}KB (${it.length() / 1000000}MB)")
             }
         }
-        mViewMvc.navigateToPlayer(track)
+        viewMvc.navigateToPlayer(track)
     }
 
     override fun onDownloadTrackError() {
@@ -94,6 +83,6 @@ class TracksListController @Inject constructor(
     }
 
     override fun onTracksFetched(tracks: List<Track>) {
-        mViewMvc.bindTracks(tracks)
+        viewMvc.bindTracks(tracks)
     }
 }

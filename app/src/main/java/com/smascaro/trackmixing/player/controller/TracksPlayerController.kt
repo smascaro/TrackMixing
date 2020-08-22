@@ -1,20 +1,17 @@
 package com.smascaro.trackmixing.player.controller
 
-import com.smascaro.trackmixing.common.error.NoLoadedTrackException
+import com.smascaro.trackmixing.common.controller.BaseController
 import com.smascaro.trackmixing.common.data.model.Track
+import com.smascaro.trackmixing.common.error.NoLoadedTrackException
 import com.smascaro.trackmixing.player.view.TracksPlayerViewMvc
 import timber.log.Timber
 import javax.inject.Inject
 
 class TracksPlayerController @Inject constructor() :
+    BaseController<TracksPlayerViewMvc>(),
     TracksPlayerViewMvc.Listener {
 
-    private lateinit var mViewMvc: TracksPlayerViewMvc
     private lateinit var mTrack: Track
-    fun bindView(viewMvc: TracksPlayerViewMvc) {
-        mViewMvc = viewMvc
-        mViewMvc.registerListener(this)
-    }
 
     fun bindTrack(track: Track) {
         mTrack = track
@@ -24,21 +21,23 @@ class TracksPlayerController @Inject constructor() :
         if (!this::mTrack.isInitialized) {
             throw NoLoadedTrackException()
         }
-        mViewMvc.loadTrack(mTrack)
+        viewMvc.loadTrack(mTrack)
     }
 
     fun onDestroy() {
-        mViewMvc.unregisterListener(this)
-        mViewMvc.onDestroy()
+        viewMvc.unregisterListener(this)
+        viewMvc.onDestroy()
     }
 
     fun onCreate() {
+        ensureViewMvcBound()
         loadTrack()
+        viewMvc.registerListener(this)
     }
 
     fun playMaster() {
-        if (mViewMvc.isServiceStarted()) {
-            mViewMvc.playMaster()
+        if (viewMvc.isServiceStarted()) {
+            viewMvc.playMaster()
         } else {
             Timber.w("Can't play master because service is not connected yet.")
         }
