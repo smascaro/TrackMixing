@@ -11,13 +11,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import com.google.android.material.textview.MaterialTextView
 import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.common.utils.SHARED_PREFERENCES_PLAYBACK_IS_PLAYING
-import com.smascaro.trackmixing.common.utils.SHARED_PREFERENCES_PLAYBACK_SONG_PLAYING
-import com.smascaro.trackmixing.common.utils.SharedPreferencesFactory
 import com.smascaro.trackmixing.common.data.model.Track
+import com.smascaro.trackmixing.common.utils.*
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
-import com.smascaro.trackmixing.common.utils.UiUtils
-import com.smascaro.trackmixing.common.utils.NavigationHelper
 import com.smascaro.trackmixing.main.model.BottomPlayerData
 import javax.inject.Inject
 
@@ -38,6 +34,7 @@ class BottomPlayerViewMvcImpl @Inject constructor(
     private var isBottomBarShown = false
     private val bottomBarHeight = uiUtils.DpToPixels(80f)
 
+    private var currentShownData: BottomPlayerData? = null
     private lateinit var sharedPreferences: SharedPreferences
 
     override fun bindRootView(rootView: View?) {
@@ -74,12 +71,18 @@ class BottomPlayerViewMvcImpl @Inject constructor(
     }
 
     override fun showPlayerBar(data: BottomPlayerData) {
-        bottomBarTextView.text = data.title
-        renderBottomBarBackground(data.thumbnailUrl)
-        setBottomBarVisibility(View.VISIBLE)
-        setBottomBarHeight(bottomBarHeight.toInt())
-        isBottomBarShown = true
+        if (shouldReloadBottomBar(data)) {
+            bottomBarTextView.text = data.title
+            renderBottomBarBackground(data.thumbnailUrl)
+            setBottomBarVisibility(View.VISIBLE)
+            setBottomBarHeight(bottomBarHeight.toInt())
+            isBottomBarShown = true
+            currentShownData = data
+        }
     }
+
+    private fun shouldReloadBottomBar(data: BottomPlayerData) =
+        !isBottomBarShown || currentShownData?.title != data.title || currentShownData?.thumbnailUrl != data.thumbnailUrl
 
     private fun renderBottomBarBackground(imageUrl: String) {
         glide
@@ -100,9 +103,11 @@ class BottomPlayerViewMvcImpl @Inject constructor(
     }
 
     override fun hidePlayerBar() {
-        setBottomBarHeight(0)
-        setBottomBarVisibility(View.GONE)
-        isBottomBarShown = false
+        if (isBottomBarShown) {
+            setBottomBarHeight(0)
+            setBottomBarVisibility(View.GONE)
+            isBottomBarShown = false
+        }
     }
 
     override fun navigateToPlayer(track: Track) {
