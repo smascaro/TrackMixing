@@ -2,7 +2,8 @@ package com.smascaro.trackmixing.main.view
 
 import android.view.View
 import android.widget.LinearLayout
-import com.google.android.material.textview.MaterialTextView
+import android.widget.TextSwitcher
+import androidx.core.view.children
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.utils.UiUtils
 import com.smascaro.trackmixing.common.view.architecture.BaseViewMvc
@@ -12,8 +13,10 @@ import javax.inject.Inject
 class BottomProgressViewMvcImpl @Inject constructor(private val uiUtils: UiUtils) : BaseViewMvc(),
     BottomProgressViewMvc {
     private lateinit var progressBar: LinearLayout
-    private lateinit var textViewProgressValue: MaterialTextView
-    private lateinit var textViewProgressText: MaterialTextView
+    private var currentProgressValue: Int = -1
+    private var currentProgressMessage: String = ""
+    private lateinit var textSwitcherProgressValue: TextSwitcher
+    private lateinit var textSwitcherProgressText: TextSwitcher
 
     private val progressBarHeight = uiUtils.DpToPixels(26f)
 
@@ -25,13 +28,20 @@ class BottomProgressViewMvcImpl @Inject constructor(private val uiUtils: UiUtils
 
     private fun initialize() {
         progressBar = findViewById(R.id.layout_progress_container)
-        textViewProgressValue = findViewById(R.id.tv_progress_value)
-        textViewProgressText = findViewById(R.id.tv_progress_message)
+        textSwitcherProgressValue = findViewById(R.id.ts_progress_value)
+        textSwitcherProgressText = findViewById(R.id.ts_progress_message)
+
+        textSwitcherProgressValue.setInAnimation(getContext(), R.anim.slide_in_bottom)
+        textSwitcherProgressValue.setOutAnimation(getContext(), R.anim.slide_out_top)
+        textSwitcherProgressText.setInAnimation(getContext(), R.anim.slide_in_bottom)
+        textSwitcherProgressText.setOutAnimation(getContext(), R.anim.slide_out_top)
     }
 
     override fun startMarquee() {
         Timber.d("Starting marquee")
-        textViewProgressText.isSelected = true
+        textSwitcherProgressText.children.forEach {
+            it.isSelected = true
+        }
     }
 
     override fun showProgressBar() {
@@ -61,9 +71,13 @@ class BottomProgressViewMvcImpl @Inject constructor(private val uiUtils: UiUtils
     }
 
     override fun updateProgress(progress: Int, status: String) {
-        textViewProgressValue.text = "$progress%"
-        if (textViewProgressText.text != status) {
-            textViewProgressText.text = status
+        if (currentProgressValue != progress) {
+            textSwitcherProgressValue.setText("$progress%")
+            currentProgressValue = progress
+        }
+        if (currentProgressMessage != status) {
+            textSwitcherProgressText.setText(status)
+            currentProgressMessage = status
         }
     }
 }

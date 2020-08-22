@@ -9,23 +9,50 @@
     android:orientation="horizontal"
     android:visibility="gone">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tv_progress_value"
+    <TextSwitcher
+        android:id="@+id/ts_progress_value"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="0.1"
-        android:gravity="center"
-        android:text="90%" />
+        android:layout_weight="0.1">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tv_progress_message"
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="90%" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="90%" />
+    </TextSwitcher>
+
+    <TextSwitcher
+        android:id="@+id/ts_progress_message"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="0.7"
-        android:ellipsize="marquee"
-        android:gravity="center_vertical"
-        android:marqueeRepeatLimit="marquee_forever"
-        android:scrollHorizontally="true"
-        android:singleLine="true"
-        android:text="Video is being processed but this message is too long to fit" />
+        android:layout_weight="0.7">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:ellipsize="marquee"
+            android:gravity="center_vertical"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:text="Video is being processed but this message is too long to fit" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:ellipsize="marquee"
+            android:gravity="center_vertical"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:text="Video is being processed but this message is too long to fit" />
+    </TextSwitcher>
 </LinearLayout>
+
