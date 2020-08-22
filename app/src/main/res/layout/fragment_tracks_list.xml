@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/fabTempMode"
-        android:layout_marginRight="36dp"
+        android:layout_marginRight="@dimen/fab_margin_right"
         android:src="@android:drawable/ic_menu_search"
         app:layout_constraintBottom_toTopOf="@+id/motionLayoutFloatingCard"
         app:layout_constraintEnd_toEndOf="parent" />

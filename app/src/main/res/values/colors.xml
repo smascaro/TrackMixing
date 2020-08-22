@@ -3,4 +3,8 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
+    <color name="item_track_title_text_color">#fff</color>
+    <color name="item_track_expanded_title_text_color">#fff</color>
+    <color name="actions_bottom_gradient_background">#77000000</color>
+    <color name="download_progress_layout_background">#bb66dd22</color>
 </resources>

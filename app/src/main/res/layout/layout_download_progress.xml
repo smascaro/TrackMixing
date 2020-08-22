@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_progress_container"
     android:layout_width="match_parent"
-    android:layout_height="26dp"
+    android:layout_height="@dimen/download_progress_layout_height"
     android:layout_gravity="bottom"
     android:layout_weight="1"
-    android:background="#bb66dd22"
+    android:background="@color/download_progress_layout_background"
     android:orientation="horizontal"
     android:visibility="visible">
 
@@ -18,14 +18,12 @@
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="90%" />
+            android:gravity="center" />
 
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="90%" />
+            android:gravity="center" />
     </TextSwitcher>
 
     <TextSwitcher
@@ -41,8 +39,7 @@
             android:gravity="center_vertical"
             android:marqueeRepeatLimit="marquee_forever"
             android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:text="Video is being processed but this message is too long to fit" />
+            android:singleLine="true" />
 
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
@@ -51,8 +48,7 @@
             android:gravity="center_vertical"
             android:marqueeRepeatLimit="marquee_forever"
             android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:text="Video is being processed but this message is too long to fit" />
+            android:singleLine="true" />
     </TextSwitcher>
 </LinearLayout>
 

@@ -22,7 +22,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#77000000"
+        android:background="@color/actions_bottom_gradient_background"
         android:gravity="center"
         android:weightSum="1"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -38,9 +38,9 @@
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="1"
-            android:paddingHorizontal="10dp"
+            android:paddingHorizontal="@dimen/actions_bottom_title_padding_horizontal"
             android:text="Desakato - Nueva religión renenejck dwkdwkd kwdkwkdj jjsksdsl"
-            android:textSize="18sp" />
+            android:textSize="@dimen/actions_bottom_title_text_size" />
 
         <ImageView
             android:id="@+id/iv_action_button_player_bottom"

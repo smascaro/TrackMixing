@@ -21,7 +21,7 @@
             <ImageView
                 android:id="@+id/thumbnailImg"
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
+                android:layout_height="@dimen/item_track_thumbnail_height"
                 android:scaleType="centerCrop"
                 android:src="@drawable/test_thumbnail_1280x720"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -31,7 +31,7 @@
             <View
                 android:id="@+id/gradientView"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="@dimen/item_track_gradient_height"
                 android:background="@drawable/bg_gradient_black"
                 app:layout_constraintBottom_toBottomOf="@+id/thumbnailImg" />
 
@@ -39,15 +39,15 @@
                 android:id="@+id/trackTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginStart="@dimen/item_track_title_margin_start"
+                android:layout_marginLeft="@dimen/item_track_title_margin_left"
+                android:layout_marginBottom="@dimen/item_track_title_margin_bottom"
                 android:ellipsize="end"
-                android:paddingRight="8dp"
+                android:paddingRight="@dimen/item_track_title_padding_right"
                 android:singleLine="true"
                 android:text="Desakato - Nueva Religión (Bonus Track 100% Real) - 2019 Remastered edition"
-                android:textColor="#fff"
-                android:textSize="20sp"
+                android:textColor="@color/item_track_title_text_color"
+                android:textSize="@dimen/item_track_title_text_size"
                 app:layout_constraintBottom_toBottomOf="@id/gradientView"
                 app:layout_constraintStart_toStartOf="@id/gradientView" />
 
@@ -67,11 +67,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:paddingVertical="64dp"
+            android:paddingVertical="@dimen/item_track_expanded_title_padding_vertical"
             android:singleLine="true"
             android:text="This is just a test"
             android:textAlignment="center"
-            android:textColor="#fff"
-            android:textSize="20sp" />
+            android:textColor="@color/item_track_expanded_title_text_color"
+            android:textSize="@dimen/item_track_expanded_title_text_size" />
     </LinearLayout>
 </LinearLayout>
