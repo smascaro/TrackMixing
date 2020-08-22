@@ -2,12 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_progress_container"
     android:layout_width="match_parent"
-    android:layout_height="0dp"
+    android:layout_height="26dp"
     android:layout_gravity="bottom"
     android:layout_weight="1"
     android:background="#bb66dd22"
     android:orientation="horizontal"
-    android:visibility="gone">
+    android:visibility="visible">
 
     <TextSwitcher
         android:id="@+id/ts_progress_value"
