@@ -6,8 +6,10 @@ import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.TrackMixingApplication
 import com.smascaro.trackmixing.common.di.main.MainComponent
 import com.smascaro.trackmixing.common.view.ui.BaseActivity
-import com.smascaro.trackmixing.main.controller.BottomPlayerController
-import com.smascaro.trackmixing.main.controller.BottomProgressController
+import com.smascaro.trackmixing.main.components.bottomplayer.controller.BottomPlayerController
+import com.smascaro.trackmixing.main.components.bottomplayer.view.BottomPlayerViewMvc
+import com.smascaro.trackmixing.main.components.progress.controller.BottomProgressController
+import com.smascaro.trackmixing.main.components.progress.view.BottomProgressViewMvc
 import com.smascaro.trackmixing.main.controller.MainActivityController
 import com.smascaro.trackmixing.player.business.downloadtrack.model.ApplicationEvent
 import com.smascaro.trackmixing.player.business.downloadtrack.model.ApplicationEvent.AppState

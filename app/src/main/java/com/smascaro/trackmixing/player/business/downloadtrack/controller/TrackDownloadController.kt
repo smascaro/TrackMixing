@@ -6,7 +6,7 @@ import com.smascaro.trackmixing.common.di.DownloadNotificationHelperImplementati
 import com.smascaro.trackmixing.common.utils.DOWNLOAD_NOTIFICATION_ID
 import com.smascaro.trackmixing.common.utils.NotificationHelper
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable
-import com.smascaro.trackmixing.main.model.UiProgressEvent
+import com.smascaro.trackmixing.main.components.progress.model.UiProgressEvent
 import com.smascaro.trackmixing.player.business.DownloadTrackUseCase
 import com.smascaro.trackmixing.player.business.downloadtrack.business.RequestTrackUseCase
 import com.smascaro.trackmixing.player.business.downloadtrack.model.*

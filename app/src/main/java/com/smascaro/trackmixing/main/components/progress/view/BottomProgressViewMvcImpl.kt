@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.main.view
+package com.smascaro.trackmixing.main.components.progress.view
 
 import android.view.View
 import android.widget.LinearLayout

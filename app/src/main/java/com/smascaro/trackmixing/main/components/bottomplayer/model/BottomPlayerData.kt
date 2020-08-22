@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.main.model
+package com.smascaro.trackmixing.main.components.bottomplayer.model
 
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager
 

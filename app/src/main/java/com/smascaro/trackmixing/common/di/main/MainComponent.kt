@@ -3,7 +3,6 @@ package com.smascaro.trackmixing.common.di.main
 import com.smascaro.trackmixing.common.view.ui.BaseActivity
 import com.smascaro.trackmixing.details.view.TrackDetailsFragment
 import com.smascaro.trackmixing.main.view.MainActivity
-import com.smascaro.trackmixing.player.business.downloadtrack.TrackDownloadService
 import com.smascaro.trackmixing.trackslist.view.TracksListFragment
 import dagger.BindsInstance
 import dagger.Subcomponent

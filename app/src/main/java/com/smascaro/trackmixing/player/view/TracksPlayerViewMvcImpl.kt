@@ -1,9 +1,9 @@
 package com.smascaro.trackmixing.player.view
 
 import android.content.Intent
-import com.smascaro.trackmixing.playbackservice.utils.PlaybackSession
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
+import com.smascaro.trackmixing.playbackservice.utils.PlaybackSession
 import javax.inject.Inject
 
 class TracksPlayerViewMvcImpl @Inject constructor(

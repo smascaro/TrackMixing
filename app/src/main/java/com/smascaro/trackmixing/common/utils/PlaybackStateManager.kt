@@ -28,9 +28,11 @@ class PlaybackStateManager @Inject constructor(context: Context) {
         class Playing : PlaybackState(
             PLAYBACK_STATE_PLAYING
         )
+
         class Paused : PlaybackState(
             PLAYBACK_STATE_PAUSED
         )
+
         class Stopped : PlaybackState(
             PLAYBACK_STATE_STOPPED
         )

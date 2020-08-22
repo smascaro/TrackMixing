@@ -2,8 +2,8 @@ package com.smascaro.trackmixing.playbackservice.utils
 
 import android.media.MediaPlayer
 import com.smascaro.trackmixing.common.data.model.Track
-import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable
+import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
 import java.io.File
 import java.io.FileInputStream
 

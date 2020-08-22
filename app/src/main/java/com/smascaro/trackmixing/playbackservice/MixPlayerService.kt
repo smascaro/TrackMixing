@@ -4,12 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.IBinder
+import com.smascaro.trackmixing.TrackMixingApplication
+import com.smascaro.trackmixing.common.data.model.ForegroundNotification
+import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.utils.PLAYER_NOTIFICATION_ACTION_LOAD_TRACK
 import com.smascaro.trackmixing.common.utils.PLAYER_NOTIFICATION_EXTRA_LOAD_TRACK_PARAM_KEY
-import com.smascaro.trackmixing.TrackMixingApplication
-import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.playbackservice.controller.MixPlayerServiceController
-import com.smascaro.trackmixing.common.data.model.ForegroundNotification
 import timber.log.Timber
 import javax.inject.Inject
 

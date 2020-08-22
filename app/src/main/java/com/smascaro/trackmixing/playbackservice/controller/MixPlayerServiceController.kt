@@ -8,7 +8,6 @@ import com.smascaro.trackmixing.common.utils.PlaybackStateManager.PlaybackState
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable
 import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
-import com.smascaro.trackmixing.common.utils.NotificationHelper
 import com.smascaro.trackmixing.playbackservice.utils.PlaybackHelper
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe

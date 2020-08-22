@@ -1,12 +1,12 @@
-package com.smascaro.trackmixing.main.controller
+package com.smascaro.trackmixing.main.components.bottomplayer.controller
 
 import com.smascaro.trackmixing.common.controller.BaseController
 import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepository
 import com.smascaro.trackmixing.common.data.datasource.repository.toModel
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager
-import com.smascaro.trackmixing.main.model.BottomPlayerData
-import com.smascaro.trackmixing.main.view.BottomPlayerViewMvc
+import com.smascaro.trackmixing.main.components.bottomplayer.model.BottomPlayerData
+import com.smascaro.trackmixing.main.components.bottomplayer.view.BottomPlayerViewMvc
 import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
 import kotlinx.coroutines.runBlocking
 import org.greenrobot.eventbus.EventBus

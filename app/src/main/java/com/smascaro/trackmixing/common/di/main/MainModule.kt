@@ -6,10 +6,10 @@ import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.view.ui.BaseActivity
 import com.smascaro.trackmixing.details.view.TrackDetailsViewMvc
 import com.smascaro.trackmixing.details.view.TrackDetailsViewMvcImpl
-import com.smascaro.trackmixing.main.view.BottomPlayerViewMvc
-import com.smascaro.trackmixing.main.view.BottomPlayerViewMvcImpl
-import com.smascaro.trackmixing.main.view.BottomProgressViewMvc
-import com.smascaro.trackmixing.main.view.BottomProgressViewMvcImpl
+import com.smascaro.trackmixing.main.components.bottomplayer.view.BottomPlayerViewMvc
+import com.smascaro.trackmixing.main.components.bottomplayer.view.BottomPlayerViewMvcImpl
+import com.smascaro.trackmixing.main.components.progress.view.BottomProgressViewMvc
+import com.smascaro.trackmixing.main.components.progress.view.BottomProgressViewMvcImpl
 import com.smascaro.trackmixing.trackslist.view.TracksListViewMvc
 import com.smascaro.trackmixing.trackslist.view.TracksListViewMvcImpl
 import dagger.Binds

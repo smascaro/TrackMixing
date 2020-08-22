@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.main.view
+package com.smascaro.trackmixing.main.components.bottomplayer.view
 
 //import com.smascaro.trackmixing.common.di.PlaybackSharedPreferences
 import android.content.SharedPreferences
@@ -14,7 +14,7 @@ import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.utils.*
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
-import com.smascaro.trackmixing.main.model.BottomPlayerData
+import com.smascaro.trackmixing.main.components.bottomplayer.model.BottomPlayerData
 import javax.inject.Inject
 
 class BottomPlayerViewMvcImpl @Inject constructor(

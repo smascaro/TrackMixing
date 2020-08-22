@@ -1,8 +1,8 @@
-package com.smascaro.trackmixing.main.view
+package com.smascaro.trackmixing.main.components.bottomplayer.view
 
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.view.architecture.ObservableViewMvc
-import com.smascaro.trackmixing.main.model.BottomPlayerData
+import com.smascaro.trackmixing.main.components.bottomplayer.model.BottomPlayerData
 
 interface BottomPlayerViewMvc :
     ObservableViewMvc<BottomPlayerViewMvc.Listener> {

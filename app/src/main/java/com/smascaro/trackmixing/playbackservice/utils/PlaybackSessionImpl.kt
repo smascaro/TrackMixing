@@ -1,10 +1,9 @@
 package com.smascaro.trackmixing.playbackservice.utils
 
 import android.content.Context
-import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.playbackservice.MixPlayerService
-import com.smascaro.trackmixing.playbackservice.utils.PlaybackSession
+import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
 import org.greenrobot.eventbus.EventBus
 import javax.inject.Inject
 
