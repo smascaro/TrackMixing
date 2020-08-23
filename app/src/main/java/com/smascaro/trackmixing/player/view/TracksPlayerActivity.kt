@@ -10,7 +10,6 @@ import com.smascaro.trackmixing.TrackMixingApplication
 import com.smascaro.trackmixing.common.di.player.PlayerComponent
 import com.smascaro.trackmixing.common.view.ui.BaseActivity
 import com.smascaro.trackmixing.player.controller.TracksPlayerController
-import kotlinx.android.synthetic.main.activity_track_player.*
 import javax.inject.Inject
 
 /**
@@ -52,9 +51,6 @@ class TracksPlayerActivity : BaseActivity() {
         mTracksPlayerController.onCreate()
 
         setContentView(viewMvc.getRootView())
-        btnPlayPauseMaster.setOnClickListener {
-            mTracksPlayerController.playMaster()
-        }
     }
 
     override fun onDestroy() {

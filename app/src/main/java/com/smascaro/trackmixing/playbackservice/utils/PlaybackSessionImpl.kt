@@ -4,6 +4,7 @@ import android.content.Context
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.playbackservice.MixPlayerService
 import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
+import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
 import org.greenrobot.eventbus.EventBus
 import javax.inject.Inject
 
@@ -44,6 +45,14 @@ class PlaybackSessionImpl @Inject constructor(private val context: Context) :
 
     override fun seek(seconds: Int) {
 //        TODO("Not yet implemented")
+    }
+
+    override fun setMasterVolume(volume: Int) {
+        eventBus.post(PlaybackEvent.SetVolumeMasterEvent(volume))
+    }
+
+    override fun setTrackVolume(trackInstrument: TrackInstrument, volume: Int) {
+        eventBus.post(PlaybackEvent.SetVolumeTrackEvent(trackInstrument, volume))
     }
 
 }

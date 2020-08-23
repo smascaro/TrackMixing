@@ -7,171 +7,92 @@
     android:animateLayoutChanges="true"
     tools:context=".player.view.TracksPlayerActivity">
 
-    <TextView
-        android:id="@+id/txtVocals"
+    <com.google.android.material.textview.MaterialTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Vocals"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.11"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.154" />
+        android:textSize="14dp"
+        app:layout_constraintBottom_toTopOf="@id/sb_track_player_vocals"
+        app:layout_constraintStart_toStartOf="@id/sb_track_player_vocals" />
 
-    <Button
-        android:id="@+id/btnVolDownVocals"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:text="Vol-"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="226dp"
-        app:layout_constraintTop_toBottomOf="@+id/txtVocals" />
-
-    <Button
-        android:id="@+id/btnPlayPauseVocals"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Mute/Unmute"
-        app:layout_constraintEnd_toStartOf="@+id/btnVolUpVocals"
-        app:layout_constraintStart_toEndOf="@+id/btnVolDownVocals"
-        app:layout_constraintTop_toBottomOf="@+id/txtVocals" />
-
-    <Button
-        android:id="@+id/btnVolUpVocals"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="40dp"
-        android:text="Vol+"
+    <androidx.appcompat.widget.AppCompatSeekBar
+        android:id="@+id/sb_track_player_vocals"
+        android:layout_width="350dp"
+        android:layout_height="@dimen/seekbar_volume_thickness"
+        android:max="@integer/seekbar_volume_max_value"
+        android:progress="@integer/seekbar_volume_max_value"
+        android:progressDrawable="@drawable/seekbar_volume_progress"
+        android:splitTrack="false"
+        android:thumb="@drawable/seekbar_volume_thumb"
+        app:layout_constraintBottom_toTopOf="@id/sb_track_player_other"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtVocals" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/txtOther"
+    <com.google.android.material.textview.MaterialTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Other"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.106"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnVolDownVocals"
-        app:layout_constraintVertical_bias="0.053" />
+        android:textSize="14dp"
+        app:layout_constraintBottom_toTopOf="@id/sb_track_player_other"
+        app:layout_constraintStart_toStartOf="@id/sb_track_player_other" />
 
-    <Button
-        android:id="@+id/btnVolDownOther"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:text="Vol-"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtOther" />
-
-    <Button
-        android:id="@+id/btnPlayPauseOther"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Mute/Unmute"
-        app:layout_constraintEnd_toStartOf="@+id/btnVolUpOther"
-        app:layout_constraintStart_toEndOf="@+id/btnVolDownOther"
-        app:layout_constraintTop_toBottomOf="@+id/txtOther" />
-
-    <Button
-        android:id="@+id/btnVolUpOther"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="40dp"
-        android:text="Vol+"
+    <androidx.appcompat.widget.AppCompatSeekBar
+        android:id="@+id/sb_track_player_other"
+        android:layout_width="350dp"
+        android:layout_height="@dimen/seekbar_volume_thickness"
+        android:max="@integer/seekbar_volume_max_value"
+        android:progress="@integer/seekbar_volume_max_value"
+        android:progressDrawable="@drawable/seekbar_volume_progress"
+        android:splitTrack="false"
+        android:thumb="@drawable/seekbar_volume_thumb"
+        app:layout_constraintBottom_toTopOf="@id/sb_track_player_bass"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtOther" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sb_track_player_vocals" />
 
-    <TextView
-        android:id="@+id/txtBass"
+    <com.google.android.material.textview.MaterialTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Bass"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.105"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnVolDownOther"
-        app:layout_constraintVertical_bias="0.064" />
+        android:textSize="14dp"
+        app:layout_constraintBottom_toTopOf="@id/sb_track_player_bass"
+        app:layout_constraintStart_toStartOf="@id/sb_track_player_bass" />
 
-    <Button
-        android:id="@+id/btnVolDownBass"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:text="Vol-"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtBass" />
-
-    <Button
-        android:id="@+id/btnPlayPauseBass"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Mute/Unmute"
-        app:layout_constraintEnd_toStartOf="@+id/btnVolUpOther"
-        app:layout_constraintStart_toEndOf="@+id/btnVolDownOther"
-        app:layout_constraintTop_toBottomOf="@+id/txtBass" />
-
-    <Button
-        android:id="@+id/btnVolUpBass"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="40dp"
-        android:text="Vol+"
+    <androidx.appcompat.widget.AppCompatSeekBar
+        android:id="@+id/sb_track_player_bass"
+        android:layout_width="350dp"
+        android:layout_height="@dimen/seekbar_volume_thickness"
+        android:max="@integer/seekbar_volume_max_value"
+        android:progress="@integer/seekbar_volume_max_value"
+        android:progressDrawable="@drawable/seekbar_volume_progress"
+        android:splitTrack="false"
+        android:thumb="@drawable/seekbar_volume_thumb"
+        app:layout_constraintBottom_toTopOf="@id/sb_track_player_drums"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtBass" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sb_track_player_other" />
 
-
-    <TextView
-        android:id="@+id/txtDrums"
+    <com.google.android.material.textview.MaterialTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Drums"
+        android:textSize="14dp"
+        app:layout_constraintBottom_toTopOf="@id/sb_track_player_drums"
+        app:layout_constraintStart_toStartOf="@id/sb_track_player_drums" />
+
+    <androidx.appcompat.widget.AppCompatSeekBar
+        android:id="@+id/sb_track_player_drums"
+        android:layout_width="350dp"
+        android:layout_height="@dimen/seekbar_volume_thickness"
+        android:max="@integer/seekbar_volume_max_value"
+        android:progress="@integer/seekbar_volume_max_value"
+        android:progressDrawable="@drawable/seekbar_volume_progress"
+        android:splitTrack="false"
+        android:thumb="@drawable/seekbar_volume_thumb"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.105"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnVolDownBass"
-        app:layout_constraintVertical_bias="0.064" />
-
-    <Button
-        android:id="@+id/btnVolDownDrums"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:text="Vol-"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtDrums" />
-
-    <Button
-        android:id="@+id/btnPlayPauseDrums"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Mute/Unmute"
-        app:layout_constraintEnd_toStartOf="@+id/btnVolUpDrums"
-        app:layout_constraintStart_toEndOf="@+id/btnVolDownDrums"
-        app:layout_constraintTop_toBottomOf="@+id/txtDrums" />
-
-    <Button
-        android:id="@+id/btnVolUpDrums"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="40dp"
-        android:text="Vol+"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtDrums" />
-
-    <Button
-        android:id="@+id/btnPlayPauseMaster"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
-        android:text="Play/Pause MASTER"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnPlayPauseDrums" />
+        app:layout_constraintTop_toBottomOf="@id/sb_track_player_bass" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,10 +2,13 @@ package com.smascaro.trackmixing.playbackservice.utils
 
 import android.media.MediaPlayer
 import com.smascaro.trackmixing.common.data.model.Track
+import com.smascaro.trackmixing.common.utils.MEDIA_PLAYER_MAX_VOLUME
+import com.smascaro.trackmixing.common.utils.ResourcesWrapper
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
 import java.io.File
 import java.io.FileInputStream
+import kotlin.math.ln
 
 class PlayingTrackState(
     val instrument: TrackInstrument
@@ -42,6 +45,7 @@ class PlayingTrackState(
         MUTED, PLAYING
     }
 
+    val maxVolume: Float = MEDIA_PLAYER_MAX_VOLUME
     private var mCurrentMediaState: LogicMediaState =
         LogicMediaState.PLAYING
     private var mIsPrepared: Boolean = false
@@ -74,6 +78,11 @@ class PlayingTrackState(
     fun decrementVolume() {
         mVolume -= 0.01f
         mVolume.coerceAtLeast(0.0f)
+        updateVolume()
+    }
+
+    fun setVolume(volume: Int) {
+        mVolume = volume.toFloat()
         updateVolume()
     }
 
@@ -115,7 +124,8 @@ class PlayingTrackState(
     }
 
     private fun updateVolume() {
-        mPlayer.setVolume(mVolume, mVolume)
+        val mediaPlayerVolume = (1 - (ln(maxVolume - mVolume) / ln(maxVolume)))
+        mPlayer.setVolume(mediaPlayerVolume, mediaPlayerVolume)
         if (mVolume == 0.0f) {
             mCurrentMediaState =
                 LogicMediaState.MUTED

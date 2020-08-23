@@ -230,4 +230,24 @@ class PlaybackHelper @Inject constructor() :
     override fun onPlayerError(instrument: TrackInstrument, errorMessage: String) {
         Timber.e("Error on track $instrument: $errorMessage")
     }
+
+    fun setMasterVolume(volume: Int) {
+        setVolumeToAllTracks(volume)
+    }
+
+    private fun setVolumeToAllTracks(volume: Int) {
+        setVolume(TrackInstrument.VOCALS, volume)
+        setVolume(TrackInstrument.OTHER, volume)
+        setVolume(TrackInstrument.BASS, volume)
+        setVolume(TrackInstrument.DRUMS, volume)
+    }
+
+    fun setVolume(trackInstrument: TrackInstrument, volume: Int) {
+        when (trackInstrument) {
+            TrackInstrument.VOCALS -> mVocalsState.setVolume(volume)
+            TrackInstrument.OTHER -> mOtherState.setVolume(volume)
+            TrackInstrument.BASS -> mBassState.setVolume(volume)
+            TrackInstrument.DRUMS -> mDrumsState.setVolume(volume)
+        }
+    }
 }

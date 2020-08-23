@@ -157,4 +157,16 @@ class MixPlayerServiceController @Inject constructor(
         Timber.d("Event of type LoadTrackEvent received")
         loadTrack(loadTrackEvent.track)
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(setVolumeMasterEvent: PlaybackEvent.SetVolumeMasterEvent) {
+        Timber.d("Event of type SetVolumeMasterEvent received")
+        playbackHelper.setMasterVolume(setVolumeMasterEvent.volume)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(setVolumeTrackEvent: PlaybackEvent.SetVolumeTrackEvent) {
+        Timber.d("Event of type SetVolumeTrackEvent received")
+        playbackHelper.setVolume(setVolumeTrackEvent.trackInstrument, setVolumeTrackEvent.volume)
+    }
 }
