@@ -85,6 +85,7 @@ class BottomPlayerViewMvcImpl @Inject constructor(
 
     override fun showPlayerBar(data: BottomPlayerData) {
         if (shouldReloadBottomBar(data)) {
+            bottomBar.visibility = View.VISIBLE
             bottomBarTextView.text = data.title
             renderBottomBarBackground(data.thumbnailUrl)
             val animation = ResizeAnimation(bottomBar, bottomBarHeight.toInt()).apply {

@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_player_actions_bottom"
     android:layout_width="match_parent"
-    android:layout_height="0dp"
+    android:layout_height="1px"
     android:layout_alignParentBottom="true"
     android:layout_gravity="bottom"
     android:animateLayoutChanges="true"
-    android:visibility="visible">
+    android:visibility="gone">
 
     <ImageView
         android:id="@+id/iv_background_player_bottom"
