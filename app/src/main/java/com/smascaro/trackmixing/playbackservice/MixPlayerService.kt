@@ -10,6 +10,7 @@ import com.smascaro.trackmixing.common.data.model.ForegroundNotification
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.utils.PLAYER_NOTIFICATION_ACTION_LOAD_TRACK
 import com.smascaro.trackmixing.common.utils.PLAYER_NOTIFICATION_EXTRA_LOAD_TRACK_PARAM_KEY
+import com.smascaro.trackmixing.common.utils.PLAYER_NOTIFICATION_EXTRA_START_PLAYING_PARAM_KEY
 import com.smascaro.trackmixing.playbackservice.controller.MixPlayerServiceController
 import timber.log.Timber
 import javax.inject.Inject
@@ -18,13 +19,14 @@ class MixPlayerService : BaseService(),
     MixPlayerServiceController.ServiceActionsDelegate {
 
     companion object {
-        fun start(context: Context, track: Track): Boolean {
+        fun start(context: Context, track: Track, startPlaying: Boolean = true): Boolean {
             val intent = Intent(context, MixPlayerService::class.java).apply {
                 action =
                     PLAYER_NOTIFICATION_ACTION_LOAD_TRACK
             }
             val extras = Bundle().apply {
                 putSerializable(PLAYER_NOTIFICATION_EXTRA_LOAD_TRACK_PARAM_KEY, track)
+                putBoolean(PLAYER_NOTIFICATION_EXTRA_START_PLAYING_PARAM_KEY, startPlaying)
             }
             intent.putExtras(extras)
             val startedComponentName = context.startService(intent)
@@ -82,6 +84,12 @@ class MixPlayerService : BaseService(),
         ) {
             val track = intent.extras!!.get(PLAYER_NOTIFICATION_EXTRA_LOAD_TRACK_PARAM_KEY) as Track
             loadTrack(track)
+            if (intent.extras!!.containsKey(PLAYER_NOTIFICATION_EXTRA_START_PLAYING_PARAM_KEY) && intent.extras!!.getBoolean(
+                    PLAYER_NOTIFICATION_EXTRA_START_PLAYING_PARAM_KEY
+                )
+            ) {
+                playMaster()
+            }
         } else {
             Timber.w("$action action called but no track parameter supplied")
         }

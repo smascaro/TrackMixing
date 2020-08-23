@@ -212,6 +212,7 @@ class PlaybackHelper @Inject constructor() :
                 mCurrentState =
                     State.PLAYING
                 mPlayRequested = false
+                notifyMediaStateChange()
             }
         }
     }
