@@ -12,10 +12,12 @@ import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.utils.ResourcesWrapper
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
+import com.smascaro.trackmixing.playbackservice.utils.PlaybackSession
 import javax.inject.Inject
 
 class TracksListItemViewMvcImpl @Inject constructor(
     val glide: RequestManager,
+    private val playbackSession: PlaybackSession,
     resources: ResourcesWrapper
 ) :
     BaseObservableViewMvc<TracksListItemViewMvc.Listener>(),
@@ -60,6 +62,7 @@ class TracksListItemViewMvcImpl @Inject constructor(
             }
         }
         getRootView().setOnClickListener {
+            playbackSession.startPlayback(mTrack)
         }
         mExpandView.setOnClickListener {
             getListeners().forEach {
