@@ -7,9 +7,9 @@
     <dimen name="item_track_thumbnail_height">120dp</dimen>
     <dimen name="item_track_gradient_height">60dp</dimen>
     <dimen name="item_track_title_margin_start">8dp</dimen>
-    <dimen name="item_track_title_margin_left">8dp</dimen>
+    <dimen name="item_track_title_margin_end">8dp</dimen>
     <dimen name="item_track_title_margin_bottom">8dp</dimen>
-    <dimen name="item_track_title_padding_right">8dp</dimen>
+    <dimen name="item_track_title_padding_end">8dp</dimen>
     <dimen name="item_track_title_text_size">20sp</dimen>
     <dimen name="item_track_expanded_title_padding_vertical">64dp</dimen>
     <dimen name="item_track_expanded_title_text_size">20sp</dimen>
@@ -17,7 +17,6 @@
     <dimen name="actions_bottom_title_padding_horizontal">10dp</dimen>
     <dimen name="actions_bottom_title_text_size">18sp</dimen>
     <dimen name="download_progress_layout_height">26dp</dimen>
-    <integer name="download_progress_delay_before_hiding_millis">1000</integer>
-    <integer name="animation_slide_in_bottom_duration">200</integer>
-    <integer name="animation_slide_out_top_duration">200</integer>
+    <dimen name="item_track_title_padding_start">0dp</dimen>
+    <dimen name="item_track_expand_arrow_margin_end">8dp</dimen>
 </resources>

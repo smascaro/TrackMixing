@@ -10,16 +10,21 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textview.MaterialTextView
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.data.model.Track
+import com.smascaro.trackmixing.common.utils.ResourcesWrapper
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
 import javax.inject.Inject
 
-class TracksListItemViewMvcImpl @Inject constructor(val glide: RequestManager) :
+class TracksListItemViewMvcImpl @Inject constructor(
+    val glide: RequestManager,
+    resources: ResourcesWrapper
+) :
     BaseObservableViewMvc<TracksListItemViewMvc.Listener>(),
     TracksListItemViewMvc {
     private lateinit var mTrack: Track
     private lateinit var mCard: MaterialCardView
     private lateinit var mTrackTitleTxt: TextView
     private lateinit var mTrackThumbnailImg: ImageView
+    private lateinit var mExpandArrowImg: ImageView
 
     private lateinit var mExpandView: LinearLayout
     private lateinit var mExpandTitle: MaterialTextView
@@ -28,6 +33,12 @@ class TracksListItemViewMvcImpl @Inject constructor(val glide: RequestManager) :
 
     private var mIsExpanded: Boolean = false
 
+    private val expandArrowInitialRotationDegrees =
+        resources.getInteger(R.integer.item_track_expand_arrow_initial_rotation).toFloat()
+    private val expandArrowBackRotationDegrees =
+        resources.getInteger(R.integer.item_track_expand_arrow_back_rotation).toFloat()
+    private val expandArrowAnimationDuration =
+        resources.getLong(R.integer.item_track_expand_arrow_animation_duration)
 
     override fun bindRootView(rootView: View?) {
         super.bindRootView(rootView)
@@ -40,20 +51,29 @@ class TracksListItemViewMvcImpl @Inject constructor(val glide: RequestManager) :
         mTrackThumbnailImg = findViewById(R.id.thumbnailImg)
         mExpandView = findViewById(R.id.expandedView)
         mExpandTitle = findViewById(R.id.expandedTitle)
-
-        getRootView().setOnClickListener {
+        mExpandArrowImg = findViewById(R.id.expandArrow)
+        mExpandArrowImg.setOnClickListener {
             mIsExpanded = !mIsExpanded
+            rotateExpandArrow()
             getListeners().forEach { listener ->
-//                listener.onTrackClicked(mTrack, mCard)
-//                listener.onExpandOrCollapseDetailsRequest(mTrack, mExpandView, mIsExpanded)
                 listener.onExpandOrCollapseDetailsRequest(mPosition)
             }
+        }
+        getRootView().setOnClickListener {
         }
         mExpandView.setOnClickListener {
             getListeners().forEach {
                 it.onTrackClicked(mTrack, mCard)
             }
         }
+    }
+
+    private fun rotateExpandArrow() {
+        mExpandArrowImg.animate()
+            .rotationBy(if (mIsExpanded) expandArrowBackRotationDegrees else expandArrowInitialRotationDegrees)
+            .apply {
+                duration = expandArrowAnimationDuration
+            }.start()
     }
 
     override fun bindTrack(track: Track) {
