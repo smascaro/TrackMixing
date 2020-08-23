@@ -4,6 +4,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="details_thumbnail_height">240dp</dimen>
     <dimen name="fab_margin_right">36dp</dimen>
+    <dimen name="fab_margin_bottom">36dp</dimen>
     <dimen name="item_track_thumbnail_height">120dp</dimen>
     <dimen name="item_track_gradient_height">60dp</dimen>
     <dimen name="item_track_title_margin_start">8dp</dimen>
