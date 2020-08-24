@@ -12,20 +12,21 @@
         android:layout_height="wrap_content"
         android:text="Vocals"
         android:textSize="14dp"
-        app:layout_constraintBottom_toTopOf="@id/sb_track_player_vocals"
-        app:layout_constraintStart_toStartOf="@id/sb_track_player_vocals" />
+        app:layout_constraintEnd_toEndOf="@id/sb_track_player_vocals"
+        app:layout_constraintStart_toStartOf="@id/sb_track_player_vocals"
+        app:layout_constraintTop_toBottomOf="@id/sb_track_player_vocals" />
 
-    <androidx.appcompat.widget.AppCompatSeekBar
+    <com.smascaro.trackmixing.player.view.widget.VerticalSeekbar
         android:id="@+id/sb_track_player_vocals"
-        android:layout_width="350dp"
-        android:layout_height="@dimen/seekbar_volume_thickness"
+        android:layout_width="@dimen/seekbar_volume_thickness"
+        android:layout_height="350dp"
         android:max="@integer/seekbar_volume_max_value"
         android:progress="@integer/seekbar_volume_max_value"
         android:progressDrawable="@drawable/seekbar_volume_progress"
         android:splitTrack="false"
         android:thumb="@drawable/seekbar_volume_thumb"
-        app:layout_constraintBottom_toTopOf="@id/sb_track_player_other"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/sb_track_player_other"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -34,57 +35,60 @@
         android:layout_height="wrap_content"
         android:text="Other"
         android:textSize="14dp"
-        app:layout_constraintBottom_toTopOf="@id/sb_track_player_other"
-        app:layout_constraintStart_toStartOf="@id/sb_track_player_other" />
+        app:layout_constraintEnd_toEndOf="@id/sb_track_player_other"
+        app:layout_constraintStart_toStartOf="@id/sb_track_player_other"
+        app:layout_constraintTop_toBottomOf="@id/sb_track_player_other" />
 
-    <androidx.appcompat.widget.AppCompatSeekBar
+    <com.smascaro.trackmixing.player.view.widget.VerticalSeekbar
         android:id="@+id/sb_track_player_other"
-        android:layout_width="350dp"
-        android:layout_height="@dimen/seekbar_volume_thickness"
+        android:layout_width="@dimen/seekbar_volume_thickness"
+        android:layout_height="350dp"
         android:max="@integer/seekbar_volume_max_value"
         android:progress="@integer/seekbar_volume_max_value"
         android:progressDrawable="@drawable/seekbar_volume_progress"
         android:splitTrack="false"
         android:thumb="@drawable/seekbar_volume_thumb"
-        app:layout_constraintBottom_toTopOf="@id/sb_track_player_bass"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sb_track_player_vocals" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/sb_track_player_bass"
+        app:layout_constraintStart_toEndOf="@id/sb_track_player_vocals"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Bass"
         android:textSize="14dp"
-        app:layout_constraintBottom_toTopOf="@id/sb_track_player_bass"
-        app:layout_constraintStart_toStartOf="@id/sb_track_player_bass" />
+        app:layout_constraintEnd_toEndOf="@id/sb_track_player_bass"
+        app:layout_constraintStart_toStartOf="@id/sb_track_player_bass"
+        app:layout_constraintTop_toBottomOf="@id/sb_track_player_bass" />
 
-    <androidx.appcompat.widget.AppCompatSeekBar
+    <com.smascaro.trackmixing.player.view.widget.VerticalSeekbar
         android:id="@+id/sb_track_player_bass"
-        android:layout_width="350dp"
-        android:layout_height="@dimen/seekbar_volume_thickness"
+        android:layout_width="@dimen/seekbar_volume_thickness"
+        android:layout_height="350dp"
         android:max="@integer/seekbar_volume_max_value"
         android:progress="@integer/seekbar_volume_max_value"
         android:progressDrawable="@drawable/seekbar_volume_progress"
         android:splitTrack="false"
         android:thumb="@drawable/seekbar_volume_thumb"
-        app:layout_constraintBottom_toTopOf="@id/sb_track_player_drums"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sb_track_player_other" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/sb_track_player_drums"
+        app:layout_constraintStart_toEndOf="@id/sb_track_player_other"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Drums"
         android:textSize="14dp"
-        app:layout_constraintBottom_toTopOf="@id/sb_track_player_drums"
-        app:layout_constraintStart_toStartOf="@id/sb_track_player_drums" />
+        app:layout_constraintEnd_toEndOf="@id/sb_track_player_drums"
+        app:layout_constraintStart_toStartOf="@id/sb_track_player_drums"
+        app:layout_constraintTop_toBottomOf="@id/sb_track_player_drums" />
 
-    <androidx.appcompat.widget.AppCompatSeekBar
+    <com.smascaro.trackmixing.player.view.widget.VerticalSeekbar
         android:id="@+id/sb_track_player_drums"
-        android:layout_width="350dp"
-        android:layout_height="@dimen/seekbar_volume_thickness"
+        android:layout_width="@dimen/seekbar_volume_thickness"
+        android:layout_height="350dp"
         android:max="@integer/seekbar_volume_max_value"
         android:progress="@integer/seekbar_volume_max_value"
         android:progressDrawable="@drawable/seekbar_volume_progress"
@@ -92,7 +96,7 @@
         android:thumb="@drawable/seekbar_volume_thumb"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sb_track_player_bass" />
+        app:layout_constraintStart_toEndOf="@id/sb_track_player_bass"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
