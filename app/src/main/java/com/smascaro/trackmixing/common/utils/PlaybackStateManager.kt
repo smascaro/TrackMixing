@@ -1,6 +1,8 @@
 package com.smascaro.trackmixing.common.utils
 
 import android.content.Context
+import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
+import org.greenrobot.eventbus.EventBus
 import javax.inject.Inject
 
 class PlaybackStateManager @Inject constructor(context: Context) {
@@ -40,6 +42,7 @@ class PlaybackStateManager @Inject constructor(context: Context) {
 
     fun setPlayingStateFlag(state: PlaybackState) {
         setPlayingStateFlag(state.getIntValue())
+        EventBus.getDefault().post(PlaybackEvent.StateChanged(state))
     }
 
     private fun setPlayingStateFlag(state: Int) {
