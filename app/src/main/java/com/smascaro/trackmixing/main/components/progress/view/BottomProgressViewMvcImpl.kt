@@ -67,7 +67,6 @@ class BottomProgressViewMvcImpl @Inject constructor(resources: ResourcesWrapper)
         val animation = ResizeAnimation(progressBar, progressBarVisibleHeight.toInt()).apply {
             duration = inAnimationDuration
         }
-        progressBar.requestLayout()
         progressBar.startAnimation(animation)
     }
 
