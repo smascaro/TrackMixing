@@ -23,7 +23,6 @@ class BottomProgressController @Inject constructor(resources: ResourcesWrapper) 
 
     fun onCreate() {
         ensureViewMvcBound()
-        viewMvc.onCreate()
         viewMvc.startMarquee()
     }
 
@@ -73,6 +72,5 @@ class BottomProgressController @Inject constructor(resources: ResourcesWrapper) 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onMessageEvent(event: UiProgressEvent.ErrorOccurred) =
         CoroutineScope(Dispatchers.Main).launch { handleErrorOccurredEvent(event) }
-
 }
 

@@ -7,5 +7,4 @@ interface BottomProgressViewMvc : ViewMvc {
     fun showProgressBar()
     fun hideProgressBar()
     fun updateProgress(progress: Int, status: String)
-    fun onCreate()
 }

@@ -35,7 +35,10 @@ class BottomPlayerViewMvcImpl @Inject constructor(
     private lateinit var bottomBarActionButton: ImageView
 
     private var isBottomBarShown = false
-    private val bottomBarHeight = resources.getDimension(R.dimen.actions_bottom_layout_height)
+    private val bottomBarVisibleHeight =
+        resources.getDimension(R.dimen.actions_bottom_layout_visible_height)
+    private val bottomBarHiddenHeight =
+        resources.getDimension(R.dimen.actions_bottom_layout_hidden_height)
     private val inAnimationDuration =
         resources.getLong(R.integer.animation_slide_in_bottom_duration)
     private val outAnimationDuration =
@@ -88,7 +91,7 @@ class BottomPlayerViewMvcImpl @Inject constructor(
             bottomBar.visibility = View.VISIBLE
             bottomBarTextView.text = data.title
             renderBottomBarBackground(data.thumbnailUrl)
-            val animation = ResizeAnimation(bottomBar, bottomBarHeight.toInt()).apply {
+            val animation = ResizeAnimation(bottomBar, bottomBarVisibleHeight.toInt()).apply {
                 duration = inAnimationDuration
             }
             bottomBar.startAnimation(animation)
@@ -110,10 +113,11 @@ class BottomPlayerViewMvcImpl @Inject constructor(
 
     override fun hidePlayerBar() {
         if (isBottomBarShown) {
-            val animation = ResizeAnimation(bottomBar, 0).apply {
+            val animation = ResizeAnimation(bottomBar, bottomBarHiddenHeight.toInt()).apply {
                 duration = outAnimationDuration
             }
             bottomBar.startAnimation(animation)
+            bottomBar.visibility = View.INVISIBLE
             isBottomBarShown = false
         }
     }

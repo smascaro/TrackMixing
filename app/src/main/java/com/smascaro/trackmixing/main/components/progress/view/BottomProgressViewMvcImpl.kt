@@ -20,7 +20,10 @@ class BottomProgressViewMvcImpl @Inject constructor(resources: ResourcesWrapper)
     private lateinit var textSwitcherProgressValue: TextSwitcher
     private lateinit var textSwitcherProgressText: TextSwitcher
 
-    private val progressBarHeight = resources.getDimension(R.dimen.download_progress_layout_height)
+    private val progressBarVisibleHeight =
+        resources.getDimension(R.dimen.download_progress_layout_visible_height)
+    private val progressBarHiddenHeight =
+        resources.getDimension(R.dimen.download_progress_layout_hidden_height)
     private val inAnimationDuration =
         resources.getLong(R.integer.animation_slide_in_bottom_duration)
     private val outAnimationDuration = resources.getLong(R.integer.animation_slide_out_top_duration)
@@ -35,6 +38,7 @@ class BottomProgressViewMvcImpl @Inject constructor(resources: ResourcesWrapper)
         LayoutInflater.from(getContext())
             .inflate(R.layout.layout_download_progress, progressBarWrapper, false)
         progressBar = progressBarWrapper.findViewById(R.id.layout_progress_container)
+        removeProgressBarWithoutAnimation()
         textSwitcherProgressValue = progressBarWrapper.findViewById(R.id.ts_progress_value)
         textSwitcherProgressText = progressBarWrapper.findViewById(R.id.ts_progress_message)
 
@@ -59,7 +63,8 @@ class BottomProgressViewMvcImpl @Inject constructor(resources: ResourcesWrapper)
     }
 
     private fun displayProgressBar() {
-        val animation = ResizeAnimation(progressBar, progressBarHeight.toInt()).apply {
+        progressBar.visibility = View.VISIBLE
+        val animation = ResizeAnimation(progressBar, progressBarVisibleHeight.toInt()).apply {
             duration = inAnimationDuration
         }
         progressBar.requestLayout()
@@ -74,10 +79,11 @@ class BottomProgressViewMvcImpl @Inject constructor(resources: ResourcesWrapper)
     }
 
     private fun removeProgressBar() {
-        val animation = ResizeAnimation(progressBar, 0).apply {
+        val animation = ResizeAnimation(progressBar, progressBarHiddenHeight.toInt()).apply {
             duration = outAnimationDuration
         }
         progressBar.startAnimation(animation)
+        progressBar.visibility = View.INVISIBLE
     }
 
 
@@ -102,11 +108,8 @@ class BottomProgressViewMvcImpl @Inject constructor(resources: ResourcesWrapper)
         }
     }
 
-    override fun onCreate() {
-        val lp = progressBar.layoutParams
-        lp.height = 0
-        progressBar.layoutParams = lp
-        progressBar.visibility = View.VISIBLE
-        progressBar.requestLayout()
+    private fun removeProgressBarWithoutAnimation() {
+        setProgressBarHeight(progressBarHiddenHeight.toInt())
+        setProgressBarVisibility(View.INVISIBLE)
     }
 }
