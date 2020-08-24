@@ -9,6 +9,7 @@ import com.smascaro.trackmixing.common.view.architecture.BaseObservable
 import com.smascaro.trackmixing.main.components.progress.model.UiProgressEvent
 import com.smascaro.trackmixing.player.business.DownloadTrackUseCase
 import com.smascaro.trackmixing.player.business.downloadtrack.business.RequestTrackUseCase
+import com.smascaro.trackmixing.player.business.downloadtrack.business.RequestTrackUseCaseResult
 import com.smascaro.trackmixing.player.business.downloadtrack.model.*
 import com.smascaro.trackmixing.player.business.downloadtrack.model.ApplicationEvent.AppState
 import org.greenrobot.eventbus.EventBus
@@ -111,6 +112,15 @@ class TrackDownloadController @Inject constructor(
         Timber.d("Received event of type ErrorOccurred")
         Timber.w(errorOccurred.message)
         EventBus.getDefault().post(UiProgressEvent.ErrorOccurred(errorOccurred.message))
+        EventBus.getDefault().unregister(this)
+        notifyStopService()
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    fun onMessageEvent(networkError: RequestTrackUseCaseResult.NetworkError) {
+        Timber.d("Received event of type ErrorOccurred")
+        Timber.e(networkError.message)
+        EventBus.getDefault().post(UiProgressEvent.ErrorOccurred(networkError.message))
         EventBus.getDefault().unregister(this)
         notifyStopService()
     }

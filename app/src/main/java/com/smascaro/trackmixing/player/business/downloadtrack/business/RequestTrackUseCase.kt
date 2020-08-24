@@ -26,7 +26,7 @@ class RequestTrackUseCase @Inject constructor(private val nodeApi: NodeApi) {
                     call: Call<RequestTrackResponseSchema>,
                     t: Throwable
                 ) {
-                    notifyFailure(t.message ?: "Unknown error")
+                    notifyNetworkError("Network error while trying to request $url")
                 }
 
                 override fun onResponse(
@@ -51,7 +51,7 @@ class RequestTrackUseCase @Inject constructor(private val nodeApi: NodeApi) {
                         call: Call<FetchProgressResponseSchema>,
                         t: Throwable
                     ) {
-                        notifyFailure(t.message ?: "Unknown error")
+                        notifyNetworkError("Network error while fetching progress for track $videoId")
                     }
 
                     override fun onResponse(
@@ -100,6 +100,10 @@ class RequestTrackUseCase @Inject constructor(private val nodeApi: NodeApi) {
 
     private fun notifyFailure(message: String) {
         EventBus.getDefault().post(DownloadEvents.ErrorOccurred(message))
+    }
+
+    private fun notifyNetworkError(message: String) {
+        EventBus.getDefault().post(RequestTrackUseCaseResult.NetworkError(message))
     }
 
     fun getTrackId(): String {
