@@ -4,6 +4,7 @@ import java.io.Serializable
 
 data class Track(
     val title: String,
+    val author: String,
     val videoKey: String,
     //val quality: String,
     val thumbnailUrl: String,

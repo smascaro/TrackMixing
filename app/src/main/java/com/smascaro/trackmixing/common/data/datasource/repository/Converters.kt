@@ -7,6 +7,7 @@ import com.smascaro.trackmixing.common.data.network.AvailableTracksResponseSchem
 fun AvailableTracksResponseSchema.Item.toModel(): Track {
     return Track(
         title,
+        "",
         videoId,
         thumbnailUrl ?: "",
         secondsLong,
@@ -18,6 +19,7 @@ fun AvailableTracksResponseSchema.Item.toModel(): Track {
 fun DownloadEntity.toModel(): Track {
     return Track(
         title,
+        author,
         sourceVideoKey,
         thumbnailUrl,
         secondsLong,
