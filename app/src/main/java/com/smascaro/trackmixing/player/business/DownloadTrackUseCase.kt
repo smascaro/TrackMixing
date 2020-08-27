@@ -90,6 +90,7 @@ class DownloadTrackUseCase @Inject constructor(
                             mTrack!!.videoKey,
                             "low",
                             mTrack!!.title,
+                            mTrack!!.author,
                             mTrack!!.thumbnailUrl,
                             Calendar.getInstance().toString(),
                             mFilesStorageHelper.getBaseDirectoryByVideoId(mTrack!!.videoKey),

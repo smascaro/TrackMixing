@@ -18,6 +18,7 @@ data class FetchTrackDetailsResponseSchema(
         val status_key: Int,
         val status_message: String,
         val thumbnailUrl: String,
+        val channelTitle: String,
         val title: String,
         val videoId: String
     )
@@ -30,6 +31,7 @@ data class FetchTrackDetailsResponseSchema(
 
 fun FetchTrackDetailsResponseSchema.toModel(): Track = Track(
     body.title,
+    body.channelTitle,
     body.videoId,
     body.thumbnailUrl,
     body.secondsLong,
