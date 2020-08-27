@@ -28,6 +28,14 @@ class TracksListController @Inject constructor(
         loadTracksFrom(dataSource)
     }
 
+    override fun onSearchNavigationButtonClicked() {
+        navigateToSearch()
+    }
+
+    private fun navigateToSearch() {
+        navigationHelper.toSearch()
+    }
+
     fun loadTracksFrom(dataSource: TracksListViewMvc.TracksDataSource) {
         if (dataSource == TracksListViewMvc.TracksDataSource.DATABASE) {
             mFetchDownloadedTracks.fetchTracksAndNotify(FetchDownloadedTracks.Sort.ALPHABETICALLY_ASC)

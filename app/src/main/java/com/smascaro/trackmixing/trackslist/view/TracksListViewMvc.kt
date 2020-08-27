@@ -9,6 +9,7 @@ interface TracksListViewMvc :
     interface Listener {
         fun onTrackClicked(track: Track)
         fun onCurrentDataSourceRequest(dataSource: TracksDataSource)
+        fun onSearchNavigationButtonClicked()
     }
 
     enum class TracksDataSource {

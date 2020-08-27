@@ -11,13 +11,16 @@ import com.smascaro.trackmixing.common.data.datasource.repository.TracksReposito
 import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepositoryImpl
 import com.smascaro.trackmixing.common.di.main.RetrofitForBinaryData
 import com.smascaro.trackmixing.common.di.main.RetrofitForJsonData
+import com.smascaro.trackmixing.common.di.main.RetrofitForYoutubeApi
 import com.smascaro.trackmixing.common.utils.FilesStorageHelper
 import com.smascaro.trackmixing.common.utils.NODE_BASE_URL
 import com.smascaro.trackmixing.common.utils.NotificationHelper
+import com.smascaro.trackmixing.common.utils.YOUTUBE_API_BASE_URL
 import com.smascaro.trackmixing.playbackservice.utils.PlaybackSession
 import com.smascaro.trackmixing.playbackservice.utils.PlaybackSessionImpl
 import com.smascaro.trackmixing.playbackservice.utils.PlayerNotificationHelper
 import com.smascaro.trackmixing.player.business.downloadtrack.utils.DownloadNotificationHelper
+import com.smascaro.trackmixing.search.model.repository.YoutubeApi
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -82,10 +85,27 @@ class AppModule {
         }.build()
     }
 
+
     @Singleton
     @Provides
     fun provideNodeApiForBinaryDownloads(@RetrofitForBinaryData retrofit: Retrofit): NodeDownloadsApi {
         return retrofit.create(NodeDownloadsApi::class.java)
+    }
+
+    @Singleton
+    @Provides
+    @RetrofitForYoutubeApi
+    fun provideRetrofitInstanceForYoutubeApi(): Retrofit {
+        return Retrofit.Builder().apply {
+            baseUrl(YOUTUBE_API_BASE_URL)
+            addConverterFactory(GsonConverterFactory.create())
+        }.build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideYoutubeApi(@RetrofitForYoutubeApi retrofit: Retrofit): YoutubeApi {
+        return retrofit.create(YoutubeApi::class.java)
     }
 
     @Singleton

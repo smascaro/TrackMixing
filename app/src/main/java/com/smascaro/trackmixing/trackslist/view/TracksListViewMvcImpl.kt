@@ -39,12 +39,15 @@ class TracksListViewMvcImpl @Inject constructor(
         mRecyclerViewTracks.adapter = this.tracksListAdapter
         val fab = findViewById<FloatingActionButton>(R.id.fabTempMode)
         fab.setOnClickListener {
-            currentDataSource = when (currentDataSource) {
-                TracksListViewMvc.TracksDataSource.DATABASE -> TracksListViewMvc.TracksDataSource.SERVER
-                TracksListViewMvc.TracksDataSource.SERVER -> TracksListViewMvc.TracksDataSource.DATABASE
-            }
+//            currentDataSource = when (currentDataSource) {
+//                TracksListViewMvc.TracksDataSource.DATABASE -> TracksListViewMvc.TracksDataSource.SERVER
+//                TracksListViewMvc.TracksDataSource.SERVER -> TracksListViewMvc.TracksDataSource.DATABASE
+//            }
+//            getListeners().forEach {
+//                it.onCurrentDataSourceRequest(currentDataSource)
+//            }
             getListeners().forEach {
-                it.onCurrentDataSourceRequest(currentDataSource)
+                it.onSearchNavigationButtonClicked()
             }
         }
 

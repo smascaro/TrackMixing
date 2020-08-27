@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_destination_tracks_list_to_destination_track_details"
             app:destination="@id/destination_track_details" />
+        <action
+            android:id="@+id/action_destination_tracks_list_to_destination_search"
+            app:destination="@id/destination_search" />
     </fragment>
     <fragment
         android:id="@+id/destination_search"

@@ -23,4 +23,5 @@
     <dimen name="item_track_title_padding_start">0dp</dimen>
     <dimen name="item_track_expand_arrow_margin_end">8dp</dimen>
     <dimen name="seekbar_volume_thickness">64dp</dimen>
+    <dimen name="item_track_author_text_size">16sp</dimen>
 </resources>

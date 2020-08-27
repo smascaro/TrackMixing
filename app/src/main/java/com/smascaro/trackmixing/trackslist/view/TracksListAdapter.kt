@@ -14,8 +14,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class TracksListAdapter @Inject constructor(
-    private val viewMvcFactory: DaggerViewMvcFactory,
-    val viewMvc: TracksListItemViewMvc
+    private val viewMvcFactory: DaggerViewMvcFactory
 ) : RecyclerView.Adapter<TracksListAdapter.ViewHolder>(), TracksListItemViewMvc.Listener {
     interface Listener {
         fun onTrackClicked(
@@ -57,7 +56,6 @@ class TracksListAdapter @Inject constructor(
             notifyDataSetChanged()
         }
     }
-
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.mViewMvc.bindTrack(mTracks[position])

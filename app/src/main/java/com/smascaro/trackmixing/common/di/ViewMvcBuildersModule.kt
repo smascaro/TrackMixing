@@ -4,6 +4,8 @@ import com.smascaro.trackmixing.main.view.MainActivityViewMvc
 import com.smascaro.trackmixing.main.view.MainActivityViewMvcImpl
 import com.smascaro.trackmixing.player.view.TracksPlayerViewMvc
 import com.smascaro.trackmixing.player.view.TracksPlayerViewMvcImpl
+import com.smascaro.trackmixing.search.view.SearchResultsViewMvc
+import com.smascaro.trackmixing.search.view.SearchResultsViewMvcImpl
 import com.smascaro.trackmixing.trackslist.view.listitem.TracksListItemViewMvc
 import com.smascaro.trackmixing.trackslist.view.listitem.TracksListItemViewMvcImpl
 import dagger.Binds
@@ -22,4 +24,8 @@ abstract class ViewMvcBuildersModule {
 
     @Binds
     abstract fun provideTracksListItemViewMvc(tracksListItemViewMvcImpl: TracksListItemViewMvcImpl): TracksListItemViewMvc
+
+    @Singleton
+    @Binds
+    abstract fun provideSearchResultsViewMvc(searchResultsViewMvcImpl: SearchResultsViewMvcImpl): SearchResultsViewMvc
 }

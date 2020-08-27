@@ -1,14 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".search.view.SongSearchFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
+        android:id="@+id/search_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:weightSum="2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-</FrameLayout>
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_search_input"
+            android:layout_width="0dp"
+            android:layout_height="54dp"
+            android:layout_weight="1.9"
+            android:hint="Type in your favorite song..."
+            android:textColorHint="@color/colorAccent" />
+
+        <ImageView
+            android:id="@+id/iv_search_button"
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            android:layout_weight="0.1"
+            android:scaleX="0.8"
+            android:scaleY="0.8"
+            android:src="@android:drawable/ic_menu_search" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_search_results"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/search_container"
+        tools:listitem="@layout/item_search_result" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

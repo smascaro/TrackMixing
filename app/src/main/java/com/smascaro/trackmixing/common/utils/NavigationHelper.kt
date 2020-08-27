@@ -49,4 +49,9 @@ class NavigationHelper @Inject constructor() {
             mNavController?.navigate(action)
         }
     }
+
+    fun toSearch() {
+        val action = TracksListFragmentDirections.actionDestinationTracksListToDestinationSearch()
+        mNavController?.navigate(action)
+    }
 }

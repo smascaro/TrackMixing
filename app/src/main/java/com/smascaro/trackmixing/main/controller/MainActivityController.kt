@@ -2,12 +2,11 @@ package com.smascaro.trackmixing.main.controller
 
 import android.content.Intent
 import com.smascaro.trackmixing.common.controller.BaseController
-import com.smascaro.trackmixing.common.data.datasource.network.NodeApi
 import com.smascaro.trackmixing.main.view.MainActivityViewMvc
 import timber.log.Timber
 import javax.inject.Inject
 
-class MainActivityController @Inject constructor(val mNodeApi: NodeApi) :
+class MainActivityController @Inject constructor() :
     BaseController<MainActivityViewMvc>() {
 
     fun handleIntent(intent: Intent) {
@@ -21,5 +20,4 @@ class MainActivityController @Inject constructor(val mNodeApi: NodeApi) :
             }
         }
     }
-
 }
