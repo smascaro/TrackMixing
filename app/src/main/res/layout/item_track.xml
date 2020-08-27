@@ -1,87 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/parentItemLayout"
+    android:id="@+id/cardViewContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <com.google.android.material.card.MaterialCardView
-
-        android:id="@+id/cardViewContainer"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayoutContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayoutContainer"
+        <ImageView
+            android:id="@+id/thumbnailImg"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="@dimen/item_track_thumbnail_height"
+            android:scaleType="centerCrop"
+            android:src="@drawable/test_thumbnail_1280x720"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/thumbnailImg"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/item_track_thumbnail_height"
-                android:scaleType="centerCrop"
-                android:src="@drawable/test_thumbnail_1280x720"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <View
-                android:id="@+id/gradientView"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/item_track_gradient_height"
-                android:background="@drawable/bg_gradient_black"
-                app:layout_constraintBottom_toBottomOf="@+id/thumbnailImg" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/trackTitle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/item_track_title_margin_start"
-                android:layout_marginBottom="@dimen/item_track_title_margin_bottom"
-                android:ellipsize="end"
-                android:paddingStart="@dimen/item_track_title_padding_start"
-                android:paddingEnd="@dimen/item_track_title_padding_end"
-                android:singleLine="true"
-                android:text="Desakato - Nueva Religión (Bonus Track 100% Real) - 2019 Remastered edition"
-                android:textColor="@color/item_track_title_text_color"
-                android:textSize="@dimen/item_track_title_text_size"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/expandArrow"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <ImageView
-                android:id="@+id/expandArrow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/item_track_expand_arrow_margin_end"
-                android:rotation="@integer/item_track_expand_arrow_initial_rotation"
-                android:src="@drawable/ic_keyboard_arrow_up_gray_32dp"
-                app:layout_constraintBottom_toBottomOf="@id/trackTitle"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/trackTitle" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.card.MaterialCardView>
-
-    <LinearLayout
-        android:id="@+id/expandedView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="visible">
+        <View
+            android:id="@+id/gradientView"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:background="@drawable/bg_gradient_black"
+            app:layout_constraintBottom_toBottomOf="@+id/thumbnailImg" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/expandedTitle"
-            android:layout_width="match_parent"
+            android:id="@+id/trackTitle"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/item_track_title_margin_start"
+            android:layout_marginBottom="@dimen/item_track_title_margin_bottom"
             android:ellipsize="end"
-            android:paddingVertical="@dimen/item_track_expanded_title_padding_vertical"
-            android:singleLine="true"
-            android:text="This is just a test"
-            android:textAlignment="center"
-            android:textColor="@color/item_track_expanded_title_text_color"
-            android:textSize="@dimen/item_track_expanded_title_text_size" />
-    </LinearLayout>
-</LinearLayout>
+            android:paddingStart="@dimen/item_track_title_padding_start"
+            android:paddingEnd="@dimen/item_track_title_padding_end"
+            android:text="Desakato - Nueva Religión (Bonus Track 100% Real) - 2019 Remastered edition"
+            android:textColor="@color/item_track_title_text_color"
+            android:textSize="@dimen/item_track_title_text_size"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/tv_item_track_author" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_item_track_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Desakato Oficial"
+            android:layout_marginStart="8dp"
+            android:textSize="14dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/trackTitle"
+            app:layout_constraintBottom_toTopOf="@id/tv_item_track_duration" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_item_track_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3:40"
+            android:layout_marginStart="8dp"
+            android:textSize="14dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_item_track_author"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_item_track_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="Downloaded"
+            android:textSize="@dimen/item_track_author_text_size"
+            android:textStyle="bold"
+            app:layout_constraintBaseline_toBaselineOf="@id/tv_item_track_duration"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
