@@ -20,6 +20,9 @@
             android:layout_width="0dp"
             android:layout_height="54dp"
             android:layout_weight="1.9"
+            android:maxLines="1"
+            android:inputType="text"
+            android:imeOptions="actionSearch"
             android:hint="Type in your favorite song..."
             android:textColorHint="@color/colorAccent" />
 
