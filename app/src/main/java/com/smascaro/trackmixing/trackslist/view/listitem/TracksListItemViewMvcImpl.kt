@@ -8,6 +8,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.card.MaterialCardView
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.data.model.Track
+import com.smascaro.trackmixing.common.utils.ResourcesWrapper
 import com.smascaro.trackmixing.common.utils.TimeHelper
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
 import com.smascaro.trackmixing.playbackservice.utils.PlaybackSession
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 class TracksListItemViewMvcImpl @Inject constructor(
     val glide: RequestManager,
-    private val playbackSession: PlaybackSession
+    private val playbackSession: PlaybackSession,
+    resourcesWrapper: ResourcesWrapper
 ) :
     BaseObservableViewMvc<TracksListItemViewMvc.Listener>(),
     TracksListItemViewMvc {
@@ -36,8 +38,8 @@ class TracksListItemViewMvcImpl @Inject constructor(
 
     private fun initialize() {
         mCard = findViewById(R.id.cardViewContainer)
-        mTrackTitleTxt = findViewById(R.id.trackTitle)
-        mTrackThumbnailImg = findViewById(R.id.thumbnailImg)
+        mTrackTitleTxt = findViewById(R.id.tv_item_track_title)
+        mTrackThumbnailImg = findViewById(R.id.iv_item_track_thumbnail)
         mTrackAuthorTxt = findViewById(R.id.tv_item_track_author)
         mTrackDuration = findViewById(R.id.tv_item_track_duration)
         mTrackState = findViewById(R.id.tv_item_track_status)

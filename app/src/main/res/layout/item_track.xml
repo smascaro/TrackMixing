@@ -12,7 +12,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/thumbnailImg"
+            android:id="@+id/iv_item_track_thumbnail"
             android:layout_width="match_parent"
             android:layout_height="@dimen/item_track_thumbnail_height"
             android:scaleType="centerCrop"
@@ -22,14 +22,14 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <View
-            android:id="@+id/gradientView"
+            android:id="@+id/v_item_track_gradient"
             android:layout_width="match_parent"
             android:layout_height="120dp"
             android:background="@drawable/bg_gradient_black"
-            app:layout_constraintBottom_toBottomOf="@+id/thumbnailImg" />
+            app:layout_constraintBottom_toBottomOf="@+id/iv_item_track_thumbnail" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/trackTitle"
+            android:id="@+id/tv_item_track_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/item_track_title_margin_start"
@@ -53,7 +53,7 @@
             android:layout_marginStart="8dp"
             android:textSize="14dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/trackTitle"
+            app:layout_constraintTop_toBottomOf="@id/tv_item_track_title"
             app:layout_constraintBottom_toTopOf="@id/tv_item_track_duration" />
 
         <com.google.android.material.textview.MaterialTextView

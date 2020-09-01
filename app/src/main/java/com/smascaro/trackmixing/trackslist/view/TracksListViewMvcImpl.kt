@@ -65,8 +65,8 @@ class TracksListViewMvcImpl @Inject constructor(
         track: Track,
         card: MaterialCardView
     ) {
-        val title = card.findViewById<MaterialTextView>(R.id.trackTitle)
-        val imageView = card.findViewById<ImageView>(R.id.thumbnailImg)
+        val title = card.findViewById<MaterialTextView>(R.id.tv_item_track_title)
+        val imageView = card.findViewById<ImageView>(R.id.iv_item_track_thumbnail)
         val extras = FragmentNavigatorExtras(
             card to track.videoKey,
             title to track.title
