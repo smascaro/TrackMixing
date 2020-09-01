@@ -6,6 +6,7 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.textview.MaterialTextView
 import com.smascaro.trackmixing.R
+import com.smascaro.trackmixing.common.utils.TimeHelper
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
 import com.smascaro.trackmixing.search.model.SearchResult
 
@@ -27,11 +28,11 @@ class SearchResultsItemViewMvcImpl(private val glide: RequestManager) :
     }
 
     private fun initialize() {
-        searchResultThumbnailImageView = findViewById(R.id.iv_item_search_result_thumbnail)
-        searchResultTitleTextView = findViewById(R.id.tv_item_search_result_title)
-        searchResultAuthorTextView = findViewById(R.id.tv_item_search_result_author)
-        searchResultDurationTextView = findViewById(R.id.tv_item_search_result_duration)
-        searchResultStatusTextView = findViewById(R.id.tv_item_search_result_status)
+        searchResultThumbnailImageView = findViewById(R.id.iv_item_track_thumbnail)
+        searchResultTitleTextView = findViewById(R.id.tv_item_track_title)
+        searchResultAuthorTextView = findViewById(R.id.tv_item_track_author)
+        searchResultDurationTextView = findViewById(R.id.tv_item_track_duration)
+        searchResultStatusTextView = findViewById(R.id.tv_item_track_status)
 
         getRootView().setOnClickListener {
             getListeners().forEach {
@@ -44,7 +45,8 @@ class SearchResultsItemViewMvcImpl(private val glide: RequestManager) :
         this.searchResult = result
         searchResultTitleTextView.text = this.searchResult.title
         searchResultAuthorTextView.text = this.searchResult.author
-        searchResultDurationTextView.text = "${this.searchResult.secondsLong} s"
+        searchResultDurationTextView.text =
+            TimeHelper.fromSeconds(this.searchResult.secondsLong.toLong()).toStringRepresentation()
         glide
             .asBitmap()
             .load(this.searchResult.thumbnailUrl)

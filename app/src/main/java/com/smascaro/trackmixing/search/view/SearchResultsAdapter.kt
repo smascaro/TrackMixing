@@ -36,7 +36,7 @@ class SearchResultsAdapter @Inject constructor(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemViewMvc = viewMvcFactory.getSearchResultsItemViewMvc()
         itemViewMvc.bindRootView(
-            LayoutInflater.from(parent.context).inflate(R.layout.item_search_result, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.item_track, parent, false)
         )
         itemViewMvc.registerListener(this)
         return ViewHolder(itemViewMvc)
