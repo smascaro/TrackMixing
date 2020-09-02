@@ -10,30 +10,37 @@
         android:id="@+id/search_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="2"
+        android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_search_input"
-            android:layout_width="0dp"
-            android:layout_height="54dp"
-            android:layout_weight="1.9"
-            android:maxLines="1"
-            android:inputType="text"
-            android:imeOptions="actionSearch"
-            android:hint="Type in your favorite song..."
-            android:textColorHint="@color/colorAccent" />
 
-        <ImageView
-            android:id="@+id/iv_search_button"
-            android:layout_width="54dp"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/il_search_input_layout"
+            android:layout_width="match_parent"
             android:layout_height="54dp"
-            android:layout_weight="0.1"
-            android:scaleX="0.8"
-            android:scaleY="0.8"
-            android:src="@android:drawable/ic_menu_search" />
+            android:layout_gravity="center"
+            android:textColorHint="@color/colorAccent"
+            app:boxStrokeColor="@null"
+            app:hintEnabled="false"
+            app:startIconDrawable="@drawable/ic_search_24dp">
+
+            <com.google.android.material.textfield.TextInputEditText xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/et_search_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal|center_vertical"
+                android:hint="Type in your favorite song..."
+                android:textSize="18sp"
+                android:paddingVertical="0dp"
+                android:imeOptions="actionSearch"
+                android:includeFontPadding="false"
+                android:inputType="text"
+                android:maxLines="1"
+                android:textColorHint="@color/colorAccent" />
+        </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

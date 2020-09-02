@@ -1,18 +1,18 @@
 package com.smascaro.trackmixing.search.view
 
 import android.app.Activity
+import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
 import com.smascaro.trackmixing.search.model.SearchResult
-import timber.log.Timber
 import javax.inject.Inject
 
 class SearchResultsViewMvcImpl @Inject constructor(
@@ -21,8 +21,10 @@ class SearchResultsViewMvcImpl @Inject constructor(
     SearchResultsAdapter.Listener,
     SearchResultsViewMvc {
     private lateinit var resultsRecyclerView: RecyclerView
-    private lateinit var searchButton: ImageView
+
+    private lateinit var searchInputLayout: TextInputLayout
     private lateinit var searchInputText: TextInputEditText
+
 
     override fun bindRootView(rootView: View?) {
         super.bindRootView(rootView)
@@ -35,31 +37,59 @@ class SearchResultsViewMvcImpl @Inject constructor(
         searchResultsAdapter.setOnSearchResultClickedListener(this)
         resultsRecyclerView.adapter = searchResultsAdapter
 
+        searchInputLayout = findViewById(R.id.il_search_input_layout)
         searchInputText = findViewById(R.id.et_search_input)
-
-        searchButton = findViewById(R.id.iv_search_button)
-        searchButton.setOnClickListener {
-            val queryText = getTextInSearchInput()
-            Timber.d("Searching with keyword $queryText")
-            getListeners().forEach {
-                it.onSearchButtonClicked(queryText)
-            }
+        searchInputText.setOnFocusChangeListener { v, hasFocus ->
+            searchInputLayout.setStartIconDrawable(
+                if (hasFocus) {
+                    R.drawable.ic_back_24dp
+                } else {
+                    R.drawable.ic_search_24dp
+                }
+            )
         }
 
-        searchInputText.setOnEditorActionListener { _, actionId, _ ->
+        searchInputText.setOnEditorActionListener { v, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 getListeners().forEach {
                     val queryText = getTextInSearchInput()
                     it.onSearchButtonClicked(queryText)
                 }
 
-                val imm =
-                    getContext()?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(getRootView().rootView.windowToken, 0)
-                true
+                hideKeyboard()
+                v.clearFocus()
+                return@setOnEditorActionListener true
             }
             false
         }
+
+        resultsRecyclerView.setOnTouchListener { v, event ->
+            searchInputText.clearFocus()
+            return@setOnTouchListener false
+        }
+        searchInputText.setOnTouchListener { v, event ->
+            val DRAWABLE_LEFT_IDX = 0
+            val DRAWABLE_TOP_IDX = 1
+            val DRAWABLE_RIGHT_IDX = 2
+            val DRAWABLE_BOTTOM_IDX = 3
+            if (event.action == MotionEvent.ACTION_UP) {
+                if (searchInputText.hasFocus()) {
+                    if (event.rawX >= (searchInputText.left - searchInputText.compoundDrawables[DRAWABLE_LEFT_IDX].bounds.width())) {
+                        hideKeyboard()
+                        searchInputText.clearFocus()
+                        true
+                    }
+                }
+            }
+
+            false
+        }
+    }
+
+    private fun hideKeyboard() {
+        val imm =
+            getContext()?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(getRootView().rootView.windowToken, 0)
     }
 
     private fun getTextInSearchInput(): String {
@@ -67,6 +97,8 @@ class SearchResultsViewMvcImpl @Inject constructor(
     }
 
     override fun onSearchResultClicked(searchResult: SearchResult) {
+        showMessage("Clicked on \"${searchResult.title}\"")
+        searchInputText.clearFocus()
         getListeners().forEach {
             it.onSearchResultClicked(searchResult)
         }
