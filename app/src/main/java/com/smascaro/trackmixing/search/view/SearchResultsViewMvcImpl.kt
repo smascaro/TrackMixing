@@ -74,7 +74,7 @@ class SearchResultsViewMvcImpl @Inject constructor(
             val DRAWABLE_BOTTOM_IDX = 3
             if (event.action == MotionEvent.ACTION_UP) {
                 if (searchInputText.hasFocus()) {
-                    if (event.rawX >= (searchInputText.left - searchInputText.compoundDrawables[DRAWABLE_LEFT_IDX].bounds.width())) {
+                    if (event.rawX <= searchInputText.compoundDrawables[DRAWABLE_LEFT_IDX].bounds.right) {
                         hideKeyboard()
                         searchInputText.clearFocus()
                         true
