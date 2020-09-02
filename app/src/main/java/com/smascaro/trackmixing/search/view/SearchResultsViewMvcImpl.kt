@@ -12,8 +12,10 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
+import com.smascaro.trackmixing.player.business.downloadtrack.TrackDownloadService
 import com.smascaro.trackmixing.search.model.SearchResult
 import javax.inject.Inject
+import kotlin.concurrent.thread
 
 class SearchResultsViewMvcImpl @Inject constructor(
     private val searchResultsAdapter: SearchResultsAdapter
@@ -97,7 +99,7 @@ class SearchResultsViewMvcImpl @Inject constructor(
     }
 
     override fun onSearchResultClicked(searchResult: SearchResult) {
-        showMessage("Clicked on \"${searchResult.title}\"")
+        showMessage("Requesting \"${searchResult.title}\"")
         searchInputText.clearFocus()
         getListeners().forEach {
             it.onSearchResultClicked(searchResult)
@@ -110,6 +112,14 @@ class SearchResultsViewMvcImpl @Inject constructor(
 
     override fun showMessage(message: String) {
         Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show()
+    }
+
+    override fun startRequest(url: String) {
+        if (getContext() != null) {
+            thread {
+                TrackDownloadService.start(getContext()!!, url)
+            }
+        }
     }
 
 }

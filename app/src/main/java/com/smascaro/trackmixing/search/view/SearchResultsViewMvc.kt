@@ -11,4 +11,5 @@ interface SearchResultsViewMvc : ObservableViewMvc<SearchResultsViewMvc.Listener
 
     fun bindResults(results: List<SearchResult>)
     fun showMessage(message: String)
+    fun startRequest(url: String)
 }

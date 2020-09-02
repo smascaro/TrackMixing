@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.main.view.MainActivity
 import com.smascaro.trackmixing.search.controller.SearchResultsController
@@ -30,6 +31,7 @@ class SongSearchFragment : Fragment() {
     ): View? {
         viewMvc.bindRootView(inflater.inflate(R.layout.fragment_song_search, container, false))
         searchResultsController.bindViewMvc(viewMvc)
+        searchResultsController.bindNavController(findNavController())
         return viewMvc.getRootView()
     }
 

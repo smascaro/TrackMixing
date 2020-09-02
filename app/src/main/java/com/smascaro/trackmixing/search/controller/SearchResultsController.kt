@@ -1,7 +1,8 @@
 package com.smascaro.trackmixing.search.controller
 
 import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.common.controller.BaseController
+import com.smascaro.trackmixing.common.controller.BaseNavigatorController
+import com.smascaro.trackmixing.common.utils.NavigationHelper
 import com.smascaro.trackmixing.common.utils.ResourcesWrapper
 import com.smascaro.trackmixing.search.business.SearchYoutubeVideosUseCase
 import com.smascaro.trackmixing.search.model.SearchResult
@@ -10,8 +11,10 @@ import javax.inject.Inject
 
 class SearchResultsController @Inject constructor(
     private val searchYoutubeVideosUseCase: SearchYoutubeVideosUseCase,
-    resourcesWrapper: ResourcesWrapper
-) : BaseController<SearchResultsViewMvc>(), SearchResultsViewMvc.Listener,
+    resourcesWrapper: ResourcesWrapper,
+    p_navigationHelper: NavigationHelper
+) : BaseNavigatorController<SearchResultsViewMvc>(p_navigationHelper),
+    SearchResultsViewMvc.Listener,
     SearchYoutubeVideosUseCase.Listener {
     private val maxVideoDuration =
         resourcesWrapper.getInteger(R.integer.youtube_api_results_max_duration_minutes) * 60
@@ -22,7 +25,8 @@ class SearchResultsController @Inject constructor(
     }
 
     override fun onSearchResultClicked(searchResult: SearchResult) {
-//        TODO("Not yet implemented")
+        viewMvc.startRequest("https://youtu.be/${searchResult.videoId}")
+        navigationHelper.back()
     }
 
     fun onStart() {
