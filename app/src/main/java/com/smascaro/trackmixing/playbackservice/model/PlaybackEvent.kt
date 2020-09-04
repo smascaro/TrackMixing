@@ -13,4 +13,6 @@ sealed class PlaybackEvent {
         PlaybackEvent()
 
     class StateChanged(val newState: PlaybackStateManager.PlaybackState)
+    class TimestampChanged(val newTimestamp: Int)
+    class SeekMaster(val seconds: Int)
 }

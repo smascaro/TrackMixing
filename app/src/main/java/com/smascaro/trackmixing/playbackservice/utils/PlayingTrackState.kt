@@ -170,4 +170,12 @@ class PlayingTrackState(
     fun getVolume(): Float {
         return mVolume
     }
+
+    fun getTimestampMillis(): Int {
+        return mPlayer.currentPosition
+    }
+
+    fun seek(timestampSeconds: Int) {
+        mPlayer.seekTo(timestampSeconds * 1000)
+    }
 }

@@ -30,6 +30,7 @@ class TracksPlayerController @Inject constructor(
             throw NoLoadedTrackException()
         }
         isServiceStarted = playbackSession.startPlayback(mTrack)
+
     }
 
     fun onDestroy() {
@@ -40,8 +41,9 @@ class TracksPlayerController @Inject constructor(
 
     fun onCreate() {
         ensureViewMvcBound()
-        initializeActionButton()
         viewMvc.bindVolumes(playbackSession.getVolumes())
+        viewMvc.bindTrackDuration(mTrack.secondsLong)
+        initializeActionButton()
         viewMvc.registerListener(this)
         EventBus.getDefault().register(this)
     }
@@ -71,6 +73,10 @@ class TracksPlayerController @Inject constructor(
 
     override fun onTrackVolumeChanged(trackInstrument: TrackInstrument, volume: Int) {
         playbackSession.setTrackVolume(trackInstrument, volume)
+    }
+
+    override fun onSeekRequestEvent(progress: Int) {
+        playbackSession.seek(progress)
     }
 
     override fun onActionButtonClicked() {

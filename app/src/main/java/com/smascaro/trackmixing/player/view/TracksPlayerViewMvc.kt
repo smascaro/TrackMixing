@@ -9,6 +9,7 @@ interface TracksPlayerViewMvc :
     interface Listener {
         fun onServiceConnected()
         fun onTrackVolumeChanged(trackInstrument: TrackInstrument, volume: Int)
+        fun onSeekRequestEvent(progress: Int)
         fun onActionButtonClicked()
     }
 
@@ -18,5 +19,6 @@ interface TracksPlayerViewMvc :
     fun showPauseButton()
     fun onDestroy()
     fun bindVolumes(volumes: TrackVolumeBundle)
+    fun bindTrackDuration(lengthSeconds: Int)
     fun updateTimestamp(timestamp: Int)
 }

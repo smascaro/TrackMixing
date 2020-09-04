@@ -176,6 +176,17 @@ class PlaybackHelper @Inject constructor() :
         }
     }
 
+    fun seekMaster(newTimestampSeconds: Int) {
+        seekAll(newTimestampSeconds)
+    }
+
+    private fun seekAll(timestampSeconds: Int) {
+        mVocalsState.seek(timestampSeconds)
+        mOtherState.seek(timestampSeconds)
+        mBassState.seek(timestampSeconds)
+        mDrumsState.seek(timestampSeconds)
+    }
+
     private fun notifyMediaStateChange() {
         getListeners().forEach {
             it.onMediaStateChange()
@@ -259,5 +270,9 @@ class PlaybackHelper @Inject constructor() :
             mBassState.getVolume().toInt(),
             mDrumsState.getVolume().toInt()
         )
+    }
+
+    fun getTimestampMillis(): Int {
+        return mVocalsState.getTimestampMillis()
     }
 }

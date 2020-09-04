@@ -14,6 +14,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import timber.log.Timber
 import javax.inject.Inject
+import kotlin.concurrent.thread
 
 class MixPlayerServiceController @Inject constructor(
     val playbackHelper: PlaybackHelper,
@@ -27,6 +28,7 @@ class MixPlayerServiceController @Inject constructor(
         fun onStopForeground(removeNotification: Boolean)
     }
 
+    private var timestampUpdateThread: TimestampUpdateThread? = null
     fun onCreate() {
         playbackHelper.registerListener(this)
         EventBus.getDefault().register(this)
@@ -84,6 +86,7 @@ class MixPlayerServiceController @Inject constructor(
             )
         )
         playbackHelper.playMaster()
+        startTimestampThread()
         createOrUpdateNotification()
         startForeground(
             ForegroundNotification(
@@ -97,10 +100,23 @@ class MixPlayerServiceController @Inject constructor(
         playbackStateManager.setPlayingStateFlag(PlaybackState.Playing())
     }
 
+    private fun startTimestampThread() {
+        thread {
+            timestampUpdateThread = TimestampUpdateThread(playbackHelper)
+            timestampUpdateThread!!.start()
+        }
+    }
+
     fun pauseMaster() {
+        pauseTimestampThread()
         playbackHelper.pauseMaster()
         stopForeground(false)
         playbackStateManager.setPlayingStateFlag(PlaybackState.Paused())
+    }
+
+    private fun pauseTimestampThread() {
+        timestampUpdateThread?.cancel()
+        timestampUpdateThread = null
     }
 
     private fun startForeground(foregroundNotification: ForegroundNotification) {
@@ -170,5 +186,11 @@ class MixPlayerServiceController @Inject constructor(
         Timber.d("Event of type SetVolumeTrackEvent received")
         playbackHelper.setVolume(setVolumeTrackEvent.trackInstrument, setVolumeTrackEvent.volume)
         playbackStateManager.setCurrentPlayingVolumes(playbackHelper.getVolumesBundle())
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(seekEvent: PlaybackEvent.SeekMaster) {
+        Timber.d("Event of type SeekMaster received")
+        playbackHelper.seekMaster(seekEvent.seconds)
     }
 }

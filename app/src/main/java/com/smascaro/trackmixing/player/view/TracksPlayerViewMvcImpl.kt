@@ -1,8 +1,11 @@
 package com.smascaro.trackmixing.player.view
 
 import android.view.View
+import android.widget.SeekBar
 import com.google.android.material.imageview.ShapeableImageView
+import com.google.android.material.textview.MaterialTextView
 import com.smascaro.trackmixing.R
+import com.smascaro.trackmixing.common.utils.TimeHelper
 import com.smascaro.trackmixing.common.utils.TrackVolumeBundle
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
@@ -22,6 +25,10 @@ class TracksPlayerViewMvcImpl @Inject constructor() :
 
     private lateinit var actionButtonImageView: ShapeableImageView
 
+    private lateinit var currentTimestampTextView: MaterialTextView
+    private lateinit var totalLengthTextView: MaterialTextView
+    private lateinit var songProgressSeekbar: SeekBar
+
     override fun bindRootView(rootView: View?) {
         super.bindRootView(rootView)
         initialize()
@@ -35,6 +42,9 @@ class TracksPlayerViewMvcImpl @Inject constructor() :
 
         actionButtonImageView = findViewById(R.id.iv_track_player_action)
 
+        currentTimestampTextView = findViewById(R.id.tv_track_player_current_timestamp)
+        totalLengthTextView = findViewById(R.id.tv_track_player_length)
+        songProgressSeekbar = findViewById(R.id.sb_track_player_timestamp)
         initializeListeners()
     }
 
@@ -49,6 +59,20 @@ class TracksPlayerViewMvcImpl @Inject constructor() :
                 it.onActionButtonClicked()
             }
         }
+
+        val progressChangeListener = ProgressSeekBarChangeListener()
+        progressChangeListener.setOnProgressChanged { _, progress, _ ->
+            currentTimestampTextView.text = transformSecondsToTimeRepresentation(progress)
+        }
+
+        progressChangeListener.setOnStopTrackingTouch { seekBar ->
+            if (seekBar != null) {
+                getListeners().forEach {
+                    it.onSeekRequestEvent(seekBar.progress)
+                }
+            }
+        }
+        songProgressSeekbar.setOnSeekBarChangeListener(progressChangeListener)
     }
 
     private fun makeSeekbarChangeListenerFor(trackInstrument: TrackInstrument): TrackMixerSeekBarChangeListener {
@@ -93,8 +117,19 @@ class TracksPlayerViewMvcImpl @Inject constructor() :
         drumsVolumeSeekbar.progress = volumes.drums
     }
 
-    override fun updateTimestamp(timestamp: Int) {
-        TODO("Not yet implemented")
+    override fun bindTrackDuration(lengthSeconds: Int) {
+        totalLengthTextView.text =
+            transformSecondsToTimeRepresentation(lengthSeconds)
+        songProgressSeekbar.max = lengthSeconds
     }
 
+    override fun updateTimestamp(timestamp: Int) {
+        currentTimestampTextView.text =
+            transformSecondsToTimeRepresentation(timestamp)
+        songProgressSeekbar.progress = timestamp
+    }
+
+    private fun transformSecondsToTimeRepresentation(seconds: Int): String {
+        return TimeHelper.fromSeconds(seconds.toLong()).toStringRepresentation()
+    }
 }

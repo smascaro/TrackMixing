@@ -49,7 +49,7 @@ class PlaybackSessionImpl @Inject constructor(
     }
 
     override fun seek(seconds: Int) {
-//        TODO("Not yet implemented")
+        eventBus.post(PlaybackEvent.SeekMaster(seconds))
     }
 
     override fun setMasterVolume(volume: Int) {
