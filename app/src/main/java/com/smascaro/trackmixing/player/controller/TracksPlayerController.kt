@@ -41,14 +41,7 @@ class TracksPlayerController @Inject constructor(
     fun onCreate() {
         ensureViewMvcBound()
         initializeActionButton()
-        viewMvc.bindVolumes(
-            hashMapOf(
-                TrackInstrument.VOCALS to 100,
-                TrackInstrument.OTHER to 100,
-                TrackInstrument.BASS to 100,
-                TrackInstrument.DRUMS to 100
-            )
-        )
+        viewMvc.bindVolumes(playbackSession.getVolumes())
         viewMvc.registerListener(this)
         EventBus.getDefault().register(this)
     }
@@ -107,5 +100,14 @@ class TracksPlayerController @Inject constructor(
             is PlaybackStateManager.PlaybackState.Playing -> viewMvc.showPauseButton()
             is PlaybackStateManager.PlaybackState.Paused -> viewMvc.showPlayButton()
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: PlaybackEvent.TimestampChanged) {
+        handleTimestampChanged(event.newTimestamp)
+    }
+
+    private fun handleTimestampChanged(timestamp: Int) {
+        viewMvc.updateTimestamp(timestamp)
     }
 }

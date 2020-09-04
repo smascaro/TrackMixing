@@ -99,6 +99,30 @@
         app:layout_constraintStart_toEndOf="@id/sb_track_player_bass"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <SeekBar
+        android:id="@+id/sb_track_player_timestamp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        app:layout_constraintBottom_toTopOf="@id/iv_track_player_action"
+        app:layout_constraintTop_toBottomOf="@id/sb_track_player_vocals" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_track_player_current_timestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0:00"
+        app:layout_constraintStart_toStartOf="@id/sb_track_player_timestamp"
+        app:layout_constraintTop_toBottomOf="@id/sb_track_player_timestamp" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_track_player_length"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="4:50"
+        app:layout_constraintEnd_toEndOf="@id/sb_track_player_timestamp"
+        app:layout_constraintTop_toBottomOf="@id/sb_track_player_timestamp" />
+
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_track_player_action"
         android:layout_width="wrap_content"
@@ -109,5 +133,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sb_track_player_vocals" />
+        app:layout_constraintTop_toBottomOf="@id/sb_track_player_timestamp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

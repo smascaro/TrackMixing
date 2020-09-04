@@ -3,6 +3,7 @@ package com.smascaro.trackmixing.common.utils
 import android.content.Context
 import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
 import org.greenrobot.eventbus.EventBus
+import timber.log.Timber
 import javax.inject.Inject
 
 class PlaybackStateManager @Inject constructor(context: Context) {
@@ -69,5 +70,35 @@ class PlaybackStateManager @Inject constructor(context: Context) {
 
     fun getCurrentSong(): String {
         return sharedPreferences.getString(SHARED_PREFERENCES_PLAYBACK_SONG_PLAYING, "") ?: ""
+    }
+
+    fun setCurrentPlayingTimestamp(timestampMillis: Long) {
+        sharedPreferences
+            .edit()
+            .putLong(SHARED_PREFERENCES_PLAYBACK_CURRENT_TIMESTAMP_MILLIS, timestampMillis)
+            .apply()
+    }
+
+    fun getCurrentPlayingTimestampMillis(): Long {
+        return sharedPreferences.getLong(SHARED_PREFERENCES_PLAYBACK_CURRENT_TIMESTAMP_MILLIS, 0)
+    }
+
+    fun setCurrentPlayingVolumes(trackVolumeBundle: TrackVolumeBundle) {
+        Timber.d("Storing volumes preferences")
+        val jsonBundle = trackVolumeBundle.bundleAsString()
+        sharedPreferences
+            .edit()
+            .putString(SHARED_PREFERENCES_PLAYBACK_CURRENT_VOLUMES, jsonBundle)
+            .apply()
+    }
+
+    fun getCurrentPlayingVolumes(): TrackVolumeBundle {
+        val jsonBundle =
+            sharedPreferences.getString(SHARED_PREFERENCES_PLAYBACK_CURRENT_VOLUMES, "")
+        return if (jsonBundle == null || jsonBundle.isEmpty()) {
+            TrackVolumeBundle(100, 100, 100, 100)
+        } else {
+            TrackVolumeBundle.parse(jsonBundle)
+        }
     }
 }

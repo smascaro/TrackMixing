@@ -71,6 +71,7 @@ class MixPlayerServiceController @Inject constructor(
         val isTrackDifferentFromCurrent = isInitialized && track != playbackHelper.getTrack()
         if (!isInitialized || (isInitialized && isTrackDifferentFromCurrent)) {
             playbackHelper.initialize(track)
+            playbackStateManager.setCurrentPlayingVolumes(TrackVolumeBundle.getDefault())
         }
     }
 
@@ -168,5 +169,6 @@ class MixPlayerServiceController @Inject constructor(
     fun onMessageEvent(setVolumeTrackEvent: PlaybackEvent.SetVolumeTrackEvent) {
         Timber.d("Event of type SetVolumeTrackEvent received")
         playbackHelper.setVolume(setVolumeTrackEvent.trackInstrument, setVolumeTrackEvent.volume)
+        playbackStateManager.setCurrentPlayingVolumes(playbackHelper.getVolumesBundle())
     }
 }

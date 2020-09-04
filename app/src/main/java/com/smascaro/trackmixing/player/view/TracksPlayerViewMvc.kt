@@ -1,5 +1,6 @@
 package com.smascaro.trackmixing.player.view
 
+import com.smascaro.trackmixing.common.utils.TrackVolumeBundle
 import com.smascaro.trackmixing.common.view.architecture.ObservableViewMvc
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
 
@@ -16,5 +17,6 @@ interface TracksPlayerViewMvc :
     fun showPlayButton()
     fun showPauseButton()
     fun onDestroy()
-    fun bindVolumes(volumesMap: Map<TrackInstrument, Int>)
+    fun bindVolumes(volumes: TrackVolumeBundle)
+    fun updateTimestamp(timestamp: Int)
 }

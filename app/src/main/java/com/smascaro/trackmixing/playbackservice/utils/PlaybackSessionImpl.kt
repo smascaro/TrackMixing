@@ -3,6 +3,7 @@ package com.smascaro.trackmixing.playbackservice.utils
 import android.content.Context
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager
+import com.smascaro.trackmixing.common.utils.TrackVolumeBundle
 import com.smascaro.trackmixing.playbackservice.MixPlayerService
 import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
@@ -63,4 +64,7 @@ class PlaybackSessionImpl @Inject constructor(
         return playbackStateManager.getPlayingState()
     }
 
+    override fun getVolumes(): TrackVolumeBundle {
+        return playbackStateManager.getCurrentPlayingVolumes()
+    }
 }

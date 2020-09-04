@@ -1,11 +1,12 @@
 package com.smascaro.trackmixing.player.view
 
 import android.view.View
-import android.widget.SeekBar
 import com.google.android.material.imageview.ShapeableImageView
 import com.smascaro.trackmixing.R
+import com.smascaro.trackmixing.common.utils.TrackVolumeBundle
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
+import com.smascaro.trackmixing.player.view.widget.VerticalSeekbar
 import javax.inject.Inject
 
 class TracksPlayerViewMvcImpl @Inject constructor() :
@@ -14,10 +15,10 @@ class TracksPlayerViewMvcImpl @Inject constructor() :
 
     private var mIsServiceStarted: Boolean = false
 
-    private lateinit var vocalsVolumeSeekbar: SeekBar
-    private lateinit var otherVolumeSeekbar: SeekBar
-    private lateinit var bassVolumeSeekbar: SeekBar
-    private lateinit var drumsVolumeSeekbar: SeekBar
+    private lateinit var vocalsVolumeSeekbar: VerticalSeekbar
+    private lateinit var otherVolumeSeekbar: VerticalSeekbar
+    private lateinit var bassVolumeSeekbar: VerticalSeekbar
+    private lateinit var drumsVolumeSeekbar: VerticalSeekbar
 
     private lateinit var actionButtonImageView: ShapeableImageView
 
@@ -84,12 +85,16 @@ class TracksPlayerViewMvcImpl @Inject constructor() :
     }
 
     override fun bindVolumes(
-        volumesMap: Map<TrackInstrument, Int>
+        volumes: TrackVolumeBundle
     ) {
-        vocalsVolumeSeekbar.progress = volumesMap[TrackInstrument.VOCALS] ?: 100
-        otherVolumeSeekbar.progress = volumesMap[TrackInstrument.OTHER] ?: 100
-        bassVolumeSeekbar.progress = volumesMap[TrackInstrument.BASS] ?: 100
-        drumsVolumeSeekbar.progress = volumesMap[TrackInstrument.DRUMS] ?: 100
+        vocalsVolumeSeekbar.progress = volumes.vocals
+        otherVolumeSeekbar.progress = volumes.other
+        bassVolumeSeekbar.progress = volumes.bass
+        drumsVolumeSeekbar.progress = volumes.drums
+    }
+
+    override fun updateTimestamp(timestamp: Int) {
+        TODO("Not yet implemented")
     }
 
 }

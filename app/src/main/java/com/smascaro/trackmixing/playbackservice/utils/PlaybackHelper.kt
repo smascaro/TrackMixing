@@ -2,6 +2,7 @@ package com.smascaro.trackmixing.playbackservice.utils
 
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.error.NoLoadedTrackException
+import com.smascaro.trackmixing.common.utils.TrackVolumeBundle
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable
 import com.smascaro.trackmixing.playbackservice.model.MixPlaybackState
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
@@ -249,5 +250,14 @@ class PlaybackHelper @Inject constructor() :
             TrackInstrument.BASS -> mBassState.setVolume(volume)
             TrackInstrument.DRUMS -> mDrumsState.setVolume(volume)
         }
+    }
+
+    fun getVolumesBundle(): TrackVolumeBundle {
+        return TrackVolumeBundle(
+            mVocalsState.getVolume().toInt(),
+            mOtherState.getVolume().toInt(),
+            mBassState.getVolume().toInt(),
+            mDrumsState.getVolume().toInt()
+        )
     }
 }

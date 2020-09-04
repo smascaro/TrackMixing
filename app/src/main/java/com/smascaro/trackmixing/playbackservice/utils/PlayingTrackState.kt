@@ -3,7 +3,6 @@ package com.smascaro.trackmixing.playbackservice.utils
 import android.media.MediaPlayer
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.utils.MEDIA_PLAYER_MAX_VOLUME
-import com.smascaro.trackmixing.common.utils.ResourcesWrapper
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
 import java.io.File
@@ -50,7 +49,7 @@ class PlayingTrackState(
         LogicMediaState.PLAYING
     private var mIsPrepared: Boolean = false
     private lateinit var mPlayer: MediaPlayer
-    private var mVolume = 1.0f
+    private var mVolume = maxVolume
     fun isPlaying(): Boolean {
         return mCurrentMediaState == LogicMediaState.PLAYING
     }
@@ -166,5 +165,9 @@ class PlayingTrackState(
             it.onPlayerError(instrument, "$whatMsg - $extraMsg")
         }
         return true
+    }
+
+    fun getVolume(): Float {
+        return mVolume
     }
 }
