@@ -111,7 +111,7 @@
         android:id="@+id/tv_track_player_current_timestamp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="0:00"
+        android:text="00:00"
         app:layout_constraintStart_toStartOf="@id/sb_track_player_timestamp"
         app:layout_constraintTop_toBottomOf="@id/sb_track_player_timestamp" />
 
@@ -119,7 +119,7 @@
         android:id="@+id/tv_track_player_length"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="4:50"
+        android:text="--:--"
         app:layout_constraintEnd_toEndOf="@id/sb_track_player_timestamp"
         app:layout_constraintTop_toBottomOf="@id/sb_track_player_timestamp" />
 
