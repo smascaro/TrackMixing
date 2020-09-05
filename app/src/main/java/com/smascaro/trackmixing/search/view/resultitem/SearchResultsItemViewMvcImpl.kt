@@ -34,10 +34,19 @@ class SearchResultsItemViewMvcImpl(private val glide: RequestManager) :
         searchResultDurationTextView = findViewById(R.id.tv_item_track_duration)
         searchResultStatusTextView = findViewById(R.id.tv_item_track_status)
 
+        initializeListeners()
+    }
+
+    private fun initializeListeners() {
         getRootView().setOnClickListener {
             getListeners().forEach {
                 it.onSearchResultClicked(searchResult)
             }
+        }
+
+        getRootView().setOnLongClickListener {
+            it.isSelected = true
+            true
         }
     }
 
