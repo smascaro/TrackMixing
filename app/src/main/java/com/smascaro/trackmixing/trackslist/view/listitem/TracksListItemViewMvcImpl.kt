@@ -5,7 +5,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.google.android.material.card.MaterialCardView
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.utils.ResourcesWrapper
@@ -41,8 +40,18 @@ class TracksListItemViewMvcImpl @Inject constructor(
         mTrackAuthorTxt = findViewById(R.id.tv_item_track_author)
         mTrackDuration = findViewById(R.id.tv_item_track_duration)
         mTrackState = findViewById(R.id.tv_item_track_status)
+
+        initializeListeners()
+    }
+
+    private fun initializeListeners() {
         getRootView().setOnClickListener {
             playbackSession.startPlayback(mTrack)
+        }
+
+        getRootView().setOnLongClickListener {
+            it.isSelected = true
+            true
         }
     }
 
