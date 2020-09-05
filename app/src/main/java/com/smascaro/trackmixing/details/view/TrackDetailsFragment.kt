@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -16,7 +17,7 @@ import com.smascaro.trackmixing.details.controller.TrackDetailsController
 import com.smascaro.trackmixing.main.view.MainActivity
 import javax.inject.Inject
 
-class TrackDetailsFragment : BaseFragment() {
+class TrackDetailsFragment : Fragment() {
 
     private val args: TrackDetailsFragmentArgs by navArgs()
 

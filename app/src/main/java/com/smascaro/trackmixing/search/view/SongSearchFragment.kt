@@ -5,14 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.smascaro.trackmixing.R
+import com.smascaro.trackmixing.common.view.ui.BaseFragment
 import com.smascaro.trackmixing.main.view.MainActivity
 import com.smascaro.trackmixing.search.controller.SearchResultsController
 import javax.inject.Inject
 
-class SongSearchFragment : Fragment() {
+class SongSearchFragment : BaseFragment() {
 
     @Inject
     lateinit var searchResultsController: SearchResultsController
@@ -25,10 +25,17 @@ class SongSearchFragment : Fragment() {
         (activity as MainActivity).mainComponent.inject(this)
     }
 
+    override fun getFragmentTitle(): String {
+        return "Search a song"
+    }
+
+    override fun isBackNavigable() = true
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
         viewMvc.bindRootView(inflater.inflate(R.layout.fragment_song_search, container, false))
         searchResultsController.bindViewMvc(viewMvc)
         searchResultsController.bindNavController(findNavController())

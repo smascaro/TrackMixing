@@ -7,6 +7,7 @@ import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.TrackMixingApplication
 import com.smascaro.trackmixing.common.di.main.MainComponent
 import com.smascaro.trackmixing.common.view.ui.BaseActivity
+import com.smascaro.trackmixing.common.view.ui.BaseFragment
 import com.smascaro.trackmixing.main.components.bottomplayer.controller.BottomPlayerController
 import com.smascaro.trackmixing.main.components.bottomplayer.view.BottomPlayerViewMvc
 import com.smascaro.trackmixing.main.components.progress.controller.BottomProgressController
@@ -17,7 +18,7 @@ import com.smascaro.trackmixing.player.business.downloadtrack.model.ApplicationE
 import org.greenrobot.eventbus.EventBus
 import javax.inject.Inject
 
-class MainActivity : BaseActivity() {
+class MainActivity : BaseActivity(), BaseFragment.OnTitleChangeListener {
     @Inject
     lateinit var mainActivityController: MainActivityController
 
@@ -56,11 +57,14 @@ class MainActivity : BaseActivity() {
         bottomProgressViewMvc.bindRootView(rootView)
         bottomProgressController.bindViewMvc(bottomProgressViewMvc)
 
+        mainActivityController.onCreate()
         bottomProgressController.onCreate()
         bottomPlayerController.onCreate()
 
         setContentView(rootView)
-        bottomPlayerController.bindNavController(findNavController(R.id.nav_host_fragment))
+        val navController = findNavController(R.id.nav_host_fragment)
+        mainActivityController.bindNavController(navController)
+        bottomPlayerController.bindNavController(navController)
     }
 
     override fun onStart() {
@@ -71,22 +75,17 @@ class MainActivity : BaseActivity() {
 
     override fun onStop() {
         super.onStop()
+        mainActivityController.onStop()
         bottomProgressController.onStop()
         EventBus.getDefault().post(ApplicationEvent(AppState.Background()))
     }
-//
-//    private var showAnim = true
-//    override fun onBackPressed() {
-//        if (showAnim) {
-//            EventBus.getDefault().post(UiProgressEvent.ProgressUpdate(26, "Testing animation"))
-//        } else {
-//            EventBus.getDefault().post(UiProgressEvent.ProgressFinished())
-//        }
-//        showAnim = !showAnim
-//    }
 
     override fun onDestroy() {
         super.onDestroy()
         bottomPlayerController.onDestroy()
+    }
+
+    override fun changeTitle(title: String, enableBackNavigation: Boolean) {
+        mainActivityController.updateTitle(title, enableBackNavigation)
     }
 }

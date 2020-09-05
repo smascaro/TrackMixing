@@ -4,8 +4,11 @@ import com.smascaro.trackmixing.common.view.architecture.ObservableViewMvc
 
 interface MainActivityViewMvc :
     ObservableViewMvc<MainActivityViewMvc.Listener> {
-    interface Listener
+    interface Listener {
+        fun onToolbarBackButtonPressed()
+    }
 
     fun showMessage(text: String)
     fun startProcessingRequest(url: String)
+    fun updateTitle(title: String, enableBackNavigation: Boolean)
 }

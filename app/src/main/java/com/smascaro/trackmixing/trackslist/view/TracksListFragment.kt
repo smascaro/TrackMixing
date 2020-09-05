@@ -30,6 +30,12 @@ class TracksListFragment : BaseFragment() {
         (activity as MainActivity).mainComponent.inject(this)
     }
 
+    override fun getFragmentTitle(): String {
+        return "My studio"
+    }
+
+    override fun isBackNavigable() = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enterTransition = MaterialFadeThrough()
@@ -44,6 +50,7 @@ class TracksListFragment : BaseFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
         viewMvc.bindRootView(inflater.inflate(R.layout.fragment_tracks_list, null, false))
         mTracksListController.bindViewMvc(viewMvc)
         mTracksListController.bindNavController(findNavController())
