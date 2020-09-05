@@ -111,4 +111,5 @@ class BottomProgressViewMvcImpl @Inject constructor(resources: ResourcesWrapper)
         setProgressBarHeight(progressBarHiddenHeight.toInt())
         setProgressBarVisibility(View.INVISIBLE)
     }
+
 }

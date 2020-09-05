@@ -100,6 +100,7 @@ class PlaybackHelper @Inject constructor() :
         getListeners().forEach {
             it.onInitializationFinished()
         }
+
     }
 
     private fun resetPlayersIfInitialized() {

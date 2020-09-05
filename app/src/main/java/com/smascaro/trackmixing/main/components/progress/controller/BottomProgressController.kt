@@ -5,6 +5,7 @@ import com.smascaro.trackmixing.common.controller.BaseController
 import com.smascaro.trackmixing.common.utils.ResourcesWrapper
 import com.smascaro.trackmixing.main.components.progress.model.UiProgressEvent
 import com.smascaro.trackmixing.main.components.progress.view.BottomProgressViewMvc
+import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -72,5 +73,6 @@ class BottomProgressController @Inject constructor(resources: ResourcesWrapper) 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onMessageEvent(event: UiProgressEvent.ErrorOccurred) =
         CoroutineScope(Dispatchers.Main).launch { handleErrorOccurredEvent(event) }
+
 }
 

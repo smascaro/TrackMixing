@@ -17,4 +17,5 @@ interface BottomPlayerViewMvc :
     fun hidePlayerBar()
     fun showPlayButton()
     fun showPauseButton()
+    fun updateTimestamp(percentage: Float)
 }

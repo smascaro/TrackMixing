@@ -10,6 +10,7 @@ import timber.log.Timber
 class TimestampUpdateThread(private val playbackHelper: PlaybackHelper) {
     private lateinit var job: Job
     private var currentTimestampSeconds: Int = 0
+    private val totalLength = playbackHelper.getTrack().secondsLong
     fun start() {
         job = run()
 
@@ -24,7 +25,8 @@ class TimestampUpdateThread(private val playbackHelper: PlaybackHelper) {
                     "Sending timestamp ${TimeHelper.fromSeconds(currentTimestampSeconds.toLong())
                         .toStringRepresentation()}"
                 )
-                EventBus.getDefault().post(PlaybackEvent.TimestampChanged(currentTimestampSeconds))
+                EventBus.getDefault()
+                    .post(PlaybackEvent.TimestampChanged(currentTimestampSeconds, totalLength))
                 delay(1 * 1000)
             }
         } catch (e: CancellationException) {

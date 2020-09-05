@@ -5,10 +5,8 @@ import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.bumptech.glide.RequestManager
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.target.BitmapImageViewTarget
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textview.MaterialTextView
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.utils.ResourcesWrapper
@@ -29,10 +27,12 @@ class BottomPlayerViewMvcImpl @Inject constructor(
     BottomPlayerViewMvc,
     SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private lateinit var bottomBar: ConstraintLayout
+    private lateinit var bottomBar: MaterialCardView
     private lateinit var bottomBarTextView: MaterialTextView
-    private lateinit var bottomBarBackgroundImageView: ImageView
+
+    //    private lateinit var bottomBarBackgroundImageView: ImageView
     private lateinit var bottomBarActionButton: ImageView
+    private lateinit var timestampProgressIndicatorView: View
 
     private var isBottomBarShown = false
     private val bottomBarVisibleHeight =
@@ -59,14 +59,16 @@ class BottomPlayerViewMvcImpl @Inject constructor(
     }
 
     private fun initialize() {
-        val bottomBarWrapper = findViewById<ConstraintLayout>(R.id.layout_player_actions_bottom)
+        val bottomBarWrapper = findViewById<MaterialCardView>(R.id.layout_player_actions_bottom)
         LayoutInflater.from(getContext())
             .inflate(R.layout.layout_actions_bottom, bottomBarWrapper, false)
         bottomBar = bottomBarWrapper.findViewById(R.id.layout_player_actions_bottom)
         bottomBarTextView = bottomBarWrapper.findViewById(R.id.tv_track_title_player_bottom)
-        bottomBarBackgroundImageView =
-            bottomBarWrapper.findViewById(R.id.iv_background_player_bottom)
+//        bottomBarBackgroundImageView =
+//            bottomBarWrapper.findViewById(R.id.iv_background_player_bottom)
         bottomBarActionButton = bottomBarWrapper.findViewById(R.id.iv_action_button_player_bottom)
+        timestampProgressIndicatorView =
+            bottomBarWrapper.findViewById(R.id.v_bottom_player_progress_indicator)
         bottomBarActionButton.setOnClickListener {
             getListeners().forEach {
                 it.onActionButtonClicked()
@@ -104,11 +106,11 @@ class BottomPlayerViewMvcImpl @Inject constructor(
         !isBottomBarShown || currentShownData?.title != data.title || currentShownData?.thumbnailUrl != data.thumbnailUrl
 
     private fun renderBottomBarBackground(imageUrl: String) {
-        glide
-            .asBitmap()
-            .load(imageUrl)
-            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-            .into(BitmapImageViewTarget(bottomBarBackgroundImageView))
+//        glide
+//            .asBitmap()
+//            .load(imageUrl)
+//            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+//            .into(BitmapImageViewTarget(bottomBarBackgroundImageView))
     }
 
     override fun hidePlayerBar() {
@@ -137,5 +139,13 @@ class BottomPlayerViewMvcImpl @Inject constructor(
                 it.onPlayerStateChanged()
             }
         }
+    }
+
+    override fun updateTimestamp(percentage: Float) {
+        val totalWidth = bottomBar.right - bottomBar.left
+        //Set 1px as minimum width because 0 is interpreted as a weighted width => full width
+        val progressWidth = (totalWidth * percentage).coerceAtLeast(1f)
+        timestampProgressIndicatorView.layoutParams.width = progressWidth.toInt()
+        timestampProgressIndicatorView.requestLayout()
     }
 }

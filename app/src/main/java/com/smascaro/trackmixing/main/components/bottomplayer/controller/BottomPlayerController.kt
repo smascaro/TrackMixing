@@ -11,6 +11,8 @@ import com.smascaro.trackmixing.main.components.bottomplayer.view.BottomPlayerVi
 import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
 import kotlinx.coroutines.runBlocking
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -27,6 +29,7 @@ class BottomPlayerController @Inject constructor(
     fun onCreate() {
         ensureViewMvcBound()
         viewMvc.registerListener(this)
+        EventBus.getDefault().register(this)
         viewMvc.onCreate()
     }
 
@@ -58,6 +61,7 @@ class BottomPlayerController @Inject constructor(
 
     fun onDestroy() {
         viewMvc.unregisterListener(this)
+        EventBus.getDefault().unregister(this)
     }
 
     override fun onLayoutClick() {
@@ -87,5 +91,14 @@ class BottomPlayerController @Inject constructor(
         if (running) {
             updateCurrentPlayingTrack()
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: PlaybackEvent.TimestampChanged) =
+        handleTimestampChanged(event.newTimestamp, event.totalLength)
+
+    private fun handleTimestampChanged(newTimestamp: Int, totalLength: Int) {
+        Timber.d("Received timestamp event: $newTimestamp / $totalLength")
+        viewMvc.updateTimestamp((newTimestamp.toFloat()) / (totalLength.toFloat()))
     }
 }
