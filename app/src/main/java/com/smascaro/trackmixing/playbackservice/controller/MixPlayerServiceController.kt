@@ -74,6 +74,7 @@ class MixPlayerServiceController @Inject constructor(
         if (!isInitialized || (isInitialized && isTrackDifferentFromCurrent)) {
             playbackHelper.initialize(track)
             playbackStateManager.setCurrentPlayingVolumes(TrackVolumeBundle.getDefault())
+            pauseTimestampThread()
         }
     }
 
