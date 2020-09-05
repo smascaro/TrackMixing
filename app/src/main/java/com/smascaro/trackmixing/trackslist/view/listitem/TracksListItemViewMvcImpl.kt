@@ -22,7 +22,6 @@ class TracksListItemViewMvcImpl @Inject constructor(
     BaseObservableViewMvc<TracksListItemViewMvc.Listener>(),
     TracksListItemViewMvc {
     private lateinit var mTrack: Track
-    private lateinit var mCard: MaterialCardView
     private lateinit var mTrackTitleTxt: TextView
     private lateinit var mTrackAuthorTxt: TextView
     private lateinit var mTrackDuration: TextView
@@ -37,7 +36,6 @@ class TracksListItemViewMvcImpl @Inject constructor(
     }
 
     private fun initialize() {
-        mCard = findViewById(R.id.cardViewContainer)
         mTrackTitleTxt = findViewById(R.id.tv_item_track_title)
         mTrackThumbnailImg = findViewById(R.id.iv_item_track_thumbnail)
         mTrackAuthorTxt = findViewById(R.id.tv_item_track_author)
@@ -60,7 +58,6 @@ class TracksListItemViewMvcImpl @Inject constructor(
             .load(mTrack.thumbnailUrl)
             .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
             .into(mTrackThumbnailImg)
-        mCard.transitionName = track.videoKey
         mTrackTitleTxt.transitionName = track.title
     }
 
