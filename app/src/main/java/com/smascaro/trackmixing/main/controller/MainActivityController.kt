@@ -10,7 +10,7 @@ import javax.inject.Inject
 class MainActivityController @Inject constructor(p_navigationHelper: NavigationHelper) :
     BaseNavigatorController<MainActivityViewMvc>(p_navigationHelper), MainActivityViewMvc.Listener {
 
-    fun onCreate() {
+    fun onStart() {
         viewMvc.registerListener(this)
     }
 

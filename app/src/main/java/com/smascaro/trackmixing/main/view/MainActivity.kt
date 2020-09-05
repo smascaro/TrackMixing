@@ -57,7 +57,6 @@ class MainActivity : BaseActivity(), BaseFragment.OnTitleChangeListener {
         bottomProgressViewMvc.bindRootView(rootView)
         bottomProgressController.bindViewMvc(bottomProgressViewMvc)
 
-        mainActivityController.onCreate()
         bottomProgressController.onCreate()
         bottomPlayerController.onCreate()
 
@@ -69,6 +68,7 @@ class MainActivity : BaseActivity(), BaseFragment.OnTitleChangeListener {
 
     override fun onStart() {
         super.onStart()
+        mainActivityController.onStart()
         bottomProgressController.onStart()
         EventBus.getDefault().post(ApplicationEvent(AppState.Foreground()))
     }
