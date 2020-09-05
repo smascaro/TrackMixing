@@ -11,4 +11,5 @@ interface MainActivityViewMvc :
     fun showMessage(text: String)
     fun startProcessingRequest(url: String)
     fun updateTitle(title: String, enableBackNavigation: Boolean)
+    fun cleanUp()
 }

@@ -35,6 +35,7 @@ class MainActivityController @Inject constructor(p_navigationHelper: NavigationH
     }
 
     override fun onToolbarBackButtonPressed() {
+        viewMvc.cleanUp()
         navigationHelper.back()
     }
 }

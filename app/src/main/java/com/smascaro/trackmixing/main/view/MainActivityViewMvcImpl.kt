@@ -1,6 +1,8 @@
 package com.smascaro.trackmixing.main.view
 
+import android.app.Activity
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.Toast
 import com.google.android.material.textview.MaterialTextView
@@ -39,6 +41,12 @@ class MainActivityViewMvcImpl @Inject constructor(private val playbackStateManag
         } else {
             toolbarBackButtonImageView.visibility = View.GONE
         }
+    }
+
+    override fun cleanUp() {
+        val imm =
+            getContext()?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(getRootView().rootView.windowToken, 0)
     }
 
     private fun initialize() {
