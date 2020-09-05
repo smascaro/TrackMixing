@@ -1,16 +1,15 @@
 package com.smascaro.trackmixing.search.view
 
-import android.app.Activity
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.smascaro.trackmixing.R
+import com.smascaro.trackmixing.common.utils.UiUtils
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
 import com.smascaro.trackmixing.player.business.downloadtrack.TrackDownloadService
 import com.smascaro.trackmixing.search.model.SearchResult
@@ -18,7 +17,8 @@ import javax.inject.Inject
 import kotlin.concurrent.thread
 
 class SearchResultsViewMvcImpl @Inject constructor(
-    private val searchResultsAdapter: SearchResultsAdapter
+    private val searchResultsAdapter: SearchResultsAdapter,
+    private val uiUtils: UiUtils
 ) : BaseObservableViewMvc<SearchResultsViewMvc.Listener>(),
     SearchResultsAdapter.Listener,
     SearchResultsViewMvc {
@@ -89,9 +89,7 @@ class SearchResultsViewMvcImpl @Inject constructor(
     }
 
     private fun hideKeyboard() {
-        val imm =
-            getContext()?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(getRootView().rootView.windowToken, 0)
+        uiUtils.hideKeyboard(getRootView())
     }
 
     private fun getTextInSearchInput(): String {

@@ -1,19 +1,17 @@
 package com.smascaro.trackmixing.main.view
 
-import android.app.Activity
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.Toast
 import com.google.android.material.textview.MaterialTextView
 import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.common.utils.PlaybackStateManager
+import com.smascaro.trackmixing.common.utils.UiUtils
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
 import com.smascaro.trackmixing.player.business.downloadtrack.TrackDownloadService
 import javax.inject.Inject
 import kotlin.concurrent.thread
 
-class MainActivityViewMvcImpl @Inject constructor(private val playbackStateManager: PlaybackStateManager) :
+class MainActivityViewMvcImpl @Inject constructor(private val uiUtils: UiUtils) :
     MainActivityViewMvc,
     BaseObservableViewMvc<MainActivityViewMvc.Listener>() {
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
@@ -44,9 +42,7 @@ class MainActivityViewMvcImpl @Inject constructor(private val playbackStateManag
     }
 
     override fun cleanUp() {
-        val imm =
-            getContext()?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(getRootView().rootView.windowToken, 0)
+        uiUtils.hideKeyboard(getRootView())
     }
 
     private fun initialize() {
