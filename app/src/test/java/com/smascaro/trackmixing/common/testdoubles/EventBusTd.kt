@@ -8,6 +8,7 @@ class EventBusTd : EventBus() {
     var registeredListener: Any? = null
     var isListenerUnregistered = false
     var unregisteredListener: Any? = null
+    var lastPostedEvent: Any? = null
     override fun register(subscriber: Any?) {
         isListenerRegistered = true
         registeredListener = subscriber
@@ -20,5 +21,6 @@ class EventBusTd : EventBus() {
 
     override fun post(event: Any?) {
         Timber.d("TD Post: $event")
+        lastPostedEvent = event
     }
 }
