@@ -25,6 +25,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
+import org.greenrobot.eventbus.EventBus
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
@@ -123,6 +124,12 @@ class AppModule {
         requestManager: RequestManager
     ): NotificationHelper {
         return PlayerNotificationHelper(context, requestManager)
+    }
+
+    @Singleton
+    @Provides
+    fun provideEventBus(): EventBus {
+        return EventBus.getDefault()
     }
 
 
