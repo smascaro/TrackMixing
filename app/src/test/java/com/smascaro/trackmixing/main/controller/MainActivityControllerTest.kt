@@ -1,6 +1,6 @@
 package com.smascaro.trackmixing.main.controller
 
-import com.smascaro.trackmixing.common.utils.NavigationHelper
+import com.smascaro.trackmixing.common.utils.NavigationHelperImpl
 import com.smascaro.trackmixing.main.view.MainActivityViewMvc
 import org.junit.Before
 import org.junit.Test
@@ -18,7 +18,7 @@ class MainActivityControllerTest {
     // endregion constants
 
     // region helper fields
-    @Mock lateinit var navigationHelper: NavigationHelper
+    @Mock lateinit var navigationHelper: NavigationHelperImpl
 
     @Mock lateinit var viewMvc: MainActivityViewMvc
     // endregion helper fields
