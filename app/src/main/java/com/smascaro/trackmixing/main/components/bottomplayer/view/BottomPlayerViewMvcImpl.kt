@@ -16,12 +16,13 @@ import com.smascaro.trackmixing.common.utils.SharedPreferencesFactory
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
 import com.smascaro.trackmixing.main.components.bottomplayer.model.BottomPlayerData
 import com.smascaro.trackmixing.main.components.progress.view.ResizeAnimation
-import com.smascaro.trackmixing.playbackservice.MixPlayerService
+import com.smascaro.trackmixing.playbackservice.MixPlayerServiceChecker
 import javax.inject.Inject
 
 class BottomPlayerViewMvcImpl @Inject constructor(
     private val glide: RequestManager,
-    private val resources: ResourcesWrapper
+    private val resources: ResourcesWrapper,
+    private val serviceChecker: MixPlayerServiceChecker
 ) :
     BaseObservableViewMvc<BottomPlayerViewMvc.Listener>(),
     BottomPlayerViewMvc,
@@ -47,10 +48,14 @@ class BottomPlayerViewMvcImpl @Inject constructor(
     private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate() {
-        val isServiceRunning = MixPlayerService.ping(getContext()!!)
+        val isServiceRunning = isServiceRunning()
         getListeners().forEach {
             it.onServiceRunningCheck(isServiceRunning)
         }
+    }
+
+    fun isServiceRunning(): Boolean {
+        return serviceChecker.ping()
     }
 
     override fun bindRootView(rootView: View?) {

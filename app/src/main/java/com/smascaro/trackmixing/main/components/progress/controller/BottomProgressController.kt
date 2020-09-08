@@ -5,7 +5,6 @@ import com.smascaro.trackmixing.common.controller.BaseController
 import com.smascaro.trackmixing.common.utils.ResourcesWrapper
 import com.smascaro.trackmixing.main.components.progress.model.UiProgressEvent
 import com.smascaro.trackmixing.main.components.progress.view.BottomProgressViewMvc
-import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -16,7 +15,10 @@ import org.greenrobot.eventbus.ThreadMode
 import timber.log.Timber
 import javax.inject.Inject
 
-class BottomProgressController @Inject constructor(resources: ResourcesWrapper) :
+class BottomProgressController @Inject constructor(
+    resources: ResourcesWrapper,
+    private val eventBus: EventBus
+) :
     BaseController<BottomProgressViewMvc>() {
 
     private val delayBeforeHidingMillis =
@@ -29,12 +31,12 @@ class BottomProgressController @Inject constructor(resources: ResourcesWrapper) 
 
     fun onStart() {
         Timber.d("BottomProgressController - OnStart - Register to event bus")
-        EventBus.getDefault().register(this)
+        eventBus.register(this)
     }
 
     fun onStop() {
         Timber.d("BottomProgressController - OnStop - Unregister from event bus")
-        EventBus.getDefault().unregister(this)
+        eventBus.unregister(this)
     }
 
     private fun handleProgressUpdate(event: UiProgressEvent.ProgressUpdate) {

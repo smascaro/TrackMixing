@@ -12,10 +12,7 @@ import com.smascaro.trackmixing.common.data.datasource.repository.TracksReposito
 import com.smascaro.trackmixing.common.di.main.RetrofitForBinaryData
 import com.smascaro.trackmixing.common.di.main.RetrofitForJsonData
 import com.smascaro.trackmixing.common.di.main.RetrofitForYoutubeApi
-import com.smascaro.trackmixing.common.utils.FilesStorageHelper
-import com.smascaro.trackmixing.common.utils.NODE_BASE_URL
-import com.smascaro.trackmixing.common.utils.NotificationHelper
-import com.smascaro.trackmixing.common.utils.YOUTUBE_API_BASE_URL
+import com.smascaro.trackmixing.common.utils.*
 import com.smascaro.trackmixing.playbackservice.utils.PlaybackSession
 import com.smascaro.trackmixing.playbackservice.utils.PlaybackSessionImpl
 import com.smascaro.trackmixing.playbackservice.utils.PlayerNotificationHelper
@@ -25,6 +22,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
+import org.greenrobot.eventbus.EventBus
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
@@ -125,6 +123,12 @@ class AppModule {
         return PlayerNotificationHelper(context, requestManager)
     }
 
+    @Singleton
+    @Provides
+    fun provideEventBus(): EventBus {
+        return EventBus.getDefault()
+    }
+
 
     @Module
     interface StaticBindings {
@@ -135,5 +139,9 @@ class AppModule {
         @Singleton
         @Binds
         fun provideTracksRepository(tracksRepositoryImpl: TracksRepositoryImpl): TracksRepository
+
+        @Singleton
+        @Binds
+        fun provideNavigationHelper(navigationHelperImpl: NavigationHelperImpl): NavigationHelper
     }
 }

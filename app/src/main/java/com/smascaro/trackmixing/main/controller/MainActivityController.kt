@@ -24,11 +24,14 @@ class MainActivityController @Inject constructor(p_navigationHelper: NavigationH
                 intent.clipData?.getItemAt(0)!!.text
             } else ""
             Timber.d(intent.toString())
-            if (url.contains("youtube") || url.contains("youtu.be")) {
+            if (isYoutubeValidUrl(url)) {
                 viewMvc.startProcessingRequest(url.toString())
             }
         }
     }
+
+    fun isYoutubeValidUrl(url: CharSequence): Boolean =
+        YoutubeUrlValidator(url.toString()).isValid()
 
     fun updateTitle(title: String, enableBackNavigation: Boolean) {
         viewMvc.updateTitle(title, enableBackNavigation)
