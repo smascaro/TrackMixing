@@ -19,6 +19,7 @@ import javax.inject.Inject
 class BottomPlayerController @Inject constructor(
     private val playbackStateManager: PlaybackStateManager,
     private val tracksRepository: TracksRepository,
+    private val eventBus: EventBus,
     navigationHelper: NavigationHelper
 ) : BaseNavigatorController<BottomPlayerViewMvc>(navigationHelper),
     BottomPlayerViewMvc.Listener {
@@ -29,7 +30,7 @@ class BottomPlayerController @Inject constructor(
     fun onCreate() {
         ensureViewMvcBound()
         viewMvc.registerListener(this)
-        EventBus.getDefault().register(this)
+        eventBus.register(this)
         viewMvc.onCreate()
     }
 
@@ -61,7 +62,7 @@ class BottomPlayerController @Inject constructor(
 
     fun onDestroy() {
         viewMvc.unregisterListener(this)
-        EventBus.getDefault().unregister(this)
+        eventBus.unregister(this)
     }
 
     override fun onLayoutClick() {
@@ -69,16 +70,18 @@ class BottomPlayerController @Inject constructor(
     }
 
     fun navigateToPlayer() {
-        navigationHelper.toPlayer(currentTrack!!)
+        if (currentTrack != null) {
+            navigationHelper.toPlayer(currentTrack!!)
+        }
     }
 
     override fun onActionButtonClicked() {
         val currentState = playbackStateManager.getPlayingState()
         if (currentState is PlaybackStateManager.PlaybackState.Playing) {
-            EventBus.getDefault().post(PlaybackEvent.PauseMasterEvent())
+            eventBus.post(PlaybackEvent.PauseMasterEvent())
             Timber.d("Sent a PauseMasterEvent")
         } else if (currentState is PlaybackStateManager.PlaybackState.Paused) {
-            EventBus.getDefault().post(PlaybackEvent.PlayMasterEvent())
+            eventBus.post(PlaybackEvent.PlayMasterEvent())
             Timber.d("Sent a PlayMasterEvent")
         }
     }
