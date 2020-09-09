@@ -1,78 +1,141 @@
 package com.smascaro.trackmixing.trackslist.controller
 
-import androidx.navigation.NavController
-import androidx.navigation.fragment.FragmentNavigator
-import com.smascaro.trackmixing.common.data.model.Track
+import com.smascaro.trackmixing.common.data.datasource.repository.toModel
+import com.smascaro.trackmixing.common.models.TestModels
 import com.smascaro.trackmixing.common.utils.NavigationHelper
+import com.smascaro.trackmixing.helpers.MockitoHelper
+import com.smascaro.trackmixing.playbackservice.utils.PlaybackSession
 import com.smascaro.trackmixing.trackslist.business.FetchDownloadedTracks
+import com.smascaro.trackmixing.trackslist.view.TracksListViewMvc
+import kotlinx.coroutines.runBlocking
+import org.junit.After
 import org.junit.Before
+import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.Mockito.*
 import org.mockito.junit.MockitoJUnitRunner
+
 
 @RunWith(MockitoJUnitRunner::class)
 class TracksListControllerTest {
     private lateinit var SUT: TracksListController
 
     // region constants
-
+    val fetchedTracksList = TestModels.getDownloadEntityList().map { it.toModel() }
+    val clickedTrack1 = fetchedTracksList[0]
+    val clickedTrack2 = fetchedTracksList[1]
     // endregion constants
 
     // region helper fields
+    @Mock private lateinit var viewMvc: TracksListViewMvc
     @Mock private lateinit var fetchDownloadedTracksUseCase: FetchDownloadedTracks
-    private lateinit var navigationHelperTd: NavigationHelperTd
+    @Mock private lateinit var playbackSession: PlaybackSession
+    @Mock private lateinit var navigationHelper: NavigationHelper
     // endregion helper fields
 
     @Before
     fun setup() {
-        navigationHelperTd = NavigationHelperTd()
-        SUT = TracksListController(fetchDownloadedTracksUseCase, navigationHelperTd)
+        SUT =
+            TracksListController(fetchDownloadedTracksUseCase, playbackSession, navigationHelper)
+        SUT.bindViewMvc(viewMvc)
+    }
+
+    @After
+    fun validate() {
+        validateMockitoUsage()
     }
 
     // region tests
-    /****LIFECYCLE EVENTS****/
-    //view listener is registered at start
-    //use case listener is registered at start
-    //downloaded tracks are loaded on start
-    //view listener is unregistered on stop
-    //use case listener is unregistered on stop
+    @Test
+    fun onStart_viewMvcListenerIsRegistered() {
+        // Arrange
+        // Act
+        SUT.onStart()
+        // Assert
+        verify(viewMvc).registerListener(SUT)
+    }
 
-    /****USER EVENTS****/
-    //user clicks on search button - navigation to search fragment
-    //user clicks on a track -
+    @Test
+    fun onStart_useCaseListenerIsRegistered() {
+        // Arrange
+        // Act
+        SUT.onStart()
+        // Assert
+        verify(fetchDownloadedTracksUseCase).registerListener(SUT)
+    }
 
+    @Test
+    fun onStart_tracksAreLoaded() = runBlocking {
+        // Arrange
+        // Act
+        SUT.onStart()
+        // Assert
+        verify(fetchDownloadedTracksUseCase)
+            .fetchTracksAndNotify(MockitoHelper.anyObject())
+    }
+
+    @Test
+    fun onStop_viewMvcListenerIsUnregistered() {
+        // Arrange
+        // Act
+        SUT.onStop()
+        // Assert
+        verify(viewMvc).unregisterListener(SUT)
+    }
+
+    @Test
+    fun onStop_useCaseListenerIsUnregistered() {
+        // Arrange
+        // Act
+        SUT.onStop()
+        // Assert
+        verify(fetchDownloadedTracksUseCase).unregisterListener(SUT)
+    }
+
+    @Test
+    fun onSearchButtonClicked_navigatesToSearchFragment() {
+        // Arrange
+        // Act
+        SUT.onSearchNavigationButtonClicked()
+        // Assert
+        verify(navigationHelper).toSearch()
+    }
+
+    @Test
+    fun onTrackClicked_startsPlayingTrack() {
+        // Arrange
+        // Act
+        SUT.onTrackClicked(clickedTrack1)
+        // Assert
+        verify(playbackSession).startPlayback(clickedTrack1)
+    }
+
+    @Test
+    fun onTrackClicked_secondTime_startsPlayingSecondTrack() {
+        // Arrange
+        // Act
+        SUT.onTrackClicked(clickedTrack1)
+        SUT.onTrackClicked(clickedTrack2)
+        // Assert
+        verify(playbackSession, times(2)).startPlayback(MockitoHelper.anyObject())
+        verify(playbackSession).startPlayback(clickedTrack1)
+        verify(playbackSession).startPlayback(clickedTrack2)
+    }
+
+    @Test
+    fun onTracksFetched_viewIsUpdated() {
+        // Arrange
+        // Act
+        SUT.onTracksFetched(fetchedTracksList)
+        // Assert
+        verify(viewMvc).bindTracks(fetchedTracksList)
+    }
     // endregion tests
 
     // region helper methods
-
     // endregion helper methods
 
     // region helper classes
-    class NavigationHelperTd : NavigationHelper {
-        override fun navigateTo(destination: Int) {
-            TODO("Not yet implemented")
-        }
-
-        override fun bindNavController(navController: NavController) {
-            TODO("Not yet implemented")
-        }
-
-        override fun toDetails(track: Track, extras: FragmentNavigator.Extras) {
-            TODO("Not yet implemented")
-        }
-
-        override fun toPlayer(track: Track) {
-            TODO("Not yet implemented")
-        }
-
-        override fun toSearch() {
-            TODO("Not yet implemented")
-        }
-
-        override fun back() {
-            TODO("Not yet implemented")
-        }
-
-    }
     // endregion helper classes
 }
