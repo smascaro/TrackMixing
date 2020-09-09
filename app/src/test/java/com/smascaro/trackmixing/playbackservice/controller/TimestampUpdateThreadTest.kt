@@ -51,7 +51,6 @@ class TimestampUpdateThreadTest {
         mainThreadSurrogate.close()
     }
 
-
     // region tests
     @Test
     fun start_threadIsRunningAndTimestampEventIsPosted() = runBlocking {
@@ -70,22 +69,27 @@ class TimestampUpdateThreadTest {
         // Arrange
         // Act
         SUT.start()
-        delay(2000)
-        val eventsPostedBeforeCancel = eventBusTd.eventsPostedCount
         SUT.cancel()
-        delay(2000)
         // Assert
-        val eventsPostedAfterCancel = eventBusTd.eventsPostedCount
-        Assert.assertEquals(eventsPostedBeforeCancel, eventsPostedAfterCancel)
+        //delay for 2 seconds as a coroutine does not get cancelled immediately and
+        //an event could be sent between calling cancel() and actually stopping
+        delay(2000)
+        val eventsPostedAfter2secondsFromCancel = eventBusTd.eventsPostedCount
+        delay(2000)
+        val eventsPostedAfter4secondsFromCancel = eventBusTd.eventsPostedCount
+        Assert.assertEquals(
+            eventsPostedAfter2secondsFromCancel,
+            eventsPostedAfter4secondsFromCancel
+        )
     }
     // endregion tests
 
     // region helper methods
-    fun mockPlaybackHelperGetTrack() {
+    private fun mockPlaybackHelperGetTrack() {
         `when`(playbackHelper.getTrack()).thenReturn(playingtrack)
     }
 
-    fun mockPlaybackHelperGetTimestampMillis() {
+    private fun mockPlaybackHelperGetTimestampMillis() {
         `when`(playbackHelper.getTimestampMillis()).thenReturn(playingTrackTimestampMillis)
     }
     // endregion helper methods
