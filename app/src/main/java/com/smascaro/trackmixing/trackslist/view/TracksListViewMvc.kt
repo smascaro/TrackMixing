@@ -8,14 +8,8 @@ interface TracksListViewMvc :
     ObservableViewMvc<TracksListViewMvc.Listener> {
     interface Listener {
         fun onTrackClicked(track: Track)
-        fun onCurrentDataSourceRequest(dataSource: TracksDataSource)
         fun onSearchNavigationButtonClicked()
     }
 
-    enum class TracksDataSource {
-        SERVER, DATABASE
-    }
-
     fun bindTracks(tracks: List<Track>)
-    fun getCurrentDataSource(): TracksDataSource
 }
