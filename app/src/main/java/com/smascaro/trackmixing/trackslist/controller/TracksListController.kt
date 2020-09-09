@@ -9,6 +9,8 @@ import com.smascaro.trackmixing.player.business.DownloadTrackUseCase
 import com.smascaro.trackmixing.trackslist.business.FetchAvailableTracksUseCase
 import com.smascaro.trackmixing.trackslist.business.FetchDownloadedTracks
 import com.smascaro.trackmixing.trackslist.view.TracksListViewMvc
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
@@ -31,7 +33,9 @@ class TracksListController @Inject constructor(
     }
 
     fun loadTracks() {
-        mFetchDownloadedTracks.fetchTracksAndNotify(FetchDownloadedTracks.Sort.ALPHABETICALLY_ASC)
+        GlobalScope.launch {
+            mFetchDownloadedTracks.fetchTracksAndNotify(FetchDownloadedTracks.Sort.ALPHABETICALLY_ASC)
+        }
     }
 
     fun onStart() {

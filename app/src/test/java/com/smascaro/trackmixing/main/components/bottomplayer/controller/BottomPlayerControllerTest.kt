@@ -6,7 +6,7 @@ import androidx.navigation.fragment.FragmentNavigator
 import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepository
 import com.smascaro.trackmixing.common.data.model.DownloadEntity
 import com.smascaro.trackmixing.common.data.model.Track
-import com.smascaro.trackmixing.common.models.DOWNLOAD_ENTITY_TITLE
+import com.smascaro.trackmixing.common.models.DOWNLOAD_ENTITY_1_TITLE
 import com.smascaro.trackmixing.common.models.TRACK_VIDEO_KEY
 import com.smascaro.trackmixing.common.models.TestModels
 import com.smascaro.trackmixing.common.testdoubles.EventBusTd
@@ -178,7 +178,7 @@ class BottomPlayerControllerTest {
         // Assert
         assertTrue(viewMvc.isPlayerBarShown)
         assertTrue(viewMvc.dataInPlayerBar?.state is PlaybackStateManager.PlaybackState.Playing)
-        assertEquals(DOWNLOAD_ENTITY_TITLE, viewMvc.dataInPlayerBar?.title)
+        assertEquals(DOWNLOAD_ENTITY_1_TITLE, viewMvc.dataInPlayerBar?.title)
     }
 
     @Test
@@ -200,7 +200,7 @@ class BottomPlayerControllerTest {
         // Assert
         assertTrue(viewMvc.isPlayerBarShown)
         assertTrue(viewMvc.dataInPlayerBar?.state is PlaybackStateManager.PlaybackState.Paused)
-        assertEquals(DOWNLOAD_ENTITY_TITLE, viewMvc.dataInPlayerBar?.title)
+        assertEquals(DOWNLOAD_ENTITY_1_TITLE, viewMvc.dataInPlayerBar?.title)
     }
 
     @Test
