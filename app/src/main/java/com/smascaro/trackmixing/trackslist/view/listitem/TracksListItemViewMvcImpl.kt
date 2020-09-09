@@ -7,16 +7,12 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.data.model.Track
-import com.smascaro.trackmixing.common.utils.ResourcesWrapper
 import com.smascaro.trackmixing.common.utils.TimeHelper
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
-import com.smascaro.trackmixing.playbackservice.utils.PlaybackSession
 import javax.inject.Inject
 
 class TracksListItemViewMvcImpl @Inject constructor(
-    val glide: RequestManager,
-    private val playbackSession: PlaybackSession,
-    resourcesWrapper: ResourcesWrapper
+    val glide: RequestManager
 ) :
     BaseObservableViewMvc<TracksListItemViewMvc.Listener>(),
     TracksListItemViewMvc {
@@ -46,7 +42,9 @@ class TracksListItemViewMvcImpl @Inject constructor(
 
     private fun initializeListeners() {
         getRootView().setOnClickListener {
-            playbackSession.startPlayback(mTrack)
+            getListeners().forEach {
+                it.onTrackClicked(mTrack)
+            }
         }
 
         getRootView().setOnLongClickListener {
