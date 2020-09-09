@@ -3,7 +3,6 @@ package com.smascaro.trackmixing.trackslist.view
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.card.MaterialCardView
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.utils.DaggerViewMvcFactory
@@ -17,10 +16,7 @@ class TracksListAdapter @Inject constructor(
     private val viewMvcFactory: DaggerViewMvcFactory
 ) : RecyclerView.Adapter<TracksListAdapter.ViewHolder>(), TracksListItemViewMvc.Listener {
     interface Listener {
-        fun onTrackClicked(
-            track: Track,
-            card: MaterialCardView
-        )
+        fun onTrackClicked(track: Track)
     }
 
     class ViewHolder(val mViewMvc: TracksListItemViewMvc) :
@@ -62,8 +58,8 @@ class TracksListAdapter @Inject constructor(
         holder.mViewMvc.bindPosition(holder.adapterPosition)
     }
 
-    override fun onTrackClicked(track: Track, card: MaterialCardView) {
-        listener?.onTrackClicked(track, card)
+    override fun onTrackClicked(track: Track) {
+        listener?.onTrackClicked(track)
     }
 
     override fun onExpandOrCollapseDetailsRequest(

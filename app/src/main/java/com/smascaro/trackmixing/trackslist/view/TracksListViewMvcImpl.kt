@@ -1,14 +1,10 @@
 package com.smascaro.trackmixing.trackslist.view
 
 import android.view.View
-import android.widget.ImageView
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
-import com.google.android.material.card.MaterialCardView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.textview.MaterialTextView
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
@@ -21,9 +17,6 @@ class TracksListViewMvcImpl @Inject constructor(
     TracksListViewMvc {
 
     private lateinit var mRecyclerViewTracks: RecyclerView
-
-    private var currentDataSource: TracksListViewMvc.TracksDataSource =
-        TracksListViewMvc.TracksDataSource.DATABASE
 
     override fun bindRootView(rootView: View?) {
         super.bindRootView(rootView)
@@ -39,13 +32,6 @@ class TracksListViewMvcImpl @Inject constructor(
         mRecyclerViewTracks.adapter = this.tracksListAdapter
         val fab = findViewById<FloatingActionButton>(R.id.fabTempMode)
         fab.setOnClickListener {
-//            currentDataSource = when (currentDataSource) {
-//                TracksListViewMvc.TracksDataSource.DATABASE -> TracksListViewMvc.TracksDataSource.SERVER
-//                TracksListViewMvc.TracksDataSource.SERVER -> TracksListViewMvc.TracksDataSource.DATABASE
-//            }
-//            getListeners().forEach {
-//                it.onCurrentDataSourceRequest(currentDataSource)
-//            }
             getListeners().forEach {
                 it.onSearchNavigationButtonClicked()
             }
@@ -57,20 +43,7 @@ class TracksListViewMvcImpl @Inject constructor(
         this.tracksListAdapter.bindTracks(tracks)
     }
 
-    override fun getCurrentDataSource(): TracksListViewMvc.TracksDataSource {
-        return currentDataSource
-    }
-
-    override fun onTrackClicked(
-        track: Track,
-        card: MaterialCardView
-    ) {
-        val title = card.findViewById<MaterialTextView>(R.id.tv_item_track_title)
-        val imageView = card.findViewById<ImageView>(R.id.iv_item_track_thumbnail)
-        val extras = FragmentNavigatorExtras(
-            card to track.videoKey,
-            title to track.title
-        )
+    override fun onTrackClicked(track: Track) {
         getListeners().forEach {
             it.onTrackClicked(track)
         }

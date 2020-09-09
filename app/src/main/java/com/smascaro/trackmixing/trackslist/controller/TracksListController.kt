@@ -15,18 +15,12 @@ import javax.inject.Inject
 
 
 class TracksListController @Inject constructor(
-    private val mFetchAvailableTracksUseCase: FetchAvailableTracksUseCase,
-    private val mDownloadTrackUseCase: DownloadTrackUseCase,
     private val mFetchDownloadedTracks: FetchDownloadedTracks,
     navigationHelper: NavigationHelper
 ) : BaseNavigatorController<TracksListViewMvc>(navigationHelper),
     TracksListViewMvc.Listener,
     FetchAvailableTracksUseCase.Listener,
     DownloadTrackUseCase.Listener, FetchDownloadedTracks.Listener {
-
-    override fun onCurrentDataSourceRequest(dataSource: TracksListViewMvc.TracksDataSource) {
-        loadTracksFrom(dataSource)
-    }
 
     override fun onSearchNavigationButtonClicked() {
         navigateToSearch()
@@ -36,27 +30,18 @@ class TracksListController @Inject constructor(
         navigationHelper.toSearch()
     }
 
-    fun loadTracksFrom(dataSource: TracksListViewMvc.TracksDataSource) {
-        if (dataSource == TracksListViewMvc.TracksDataSource.DATABASE) {
-            mFetchDownloadedTracks.fetchTracksAndNotify(FetchDownloadedTracks.Sort.ALPHABETICALLY_ASC)
-        } else {
-            mFetchAvailableTracksUseCase.fetchAvailableTracksAndNotify()
-        }
-
+    fun loadTracks() {
+        mFetchDownloadedTracks.fetchTracksAndNotify(FetchDownloadedTracks.Sort.ALPHABETICALLY_ASC)
     }
 
     fun onStart() {
         viewMvc.registerListener(this)
-        mFetchAvailableTracksUseCase.registerListener(this)
-        mDownloadTrackUseCase.registerListener(this)
         mFetchDownloadedTracks.registerListener(this)
-        loadTracksFrom(viewMvc.getCurrentDataSource())
+        loadTracks()
     }
 
     fun onStop() {
         viewMvc.unregisterListener(this)
-        mFetchAvailableTracksUseCase.unregisterListener(this)
-        mDownloadTrackUseCase.unregisterListener(this)
         mFetchDownloadedTracks.unregisterListener(this)
     }
 
@@ -87,7 +72,6 @@ class TracksListController @Inject constructor(
                 Timber.d("File: ${it?.absoluteFile}, size: ${it.length() / 1000}KB (${it.length() / 1000000}MB)")
             }
         }
-//        viewMvc.navigateToPlayer(track)
         navigateToPlayer(track)
     }
 
