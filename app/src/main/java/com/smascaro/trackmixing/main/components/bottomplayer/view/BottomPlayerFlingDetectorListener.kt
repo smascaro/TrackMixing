@@ -37,6 +37,3 @@ class BottomPlayerFlingDetectorListener : GestureDetector.SimpleOnGestureListene
         return fling != FlingMode.NONE
     }
 }
-
-class MyGestureDetector(context: Context, gestureListener: SimpleOnGestureListener) :
-    GestureDetector(context, gestureListener)
