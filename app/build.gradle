@@ -86,6 +86,9 @@ dependencies {
     //EventBus
     implementation "org.greenrobot:eventbus:3.2.0"
 
+    //Palette
+    implementation 'androidx.palette:palette:1.0.0'
+
     // Testing dependencies
     testImplementation 'junit:junit:4.13'
     testImplementation 'org.mockito:mockito-core:3.5.10'

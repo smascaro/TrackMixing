@@ -2,6 +2,7 @@ package com.smascaro.trackmixing.player.view
 
 import android.view.View
 import android.widget.SeekBar
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.textview.MaterialTextView
 import com.smascaro.trackmixing.R
@@ -28,6 +29,7 @@ class TracksPlayerViewMvcImpl @Inject constructor() :
     private lateinit var currentTimestampTextView: MaterialTextView
     private lateinit var totalLengthTextView: MaterialTextView
     private lateinit var songProgressSeekbar: SeekBar
+    private lateinit var containerLayout: ConstraintLayout
 
     override fun bindRootView(rootView: View?) {
         super.bindRootView(rootView)
@@ -45,6 +47,7 @@ class TracksPlayerViewMvcImpl @Inject constructor() :
         currentTimestampTextView = findViewById(R.id.tv_track_player_current_timestamp)
         totalLengthTextView = findViewById(R.id.tv_track_player_length)
         songProgressSeekbar = findViewById(R.id.sb_track_player_timestamp)
+        containerLayout = findViewById(R.id.layout_track_player_container)
         initializeListeners()
     }
 
@@ -121,6 +124,10 @@ class TracksPlayerViewMvcImpl @Inject constructor() :
         totalLengthTextView.text =
             transformSecondsToTimeRepresentation(lengthSeconds)
         songProgressSeekbar.max = lengthSeconds
+    }
+
+    override fun bindBackgroundColor(color: Int) {
+        containerLayout.setBackgroundColor(color)
     }
 
     override fun updateTimestamp(timestamp: Int) {

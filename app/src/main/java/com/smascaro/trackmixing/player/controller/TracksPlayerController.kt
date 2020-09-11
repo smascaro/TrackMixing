@@ -1,5 +1,13 @@
 package com.smascaro.trackmixing.player.controller
 
+import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.drawable.Drawable
+import androidx.palette.graphics.Palette
+import com.bumptech.glide.RequestManager
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.smascaro.trackmixing.common.controller.BaseController
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.error.NoLoadedTrackException
@@ -8,13 +16,17 @@ import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
 import com.smascaro.trackmixing.playbackservice.utils.PlaybackSession
 import com.smascaro.trackmixing.player.view.TracksPlayerViewMvc
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import javax.inject.Inject
 
 class TracksPlayerController @Inject constructor(
-    private val playbackSession: PlaybackSession
+    private val playbackSession: PlaybackSession,
+    private val glide: RequestManager
 ) :
     BaseController<TracksPlayerViewMvc>(),
     TracksPlayerViewMvc.Listener {
@@ -46,6 +58,32 @@ class TracksPlayerController @Inject constructor(
         initializeActionButton()
         viewMvc.registerListener(this)
         EventBus.getDefault().register(this)
+        CoroutineScope(Dispatchers.Main).launch {
+            initializeBackgroundColor()
+        }
+    }
+
+    private fun initializeBackgroundColor() {
+        glide
+            .asBitmap()
+            .load(mTrack.thumbnailUrl)
+            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+            .into(object : CustomTarget<Bitmap>() {
+                override fun onLoadCleared(placeholder: Drawable?) {
+                }
+
+                override fun onResourceReady(
+                    resource: Bitmap,
+                    transition: Transition<in Bitmap>?
+                ) {
+                    Palette.Builder(resource).generate {
+                        val color = it?.getDominantColor(Color.BLACK) ?: Color.BLACK
+                        viewMvc.bindBackgroundColor(color)
+                    }
+                }
+
+            })
+
     }
 
     private fun initializeActionButton() {

@@ -20,5 +20,6 @@ interface TracksPlayerViewMvc :
     fun onDestroy()
     fun bindVolumes(volumes: TrackVolumeBundle)
     fun bindTrackDuration(lengthSeconds: Int)
+    fun bindBackgroundColor(color: Int)
     fun updateTimestamp(timestamp: Int)
 }
