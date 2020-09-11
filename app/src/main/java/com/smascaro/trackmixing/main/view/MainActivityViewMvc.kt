@@ -6,6 +6,7 @@ interface MainActivityViewMvc :
     ObservableViewMvc<MainActivityViewMvc.Listener> {
     interface Listener {
         fun onToolbarBackButtonPressed()
+        fun onSettingsMenuButtonClicked()
     }
 
     fun showMessage(text: String)
