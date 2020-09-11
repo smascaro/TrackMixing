@@ -8,7 +8,6 @@ import android.view.animation.Animation
 import android.view.animation.AnimationSet
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
-import com.bumptech.glide.RequestManager
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textview.MaterialTextView
 import com.smascaro.trackmixing.R
@@ -24,9 +23,8 @@ import com.smascaro.trackmixing.playbackservice.MixPlayerServiceChecker
 import javax.inject.Inject
 
 class BottomPlayerViewMvcImpl @Inject constructor(
-    private val glide: RequestManager,
-    private val resources: ResourcesWrapper,
-    private val serviceChecker: MixPlayerServiceChecker
+    private val serviceChecker: MixPlayerServiceChecker,
+    resources: ResourcesWrapper
 ) :
     BaseObservableViewMvc<BottomPlayerViewMvc.Listener>(),
     BottomPlayerViewMvc,
