@@ -11,11 +11,11 @@ class ISO8601Converter {
 
         private fun parse(duration: String): Long {
             if (!duration.startsWith("P")) {
-                throw IllegalArgumentException("Duration in ISO8601 format must start with PT")
+                throw IllegalArgumentException("Duration in ISO8601 format must start with PT: $duration")
             }
             var derivedDuration = duration.substring(1)
             if (!derivedDuration.startsWith("T")) {
-                throw IllegalArgumentException("Duration in ISO8601 format must start with PT")
+                throw IllegalArgumentException("Duration in ISO8601 format must start with PT: $derivedDuration")
             }
             derivedDuration = derivedDuration.substring(1)
             return parseDurationTime(derivedDuration)
