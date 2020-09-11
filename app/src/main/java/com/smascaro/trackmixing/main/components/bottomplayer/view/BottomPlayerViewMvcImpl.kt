@@ -1,13 +1,13 @@
 package com.smascaro.trackmixing.main.components.bottomplayer.view
 
-//import com.smascaro.trackmixing.common.di.PlaybackSharedPreferences
 import android.content.SharedPreferences
 import android.view.GestureDetector
 import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.Animation
+import android.view.animation.AnimationSet
+import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
-import android.widget.Toast
 import com.bumptech.glide.RequestManager
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textview.MaterialTextView
@@ -35,7 +35,6 @@ class BottomPlayerViewMvcImpl @Inject constructor(
     private lateinit var bottomBar: MaterialCardView
     private lateinit var bottomBarTextView: MaterialTextView
 
-    //    private lateinit var bottomBarBackgroundImageView: ImageView
     private lateinit var bottomBarActionButton: ImageView
     private lateinit var timestampProgressIndicatorView: View
 
@@ -116,10 +115,6 @@ class BottomPlayerViewMvcImpl @Inject constructor(
         }
     }
 
-    private fun showToast(message: String) {
-        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show()
-    }
-
     private fun setupSharedPreferences() {
         sharedPreferences =
             SharedPreferencesFactory.getPlaybackSharedPreferencesFactory(getContext()!!)
@@ -145,36 +140,58 @@ class BottomPlayerViewMvcImpl @Inject constructor(
     private fun shouldReloadBottomBar(data: BottomPlayerData) =
         !isBottomBarShown || currentShownData?.title != data.title || currentShownData?.thumbnailUrl != data.thumbnailUrl
 
-
     override fun hidePlayerBar(mode: HideBarMode) {
         if (isBottomBarShown) {
-            val animation = when (mode) {
-                is HideBarMode.Vertical -> getVerticalAnimation()
-                is HideBarMode.Sideway -> getHorizontalAnimation()
+            when (mode) {
+                is HideBarMode.Vertical -> renderVerticalAnimation()
+                is HideBarMode.Sideway -> renderHorizontalAnimation()
             }
-            bottomBar.startAnimation(animation)
-            resetBottomBarDefaultPosition()
-            bottomBar.visibility = View.INVISIBLE
-            isBottomBarShown = false
         }
     }
 
     private fun resetBottomBarDefaultPosition() {
         bottomBar.x = 0f
         bottomBar.layoutParams.height = bottomBarHiddenHeight.toInt()
+        bottomBar.alpha = 1f
         bottomBar.requestLayout()
     }
 
-    private fun getHorizontalAnimation(): Animation {
-        return SwipeRightAnimation(bottomBar, getRootView()).apply {
-            duration = 150
-        }
-    }
-
-    private fun getVerticalAnimation(): Animation {
-        return ResizeAnimation(bottomBar, bottomBarHiddenHeight.toInt()).apply {
+    private fun renderHorizontalAnimation() {
+        val animationSet = AnimationSet(true)
+        val swipeAnimation = SwipeRightAnimation(bottomBar, getRootView()).apply {
             duration = outAnimationDuration
         }
+        val resizeDownAnimation = ResizeAnimation(bottomBar, bottomBarHiddenHeight.toInt()).apply {
+            duration = outAnimationDuration
+            startOffset = outAnimationDuration
+            interpolator = DecelerateInterpolator()
+        }
+        animationSet.addAnimation(swipeAnimation)
+        animationSet.addAnimation(resizeDownAnimation)
+        animationSet.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationRepeat(animation: Animation?) {}
+
+            override fun onAnimationEnd(animation: Animation?) {
+                makeBottomBarInvisible()
+            }
+
+            override fun onAnimationStart(animation: Animation?) {}
+        })
+        bottomBar.startAnimation(animationSet)
+    }
+
+    private fun renderVerticalAnimation() {
+        val animation = ResizeAnimation(bottomBar, bottomBarHiddenHeight.toInt()).apply {
+            duration = outAnimationDuration
+            interpolator = DecelerateInterpolator()
+        }
+        bottomBar.startAnimation(animation)
+        makeBottomBarInvisible()
+    }
+
+    private fun makeBottomBarInvisible() {
+        bottomBar.visibility = View.INVISIBLE
+        isBottomBarShown = false
     }
 
     override fun showPlayButton() {
@@ -184,7 +201,6 @@ class BottomPlayerViewMvcImpl @Inject constructor(
     override fun showPauseButton() {
         bottomBarActionButton.setImageResource(R.drawable.ic_pause)
     }
-
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         if (key != null && key == SHARED_PREFERENCES_PLAYBACK_SONG_PLAYING || key == SHARED_PREFERENCES_PLAYBACK_IS_PLAYING) {

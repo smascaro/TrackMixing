@@ -14,6 +14,7 @@ class SwipeRightAnimation(private val view: View, private val rootView: View) : 
 
     override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
         view.x = (initialX + deltaX * interpolatedTime)
+        view.alpha = 1 - interpolatedTime
         view.requestLayout()
     }
 
