@@ -10,6 +10,8 @@ interface BottomPlayerViewMvc :
         fun onActionButtonClicked()
         fun onPlayerStateChanged()
         fun onServiceRunningCheck(running: Boolean)
+        fun onSwipeUp()
+        fun onSwipeRight()
     }
 
     fun onCreate()

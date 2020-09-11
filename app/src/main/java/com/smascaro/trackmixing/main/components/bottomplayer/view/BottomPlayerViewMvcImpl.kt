@@ -2,9 +2,11 @@ package com.smascaro.trackmixing.main.components.bottomplayer.view
 
 //import com.smascaro.trackmixing.common.di.PlaybackSharedPreferences
 import android.content.SharedPreferences
+import android.view.GestureDetector
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
 import com.bumptech.glide.RequestManager
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textview.MaterialTextView
@@ -69,8 +71,6 @@ class BottomPlayerViewMvcImpl @Inject constructor(
             .inflate(R.layout.layout_actions_bottom, bottomBarWrapper, false)
         bottomBar = bottomBarWrapper.findViewById(R.id.layout_player_actions_bottom)
         bottomBarTextView = bottomBarWrapper.findViewById(R.id.tv_track_title_player_bottom)
-//        bottomBarBackgroundImageView =
-//            bottomBarWrapper.findViewById(R.id.iv_background_player_bottom)
         bottomBarActionButton = bottomBarWrapper.findViewById(R.id.iv_action_button_player_bottom)
         timestampProgressIndicatorView =
             bottomBarWrapper.findViewById(R.id.v_bottom_player_progress_indicator)
@@ -84,7 +84,36 @@ class BottomPlayerViewMvcImpl @Inject constructor(
                 it.onLayoutClick()
             }
         }
+        val gestureListener = BottomPlayerFlingDetectorListener()
+        gestureListener.setOnFlingAction {
+            when (it) {
+                BottomPlayerFlingDetectorListener.FlingMode.LEFT_TO_RIGHT -> handleSwipeOut()
+                BottomPlayerFlingDetectorListener.FlingMode.BOTTOM_TO_TOP -> handleBottomToTopSwipe()
+                BottomPlayerFlingDetectorListener.FlingMode.NONE -> null
+            }
+        }
+        val gestureDetector = GestureDetector(getContext(), gestureListener)
+        bottomBar.setOnTouchListener { v, event ->
+            gestureDetector.onTouchEvent(event)
+            return@setOnTouchListener true
+        }
         setupSharedPreferences()
+    }
+
+    private fun handleBottomToTopSwipe() {
+        getListeners().forEach {
+            it.onSwipeUp()
+        }
+    }
+
+    private fun handleSwipeOut() {
+        getListeners().forEach {
+            it.onSwipeRight()
+        }
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show()
     }
 
     private fun setupSharedPreferences() {
