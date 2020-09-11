@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.view.GestureDetector
 import android.view.LayoutInflater
 import android.view.View
+import android.view.animation.Animation
 import android.widget.ImageView
 import android.widget.Toast
 import com.bumptech.glide.RequestManager
@@ -18,6 +19,7 @@ import com.smascaro.trackmixing.common.utils.SharedPreferencesFactory
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
 import com.smascaro.trackmixing.main.components.bottomplayer.model.BottomPlayerData
 import com.smascaro.trackmixing.main.components.progress.view.ResizeAnimation
+import com.smascaro.trackmixing.main.components.progress.view.SwipeRightAnimation
 import com.smascaro.trackmixing.playbackservice.MixPlayerServiceChecker
 import javax.inject.Inject
 
@@ -124,6 +126,7 @@ class BottomPlayerViewMvcImpl @Inject constructor(
 
     override fun showPlayerBar(data: BottomPlayerData) {
         if (shouldReloadBottomBar(data)) {
+            resetBottomBarDefaultPosition()
             bottomBar.visibility = View.VISIBLE
             bottomBarTextView.text = data.title
             renderBottomBarBackground(data.thumbnailUrl)
@@ -147,14 +150,34 @@ class BottomPlayerViewMvcImpl @Inject constructor(
 //            .into(BitmapImageViewTarget(bottomBarBackgroundImageView))
     }
 
-    override fun hidePlayerBar() {
+    override fun hidePlayerBar(mode: HideBarMode) {
         if (isBottomBarShown) {
-            val animation = ResizeAnimation(bottomBar, bottomBarHiddenHeight.toInt()).apply {
-                duration = outAnimationDuration
+            val animation = when (mode) {
+                is HideBarMode.Vertical -> getVerticalAnimation()
+                is HideBarMode.Sideway -> getHorizontalAnimation()
             }
             bottomBar.startAnimation(animation)
+            resetBottomBarDefaultPosition()
             bottomBar.visibility = View.INVISIBLE
             isBottomBarShown = false
+        }
+    }
+
+    private fun resetBottomBarDefaultPosition() {
+        bottomBar.x = 0f
+        bottomBar.layoutParams.height = bottomBarHiddenHeight.toInt()
+        bottomBar.requestLayout()
+    }
+
+    private fun getHorizontalAnimation(): Animation {
+        return SwipeRightAnimation(bottomBar, getRootView()).apply {
+            duration = 150
+        }
+    }
+
+    private fun getVerticalAnimation(): Animation {
+        return ResizeAnimation(bottomBar, bottomBarHiddenHeight.toInt()).apply {
+            duration = outAnimationDuration
         }
     }
 

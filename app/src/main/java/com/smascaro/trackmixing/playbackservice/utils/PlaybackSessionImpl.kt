@@ -37,7 +37,7 @@ class PlaybackSessionImpl @Inject constructor(
     }
 
     override fun stopPlayback() {
-//        TODO("Not yet implemented")
+        eventBus.post(PlaybackEvent.StopMasterEvent())
     }
 
     override fun play() {

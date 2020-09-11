@@ -16,7 +16,7 @@ interface BottomPlayerViewMvc :
 
     fun onCreate()
     fun showPlayerBar(data: BottomPlayerData)
-    fun hidePlayerBar()
+    fun hidePlayerBar(mode: HideBarMode)
     fun showPlayButton()
     fun showPauseButton()
     fun updateTimestamp(percentage: Float)

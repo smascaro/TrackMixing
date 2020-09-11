@@ -37,6 +37,7 @@ class MixPlayerServiceController @Inject constructor(
     }
 
     fun stopService() {
+        pauseTimestampThread()
         playbackHelper.finalize()
         getListeners().forEach {
             it.onStopService()
@@ -169,6 +170,12 @@ class MixPlayerServiceController @Inject constructor(
     fun onMessageEvent(pauseMasterEvent: PlaybackEvent.PauseMasterEvent) {
         Timber.d("Event of type PauseMasterEvent received")
         pauseMaster()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(pauseMasterEvent: PlaybackEvent.StopMasterEvent) {
+        Timber.d("Event of type StopMasterEvent received")
+        stopService()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

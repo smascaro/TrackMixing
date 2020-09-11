@@ -8,7 +8,9 @@ import com.smascaro.trackmixing.common.utils.NavigationHelper
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager
 import com.smascaro.trackmixing.main.components.bottomplayer.model.BottomPlayerData
 import com.smascaro.trackmixing.main.components.bottomplayer.view.BottomPlayerViewMvc
+import com.smascaro.trackmixing.main.components.bottomplayer.view.HideBarMode
 import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
+import com.smascaro.trackmixing.playbackservice.utils.PlaybackSession
 import kotlinx.coroutines.runBlocking
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -20,6 +22,7 @@ class BottomPlayerController @Inject constructor(
     private val playbackStateManager: PlaybackStateManager,
     private val tracksRepository: TracksRepository,
     private val eventBus: EventBus,
+    private val playbackSession: PlaybackSession,
     navigationHelper: NavigationHelper
 ) : BaseNavigatorController<BottomPlayerViewMvc>(navigationHelper),
     BottomPlayerViewMvc.Listener {
@@ -48,7 +51,7 @@ class BottomPlayerController @Inject constructor(
                     makeBottomPlayerData()
                 )
             } else if (currentState is PlaybackStateManager.PlaybackState.Stopped) {
-                viewMvc.hidePlayerBar()
+//                viewMvc.hidePlayerBar(HideBarMode.Vertical())
             }
         }
 
@@ -94,6 +97,15 @@ class BottomPlayerController @Inject constructor(
         if (running) {
             updateCurrentPlayingTrack()
         }
+    }
+
+    override fun onSwipeUp() {
+        navigateToPlayer()
+    }
+
+    override fun onSwipeRight() {
+        viewMvc.hidePlayerBar(HideBarMode.Sideway())
+        playbackSession.stopPlayback()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
