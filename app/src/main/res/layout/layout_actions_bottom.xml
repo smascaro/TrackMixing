@@ -3,16 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_player_actions_bottom"
     android:layout_width="match_parent"
-    android:layout_height="1px"
+    android:layout_height="@dimen/actions_bottom_layout_hidden_height"
     android:layout_alignParentBottom="true"
     android:layout_gravity="bottom"
-    android:layout_margin="4dp"
-    app:cardBackgroundColor="@color/cardview_dark_background"
-    android:elevation="8dp"
-    app:cardCornerRadius="8dp"
     android:animateLayoutChanges="true"
+    android:elevation="8dp"
     android:visibility="gone"
-    app:strokeWidth="1dp">
+    app:cardBackgroundColor="@color/colorAccent"
+    app:cardCornerRadius="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -21,11 +19,9 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/v_bottom_player_progress_indicator"
             android:layout_width="400px"
+            android:layout_height="4dp"
+            app:cardBackgroundColor="#ffffff"
             app:contentPadding="0dp"
-            android:layout_height="match_parent"
-            app:cardBackgroundColor="#6603DAC5"
-            app:cardCornerRadius="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -44,11 +40,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="0.8"
-                android:ellipsize="end"
+                android:ellipsize="marquee"
                 android:gravity="center"
-                android:maxLines="1"
                 android:paddingHorizontal="@dimen/actions_bottom_title_padding_horizontal"
+                android:singleLine="true"
                 android:text="Desakato - Nueva religión renenejck dwkdwkd kwdkwkdj jjsksdsl"
+                android:textColor="#000"
                 android:textSize="@dimen/actions_bottom_title_text_size" />
 
             <ImageView

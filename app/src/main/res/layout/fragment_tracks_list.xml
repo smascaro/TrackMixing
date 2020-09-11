@@ -13,7 +13,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:itemCount="6"
+        tools:itemCount="15"
         tools:listitem="@layout/item_track" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

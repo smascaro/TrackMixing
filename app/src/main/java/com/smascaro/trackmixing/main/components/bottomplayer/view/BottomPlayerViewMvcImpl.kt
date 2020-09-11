@@ -76,6 +76,8 @@ class BottomPlayerViewMvcImpl @Inject constructor(
         bottomBarActionButton = bottomBarWrapper.findViewById(R.id.iv_action_button_player_bottom)
         timestampProgressIndicatorView =
             bottomBarWrapper.findViewById(R.id.v_bottom_player_progress_indicator)
+
+        bottomBarTextView.isSelected = true
         bottomBarActionButton.setOnClickListener {
             getListeners().forEach {
                 it.onActionButtonClicked()
@@ -128,8 +130,9 @@ class BottomPlayerViewMvcImpl @Inject constructor(
         if (shouldReloadBottomBar(data)) {
             resetBottomBarDefaultPosition()
             bottomBar.visibility = View.VISIBLE
-            bottomBarTextView.text = data.title
-            renderBottomBarBackground(data.thumbnailUrl)
+            if (bottomBarTextView.text != data.title) {
+                bottomBarTextView.text = data.title
+            }
             val animation = ResizeAnimation(bottomBar, bottomBarVisibleHeight.toInt()).apply {
                 duration = inAnimationDuration
             }
@@ -142,13 +145,6 @@ class BottomPlayerViewMvcImpl @Inject constructor(
     private fun shouldReloadBottomBar(data: BottomPlayerData) =
         !isBottomBarShown || currentShownData?.title != data.title || currentShownData?.thumbnailUrl != data.thumbnailUrl
 
-    private fun renderBottomBarBackground(imageUrl: String) {
-//        glide
-//            .asBitmap()
-//            .load(imageUrl)
-//            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-//            .into(BitmapImageViewTarget(bottomBarBackgroundImageView))
-    }
 
     override fun hidePlayerBar(mode: HideBarMode) {
         if (isBottomBarShown) {
