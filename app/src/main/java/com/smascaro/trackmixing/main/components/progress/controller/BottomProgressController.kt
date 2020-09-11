@@ -5,6 +5,7 @@ import com.smascaro.trackmixing.common.controller.BaseController
 import com.smascaro.trackmixing.common.utils.ResourcesWrapper
 import com.smascaro.trackmixing.main.components.progress.model.UiProgressEvent
 import com.smascaro.trackmixing.main.components.progress.view.BottomProgressViewMvc
+import com.smascaro.trackmixing.trackslist.model.RefreshListEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -54,6 +55,7 @@ class BottomProgressController @Inject constructor(
     private fun handleProgressFinishedEvent() {
         Timber.d("BottomProgressController - Received ProgressFinished event")
         delayedHideProgress(100, "Finished processing")
+        eventBus.post(RefreshListEvent())
     }
 
     private fun delayedHideProgress(progress: Int, message: String) {

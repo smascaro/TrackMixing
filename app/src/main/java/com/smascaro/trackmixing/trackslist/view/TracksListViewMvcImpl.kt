@@ -43,6 +43,10 @@ class TracksListViewMvcImpl @Inject constructor(
         this.tracksListAdapter.bindTracks(tracks)
     }
 
+    override fun refreshList() {
+        tracksListAdapter.notifyDataSetChanged()
+    }
+
     override fun onTrackClicked(track: Track) {
         getListeners().forEach {
             it.onTrackClicked(track)

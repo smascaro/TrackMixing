@@ -12,4 +12,5 @@ interface TracksListViewMvc :
     }
 
     fun bindTracks(tracks: List<Track>)
+    fun refreshList()
 }

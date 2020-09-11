@@ -46,11 +46,43 @@ class TracksListAdapter @Inject constructor(
 
     private var mTracks = mutableListOf<Track>()
 
+    fun List<Int>.isConsecutive(): Boolean {
+        if (this.size == 0) {
+            return false
+        } else {
+            val previous = this[0]
+            for (i in 1..this.size) {
+                val current = this[i]
+                if (current != previous + 1) {
+                    return false
+                }
+            }
+            return true
+        }
+    }
+
     fun bindTracks(tracks: List<Track>) {
+        val insertedIndexes = findInsertedItems(tracks).sorted()
         mTracks = tracks.toMutableList()
         CoroutineScope(Dispatchers.Main).launch {
-            notifyDataSetChanged()
+            if (insertedIndexes.size == 1) {
+                notifyItemInserted(insertedIndexes.first())
+            } else if (insertedIndexes.isConsecutive()) {
+                notifyItemRangeInserted(insertedIndexes.first(), insertedIndexes.size)
+            } else {
+                notifyDataSetChanged()
+            }
         }
+    }
+
+    private fun findInsertedItems(newTracks: List<Track>): List<Int> {
+        val newIndexes = mutableListOf<Int>()
+        newTracks.forEachIndexed { index, track ->
+            if (!mTracks.any { it.videoKey == track.videoKey }) {
+                newIndexes.add(index)
+            }
+        }
+        return newIndexes
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

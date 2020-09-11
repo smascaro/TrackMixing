@@ -1,6 +1,8 @@
 package com.smascaro.trackmixing.search.model.repository.datasource
 
 import com.smascaro.trackmixing.common.utils.TimeHelper
+import timber.log.Timber
+import kotlin.math.max
 
 class ISO8601Converter {
     companion object {
@@ -22,6 +24,7 @@ class ISO8601Converter {
         }
 
         private fun parseDurationTime(duration: String): Long {
+            Timber.d("Parsing $duration")
             val indexH = duration.indexOfFirst { it == 'H' }
             val indexM = duration.indexOfFirst { it == 'M' }
             val indexS = duration.indexOfFirst { it == 'S' }
@@ -39,11 +42,8 @@ class ISO8601Converter {
                 }
             }
             if (indexS >= 0) {
-                valueS = if (indexM >= 0) {
-                    duration.substring(indexM + 1).takeWhile { it != 'S' }.toInt()
-                } else {
-                    duration.takeWhile { it != 'S' }.toInt()
-                }
+                valueS =
+                    duration.substring(max(indexH, indexM) + 1).takeWhile { it != 'S' }.toInt()
             }
             return ((valueS + 60 * valueM + 3600 * valueH) * 1000).toLong()
         }
