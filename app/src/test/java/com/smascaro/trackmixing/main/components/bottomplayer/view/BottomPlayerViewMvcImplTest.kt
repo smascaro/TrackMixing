@@ -30,7 +30,7 @@ class BottomPlayerViewMvcImplTest {
     @Before
     fun setup() {
         viewMvcListener = BottomPlayerViewMvcListenerImplementator()
-        SUT = BottomPlayerViewMvcImpl(glide, resourcesWrapper, serviceChecker)
+        SUT = BottomPlayerViewMvcImpl(serviceChecker, resourcesWrapper)
     }
 
     // region tests
@@ -110,6 +110,14 @@ class BottomPlayerViewMvcImplTest {
         override fun onServiceRunningCheck(running: Boolean) {
             hasServiceBeenChecked = true
             serviceCheckResult = running
+        }
+
+        override fun onSwipeUp() {
+            TODO("Not yet implemented")
+        }
+
+        override fun onSwipeRight() {
+            TODO("Not yet implemented")
         }
 
     }

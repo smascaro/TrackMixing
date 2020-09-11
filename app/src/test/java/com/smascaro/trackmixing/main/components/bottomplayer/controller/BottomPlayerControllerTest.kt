@@ -14,7 +14,9 @@ import com.smascaro.trackmixing.common.utils.NavigationHelper
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager
 import com.smascaro.trackmixing.main.components.bottomplayer.model.BottomPlayerData
 import com.smascaro.trackmixing.main.components.bottomplayer.view.BottomPlayerViewMvc
+import com.smascaro.trackmixing.main.components.bottomplayer.view.HideBarMode
 import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
+import com.smascaro.trackmixing.playbackservice.utils.PlaybackSession
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
@@ -34,6 +36,7 @@ class BottomPlayerControllerTest {
 
     // region helper fields
     @Mock private lateinit var playbackStateManager: PlaybackStateManager
+    @Mock private lateinit var playbackSession: PlaybackSession
     private lateinit var navigationHelper: NavigationHelperTd
     private lateinit var viewMvc: BottomPlayerViewMvcTd
     private lateinit var eventBus: EventBusTd
@@ -51,6 +54,7 @@ class BottomPlayerControllerTest {
             playbackStateManager,
             tracksRepository,
             eventBus,
+            playbackSession,
             navigationHelper
         )
         SUT.bindViewMvc(viewMvc)
@@ -339,7 +343,7 @@ class BottomPlayerControllerTest {
             totalInteractions++
         }
 
-        override fun hidePlayerBar() {
+        override fun hidePlayerBar(mode: HideBarMode) {
             dataInPlayerBar = null
             isPlayerBarShown = false
             totalInteractions++
