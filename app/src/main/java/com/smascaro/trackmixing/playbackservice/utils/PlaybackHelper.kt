@@ -232,12 +232,18 @@ class PlaybackHelper @Inject constructor() :
 
     override fun onPlayerCompletion(instrument: TrackInstrument) {
         Timber.i("Track $instrument has completed")
-        mCurrentState =
-            State.PAUSED
-        notifyMediaStateChange()
-        getListeners().forEach {
-            it.onSongFinished()
+        if (allTracksCompleted()) {
+            mCurrentState =
+                State.PAUSED
+            notifyMediaStateChange()
+            getListeners().forEach {
+                it.onSongFinished()
+            }
         }
+    }
+
+    private fun allTracksCompleted(): Boolean {
+        return mVocalsState.isCompleted() && mOtherState.isCompleted() && mBassState.isCompleted() && mDrumsState.isCompleted()
     }
 
     override fun onPlayerError(instrument: TrackInstrument, errorMessage: String) {

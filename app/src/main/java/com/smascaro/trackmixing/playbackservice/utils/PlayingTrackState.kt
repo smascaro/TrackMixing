@@ -50,6 +50,7 @@ class PlayingTrackState(
     private var mIsPrepared: Boolean = false
     private lateinit var mPlayer: MediaPlayer
     private var mVolume = maxVolume
+    private var hasTrackCompletedPlaying: Boolean = false
     fun isPlaying(): Boolean {
         return mCurrentMediaState == LogicMediaState.PLAYING
     }
@@ -66,6 +67,7 @@ class PlayingTrackState(
         mPlayer.setOnErrorListener(this)
         mPlayer.setDataSource(fileStream.fd)
         mPlayer.prepareAsync()
+        hasTrackCompletedPlaying = false
     }
 
     fun incrementVolume() {
@@ -105,21 +107,22 @@ class PlayingTrackState(
     fun play() {
         if (mIsPrepared && !mPlayer.isPlaying) {
             mPlayer.start()
-//            mCurrentMediaState = LogicMediaState.PLAYING
         }
     }
 
     fun pause() {
         if (mPlayer.isPlaying) {
             mPlayer.pause()
-//            mCurrentMediaState = LogicMediaState.PAUSED
         }
     }
 
     fun finalize() {
-//        mPlayer.reset()
         mPlayer.release()
         mIsPrepared = false
+    }
+
+    fun isCompleted(): Boolean {
+        return hasTrackCompletedPlaying
     }
 
     private fun updateVolume() {
@@ -142,6 +145,7 @@ class PlayingTrackState(
     }
 
     override fun onCompletion(mp: MediaPlayer?) {
+        hasTrackCompletedPlaying = true
         getListeners().forEach {
             it.onPlayerCompletion(instrument)
         }
