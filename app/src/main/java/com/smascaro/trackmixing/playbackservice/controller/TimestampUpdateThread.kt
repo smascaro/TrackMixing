@@ -32,6 +32,9 @@ class TimestampUpdateThread(
             }
         } catch (e: CancellationException) {
             Timber.e(e)
+        } catch (e: Exception) {
+            Timber.e(e)
+            Timber.w("Stopping thread ${Thread.currentThread().name} due to exception")
         }
         Timber.d("Job got cancelled succesfully!")
     }
