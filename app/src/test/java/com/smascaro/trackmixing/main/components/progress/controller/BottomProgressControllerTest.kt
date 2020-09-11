@@ -1,8 +1,14 @@
 package com.smascaro.trackmixing.main.components.progress.controller
 
+import com.nhaarman.mockitokotlin2.validateMockitoUsage
 import com.smascaro.trackmixing.common.testdoubles.EventBusTd
 import com.smascaro.trackmixing.common.utils.ResourcesWrapper
+import com.smascaro.trackmixing.main.components.progress.model.UiProgressEvent
 import com.smascaro.trackmixing.main.components.progress.view.BottomProgressViewMvc
+import kotlinx.coroutines.*
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -12,18 +18,19 @@ import org.mockito.Mock
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class BottomProgressControllerTest {
     private lateinit var SUT: BottomProgressController
 
     // region constants
-
     // endregion constants
 
     // region helper fields
     @Mock private lateinit var resourcesWrapper: ResourcesWrapper
     @Mock private lateinit var viewMvc: BottomProgressViewMvc
     private lateinit var eventBus: EventBusTd
+    private val mainThreadSurrogate = newSingleThreadContext("UI thread")
     // endregion helper fields
 
     @Before
@@ -31,6 +38,14 @@ class BottomProgressControllerTest {
         eventBus = EventBusTd()
         SUT = BottomProgressController(resourcesWrapper, eventBus)
         SUT.bindViewMvc(viewMvc)
+        Dispatchers.setMain(mainThreadSurrogate)
+    }
+
+    @After
+    fun tearDown() {
+        validateMockitoUsage()
+        Dispatchers.resetMain()
+        mainThreadSurrogate.close()
     }
 
     @Test
@@ -60,6 +75,40 @@ class BottomProgressControllerTest {
         // Assert
         assertTrue(eventBus.isListenerUnregistered)
         assertEquals(SUT, eventBus.unregisteredListener)
+    }
+
+    @Test
+    fun onProgressUpdateEvent_updatesView() = runBlocking {
+        // Arrange
+        val event = UiProgressEvent.ProgressUpdate(50, "Test status")
+        // Act
+        SUT.onMessageEvent(event)
+        // Assert
+        delay(500)
+        verify(viewMvc).showProgressBar()
+        verify(viewMvc).updateProgress(event.progress, event.status)
+    }
+
+    @Test
+    fun onErrorOccurredEvent_updatesView() = runBlocking {
+        // Arrange
+        val event = UiProgressEvent.ErrorOccurred("Some test error message")
+        // Act
+        SUT.onMessageEvent(event)
+        // Assert
+        delay(500)
+        verify(viewMvc).hideProgressBar()
+    }
+
+    @Test
+    fun onProgressFinishedEvent_updatesView() = runBlocking {
+        // Arrange
+        val event = UiProgressEvent.ProgressFinished()
+        // Act
+        SUT.onMessageEvent(event)
+        // Assert
+        delay(500)
+        verify(viewMvc).hideProgressBar()
     }
     // endregion tests
 

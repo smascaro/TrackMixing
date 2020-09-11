@@ -7,13 +7,15 @@ import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 import timber.log.Timber
 
-class TimestampUpdateThread(private val playbackHelper: PlaybackHelper) {
+class TimestampUpdateThread(
+    private val playbackHelper: PlaybackHelper,
+    private val eventBus: EventBus
+) {
     private lateinit var job: Job
     private var currentTimestampSeconds: Int = 0
     private val totalLength = playbackHelper.getTrack().secondsLong
     fun start() {
         job = run()
-
     }
 
     private fun run() = CoroutineScope(Dispatchers.IO).launch {
@@ -25,14 +27,12 @@ class TimestampUpdateThread(private val playbackHelper: PlaybackHelper) {
                     "Sending timestamp ${TimeHelper.fromSeconds(currentTimestampSeconds.toLong())
                         .toStringRepresentation()}"
                 )
-                EventBus.getDefault()
-                    .post(PlaybackEvent.TimestampChanged(currentTimestampSeconds, totalLength))
+                eventBus.post(PlaybackEvent.TimestampChanged(currentTimestampSeconds, totalLength))
                 delay(1 * 1000)
             }
         } catch (e: CancellationException) {
             Timber.e(e)
         }
-
         Timber.d("Job got cancelled succesfully!")
     }
 

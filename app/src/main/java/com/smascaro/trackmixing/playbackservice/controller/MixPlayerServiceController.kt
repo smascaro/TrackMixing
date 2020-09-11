@@ -19,7 +19,8 @@ import kotlin.concurrent.thread
 class MixPlayerServiceController @Inject constructor(
     val playbackHelper: PlaybackHelper,
     @PlayerNotificationHelperImplementation val notificationHelper: NotificationHelper,
-    val playbackStateManager: PlaybackStateManager
+    val playbackStateManager: PlaybackStateManager,
+    private val eventBus: EventBus
 ) : BaseObservable<MixPlayerServiceController.ServiceActionsDelegate>(),
     PlaybackHelper.Listener {
     interface ServiceActionsDelegate {
@@ -31,7 +32,7 @@ class MixPlayerServiceController @Inject constructor(
     private var timestampUpdateThread: TimestampUpdateThread? = null
     fun onCreate() {
         playbackHelper.registerListener(this)
-        EventBus.getDefault().register(this)
+        eventBus.register(this)
         Timber.d("Registered controller to default event bus")
     }
 
@@ -41,7 +42,7 @@ class MixPlayerServiceController @Inject constructor(
             it.onStopService()
         }
         playbackStateManager.setPlayingStateFlag(PlaybackState.Stopped())
-        EventBus.getDefault().unregister(this)
+        eventBus.unregister(this)
         Timber.d("Unregistered controller from default event bus")
     }
 
@@ -103,7 +104,7 @@ class MixPlayerServiceController @Inject constructor(
 
     private fun startTimestampThread() {
         thread {
-            timestampUpdateThread = TimestampUpdateThread(playbackHelper)
+            timestampUpdateThread = TimestampUpdateThread(playbackHelper, eventBus)
             timestampUpdateThread!!.start()
         }
     }
@@ -150,7 +151,7 @@ class MixPlayerServiceController @Inject constructor(
     }
 
     private fun onStart() {
-        EventBus.getDefault().register(this)
+        eventBus.register(this)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
