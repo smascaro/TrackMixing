@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
+import com.google.android.material.button.MaterialButton
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.TestDataBundleInfo
@@ -16,6 +17,8 @@ class SelectTestDataViewMvcImpl @Inject constructor(
     BaseObservableViewMvc<SelectTestDataViewMvc.Listener>(),
     SelectTestDataViewMvc, TestDataListAdapter.Listener {
     private lateinit var recyclerViewTestDataBundleInfo: RecyclerView
+    private lateinit var startDownloadButton: MaterialButton
+
     override fun bindRootView(rootView: View?) {
         super.bindRootView(rootView)
         initialize()
@@ -29,6 +32,13 @@ class SelectTestDataViewMvcImpl @Inject constructor(
         recyclerViewTestDataBundleInfo.setHasFixedSize(true)
         testDataAdapter.setAdapterListener(this)
         recyclerViewTestDataBundleInfo.adapter = testDataAdapter
+
+        startDownloadButton = findViewById(R.id.btn_select_test_data_start_download)
+        startDownloadButton.setOnClickListener {
+            getListeners().forEach {
+                it.onDownloadButtonClicked()
+            }
+        }
     }
 
     override fun bindTracks(tracks: List<TestDataBundleInfo>) {

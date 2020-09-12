@@ -1,5 +1,9 @@
 package com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
 data class TestDataBundleInfo(
     val title: String,
     val author: String,
@@ -9,7 +13,7 @@ data class TestDataBundleInfo(
     val videoKey: String,
     val size: Int,
     var isPresentInDatabase: Boolean = false
-)
+) : Parcelable
 
 fun Double.round(decimals: Int): Double {
     var multiplier = 1.0

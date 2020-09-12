@@ -6,6 +6,8 @@ import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.details.view.TrackDetailsFragmentDirections
 import com.smascaro.trackmixing.search.view.SongSearchFragmentDirections
+import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.TestDataBundleInfo
+import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.view.SelectTestDataFragmentDirections
 import com.smascaro.trackmixing.trackslist.view.TracksListFragmentDirections
 import javax.inject.Inject
 
@@ -68,6 +70,13 @@ class NavigationHelperImpl @Inject constructor() : NavigationHelper {
         if (action != null) {
             mNavController?.navigate(action)
         }
+    }
 
+    override fun toTestDataDownload(data: List<TestDataBundleInfo>) {
+        val action =
+            SelectTestDataFragmentDirections.actionDestinationSelectTestDataToDownloadTestDataFragment(
+                data.toTypedArray()
+            )
+        mNavController?.navigate(action)
     }
 }

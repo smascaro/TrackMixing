@@ -11,5 +11,6 @@ interface SelectTestDataViewMvc : ObservableViewMvc<SelectTestDataViewMvc.Listen
     interface Listener {
         fun onItemSelected(item: TestDataBundleInfo)
         fun onItemUnselected(item: TestDataBundleInfo)
+        fun onDownloadButtonClicked()
     }
 }

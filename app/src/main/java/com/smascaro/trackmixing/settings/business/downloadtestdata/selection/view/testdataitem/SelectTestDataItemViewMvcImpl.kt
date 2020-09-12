@@ -31,10 +31,10 @@ class SelectTestDataItemViewMvcImpl @Inject constructor(private val glide: Reque
         dataAuthorText = findViewById(R.id.tv_item_test_data_selection_author)
         dataSizeText = findViewById(R.id.tv_item_test_data_selection_size)
 
-        initializeListeners()
+        initializeCheckboxListener()
     }
 
-    private fun initializeListeners() {
+    private fun initializeCheckboxListener() {
         checkboxSelectDataToDownload.setOnCheckedChangeListener { buttonView, isChecked ->
             getListeners().forEach {
                 it.onSelectionCheckChanged(data, isChecked)
@@ -42,11 +42,16 @@ class SelectTestDataItemViewMvcImpl @Inject constructor(private val glide: Reque
         }
     }
 
+    private fun removeCheckboxListener() {
+        checkboxSelectDataToDownload.setOnCheckedChangeListener(null)
+    }
+
     override fun bindData(data: TestDataBundleInfo) {
         this.data = data
         dataTitleText.text = data.title
         dataAuthorText.text = data.author
         dataSizeText.text = data.size.asMB
+        removeCheckboxListener()
         if (data.isPresentInDatabase) {
             checkboxSelectDataToDownload.isChecked = true
             checkboxSelectDataToDownload.isEnabled = false
@@ -54,6 +59,7 @@ class SelectTestDataItemViewMvcImpl @Inject constructor(private val glide: Reque
             checkboxSelectDataToDownload.isChecked = false
             checkboxSelectDataToDownload.isEnabled = true
         }
+        initializeCheckboxListener()
     }
 
     override fun bindPosition(position: Int) {

@@ -3,6 +3,7 @@ package com.smascaro.trackmixing.settings.business.downloadtestdata.selection.co
 import com.smascaro.trackmixing.common.controller.BaseNavigatorController
 import com.smascaro.trackmixing.common.data.datasource.repository.DownloadsDao
 import com.smascaro.trackmixing.common.utils.NavigationHelper
+import com.smascaro.trackmixing.player.business.DownloadTrackUseCase
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.TestDataBundleInfo
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.view.SelectTestDataViewMvc
 import com.smascaro.trackmixing.settings.business.downloadtestdata.usecase.DownloadTestDataUseCase
@@ -13,12 +14,14 @@ import javax.inject.Inject
 
 class SelectTestDataController @Inject constructor(
     private val downloadTestDataUseCase: DownloadTestDataUseCase,
+    private val downloadTrackUseCase: DownloadTrackUseCase,
     private val downloadsDao: DownloadsDao,
     p_navigationHelper: NavigationHelper
 ) :
     BaseNavigatorController<SelectTestDataViewMvc>(p_navigationHelper),
     SelectTestDataViewMvc.Listener {
     private var totalDownloadBytes = 0
+    private var tracksToDownload = mutableListOf<TestDataBundleInfo>()
     fun onStart() {
         viewMvc.registerListener(this)
         downloadTestDataUseCase.getTestDataBundleInfo {
@@ -56,10 +59,14 @@ class SelectTestDataController @Inject constructor(
     }
 
     override fun onItemSelected(item: TestDataBundleInfo) {
-        viewMvc.showError("Selected item ${item.title}")
+        tracksToDownload.add(item)
     }
 
     override fun onItemUnselected(item: TestDataBundleInfo) {
-        viewMvc.showError("Unselected item ${item.title}")
+        tracksToDownload.remove(item)
+    }
+
+    override fun onDownloadButtonClicked() {
+        navigationHelper.toTestDataDownload(tracksToDownload)
     }
 }

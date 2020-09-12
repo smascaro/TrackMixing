@@ -16,5 +16,19 @@
     <fragment
         android:id="@+id/destination_select_test_data"
         android:name="com.smascaro.trackmixing.settings.business.downloadtestdata.selection.view.SelectTestDataFragment"
-        android:label="NextStepWithTestDataFragment" />
+        android:label="SelectTestDataFragment">
+        <action
+            android:id="@+id/action_destination_select_test_data_to_downloadTestDataFragment"
+            app:destination="@id/destination_download_test_data"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
+    </fragment>
+    <fragment
+        android:id="@+id/destination_download_test_data"
+        android:name="com.smascaro.trackmixing.settings.business.downloadtestdata.download.view.DownloadTestDataFragment"
+        android:label="DownloadTestDataFragment">
+        <argument
+            android:name="dataToDownload"
+            app:argType="com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.TestDataBundleInfo[]" />
+    </fragment>
 </navigation>
