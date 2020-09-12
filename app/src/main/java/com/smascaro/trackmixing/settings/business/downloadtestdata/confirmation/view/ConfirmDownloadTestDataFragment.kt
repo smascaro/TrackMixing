@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.settings.business.downloadtestdata.view
+package com.smascaro.trackmixing.settings.business.downloadtestdata.confirmation.view
 
 import android.os.Bundle
 import android.view.LayoutInflater

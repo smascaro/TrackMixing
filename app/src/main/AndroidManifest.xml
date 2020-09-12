@@ -41,7 +41,7 @@
         <activity android:name=".player.view.TracksPlayerActivity" />
         <activity android:name=".settings.view.SettingsActivity" />
         <activity
-            android:name="com.smascaro.trackmixing.settings.business.downloadtestdata.view.DownloadTestDataActivity"
+            android:name="com.smascaro.trackmixing.settings.business.downloadtestdata.DownloadTestDataActivity"
             android:theme="@style/Theme.MaterialComponents.Dialog" />
 
         <service android:name=".playbackservice.MixPlayerService" />
