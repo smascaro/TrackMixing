@@ -1,9 +1,9 @@
 package com.smascaro.trackmixing.settings.business.downloadtestdata.usecase
 
 import com.google.gson.Gson
-import com.smascaro.trackmixing.common.data.model.Track
-import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.DownloadTestDataBundleInfoResponseSchema
-import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.toTrackModel
+import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.TestDataBundleInfo
+import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.TestDataBundleInfoResponseSchema
+import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.toModelList
 import com.smascaro.trackmixing.settings.business.downloadtestdata.usecase.data.TestDataApi
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -16,7 +16,7 @@ class DownloadTestDataUseCase @Inject constructor(
     private val testDataApi: TestDataApi
 ) {
     sealed class Result {
-        class Success(val tracks: List<Track>) : Result()
+        class Success(val tracks: List<TestDataBundleInfo>) : Result()
         class Failure(val throwable: Throwable) : Result()
     }
 
@@ -41,9 +41,9 @@ class DownloadTestDataUseCase @Inject constructor(
                         Timber.d(content)
                         val schema = Gson().fromJson(
                             content,
-                            DownloadTestDataBundleInfoResponseSchema::class.java
+                            TestDataBundleInfoResponseSchema::class.java
                         )
-                        val tracksList = schema.files.map { it.toTrackModel() }
+                        val tracksList = schema.toModelList()
                         callback(Result.Success(tracksList))
                     }
                 }

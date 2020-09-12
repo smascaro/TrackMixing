@@ -1,14 +1,14 @@
 package com.smascaro.trackmixing.settings.business.downloadtestdata.selection.view
 
 import android.widget.Toast
-import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
+import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.TestDataBundleInfo
 import javax.inject.Inject
 
 class SelectTestDataViewMvcImpl @Inject constructor() :
     BaseObservableViewMvc<SelectTestDataViewMvc.Listener>(),
     SelectTestDataViewMvc {
-    override fun bindTracks(tracks: List<Track>) {
+    override fun bindTracks(tracks: List<TestDataBundleInfo>) {
         Toast.makeText(getContext(), "Binding ${tracks.size} tracks", Toast.LENGTH_SHORT).show()
     }
 
