@@ -63,4 +63,9 @@ class SelectTestDataFragment : Fragment() {
         super.onStart()
         controller.onStart()
     }
+
+    override fun onStop() {
+        super.onStop()
+        controller.onStop()
+    }
 }

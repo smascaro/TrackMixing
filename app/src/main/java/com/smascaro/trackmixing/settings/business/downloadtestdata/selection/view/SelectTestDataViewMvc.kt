@@ -5,7 +5,11 @@ import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.mod
 
 interface SelectTestDataViewMvc : ObservableViewMvc<SelectTestDataViewMvc.Listener> {
     fun bindTracks(tracks: List<TestDataBundleInfo>)
+    fun bindAlreadyDownloadedData(downloadedTestData: List<TestDataBundleInfo>)
     fun showError(message: String?)
 
-    interface Listener
+    interface Listener {
+        fun onItemSelected(item: TestDataBundleInfo)
+        fun onItemUnselected(item: TestDataBundleInfo)
+    }
 }

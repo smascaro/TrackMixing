@@ -3,10 +3,39 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.google.android.material.textview.MaterialTextView
+    <LinearLayout
+        android:id="@+id/layout_select_test_data_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:orientation="horizontal">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_select_test_data_download_size_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Download size:" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_select_test_data_total_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="64.2MB" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/rv_select_test_data_tracks"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_select_test_data_header"
+        tools:itemCount="6"
+        tools:listitem="@layout/item_test_data_selection" />
+
+    <com.google.android.material.button.MaterialButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/rv_select_test_data_tracks"
         android:layout_centerHorizontal="true"
-        android:text="This is step 2"
-        android:textAppearance="@style/AppTheme.TM.ActionBar.TitleTextStyle" />
+        android:text="Download" />
 </RelativeLayout>

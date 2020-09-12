@@ -8,7 +8,7 @@
         android:id="@+id/nav_host_fragment_download_test_data"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         app:defaultNavHost="true"
         app:navGraph="@navigation/download_test_data_navigation" />
 </RelativeLayout>

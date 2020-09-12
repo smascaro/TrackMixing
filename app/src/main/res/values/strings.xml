@@ -9,4 +9,5 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="item_track_separator_character">·</string>
+    <string name="item_test_data_selection_separator_character">·</string>
 </resources>
