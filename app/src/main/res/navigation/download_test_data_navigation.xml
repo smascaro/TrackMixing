@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/download_test_data_navigation"
+    app:startDestination="@id/confirmDownloadTestDataFragment">
+    <fragment
+        android:id="@+id/confirmDownloadTestDataFragment"
+        android:name="com.smascaro.trackmixing.settings.business.downloadtestdata.view.ConfirmDownloadTestDataFragment"
+        android:label="ConfirmDownloadTestDataFragment">
+        <action
+            android:id="@+id/action_confirmDownloadTestDataFragment_to_nextStepWithTestDataFragment"
+            app:destination="@id/destination_step2"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
+    </fragment>
+    <fragment
+        android:id="@+id/destination_step2"
+        android:name="com.smascaro.trackmixing.settings.business.downloadtestdata.view.NextStepWithTestDataFragment"
+        android:label="NextStepWithTestDataFragment" />
+</navigation>

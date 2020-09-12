@@ -60,6 +60,11 @@
     <activity
         android:id="@+id/destination_settings"
         android:name="com.smascaro.trackmixing.settings.view.SettingsActivity"
-        android:label="SettingsActivity" />
+        android:label="SettingsActivity">
+        <action
+            android:id="@+id/action_destination_settings_to_download_test_data_navigation"
+            app:destination="@id/download_test_data_navigation" />
+    </activity>
+    <include app:graph="@navigation/download_test_data_navigation" />
 
 </navigation>

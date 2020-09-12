@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="This is step 2"
+        android:textAppearance="@style/AppTheme.TM.ActionBar.TitleTextStyle"
+        android:layout_centerHorizontal="true" />
+</RelativeLayout>
