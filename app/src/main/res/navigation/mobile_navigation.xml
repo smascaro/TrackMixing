@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_destination_tracks_list_to_destination_search"
             app:destination="@id/destination_search" />
+        <action
+            android:id="@+id/action_destination_tracks_list_to_destination_settings"
+            app:destination="@id/destination_settings" />
     </fragment>
     <fragment
         android:id="@+id/destination_search"
@@ -28,6 +31,9 @@
         <action
             android:id="@+id/action_destination_search_to_destination_player"
             app:destination="@id/destination_player" />
+        <action
+            android:id="@+id/action_destination_search_to_destination_settings"
+            app:destination="@id/destination_settings" />
     </fragment>
     <activity
         android:id="@+id/destination_player"
@@ -51,5 +57,9 @@
             android:id="@+id/action_destination_track_details_to_destination_player"
             app:destination="@id/destination_player" />
     </fragment>
+    <activity
+        android:id="@+id/destination_settings"
+        android:name="com.smascaro.trackmixing.settings.view.SettingsActivity"
+        android:label="SettingsActivity" />
 
 </navigation>

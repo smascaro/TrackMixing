@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="General">
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="TEST_MODE"
+            android:title="Some option" />
+
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Test data">
+        <Preference
+            android:key="PREFERENCE_DOWNLOAD_TEST_DATA"
+            android:summary="As long as there is no online server or the application is under development, click here to download a set of predefined songs."
+            android:title="Download test data">
+            <intent
+                android:targetClass="com.smascaro.trackmixing.settings.business.view.ConfirmDownloadTestDataActivity"
+                android:targetPackage="com.smascaro.trackmixing" />
+        </Preference>
+        <Preference
+            android:key="PREFERENCE_ERASE_DATA"
+            android:title="Erase all data" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="About">
+        <Preference
+            android:key="PREFERENCE_SOURCE_CODE"
+            android:title="Source code">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/smascaro/TrackMixing" />
+        </Preference>
+        <Preference android:title="Version 0.0.1" />
+    </PreferenceCategory>
+</PreferenceScreen>

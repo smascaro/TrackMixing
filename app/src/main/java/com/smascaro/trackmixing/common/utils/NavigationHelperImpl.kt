@@ -34,7 +34,7 @@ class NavigationHelperImpl @Inject constructor() : NavigationHelper {
 
     override fun toPlayer(track: Track) {
         val action = when (mNavController?.currentDestination?.id) {
-            R.id.destination_search -> SongSearchFragmentDirections.actionDestinationSearchToDestinationPlayer(
+            R.id.destination_settings -> SongSearchFragmentDirections.actionDestinationSearchToDestinationPlayer(
                 track
             )
             R.id.destination_tracks_list -> TracksListFragmentDirections.actionDestinationTracksListToDestinationPlayer(
@@ -57,5 +57,17 @@ class NavigationHelperImpl @Inject constructor() : NavigationHelper {
 
     override fun back() {
         mNavController?.navigateUp()
+    }
+
+    override fun toSettings() {
+        val action = when (mNavController?.currentDestination?.id) {
+            R.id.destination_tracks_list -> TracksListFragmentDirections.actionDestinationTracksListToDestinationSettings()
+            R.id.destination_search -> SongSearchFragmentDirections.actionDestinationSearchToDestinationSettings()
+            else -> null
+        }
+        if (action != null) {
+            mNavController?.navigate(action)
+        }
+
     }
 }

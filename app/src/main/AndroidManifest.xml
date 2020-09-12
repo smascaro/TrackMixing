@@ -39,6 +39,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".player.view.TracksPlayerActivity" />
+        <activity android:name=".settings.view.SettingsActivity" />
+        <activity
+            android:name=".settings.business.view.ConfirmDownloadTestDataActivity"
+            android:theme="@style/Theme.MaterialComponents.Dialog" />
 
         <service android:name=".playbackservice.MixPlayerService" />
         <service android:name=".player.business.downloadtrack.TrackDownloadService" />

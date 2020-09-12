@@ -15,4 +15,5 @@ interface NavigationHelper {
     fun toPlayer(track: Track)
     fun toSearch()
     fun back()
+    fun toSettings()
 }

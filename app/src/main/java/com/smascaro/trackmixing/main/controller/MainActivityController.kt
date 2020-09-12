@@ -41,4 +41,8 @@ class MainActivityController @Inject constructor(p_navigationHelper: NavigationH
         viewMvc.cleanUp()
         navigationHelper.back()
     }
+
+    override fun onSettingsMenuButtonClicked() {
+        navigationHelper.toSettings()
+    }
 }

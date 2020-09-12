@@ -49,6 +49,21 @@ class MainActivityViewMvcImpl @Inject constructor(private val uiUtils: UiUtils) 
         toolbar = findViewById(R.id.toolbar)
         toolbarTitleText = toolbar.findViewById(R.id.tv_toolbar_title)
         toolbarBackButtonImageView = toolbar.findViewById(R.id.iv_toolbar_back_button)
+        toolbar.inflateMenu(R.menu.options_menu_main)
+        toolbar.setOnMenuItemClickListener {
+            if (it.itemId == R.id.destination_settings) {
+                navigateToSettings()
+            } else {
+                false
+            }
+        }
+    }
+
+    private fun navigateToSettings(): Boolean {
+        getListeners().forEach {
+            it.onSettingsMenuButtonClicked()
+        }
+        return true
     }
 
     override fun showMessage(text: String) {
