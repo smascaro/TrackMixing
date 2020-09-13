@@ -1,6 +1,5 @@
 package com.smascaro.trackmixing.main.components.bottomplayer.view
 
-import android.content.Context
 import android.view.GestureDetector
 import android.view.MotionEvent
 import kotlin.math.abs
