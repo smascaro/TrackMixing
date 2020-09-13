@@ -29,14 +29,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/layout_select_test_data_header"
-        tools:itemCount="6"
+        tools:itemCount="16"
+        android:layout_above="@id/btn_select_test_data_start_download"
         tools:listitem="@layout/item_test_data_selection" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_select_test_data_start_download"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/rv_select_test_data_tracks"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:text="Download" />
 </RelativeLayout>
