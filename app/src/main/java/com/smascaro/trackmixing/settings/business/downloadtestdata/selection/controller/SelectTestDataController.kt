@@ -60,13 +60,19 @@ class SelectTestDataController @Inject constructor(
 
     override fun onItemSelected(item: TestDataBundleInfo) {
         tracksToDownload.add(item)
+        viewMvc.updateSizeToDownload(getTotalSizeToDownload())
     }
 
     override fun onItemUnselected(item: TestDataBundleInfo) {
         tracksToDownload.remove(item)
+        viewMvc.updateSizeToDownload(getTotalSizeToDownload())
     }
 
     override fun onDownloadButtonClicked() {
         navigationHelper.toTestDataDownload(tracksToDownload)
+    }
+
+    private fun getTotalSizeToDownload(): Int {
+        return tracksToDownload.sumBy { it.size }
     }
 }
