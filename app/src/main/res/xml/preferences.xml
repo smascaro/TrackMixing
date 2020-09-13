@@ -13,7 +13,7 @@
             android:summary="As long as there is no online server or the application is under development, click here to download a set of predefined songs."
             android:title="Download test data">
             <intent
-                android:targetClass="com.smascaro.trackmixing.settings.business.view.ConfirmDownloadTestDataActivity"
+                android:targetClass="com.smascaro.trackmixing.settings.business.downloadtestdata.DownloadTestDataActivity"
                 android:targetPackage="com.smascaro.trackmixing" />
         </Preference>
         <Preference

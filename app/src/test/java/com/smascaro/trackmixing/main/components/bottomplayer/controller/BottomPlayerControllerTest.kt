@@ -17,6 +17,7 @@ import com.smascaro.trackmixing.main.components.bottomplayer.view.BottomPlayerVi
 import com.smascaro.trackmixing.main.components.bottomplayer.view.HideBarMode
 import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
 import com.smascaro.trackmixing.playbackservice.utils.PlaybackSession
+import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.TestDataBundleInfo
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
@@ -319,7 +320,20 @@ class BottomPlayerControllerTest {
         override fun toSearch() {
         }
 
-        override fun back() {
+        override fun back(): Boolean {
+            return false
+        }
+
+        override fun backAndPop(): Boolean {
+            return false
+        }
+
+        override fun toSettings() {
+
+        }
+
+        override fun toTestDataDownload(data: List<TestDataBundleInfo>) {
+
         }
 
     }
