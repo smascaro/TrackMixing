@@ -11,7 +11,7 @@ data class TestDataBundleInfoResponseSchema(
         val downloadPath: String?,
         val download_size: Int,
         val requestedTimestamp: String?,
-        val resourceId: String,
+        val s3_filename: String,
         val secondsLong: Int,
         val thumbnailUrl: String,
         val title: String,
@@ -24,7 +24,7 @@ fun TestDataBundleInfoResponseSchema.File.toModel(): TestDataBundleInfo {
         title,
         author,
         TimeHelper.fromSeconds(secondsLong.toLong()).toStringRepresentation(),
-        resourceId,
+        s3_filename,
         thumbnailUrl,
         videoKey,
         download_size
