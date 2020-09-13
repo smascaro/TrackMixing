@@ -46,4 +46,6 @@ const val MEDIA_PLAYER_MAX_VOLUME = 100f
 
 const val YOUTUBE_API_BASE_URL = "https://www.googleapis.com/youtube/v3/"
 const val AWS_S3_DOWNLOAD_DATA_BASE_URL = "https://sm01-s3-tracks.s3-eu-west-1.amazonaws.com/"
+const val AWS_S3_DOWNLOAD_DATA_INFO_FILE_BASE_URL = AWS_S3_DOWNLOAD_DATA_BASE_URL
+const val AWS_S3_DOWNLOAD_DATA_BUNDLES_BASE_URL = "${AWS_S3_DOWNLOAD_DATA_BASE_URL}bundles/"
 const val AWS_S3_TEST_DATA_INFO_FILE_RESOURCE = "test_data_bundle.json"

@@ -1,9 +1,13 @@
 package com.smascaro.trackmixing.common.di.settings
 
-import com.smascaro.trackmixing.common.utils.AWS_S3_DOWNLOAD_DATA_BASE_URL
+import com.smascaro.trackmixing.common.utils.AWS_S3_DOWNLOAD_DATA_BUNDLES_BASE_URL
+import com.smascaro.trackmixing.common.utils.AWS_S3_DOWNLOAD_DATA_INFO_FILE_BASE_URL
+import com.smascaro.trackmixing.settings.business.downloadtestdata.download.view.DownloadTestDataViewMvc
+import com.smascaro.trackmixing.settings.business.downloadtestdata.download.view.DownloadTestDataViewMvcImpl
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.view.SelectTestDataViewMvc
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.view.SelectTestDataViewMvcImpl
 import com.smascaro.trackmixing.settings.business.downloadtestdata.usecase.data.TestDataApi
+import com.smascaro.trackmixing.settings.business.downloadtestdata.usecase.data.TestDataFilesApi
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -16,13 +20,14 @@ import java.util.concurrent.TimeUnit
 @Module
 class SettingsModule {
     @SettingsScope
+    @RetrofitForInfoBundleFile
     @Provides
-    fun provideRetrofit(): Retrofit {
+    fun provideRetrofitForInfoFile(): Retrofit {
         val client = OkHttpClient.Builder().apply {
             readTimeout(10, TimeUnit.SECONDS)
         }.build()
         return Retrofit.Builder().apply {
-            baseUrl(AWS_S3_DOWNLOAD_DATA_BASE_URL)
+            baseUrl(AWS_S3_DOWNLOAD_DATA_INFO_FILE_BASE_URL)
             addConverterFactory(GsonConverterFactory.create())
             client(client)
         }.build()
@@ -30,8 +35,27 @@ class SettingsModule {
 
     @SettingsScope
     @Provides
-    fun provideTestDataApi(retrofit: Retrofit): TestDataApi {
+    fun provideTestDataApi(@RetrofitForInfoBundleFile retrofit: Retrofit): TestDataApi {
         return retrofit.create(TestDataApi::class.java)
+    }
+
+    @SettingsScope
+    @RetrofitForZipBundleFiles
+    @Provides
+    fun provideRetrofit(): Retrofit {
+        val client = OkHttpClient.Builder().apply {
+            readTimeout(10, TimeUnit.SECONDS)
+        }.build()
+        return Retrofit.Builder().apply {
+            baseUrl(AWS_S3_DOWNLOAD_DATA_BUNDLES_BASE_URL)
+            client(client)
+        }.build()
+    }
+
+    @SettingsScope
+    @Provides
+    fun provideTestDataFilesApi(@RetrofitForZipBundleFiles retrofit: Retrofit): TestDataFilesApi {
+        return retrofit.create(TestDataFilesApi::class.java)
     }
 
     @Module
@@ -39,5 +63,9 @@ class SettingsModule {
         @SettingsScope
         @Binds
         fun provideSelectTestDataViewMvcImpl(selectTestDataViewMvcImpl: SelectTestDataViewMvcImpl): SelectTestDataViewMvc
+
+        @SettingsScope
+        @Binds
+        fun provideDownloadTestDataViewMvcImpl(downloadTestDataViewMvcImpl: DownloadTestDataViewMvcImpl): DownloadTestDataViewMvc
     }
 }

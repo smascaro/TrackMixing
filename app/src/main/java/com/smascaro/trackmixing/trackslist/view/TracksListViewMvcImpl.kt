@@ -25,7 +25,12 @@ class TracksListViewMvcImpl @Inject constructor(
 
     private fun initialize() {
         mRecyclerViewTracks = findViewById(R.id.rvTracks)
-        mRecyclerViewTracks.layoutManager = LinearLayoutManager(getContext())
+        val layoutManagerWrapper = object : LinearLayoutManager(getContext()) {
+            override fun supportsPredictiveItemAnimations(): Boolean {
+                return false
+            }
+        }
+        mRecyclerViewTracks.layoutManager = layoutManagerWrapper
         (mRecyclerViewTracks.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         mRecyclerViewTracks.setHasFixedSize(true)
         tracksListAdapter.setOnTrackClickedListener(this)

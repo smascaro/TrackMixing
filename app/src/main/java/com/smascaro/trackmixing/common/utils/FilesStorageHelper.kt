@@ -1,6 +1,7 @@
 package com.smascaro.trackmixing.common.utils
 
 import android.content.Context
+import com.smascaro.trackmixing.player.business.DownloadTrackUseCase
 import okhttp3.ResponseBody
 import timber.log.Timber
 import java.io.File
@@ -75,7 +76,7 @@ class FilesStorageHelper @Inject constructor(private val mContext: Context) {
             ZipFile(pathToZipFile).use { zip ->
                 zip.entries().asSequence().map { entry ->
                     val outputFile = File(zipFile.parent, entry.name)
-                    ZipIO(
+                    DownloadTrackUseCase.ZipIO(
                         entry,
                         outputFile
                     ).also { zipio ->

@@ -51,7 +51,7 @@ class TracksListAdapter @Inject constructor(
             return false
         } else {
             val previous = this[0]
-            for (i in 1..this.size) {
+            for (i in 1 until this.size) {
                 val current = this[i]
                 if (current != previous + 1) {
                     return false
