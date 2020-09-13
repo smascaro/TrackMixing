@@ -15,7 +15,8 @@ interface NavigationHelper {
 
     fun toPlayer(track: Track)
     fun toSearch()
-    fun back()
+    fun back(): Boolean
+    fun backAndPop(): Boolean
     fun toSettings()
     fun toTestDataDownload(data: List<TestDataBundleInfo>)
 }

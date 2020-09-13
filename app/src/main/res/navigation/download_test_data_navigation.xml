@@ -11,7 +11,9 @@
             android:id="@+id/action_confirmDownloadTestDataFragment_to_nextStepWithTestDataFragment"
             app:destination="@id/destination_select_test_data"
             app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left" />
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/destination_select_test_data"
@@ -21,7 +23,9 @@
             android:id="@+id/action_destination_select_test_data_to_downloadTestDataFragment"
             app:destination="@id/destination_download_test_data"
             app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left" />
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/destination_download_test_data"

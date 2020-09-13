@@ -57,8 +57,13 @@ class NavigationHelperImpl @Inject constructor() : NavigationHelper {
         mNavController?.navigate(action)
     }
 
-    override fun back() {
-        mNavController?.navigateUp()
+    override fun back(): Boolean {
+        return mNavController?.navigateUp() ?: false
+    }
+
+
+    override fun backAndPop(): Boolean {
+        return mNavController?.popBackStack() ?: false
     }
 
     override fun toSettings() {
