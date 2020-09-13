@@ -5,6 +5,10 @@ import com.smascaro.trackmixing.common.utils.NavigationHelper
 import com.smascaro.trackmixing.settings.business.downloadtestdata.download.view.DownloadTestDataViewMvc
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.TestDataBundleInfo
 import com.smascaro.trackmixing.settings.business.downloadtestdata.usecase.DownloadTestDataUseCase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class DownloadTestDataController @Inject constructor(
@@ -13,10 +17,26 @@ class DownloadTestDataController @Inject constructor(
 ) :
     BaseNavigatorController<DownloadTestDataViewMvc>(p_navigationHelper),
     DownloadTestDataViewMvc.Listener, DownloadTestDataUseCase.Listener {
+    interface Listener {
+        fun onFinishedFlow()
+    }
+
     private var tracksToDownload: Array<TestDataBundleInfo> = arrayOf()
     private var finishedDownloads = 0
+
+    private var listener: Listener? = null
+
+    fun registerListener(listener: Listener) {
+        this.listener = listener
+    }
+
+    fun unregisterListener() {
+        this.listener = null
+    }
+
     fun onCreate() {
         downloadTestDataUseCase.registerListener(this)
+        viewMvc.bindDownloadCount(tracksToDownload.size)
         startDownloads()
     }
 
@@ -35,10 +55,19 @@ class DownloadTestDataController @Inject constructor(
     }
 
     override fun onFinishedItemDownload(videoKey: String) {
-        viewMvc.updateProgress(++finishedDownloads, tracksToDownload.size)
+        finishedDownloads++
+        viewMvc.updateProgress(finishedDownloads, tracksToDownload.size)
+        if (finishedDownloads == tracksToDownload.size) {
+            viewMvc.hideProgressBar()
+            CoroutineScope(Dispatchers.IO).launch {
+                delay(500)
+                listener?.onFinishedFlow()
+            }
+
+        }
     }
 
-    override fun onItemDownloadFailed(videoKey: String, throwable: Throwable) {
-        viewMvc.notifyTrackFailure(videoKey)
+    override fun onItemDownloadFailed(item: TestDataBundleInfo, throwable: Throwable) {
+        viewMvc.notifyTrackFailure(item.title, throwable.localizedMessage)
     }
 }

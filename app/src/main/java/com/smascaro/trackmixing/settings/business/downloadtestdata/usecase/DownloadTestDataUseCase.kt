@@ -38,7 +38,7 @@ class DownloadTestDataUseCase @Inject constructor(
 
     interface Listener {
         fun onFinishedItemDownload(videoKey: String)
-        fun onItemDownloadFailed(videoKey: String, throwable: Throwable)
+        fun onItemDownloadFailed(item: TestDataBundleInfo, throwable: Throwable)
     }
 
     private val coroutines: HashMap<String, Job> = hashMapOf()
@@ -73,7 +73,7 @@ class DownloadTestDataUseCase @Inject constructor(
         testDataFilesApi.downloadTestItemBundle(fileName)
             .enqueue(object : retrofit2.Callback<ResponseBody> {
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    notifyDownloadError(bundleInfo.videoKey, t)
+                    notifyDownloadError(bundleInfo, t)
                 }
 
                 override fun onResponse(
@@ -118,7 +118,7 @@ class DownloadTestDataUseCase @Inject constructor(
                             coroutines.put(bundleInfo.videoKey, job)
                         } catch (e: Exception) {
                             Timber.e(e)
-                            notifyDownloadError(bundleInfo.videoKey, e)
+                            notifyDownloadError(bundleInfo, e)
                         }
                         coroutines.remove(bundleInfo.videoKey)
                     }
@@ -134,10 +134,10 @@ class DownloadTestDataUseCase @Inject constructor(
             }
         }
 
-    private fun notifyDownloadError(videoKey: String, e: Throwable) =
+    private fun notifyDownloadError(item: TestDataBundleInfo, e: Throwable) =
         CoroutineScope(Dispatchers.Main).launch {
             getListeners().forEach {
-                it.onItemDownloadFailed(videoKey, e)
+                it.onItemDownloadFailed(item, e)
             }
         }
 

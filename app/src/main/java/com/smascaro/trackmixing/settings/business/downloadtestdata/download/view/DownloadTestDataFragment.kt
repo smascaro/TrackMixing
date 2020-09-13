@@ -13,7 +13,7 @@ import com.smascaro.trackmixing.settings.business.downloadtestdata.DownloadTestD
 import com.smascaro.trackmixing.settings.business.downloadtestdata.download.controller.DownloadTestDataController
 import javax.inject.Inject
 
-class DownloadTestDataFragment : Fragment() {
+class DownloadTestDataFragment : Fragment(), DownloadTestDataController.Listener {
 
     @Inject lateinit var controller: DownloadTestDataController
     @Inject lateinit var viewMvc: DownloadTestDataViewMvc
@@ -32,6 +32,8 @@ class DownloadTestDataFragment : Fragment() {
     ): View? {
         viewMvc.bindRootView(inflater.inflate(R.layout.fragment_download_test_data, null, false))
         controller.bindViewMvc(viewMvc)
+        controller.bindTracksToDownload(arguments.dataToDownload)
+        controller.onCreate()
         return viewMvc.getRootView()
     }
 
@@ -44,9 +46,18 @@ class DownloadTestDataFragment : Fragment() {
         ).show()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        controller.bindTracksToDownload(arguments.dataToDownload)
-        controller.onCreate()
+    override fun onStart() {
+        super.onStart()
+        controller.registerListener(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        controller.unregisterListener()
+    }
+
+    override fun onFinishedFlow() {
+        controller.unregisterListener()
+        activity?.finish()
     }
 }
