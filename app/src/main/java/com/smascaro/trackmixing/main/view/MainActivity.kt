@@ -2,6 +2,7 @@ package com.smascaro.trackmixing.main.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.TrackMixingApplication
@@ -38,6 +39,8 @@ class MainActivity : BaseActivity(), BaseFragment.OnTitleChangeListener {
     lateinit var bottomProgressViewMvc: BottomProgressViewMvc
 
     lateinit var mainComponent: MainComponent
+    private lateinit var navController: NavController
+
     override fun onCreate(savedInstanceState: Bundle?) {
         mainComponent =
             (application as TrackMixingApplication).appComponent.mainComponent().create(this)
@@ -61,13 +64,13 @@ class MainActivity : BaseActivity(), BaseFragment.OnTitleChangeListener {
         bottomPlayerController.onCreate()
 
         setContentView(rootView)
-        val navController = findNavController(R.id.nav_host_fragment)
-        mainActivityController.bindNavController(navController)
-        bottomPlayerController.bindNavController(navController)
+        navController = findNavController(R.id.nav_host_fragment)
     }
 
     override fun onStart() {
         super.onStart()
+        mainActivityController.bindNavController(navController)
+        bottomPlayerController.bindNavController(navController)
         mainActivityController.onStart()
         bottomProgressController.onStart()
         EventBus.getDefault().post(ApplicationEvent(AppState.Foreground()))
