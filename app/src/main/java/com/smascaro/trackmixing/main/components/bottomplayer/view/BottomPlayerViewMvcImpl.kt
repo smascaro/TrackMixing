@@ -94,10 +94,8 @@ class BottomPlayerViewMvcImpl @Inject constructor(
             }
         }
         val gestureDetector = GestureDetector(getContext(), gestureListener)
-        bottomBar.setOnTouchListener { v, event ->
-            gestureDetector.onTouchEvent(event)
-            return@setOnTouchListener true
-        }
+        val bottomPlayerTouchListener = BottomPlayerOnTouchListener(gestureDetector)
+        bottomBar.setOnTouchListener(bottomPlayerTouchListener)
         setupSharedPreferences()
     }
 
