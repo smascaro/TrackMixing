@@ -69,8 +69,7 @@ class DownloadTestDataUseCase @Inject constructor(
     }
 
     fun downloadItemBundle(bundleInfo: TestDataBundleInfo) {
-        val fileName = "${bundleInfo.videoKey}.zip"
-        testDataFilesApi.downloadTestItemBundle(fileName)
+        testDataFilesApi.downloadTestItemBundle(bundleInfo.resourceFilename)
             .enqueue(object : retrofit2.Callback<ResponseBody> {
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                     notifyDownloadError(bundleInfo, t)
