@@ -2,6 +2,7 @@ package com.smascaro.trackmixing.trackslist.controller
 
 import com.smascaro.trackmixing.common.data.datasource.repository.toModel
 import com.smascaro.trackmixing.common.models.TestModels
+import com.smascaro.trackmixing.common.testdoubles.EventBusTd
 import com.smascaro.trackmixing.common.utils.NavigationHelper
 import com.smascaro.trackmixing.helpers.MockitoHelper
 import com.smascaro.trackmixing.playbackservice.utils.PlaybackSession
@@ -37,7 +38,12 @@ class TracksListControllerTest {
     @Before
     fun setup() {
         SUT =
-            TracksListController(fetchDownloadedTracksUseCase, playbackSession, navigationHelper)
+            TracksListController(
+                fetchDownloadedTracksUseCase,
+                playbackSession,
+                EventBusTd(),
+                navigationHelper
+            )
         SUT.bindViewMvc(viewMvc)
     }
 
