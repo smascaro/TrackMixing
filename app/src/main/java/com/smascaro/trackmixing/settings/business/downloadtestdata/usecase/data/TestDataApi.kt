@@ -1,13 +1,11 @@
 package com.smascaro.trackmixing.settings.business.downloadtestdata.usecase.data
 
-import okhttp3.ResponseBody
+import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.TestDataBundleInfoResponseSchema
 import retrofit2.Call
 import retrofit2.http.GET
-import retrofit2.http.Query
-import retrofit2.http.Streaming
+import retrofit2.http.Path
 
 interface TestDataApi {
-    @Streaming
-    @GET("/uc?export=download")
-    fun downloadTestDataBundleFile(@Query("id") resource: String): Call<ResponseBody>
+    @GET("{file}")
+    fun downloadTestDataBundleFile(@Path("file") fileName: String): Call<TestDataBundleInfoResponseSchema>
 }

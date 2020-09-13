@@ -1,11 +1,10 @@
 package com.smascaro.trackmixing.settings.business.downloadtestdata.usecase
 
-import com.google.gson.Gson
+import com.smascaro.trackmixing.common.utils.AWS_S3_TEST_DATA_INFO_FILE_RESOURCE
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.TestDataBundleInfo
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.TestDataBundleInfoResponseSchema
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.toModelList
 import com.smascaro.trackmixing.settings.business.downloadtestdata.usecase.data.TestDataApi
-import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
 import timber.log.Timber
@@ -21,29 +20,25 @@ class DownloadTestDataUseCase @Inject constructor(
     }
 
     fun getTestDataBundleInfo(callback: (Result) -> Unit) {
-        testDataApi.downloadTestDataBundleFile("1dS1ioDF7k1jSsMnjBENKKDt69nB6PCZ5")
-            .enqueue(object : retrofit2.Callback<ResponseBody> {
-                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+        testDataApi.downloadTestDataBundleFile(AWS_S3_TEST_DATA_INFO_FILE_RESOURCE)
+            .enqueue(object : retrofit2.Callback<TestDataBundleInfoResponseSchema> {
+                override fun onFailure(
+                    call: Call<TestDataBundleInfoResponseSchema>,
+                    t: Throwable
+                ) {
                     callback(Result.Failure(t))
                 }
 
                 override fun onResponse(
-                    call: Call<ResponseBody>,
-                    response: Response<ResponseBody>
+                    call: Call<TestDataBundleInfoResponseSchema>,
+                    response: Response<TestDataBundleInfoResponseSchema>
                 ) {
                     if (!response.isSuccessful) {
                         throw IOException("Unexpected code $response")
                     }
-                    val headers = response.headers()
                     response.body()?.let { body ->
-                        val content = body.string()
-                        Timber.d("Printing file content")
-                        Timber.d(content)
-                        val schema = Gson().fromJson(
-                            content,
-                            TestDataBundleInfoResponseSchema::class.java
-                        )
-                        val tracksList = schema.toModelList()
+                        Timber.d(body.toString())
+                        val tracksList = body.toModelList()
                         callback(Result.Success(tracksList))
                     }
                 }

@@ -10,14 +10,6 @@ import androidx.navigation.fragment.findNavController
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.settings.business.downloadtestdata.DownloadTestDataActivity
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.controller.SelectTestDataController
-import com.smascaro.trackmixing.settings.business.downloadtestdata.usecase.DownloadTestDataUseCase
-import com.smascaro.trackmixing.settings.business.downloadtestdata.usecase.DownloadTestDataUseCase.Result.Failure
-import com.smascaro.trackmixing.settings.business.downloadtestdata.usecase.DownloadTestDataUseCase.Result.Success
-import com.smascaro.trackmixing.settings.business.downloadtestdata.usecase.data.TestDataApi
-import okhttp3.OkHttpClient
-import retrofit2.Retrofit
-import timber.log.Timber
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class SelectTestDataFragment : Fragment() {
@@ -37,26 +29,6 @@ class SelectTestDataFragment : Fragment() {
         controller.bindViewMvc(viewMvc)
         controller.bindNavController(findNavController())
         return viewMvc.getRootView()
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val client = OkHttpClient.Builder().apply {
-            readTimeout(10L, TimeUnit.SECONDS)
-        }.build()
-        val retrofit = Retrofit.Builder().apply {
-            baseUrl("https://drive.google.com/")
-            client(client)
-        }.build()
-        val usecase = DownloadTestDataUseCase(retrofit.create(TestDataApi::class.java))
-        usecase.getTestDataBundleInfo {
-            when (it) {
-                is Success -> {
-                    Timber.d("${it.tracks}")
-                }
-                is Failure -> Timber.e(it.throwable.localizedMessage)
-            }
-        }
     }
 
     override fun onStart() {
