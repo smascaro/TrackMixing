@@ -47,7 +47,7 @@ class TracksListViewMvcImpl @Inject constructor(
 
     private fun initialize() {
         mRecyclerViewTracks = findViewById(R.id.rvTracks)
-        backgroundGradient = findViewById(R.id.v_track_list_gradient)
+        backgroundGradient = findViewById(R.id.v_background_gradient)
 
         initializeRecyclerView()
 

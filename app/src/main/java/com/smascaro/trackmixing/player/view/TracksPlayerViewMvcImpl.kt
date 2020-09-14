@@ -61,7 +61,7 @@ class TracksPlayerViewMvcImpl @Inject constructor(resourcesWrapper: ResourcesWra
         songProgressSeekbar = findViewById(R.id.sb_track_player_timestamp)
         containerLayout = findViewById(R.id.layout_track_player_container)
 
-        backgroundGradientView = findViewById(R.id.v_track_player_gradient)
+        backgroundGradientView = findViewById(R.id.v_background_gradient)
         initializeListeners()
     }
 
