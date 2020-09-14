@@ -10,9 +10,14 @@
         <item name="actionBarStyle">@style/AppTheme.TM.ActionBar</item>
     </style>
 
-    <style name="AppTheme.TM.NoActionBar">
+    <style name="AppTheme.TM.NoActionBar" parent="AppTheme.TM">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.TM.NoActionBar.Fullscreen" parent="AppTheme.TM.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
