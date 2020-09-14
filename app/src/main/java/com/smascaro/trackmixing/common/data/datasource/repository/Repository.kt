@@ -5,4 +5,5 @@ interface Repository<T> {
     suspend fun getAll(): List<T>
     suspend fun update(entity: T)
     suspend fun insert(entity: T): Long
+    suspend fun delete(videoId: String)
 }

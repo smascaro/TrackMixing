@@ -12,6 +12,21 @@ import javax.inject.Inject
 class DownloadTestDataActivity : BaseActivity() {
     lateinit var settingsComponent: SettingsComponent
     @Inject lateinit var navigationHelper: NavigationHelper
+
+    interface BackPressedListener {
+        fun onBackPressed(): Boolean
+    }
+
+    private var listener: BackPressedListener? = null
+
+    fun setOnBackPressedListener(listener: BackPressedListener) {
+        this.listener = listener
+    }
+
+    fun removeOnBackPressedListener(listener: BackPressedListener) {
+        this.listener = null
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         settingsComponent =
             (application as TrackMixingApplication).appComponent.settingsComponent().create()
@@ -23,7 +38,8 @@ class DownloadTestDataActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        if (!navigationHelper.backAndPop()) {
+        val consumedByListener = listener?.onBackPressed() ?: false
+        if (!consumedByListener && !navigationHelper.backAndPop()) {
             super.onBackPressed()
         }
     }

@@ -27,4 +27,8 @@ class TracksRepositoryImpl @Inject constructor(private val downloadsDao: Downloa
     override suspend fun insert(entity: DownloadEntity): Long {
         return downloadsDao.insert(entity)
     }
+
+    override suspend fun delete(key: String) {
+        downloadsDao.delete(key)
+    }
 }

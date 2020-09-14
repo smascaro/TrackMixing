@@ -9,6 +9,7 @@ interface DownloadTestDataViewMvc : ObservableViewMvc<DownloadTestDataViewMvc.Li
 
     fun bindDownloadCount(itemsToDownload: Int)
     fun updateProgress(completed: Int, total: Int)
+    fun showCancellingFeedback()
     fun showProgressBar()
     fun hideProgressBar()
     fun notifyTrackFailure(title: String, message: String)

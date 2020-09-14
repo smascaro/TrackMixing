@@ -9,6 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 class DownloadTestDataController @Inject constructor(
@@ -25,6 +26,8 @@ class DownloadTestDataController @Inject constructor(
     private var finishedDownloads = 0
 
     private var listener: Listener? = null
+
+    private var cancellationFlag: Boolean = false
 
     fun registerListener(listener: Listener) {
         this.listener = listener
@@ -51,23 +54,41 @@ class DownloadTestDataController @Inject constructor(
     }
 
     override fun onCancelRequest() {
-        downloadTestDataUseCase.cancelDownloads()
+        cancelDownloads()
+        viewMvc.showCancellingFeedback()
     }
 
     override fun onFinishedItemDownload(videoKey: String) {
         finishedDownloads++
-        viewMvc.updateProgress(finishedDownloads, tracksToDownload.size)
+        if (!cancellationFlag) {
+            viewMvc.updateProgress(finishedDownloads, tracksToDownload.size)
+        }
         if (finishedDownloads == tracksToDownload.size) {
-            viewMvc.hideProgressBar()
-            CoroutineScope(Dispatchers.IO).launch {
-                delay(500)
-                listener?.onFinishedFlow()
+            if (!cancellationFlag) {
+                viewMvc.hideProgressBar()
+                CoroutineScope(Dispatchers.IO).launch {
+                    delay(500)
+                    listener?.onFinishedFlow()
+                }
+            } else {
+                downloadTestDataUseCase.rollbackDownloads(tracksToDownload.toList())
+                CoroutineScope(Dispatchers.IO).launch {
+                    delay(500)
+                    listener?.onFinishedFlow()
+                }
             }
-
         }
     }
 
     override fun onItemDownloadFailed(item: TestDataBundleInfo, throwable: Throwable) {
         viewMvc.notifyTrackFailure(item.title, throwable.localizedMessage)
+    }
+
+    fun cancelDownloads(): Boolean {
+        Timber.d("Will rollback as soon as all downloads have finished")
+        downloadTestDataUseCase.markForCancellation()
+        viewMvc.showCancellingFeedback()
+        cancellationFlag = true
+        return cancellationFlag
     }
 }
