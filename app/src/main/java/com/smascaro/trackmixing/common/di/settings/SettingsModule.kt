@@ -8,6 +8,8 @@ import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.vie
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.view.SelectTestDataViewMvcImpl
 import com.smascaro.trackmixing.settings.business.downloadtestdata.usecase.data.TestDataApi
 import com.smascaro.trackmixing.settings.business.downloadtestdata.usecase.data.TestDataFilesApi
+import com.smascaro.trackmixing.settings.view.SettingsActivityViewMvc
+import com.smascaro.trackmixing.settings.view.SettingsActivityViewMvcImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -67,5 +69,9 @@ class SettingsModule {
         @SettingsScope
         @Binds
         fun provideDownloadTestDataViewMvcImpl(downloadTestDataViewMvcImpl: DownloadTestDataViewMvcImpl): DownloadTestDataViewMvc
+
+        @SettingsScope
+        @Binds
+        fun provideSettingsActivityViewMvcImpl(settingsActivityViewMvcImpl: SettingsActivityViewMvcImpl): SettingsActivityViewMvc
     }
 }
