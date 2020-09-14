@@ -112,4 +112,13 @@ class FilesStorageHelper @Inject constructor(private val mContext: Context) {
             false
         }
     }
+
+    fun deleteData(path: String) {
+        try {
+            File(path).deleteRecursively()
+        } catch (e: Exception) {
+            Timber.e("Exception while deleting $path")
+            Timber.e(e)
+        }
+    }
 }

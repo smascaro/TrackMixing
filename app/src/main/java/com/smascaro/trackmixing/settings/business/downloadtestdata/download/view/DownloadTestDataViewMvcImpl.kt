@@ -13,6 +13,7 @@ import javax.inject.Inject
 class DownloadTestDataViewMvcImpl @Inject constructor() :
     BaseObservableViewMvc<DownloadTestDataViewMvc.Listener>(), DownloadTestDataViewMvc {
 
+    private lateinit var currentStateTitleTextView: MaterialTextView
     private lateinit var downloadingProgressBar: ContentLoadingProgressBar
     private lateinit var downloadProgressSeekbar: AppCompatSeekBar
     private lateinit var downloadProgressTextFeedback: MaterialTextView
@@ -23,6 +24,7 @@ class DownloadTestDataViewMvcImpl @Inject constructor() :
     }
 
     private fun initialize() {
+        currentStateTitleTextView = findViewById(R.id.tv_download_test_data_downloading_title)
         downloadingProgressBar = findViewById(R.id.pb_download_test_data_progress)
         downloadProgressSeekbar = findViewById(R.id.sb_download_test_data_progress)
         downloadProgressTextFeedback = findViewById(R.id.tv_download_test_data_downloading_progress)
@@ -41,6 +43,10 @@ class DownloadTestDataViewMvcImpl @Inject constructor() :
         }
         downloadProgressSeekbar.progress = completed
         downloadProgressTextFeedback.text = "($completed/$total)"
+    }
+
+    override fun showCancellingFeedback() {
+        currentStateTitleTextView.text = "Cancelling downloads..."
     }
 
     override fun showProgressBar() {

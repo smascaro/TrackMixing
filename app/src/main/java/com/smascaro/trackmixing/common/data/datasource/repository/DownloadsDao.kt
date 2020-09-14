@@ -16,4 +16,7 @@ interface DownloadsDao {
 
     @Update
     suspend fun update(downloadEntity: DownloadEntity)
+
+    @Query("DELETE FROM DOWNLOAD WHERE sourceVideoKey=:key")
+    suspend fun delete(key: String)
 }

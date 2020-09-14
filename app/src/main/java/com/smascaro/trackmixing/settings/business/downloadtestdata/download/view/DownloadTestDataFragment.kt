@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.smascaro.trackmixing.R
@@ -13,7 +12,8 @@ import com.smascaro.trackmixing.settings.business.downloadtestdata.DownloadTestD
 import com.smascaro.trackmixing.settings.business.downloadtestdata.download.controller.DownloadTestDataController
 import javax.inject.Inject
 
-class DownloadTestDataFragment : Fragment(), DownloadTestDataController.Listener {
+class DownloadTestDataFragment : Fragment(), DownloadTestDataController.Listener,
+    DownloadTestDataActivity.BackPressedListener {
 
     @Inject lateinit var controller: DownloadTestDataController
     @Inject lateinit var viewMvc: DownloadTestDataViewMvc
@@ -23,6 +23,7 @@ class DownloadTestDataFragment : Fragment(), DownloadTestDataController.Listener
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (activity as DownloadTestDataActivity).settingsComponent.inject(this)
+        (activity as DownloadTestDataActivity).setOnBackPressedListener(this)
     }
 
     override fun onCreateView(
@@ -35,15 +36,6 @@ class DownloadTestDataFragment : Fragment(), DownloadTestDataController.Listener
         controller.bindTracksToDownload(arguments.dataToDownload)
         controller.onCreate()
         return viewMvc.getRootView()
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        Toast.makeText(
-            context,
-            "Downloading ${arguments.dataToDownload.size} items",
-            Toast.LENGTH_SHORT
-        ).show()
     }
 
     override fun onStart() {
@@ -59,5 +51,9 @@ class DownloadTestDataFragment : Fragment(), DownloadTestDataController.Listener
     override fun onFinishedFlow() {
         controller.unregisterListener()
         activity?.finish()
+    }
+
+    override fun onBackPressed(): Boolean {
+        return controller.cancelDownloads()
     }
 }
