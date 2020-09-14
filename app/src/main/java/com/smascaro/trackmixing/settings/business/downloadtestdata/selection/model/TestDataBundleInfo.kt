@@ -20,6 +20,3 @@ fun Double.round(decimals: Int): Double {
     repeat(decimals) { multiplier *= 10 }
     return Math.round(this * multiplier) / multiplier
 }
-
-val Int.asMB: String
-    get() = "${(this.toDouble() / (1000 * 1000)).round(1)}MB"
