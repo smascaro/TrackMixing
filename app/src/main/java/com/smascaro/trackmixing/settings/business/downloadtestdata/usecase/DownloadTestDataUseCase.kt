@@ -14,7 +14,6 @@ import com.smascaro.trackmixing.settings.business.downloadtestdata.usecase.data.
 import com.smascaro.trackmixing.settings.business.downloadtestdata.usecase.data.TestDataFilesApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 import org.greenrobot.eventbus.EventBus
@@ -24,7 +23,6 @@ import timber.log.Timber
 import java.io.File
 import java.io.IOException
 import java.util.*
-import java.util.concurrent.CancellationException
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
@@ -72,88 +70,63 @@ class DownloadTestDataUseCase @Inject constructor(
     }
 
     fun downloadItemBundle(bundleInfo: TestDataBundleInfo) {
-        var entity: DownloadEntity? = null
-        try {
-            testDataFilesApi.downloadTestItemBundle(bundleInfo.resourceFilename)
-                .enqueue(object : retrofit2.Callback<ResponseBody> {
-                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                        notifyDownloadError(bundleInfo, t)
-                    }
+        testDataFilesApi.downloadTestItemBundle(bundleInfo.resourceFilename)
+            .enqueue(object : retrofit2.Callback<ResponseBody> {
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    notifyDownloadError(bundleInfo, t)
+                }
 
-                    override fun onResponse(
-                        call: Call<ResponseBody>,
-                        response: Response<ResponseBody>
-                    ) {
-                        val body = response.body()
-                        if (response.isSuccessful && body != null) {
-                            CoroutineScope(Dispatchers.IO).launch {
-                                try {
-                                    val downloadPath =
-                                        filesStorageHelper.getBaseDirectoryByVideoId(bundleInfo.videoKey)
-                                    val baseDirectory = filesStorageHelper.getBaseDirectory()
-                                    entity = DownloadEntity(
-                                        0,
-                                        bundleInfo.videoKey,
-                                        "low",
-                                        bundleInfo.title,
-                                        bundleInfo.author,
-                                        bundleInfo.thumbnailUrl,
-                                        Calendar.getInstance().toString(),
-                                        downloadPath,
-                                        DownloadEntity.DownloadStatus.PENDING,
-                                        TimeHelper.fromString(bundleInfo.duration).toSeconds()
+                override fun onResponse(
+                    call: Call<ResponseBody>,
+                    response: Response<ResponseBody>
+                ) {
+                    val body = response.body()
+                    if (response.isSuccessful && body != null) {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            try {
+                                val downloadPath =
+                                    filesStorageHelper.getBaseDirectoryByVideoId(bundleInfo.videoKey)
+                                val baseDirectory = filesStorageHelper.getBaseDirectory()
+                                val entity = DownloadEntity(
+                                    0,
+                                    bundleInfo.videoKey,
+                                    "low",
+                                    bundleInfo.title,
+                                    bundleInfo.author,
+                                    bundleInfo.thumbnailUrl,
+                                    Calendar.getInstance().toString(),
+                                    downloadPath,
+                                    DownloadEntity.DownloadStatus.PENDING,
+                                    TimeHelper.fromString(bundleInfo.duration).toSeconds()
+                                )
+                                entity.id = tracksRepository.insert(entity).toInt()
+                                val downloadFilePath =
+                                    filesStorageHelper.writeFileToStorage(
+                                        baseDirectory,
+                                        entity.sourceVideoKey,
+                                        body
                                     )
-                                    ensureActive()
-                                    entity!!.id = tracksRepository.insert(entity!!).toInt()
-                                    ensureActive()
-                                    val downloadFilePath =
-                                        filesStorageHelper.writeFileToStorage(
-                                            baseDirectory,
-                                            entity!!.sourceVideoKey,
-                                            body
-                                        )
-                                    ensureActive()
-                                    if (downloadFilePath.isNotEmpty()) {
-                                        val downloadParentPath =
-                                            File(downloadFilePath).parent ?: ""
-                                        if (filesStorageHelper.unzipContent(downloadFilePath)) {
-                                            filesStorageHelper.deleteFile(downloadFilePath)
-                                            entity!!.status =
-                                                DownloadEntity.DownloadStatus.FINISHED
-                                            ensureActive()
-                                            tracksRepository.update(entity!!)
-                                            ensureActive()
-                                            notifyDownloadFinished(bundleInfo)
-                                        }
+                                if (downloadFilePath.isNotEmpty()) {
+                                    val downloadParentPath =
+                                        File(downloadFilePath).parent ?: ""
+                                    if (filesStorageHelper.unzipContent(downloadFilePath)) {
+                                        filesStorageHelper.deleteFile(downloadFilePath)
+                                        entity.status =
+                                            DownloadEntity.DownloadStatus.FINISHED
+                                        tracksRepository.update(entity)
+                                        notifyDownloadFinished(bundleInfo)
                                     }
-                                } catch (ce: CancellationException) {
-                                    Timber.w(ce)
-                                    Timber.d("Coroutine cancelled. Rolling back download.")
-//                                        rollback(entity)
-                                } catch (e: Exception) {
-                                    Timber.e(e)
-                                    notifyDownloadError(bundleInfo, e)
                                 }
-                                Timber.d("Coroutine finished execution")
+                            } catch (e: Exception) {
+                                Timber.e(e)
+                                notifyDownloadError(bundleInfo, e)
                             }
+                            Timber.d("Coroutine finished execution")
                         }
                     }
-                })
-            Timber.d("Outer context finishes")
-        } catch (e: Exception) {
-            Timber.w(e)
-            Timber.e(e)
-            rollback(entity)
-        }
-    }
+                }
+            })
 
-    private fun rollback(entity: DownloadEntity?) {
-        if (entity != null) {
-            CoroutineScope(Dispatchers.IO).launch {
-                tracksRepository.delete(entity.sourceVideoKey)
-                filesStorageHelper.deleteData(entity.downloadPath)
-            }
-        }
     }
 
     private fun notifyDownloadFinished(bundleInfo: TestDataBundleInfo) =
