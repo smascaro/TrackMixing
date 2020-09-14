@@ -7,7 +7,7 @@ import com.smascaro.trackmixing.common.data.model.NotificationData
 import com.smascaro.trackmixing.common.error.WrongArgumentType
 import com.smascaro.trackmixing.common.utils.DOWNLOAD_NOTIFICATION_ID
 import com.smascaro.trackmixing.common.utils.NOTIFICATION_CHANNEL_ID
-import com.smascaro.trackmixing.common.utils.NotificationHelper
+import com.smascaro.trackmixing.common.utils.ui.NotificationHelper
 import com.smascaro.trackmixing.player.business.downloadtrack.model.DownloadProgressState
 
 class DownloadNotificationHelper(context: Context) : NotificationHelper(context) {

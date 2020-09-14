@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.common.utils
+package com.smascaro.trackmixing.common.utils.ui
 
 import android.graphics.Bitmap
 import android.graphics.Color

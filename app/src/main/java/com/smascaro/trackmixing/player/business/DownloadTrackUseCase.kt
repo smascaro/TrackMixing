@@ -7,7 +7,7 @@ import com.smascaro.trackmixing.common.data.datasource.repository.TracksReposito
 import com.smascaro.trackmixing.common.data.datasource.repository.toModel
 import com.smascaro.trackmixing.common.data.model.DownloadEntity
 import com.smascaro.trackmixing.common.data.model.Track
-import com.smascaro.trackmixing.common.utils.ColorExtractor
+import com.smascaro.trackmixing.common.utils.ui.ColorExtractor
 import com.smascaro.trackmixing.common.utils.FilesStorageHelper
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable
 import com.smascaro.trackmixing.player.business.downloadtrack.model.DownloadEvents

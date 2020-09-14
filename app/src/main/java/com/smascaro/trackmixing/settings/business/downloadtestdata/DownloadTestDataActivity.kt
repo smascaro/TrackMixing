@@ -5,7 +5,7 @@ import androidx.navigation.findNavController
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.TrackMixingApplication
 import com.smascaro.trackmixing.common.di.settings.SettingsComponent
-import com.smascaro.trackmixing.common.utils.NavigationHelper
+import com.smascaro.trackmixing.common.utils.navigation.NavigationHelper
 import com.smascaro.trackmixing.common.view.ui.BaseActivity
 import javax.inject.Inject
 

@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.common.utils.UiUtils
+import com.smascaro.trackmixing.common.utils.ui.UiUtils
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
 import com.smascaro.trackmixing.player.business.downloadtrack.TrackDownloadService
 import com.smascaro.trackmixing.search.model.SearchResult

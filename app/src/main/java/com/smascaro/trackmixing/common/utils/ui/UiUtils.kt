@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.common.utils
+package com.smascaro.trackmixing.common.utils.ui
 
 import android.app.Activity
 import android.content.Context

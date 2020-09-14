@@ -10,9 +10,9 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.textview.MaterialTextView
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.utils.ResourcesWrapper
-import com.smascaro.trackmixing.common.utils.asGB
-import com.smascaro.trackmixing.common.utils.asKB
-import com.smascaro.trackmixing.common.utils.asMB
+import com.smascaro.trackmixing.common.utils.ui.asGB
+import com.smascaro.trackmixing.common.utils.ui.asKB
+import com.smascaro.trackmixing.common.utils.ui.asMB
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.TestDataBundleInfo
 import javax.inject.Inject

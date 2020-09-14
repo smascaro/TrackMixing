@@ -3,7 +3,7 @@ package com.smascaro.trackmixing.details.controller
 import com.smascaro.trackmixing.common.controller.BaseNavigatorController
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.utils.FilesStorageHelper
-import com.smascaro.trackmixing.common.utils.NavigationHelper
+import com.smascaro.trackmixing.common.utils.navigation.NavigationHelper
 import com.smascaro.trackmixing.details.view.TrackDetailsViewMvc
 import com.smascaro.trackmixing.player.business.DownloadTrackUseCase
 import timber.log.Timber

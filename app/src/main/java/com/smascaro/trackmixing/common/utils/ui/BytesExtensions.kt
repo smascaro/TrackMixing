@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.common.utils
+package com.smascaro.trackmixing.common.utils.ui
 
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.round
 

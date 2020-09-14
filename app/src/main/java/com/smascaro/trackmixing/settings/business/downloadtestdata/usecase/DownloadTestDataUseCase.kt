@@ -3,7 +3,7 @@ package com.smascaro.trackmixing.settings.business.downloadtestdata.usecase
 import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepository
 import com.smascaro.trackmixing.common.data.model.DownloadEntity
 import com.smascaro.trackmixing.common.utils.AWS_S3_TEST_DATA_INFO_FILE_RESOURCE
-import com.smascaro.trackmixing.common.utils.ColorExtractor
+import com.smascaro.trackmixing.common.utils.ui.ColorExtractor
 import com.smascaro.trackmixing.common.utils.FilesStorageHelper
 import com.smascaro.trackmixing.common.utils.TimeHelper
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable

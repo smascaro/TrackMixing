@@ -1,7 +1,7 @@
 package com.smascaro.trackmixing.settings.view
 
 import android.view.View
-import com.smascaro.trackmixing.common.utils.UiUtils
+import com.smascaro.trackmixing.common.utils.ui.UiUtils
 import com.smascaro.trackmixing.common.view.architecture.BaseViewMvc
 import javax.inject.Inject
 
