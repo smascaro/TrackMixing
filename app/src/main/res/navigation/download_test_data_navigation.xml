@@ -2,19 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/download_test_data_navigation"
-    app:startDestination="@id/destination_confirm_test_data">
-    <fragment
-        android:id="@+id/destination_confirm_test_data"
-        android:name="com.smascaro.trackmixing.settings.business.downloadtestdata.confirmation.view.ConfirmDownloadTestDataFragment"
-        android:label="ConfirmDownloadTestDataFragment">
-        <action
-            android:id="@+id/action_confirmDownloadTestDataFragment_to_nextStepWithTestDataFragment"
-            app:destination="@id/destination_select_test_data"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right" />
-    </fragment>
+    app:startDestination="@id/destination_select_test_data">
     <fragment
         android:id="@+id/destination_select_test_data"
         android:name="com.smascaro.trackmixing.settings.business.downloadtestdata.selection.view.SelectTestDataFragment"
