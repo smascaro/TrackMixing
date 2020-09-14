@@ -9,8 +9,11 @@ interface TracksListViewMvc :
     interface Listener {
         fun onTrackClicked(track: Track)
         fun onSearchNavigationButtonClicked()
+        fun onPlayerStateChanged()
     }
 
     fun bindTracks(tracks: List<Track>)
     fun refreshList()
+    fun updateBackgroundColor(newBackgroundColor: Int)
+    fun updateBackgroundColorToDefault()
 }

@@ -7,12 +7,15 @@ import com.smascaro.trackmixing.common.data.datasource.repository.TracksReposito
 import com.smascaro.trackmixing.common.data.datasource.repository.toModel
 import com.smascaro.trackmixing.common.data.model.DownloadEntity
 import com.smascaro.trackmixing.common.data.model.Track
+import com.smascaro.trackmixing.common.utils.ColorExtractor
 import com.smascaro.trackmixing.common.utils.FilesStorageHelper
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable
 import com.smascaro.trackmixing.player.business.downloadtrack.model.DownloadEvents
 import com.smascaro.trackmixing.player.business.downloadtrack.model.FetchSteps
 import com.smascaro.trackmixing.player.business.downloadtrack.model.FetchTrackDetailsResponseSchema
 import com.smascaro.trackmixing.player.business.downloadtrack.model.toModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
@@ -31,7 +34,8 @@ class DownloadTrackUseCase @Inject constructor(
     val nodeApi: NodeApi,
     val mNodeDownloadsApi: NodeDownloadsApi,
     val mFilesStorageHelper: FilesStorageHelper,
-    val tracksRepository: TracksRepository
+    val tracksRepository: TracksRepository,
+    val colorExtractor: ColorExtractor
 ) :
     BaseObservable<DownloadTrackUseCase.Listener>() {
     interface Listener {
@@ -95,7 +99,8 @@ class DownloadTrackUseCase @Inject constructor(
                             Calendar.getInstance().toString(),
                             mFilesStorageHelper.getBaseDirectoryByVideoId(mTrack!!.videoKey),
                             DownloadEntity.DownloadStatus.PENDING,
-                            mTrack!!.secondsLong
+                            mTrack!!.secondsLong,
+                            mTrack!!.backgroundColor
                         )
                     entity.id = tracksRepository.insert(entity).toInt()
                     Timber.d("Downloading track with id ${mTrack!!.videoKey}")
@@ -156,7 +161,13 @@ class DownloadTrackUseCase @Inject constructor(
                                             entity.apply {
                                                 status = DownloadEntity.DownloadStatus.FINISHED
                                             }
-                                            tracksRepository.update(entity)
+                                            colorExtractor.extractLightVibrant(entity.thumbnailUrl) {
+                                                entity.backgroundColor = it
+                                                CoroutineScope(Dispatchers.IO).launch {
+                                                    tracksRepository.update(entity)
+                                                    Timber.d("Updated entity -> $entity")
+                                                }
+                                            }
                                             notifyDownloadFinished(
                                                 entity.toModel(),
                                                 downloadedBasePath

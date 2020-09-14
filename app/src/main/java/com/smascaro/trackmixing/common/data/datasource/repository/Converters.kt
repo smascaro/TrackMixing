@@ -24,6 +24,7 @@ fun DownloadEntity.toModel(): Track {
         thumbnailUrl,
         secondsLong,
         downloadTimestamp,
-        downloadPath
+        downloadPath,
+        backgroundColor
     )
 }

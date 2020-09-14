@@ -1,6 +1,7 @@
 package com.smascaro.trackmixing.common.utils
 
 import android.content.Context
+import androidx.core.content.ContextCompat
 import javax.inject.Inject
 
 class ResourcesWrapper @Inject constructor(private val context: Context) {
@@ -22,6 +23,10 @@ class ResourcesWrapper @Inject constructor(private val context: Context) {
 
     fun getLong(id: Int): Long {
         return getInteger(id).toLong()
+    }
+
+    fun getColor(id: Int): Int {
+        return ContextCompat.getColor(context, id)
     }
 
 }

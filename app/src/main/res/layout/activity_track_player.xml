@@ -8,6 +8,16 @@
     android:animateLayoutChanges="true"
     tools:context=".player.view.TracksPlayerActivity">
 
+    <View
+        android:id="@+id/v_track_player_gradient"
+        android:layout_width="match_parent"
+        android:layout_height="1500dp"
+        android:background="@drawable/background_gradient"
+        app:layout_constraintBottom_toTopOf="@id/sb_track_player_vocals"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

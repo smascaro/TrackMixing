@@ -1,5 +1,6 @@
 package com.smascaro.trackmixing.common.data.model
 
+import android.graphics.Color
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
@@ -15,7 +16,8 @@ data class DownloadEntity(
     val downloadTimestamp: String,//TODO pasar a millis
     var downloadPath: String,
     var status: Int,
-    var secondsLong: Int
+    var secondsLong: Int,
+    var backgroundColor: Int = Color.BLACK
 ) {
     class DownloadStatus {
         companion object {

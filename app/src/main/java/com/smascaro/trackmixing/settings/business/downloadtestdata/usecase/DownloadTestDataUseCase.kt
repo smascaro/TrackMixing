@@ -3,6 +3,7 @@ package com.smascaro.trackmixing.settings.business.downloadtestdata.usecase
 import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepository
 import com.smascaro.trackmixing.common.data.model.DownloadEntity
 import com.smascaro.trackmixing.common.utils.AWS_S3_TEST_DATA_INFO_FILE_RESOURCE
+import com.smascaro.trackmixing.common.utils.ColorExtractor
 import com.smascaro.trackmixing.common.utils.FilesStorageHelper
 import com.smascaro.trackmixing.common.utils.TimeHelper
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable
@@ -30,7 +31,8 @@ class DownloadTestDataUseCase @Inject constructor(
     private val testDataApi: TestDataApi,
     private val testDataFilesApi: TestDataFilesApi,
     private val filesStorageHelper: FilesStorageHelper,
-    private val tracksRepository: TracksRepository
+    private val tracksRepository: TracksRepository,
+    private val colorExtractor: ColorExtractor
 ) : BaseObservable<DownloadTestDataUseCase.Listener>() {
     sealed class Result {
         class Success(val tracks: List<TestDataBundleInfo>) : Result()
@@ -113,7 +115,13 @@ class DownloadTestDataUseCase @Inject constructor(
                                         filesStorageHelper.deleteFile(downloadFilePath)
                                         entity.status =
                                             DownloadEntity.DownloadStatus.FINISHED
-                                        tracksRepository.update(entity)
+                                        colorExtractor.extractLightVibrant(entity.thumbnailUrl) {
+                                            entity.backgroundColor = it
+                                            CoroutineScope(Dispatchers.IO).launch {
+                                                tracksRepository.update(entity)
+                                                Timber.d("Updated entity -> $entity")
+                                            }
+                                        }
                                         notifyDownloadFinished(bundleInfo)
                                     }
                                 }
