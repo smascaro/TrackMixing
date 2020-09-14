@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
@@ -40,13 +40,15 @@
                 android:id="@+id/tv_track_title_player_bottom"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="0.8"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="8dp"
+                android:layout_toStartOf="@id/iv_action_button_player_bottom"
                 android:ellipsize="marquee"
-                android:gravity="center"
+                android:gravity="start|center_vertical"
                 android:marqueeRepeatLimit="marquee_forever"
                 android:paddingHorizontal="@dimen/actions_bottom_title_padding_horizontal"
                 android:singleLine="true"
-                android:text="Desakato - Nueva religión renenejck dwkdwkd kwdkwkdj jjsksdsl"
+                android:text="@string/player_bottom_title"
                 android:textColor="#000"
                 android:textSize="@dimen/actions_bottom_title_text_size" />
 
@@ -54,9 +56,10 @@
                 android:id="@+id/iv_action_button_player_bottom"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.2"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="16dp"
                 android:src="@drawable/ic_play" />
-        </LinearLayout>
+        </RelativeLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
