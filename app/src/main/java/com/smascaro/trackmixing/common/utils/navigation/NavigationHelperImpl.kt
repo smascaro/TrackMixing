@@ -1,9 +1,10 @@
-package com.smascaro.trackmixing.common.utils
+package com.smascaro.trackmixing.common.utils.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.fragment.FragmentNavigator
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.data.model.Track
+import com.smascaro.trackmixing.common.view.architecture.BaseObservable
 import com.smascaro.trackmixing.details.view.TrackDetailsFragmentDirections
 import com.smascaro.trackmixing.search.view.SongSearchFragmentDirections
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.TestDataBundleInfo
@@ -11,7 +12,8 @@ import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.vie
 import com.smascaro.trackmixing.trackslist.view.TracksListFragmentDirections
 import javax.inject.Inject
 
-class NavigationHelperImpl @Inject constructor() : NavigationHelper {
+class NavigationHelperImpl @Inject constructor() : BaseObservable<NavigationHelper.Listener>(),
+    NavigationHelper {
     private var mNavController: NavController? = null
     override fun navigateTo(destination: Int) {
         if (destination != mNavController?.currentDestination?.id) {
@@ -21,6 +23,23 @@ class NavigationHelperImpl @Inject constructor() : NavigationHelper {
 
     override fun bindNavController(navController: NavController) {
         mNavController = navController
+        mNavController?.addOnDestinationChangedListener { controller, navDestination, arguments ->
+            var destination: NavigationDestination? = null
+            destination = when (navDestination.id) {
+                R.id.destination_search -> NavigationDestination.Search()
+                R.id.destination_tracks_list -> NavigationDestination.TracksList()
+                R.id.destination_player -> NavigationDestination.Player()
+                R.id.destination_settings -> NavigationDestination.Settings()
+                R.id.destination_select_test_data -> NavigationDestination.SelectTestData()
+                R.id.destination_download_test_data -> NavigationDestination.DownloadTestData()
+                else -> null
+            }
+            if (destination != null) {
+                getListeners().forEach {
+                    it.onDestinationChange(destination)
+                }
+            }
+        }
     }
 
     override fun toDetails(

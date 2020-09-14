@@ -2,8 +2,9 @@ package com.smascaro.trackmixing.main.controller
 
 import android.content.Intent
 import com.smascaro.trackmixing.common.controller.BaseNavigatorController
-import com.smascaro.trackmixing.common.utils.NavigationHelper
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager
+import com.smascaro.trackmixing.common.utils.navigation.NavigationDestination
+import com.smascaro.trackmixing.common.utils.navigation.NavigationHelper
 import com.smascaro.trackmixing.main.view.MainActivityViewMvc
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -15,15 +16,18 @@ class MainActivityController @Inject constructor(
     private val playbackStateManager: PlaybackStateManager,
     p_navigationHelper: NavigationHelper
 ) :
-    BaseNavigatorController<MainActivityViewMvc>(p_navigationHelper), MainActivityViewMvc.Listener {
+    BaseNavigatorController<MainActivityViewMvc>(p_navigationHelper), MainActivityViewMvc.Listener,
+    NavigationHelper.Listener {
 
     fun onStart() {
         viewMvc.registerListener(this)
+        navigationHelper.registerListener(this)
         updateBackgroundColor()
     }
 
     fun onStop() {
         viewMvc.unregisterListener(this)
+        navigationHelper.unregisterListener(this)
     }
 
     fun handleIntent(intent: Intent) {
@@ -73,4 +77,20 @@ class MainActivityController @Inject constructor(
     override fun onSettingsMenuButtonClicked() {
         navigationHelper.toSettings()
     }
+
+    override fun onDestinationChange(destination: NavigationDestination) {
+        when (destination) {
+            is NavigationDestination.Search -> handleNavigationToSearch()
+            is NavigationDestination.TracksList -> handleNavigationToTracksList()
+        }
+    }
+
+    private fun handleNavigationToTracksList() {
+        viewMvc.showSearchButton()
+    }
+
+    private fun handleNavigationToSearch() {
+        viewMvc.hideSearchButton()
+    }
+
 }
