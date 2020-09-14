@@ -2,6 +2,7 @@ package com.smascaro.trackmixing.settings.business.downloadtestdata.selection.co
 
 import com.smascaro.trackmixing.common.controller.BaseNavigatorController
 import com.smascaro.trackmixing.common.data.datasource.repository.DownloadsDao
+import com.smascaro.trackmixing.common.utils.DiskSpaceHelper
 import com.smascaro.trackmixing.common.utils.NavigationHelper
 import com.smascaro.trackmixing.player.business.DownloadTrackUseCase
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.TestDataBundleInfo
@@ -16,6 +17,7 @@ class SelectTestDataController @Inject constructor(
     private val downloadTestDataUseCase: DownloadTestDataUseCase,
     private val downloadTrackUseCase: DownloadTrackUseCase,
     private val downloadsDao: DownloadsDao,
+    private val diskSpaceHelper: DiskSpaceHelper,
     p_navigationHelper: NavigationHelper
 ) :
     BaseNavigatorController<SelectTestDataViewMvc>(p_navigationHelper),
@@ -23,7 +25,6 @@ class SelectTestDataController @Inject constructor(
     private var totalDownloadBytes = 0
     private var tracksToDownload = mutableListOf<TestDataBundleInfo>()
     fun onStart() {
-        viewMvc.registerListener(this)
         downloadTestDataUseCase.getTestDataBundleInfo {
             when (it) {
                 is DownloadTestDataUseCase.Result.Success -> {
@@ -33,6 +34,9 @@ class SelectTestDataController @Inject constructor(
                 is DownloadTestDataUseCase.Result.Failure -> viewMvc.showError(it.throwable.localizedMessage)
             }
         }
+        viewMvc.registerListener(this)
+        viewMvc.disableDownloadButton()
+        viewMvc.bindAvailableSpace(diskSpaceHelper.getAvailableBytes())
     }
 
     private fun checkAlreadyDownloadedItems(tracks: List<TestDataBundleInfo>) {
@@ -61,11 +65,21 @@ class SelectTestDataController @Inject constructor(
     override fun onItemSelected(item: TestDataBundleInfo) {
         tracksToDownload.add(item)
         viewMvc.updateSizeToDownload(getTotalSizeToDownload())
+        updateDownloadButtonState()
     }
 
     override fun onItemUnselected(item: TestDataBundleInfo) {
         tracksToDownload.remove(item)
         viewMvc.updateSizeToDownload(getTotalSizeToDownload())
+        updateDownloadButtonState()
+    }
+
+    private fun updateDownloadButtonState() {
+        if (tracksToDownload.any() && getTotalSizeToDownload() < diskSpaceHelper.getAvailableBytes()) {
+            viewMvc.enableDownloadButton()
+        } else {
+            viewMvc.disableDownloadButton()
+        }
     }
 
     override fun onDownloadButtonClicked() {

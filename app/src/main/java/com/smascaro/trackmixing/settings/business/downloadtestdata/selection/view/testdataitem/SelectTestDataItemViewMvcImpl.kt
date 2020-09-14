@@ -5,9 +5,9 @@ import com.bumptech.glide.RequestManager
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.textview.MaterialTextView
 import com.smascaro.trackmixing.R
+import com.smascaro.trackmixing.common.utils.asMB
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.TestDataBundleInfo
-import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.asMB
 import javax.inject.Inject
 
 class SelectTestDataItemViewMvcImpl @Inject constructor(private val glide: RequestManager) :

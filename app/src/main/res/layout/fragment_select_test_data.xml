@@ -22,6 +22,15 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:text="0.0MB" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_select_test_data_available_space"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="@string/select_test_data_available_space" />
+
+
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView xmlns:tools="http://schemas.android.com/tools"

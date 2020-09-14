@@ -4,8 +4,8 @@ import android.content.Context
 import javax.inject.Inject
 
 class ResourcesWrapper @Inject constructor(private val context: Context) {
-    fun getString(id: Int): String {
-        return context.resources.getString(id)
+    fun getString(id: Int, vararg args: Any): String {
+        return context.resources.getString(id, *args)
     }
 
     fun getDimension(id: Int): Float {

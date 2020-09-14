@@ -11,7 +11,10 @@ interface SelectTestDataViewMvc : ObservableViewMvc<SelectTestDataViewMvc.Listen
     }
 
     fun bindTracks(tracks: List<TestDataBundleInfo>)
+    fun bindAvailableSpace(availableBytes: Long)
     fun bindAlreadyDownloadedData(downloadedTestData: List<TestDataBundleInfo>)
+    fun enableDownloadButton()
+    fun disableDownloadButton()
     fun updateSizeToDownload(bytesToDownload: Int)
     fun showError(message: String?)
 }

@@ -8,19 +8,24 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textview.MaterialTextView
 import com.smascaro.trackmixing.R
+import com.smascaro.trackmixing.common.utils.ResourcesWrapper
+import com.smascaro.trackmixing.common.utils.asGB
+import com.smascaro.trackmixing.common.utils.asKB
+import com.smascaro.trackmixing.common.utils.asMB
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.TestDataBundleInfo
-import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.asMB
 import javax.inject.Inject
 
 class SelectTestDataViewMvcImpl @Inject constructor(
-    private val testDataAdapter: TestDataListAdapter
+    private val testDataAdapter: TestDataListAdapter,
+    private val resourcesWrapper: ResourcesWrapper
 ) :
     BaseObservableViewMvc<SelectTestDataViewMvc.Listener>(),
     SelectTestDataViewMvc, TestDataListAdapter.Listener {
     private lateinit var totalDownloadSizeText: MaterialTextView
     private lateinit var recyclerViewTestDataBundleInfo: RecyclerView
     private lateinit var startDownloadButton: MaterialButton
+    private lateinit var availableSpaceTextView: MaterialTextView
 
     override fun bindRootView(rootView: View?) {
         super.bindRootView(rootView)
@@ -38,11 +43,15 @@ class SelectTestDataViewMvcImpl @Inject constructor(
 
         startDownloadButton = findViewById(R.id.btn_select_test_data_start_download)
         totalDownloadSizeText = findViewById(R.id.tv_select_test_data_total_size)
+        availableSpaceTextView = findViewById(R.id.tv_select_test_data_available_space)
+
         startDownloadButton.setOnClickListener {
             getListeners().forEach {
                 it.onDownloadButtonClicked()
             }
         }
+
+        availableSpaceTextView.text = ""
         updateTotalSize(0)
     }
 
@@ -50,8 +59,32 @@ class SelectTestDataViewMvcImpl @Inject constructor(
         testDataAdapter.bindData(tracks)
     }
 
+    override fun bindAvailableSpace(availableBytes: Long) {
+        var text = ""
+        if (availableBytes > 1 * 1000 * 1000 * 1000) {
+            text = availableBytes.asGB
+        } else if (availableBytes > 1 * 1000 * 1000) {
+            text = availableBytes.asMB
+        } else if (availableBytes > 1 * 1000) {
+            text = availableBytes.asKB
+        } else {
+            text = "$availableBytes bytes"
+        }
+
+        availableSpaceTextView.text =
+            resourcesWrapper.getString(R.string.select_test_data_available_space, text)
+    }
+
     override fun bindAlreadyDownloadedData(downloadedTestData: List<TestDataBundleInfo>) {
         testDataAdapter.bindAlreadyDownloadedData(downloadedTestData)
+    }
+
+    override fun enableDownloadButton() {
+        startDownloadButton.isEnabled = true
+    }
+
+    override fun disableDownloadButton() {
+        startDownloadButton.isEnabled = false
     }
 
     override fun updateSizeToDownload(bytesToDownload: Int) {
