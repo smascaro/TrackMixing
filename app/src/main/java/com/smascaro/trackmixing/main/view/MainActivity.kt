@@ -51,6 +51,7 @@ class MainActivity : BaseActivity(), BaseFragment.OnTitleChangeListener {
 
 
         mainViewMvc.bindRootView(rootView)
+        mainViewMvc.bindActivity(this)
         mainActivityController.bindViewMvc(mainViewMvc)
         mainActivityController.handleIntent(intent)
 

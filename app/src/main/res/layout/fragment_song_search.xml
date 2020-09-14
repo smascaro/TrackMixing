@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".search.view.SongSearchFragment">
+    tools:context=".search.view.SongSearchFragment"
+    android:background="@color/transparent">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/il_search_input_layout"

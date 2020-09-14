@@ -15,7 +15,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.TM.NoActionBar">
-        <activity android:name=".main.view.MainActivity">
+        <activity
+            android:name=".main.view.MainActivity"
+            android:theme="@style/AppTheme.TM.NoActionBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -38,7 +40,9 @@
                     android:mimeType="text/*" />
             </intent-filter>
         </activity>
-        <activity android:name=".player.view.TracksPlayerActivity" />
+        <activity
+            android:name=".player.view.TracksPlayerActivity"
+            android:theme="@style/AppTheme.TM.NoActionBar.Fullscreen" />
         <activity android:name=".settings.view.SettingsActivity" />
         <activity
             android:name="com.smascaro.trackmixing.settings.business.downloadtestdata.DownloadTestDataActivity"

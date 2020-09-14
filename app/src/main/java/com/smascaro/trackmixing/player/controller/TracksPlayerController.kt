@@ -1,16 +1,9 @@
 package com.smascaro.trackmixing.player.controller
 
-import android.graphics.Bitmap
-import android.graphics.Color
-import android.graphics.drawable.Drawable
-import androidx.palette.graphics.Palette
-import com.bumptech.glide.RequestManager
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.smascaro.trackmixing.common.controller.BaseController
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.error.NoLoadedTrackException
+import com.smascaro.trackmixing.common.utils.ui.ColorExtractor
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager
 import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
@@ -26,7 +19,8 @@ import javax.inject.Inject
 
 class TracksPlayerController @Inject constructor(
     private val playbackSession: PlaybackSession,
-    private val glide: RequestManager
+//    private val glide: RequestManager,
+    private val colorExtractor: ColorExtractor
 ) :
     BaseController<TracksPlayerViewMvc>(),
     TracksPlayerViewMvc.Listener {
@@ -64,26 +58,25 @@ class TracksPlayerController @Inject constructor(
     }
 
     private fun initializeBackgroundColor() {
-        glide
-            .asBitmap()
-            .load(mTrack.thumbnailUrl)
-            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-            .into(object : CustomTarget<Bitmap>() {
-                override fun onLoadCleared(placeholder: Drawable?) {
-                }
+        viewMvc.bindBackgroundColor(mTrack.backgroundColor)
 
-                override fun onResourceReady(
-                    resource: Bitmap,
-                    transition: Transition<in Bitmap>?
-                ) {
-                    Palette.Builder(resource).generate {
-                        val color = it?.getDominantColor(Color.BLACK) ?: Color.BLACK
-                        viewMvc.bindBackgroundColor(color)
-                    }
-                }
-
-            })
-
+//        glide
+//            .asBitmap()
+//            .load(mTrack.thumbnailUrl)
+//            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+//            .into(object : CustomTarget<Bitmap>() {
+//                override fun onLoadCleared(placeholder: Drawable?) {
+//                }
+//
+//                override fun onResourceReady(
+//                    resource: Bitmap,
+//                    transition: Transition<in Bitmap>?
+//                ) {
+//                    Palette.Builder(resource).generate {
+//                        val color = it?.getLightVibrantColor(Color.WHITE) ?: Color.WHITE
+//                    }
+//                }
+//            })
     }
 
     private fun initializeActionButton() {

@@ -3,7 +3,7 @@ package com.smascaro.trackmixing.trackslist.controller
 
 import com.smascaro.trackmixing.common.controller.BaseNavigatorController
 import com.smascaro.trackmixing.common.data.model.Track
-import com.smascaro.trackmixing.common.utils.NavigationHelper
+import com.smascaro.trackmixing.common.utils.navigation.NavigationHelper
 import com.smascaro.trackmixing.playbackservice.utils.PlaybackSession
 import com.smascaro.trackmixing.trackslist.business.FetchDownloadedTracks
 import com.smascaro.trackmixing.trackslist.model.RefreshListEvent

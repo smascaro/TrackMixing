@@ -1,12 +1,18 @@
 package com.smascaro.trackmixing.common.utils
 
 import android.content.Context
+import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepository
+import com.smascaro.trackmixing.common.data.datasource.repository.toModel
+import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
 import org.greenrobot.eventbus.EventBus
 import timber.log.Timber
 import javax.inject.Inject
 
-class PlaybackStateManager @Inject constructor(context: Context) {
+class PlaybackStateManager @Inject constructor(
+    context: Context,
+    private val tracksRepository: TracksRepository
+) {
     private val sharedPreferences =
         SharedPreferencesFactory.getPlaybackSharedPreferencesFactory(
             context
@@ -70,6 +76,12 @@ class PlaybackStateManager @Inject constructor(context: Context) {
 
     fun getCurrentSong(): String {
         return sharedPreferences.getString(SHARED_PREFERENCES_PLAYBACK_SONG_PLAYING, "") ?: ""
+    }
+
+    suspend fun getCurrentTrack(): Track {
+        val key = getCurrentSong()
+        val track = tracksRepository.get(key)
+        return track.toModel()
     }
 
     fun setCurrentPlayingTimestamp(timestampMillis: Long) {

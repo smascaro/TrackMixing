@@ -4,7 +4,7 @@ import com.smascaro.trackmixing.common.controller.BaseNavigatorController
 import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepository
 import com.smascaro.trackmixing.common.data.datasource.repository.toModel
 import com.smascaro.trackmixing.common.data.model.Track
-import com.smascaro.trackmixing.common.utils.NavigationHelper
+import com.smascaro.trackmixing.common.utils.navigation.NavigationHelper
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager
 import com.smascaro.trackmixing.main.components.bottomplayer.model.BottomPlayerData
 import com.smascaro.trackmixing.main.components.bottomplayer.view.BottomPlayerViewMvc
@@ -58,6 +58,7 @@ class BottomPlayerController @Inject constructor(
     private fun makeBottomPlayerData(): BottomPlayerData {
         return BottomPlayerData(
             currentTrack!!.title,
+            currentTrack!!.author,
             currentState!!,
             currentTrack!!.thumbnailUrl
         )

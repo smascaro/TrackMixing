@@ -4,7 +4,7 @@ import com.smascaro.trackmixing.common.data.datasource.network.NodeApi
 import com.smascaro.trackmixing.common.data.model.ForegroundNotification
 import com.smascaro.trackmixing.common.di.DownloadNotificationHelperImplementation
 import com.smascaro.trackmixing.common.utils.DOWNLOAD_NOTIFICATION_ID
-import com.smascaro.trackmixing.common.utils.NotificationHelper
+import com.smascaro.trackmixing.common.utils.ui.NotificationHelper
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable
 import com.smascaro.trackmixing.main.components.progress.model.UiProgressEvent
 import com.smascaro.trackmixing.player.business.DownloadTrackUseCase

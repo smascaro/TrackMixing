@@ -3,6 +3,7 @@ package com.smascaro.trackmixing.main.components.bottomplayer.view
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
+import kotlin.math.abs
 
 class BottomPlayerOnTouchListener(private val gestureDetector: GestureDetector) :
     View.OnTouchListener {
@@ -16,7 +17,7 @@ class BottomPlayerOnTouchListener(private val gestureDetector: GestureDetector) 
         if (event?.action == MotionEvent.ACTION_UP) {
             val xDiff = lastXDown - event.x
             val yDiff = lastYDown - event.y
-            if (xDiff <= 10 && yDiff <= 10) {
+            if (abs(xDiff) <= 10 && abs(yDiff) <= 10) {
                 return v?.performClick() ?: false
             }
         }

@@ -2,7 +2,7 @@ package com.smascaro.trackmixing.search.controller
 
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.controller.BaseNavigatorController
-import com.smascaro.trackmixing.common.utils.NavigationHelper
+import com.smascaro.trackmixing.common.utils.navigation.NavigationHelper
 import com.smascaro.trackmixing.common.utils.ResourcesWrapper
 import com.smascaro.trackmixing.search.business.SearchYoutubeVideosUseCase
 import com.smascaro.trackmixing.search.model.SearchResult

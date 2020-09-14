@@ -1,5 +1,6 @@
 package com.smascaro.trackmixing.search.view
 
+import android.annotation.SuppressLint
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -9,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.common.utils.UiUtils
+import com.smascaro.trackmixing.common.utils.ui.UiUtils
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
 import com.smascaro.trackmixing.player.business.downloadtrack.TrackDownloadService
 import com.smascaro.trackmixing.search.model.SearchResult
@@ -27,12 +28,12 @@ class SearchResultsViewMvcImpl @Inject constructor(
     private lateinit var searchInputLayout: TextInputLayout
     private lateinit var searchInputText: TextInputEditText
 
-
     override fun bindRootView(rootView: View?) {
         super.bindRootView(rootView)
         initialize()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun initialize() {
         resultsRecyclerView = findViewById(R.id.rv_search_results)
         resultsRecyclerView.layoutManager = LinearLayoutManager(getContext())
@@ -119,5 +120,4 @@ class SearchResultsViewMvcImpl @Inject constructor(
             }
         }
     }
-
 }

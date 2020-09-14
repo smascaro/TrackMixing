@@ -10,9 +10,14 @@
         <item name="actionBarStyle">@style/AppTheme.TM.ActionBar</item>
     </style>
 
-    <style name="AppTheme.TM.NoActionBar">
+    <style name="AppTheme.TM.NoActionBar" parent="AppTheme.TM">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.TM.NoActionBar.Fullscreen" parent="AppTheme.TM.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -20,11 +25,26 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="AppTheme.TM.ActionBar" parent="Theme.MaterialComponents.Light.DarkActionBar">
-        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:background">@color/transparent</item>
     </style>
 
     <style name="AppTheme.TM.ActionBar.TitleTextStyle" parent="@style/TextAppearance.AppCompat.Title">
         <item name="android:textColor">@color/textOnPrimary</item>¡
         <item name="android:text">@string/app_name</item>
+    </style>
+
+    <style name="AppTheme.TM.PlayerBar" />
+
+    <style name="AppTheme.TM.PlayerBar.Track" parent="AppTheme.TM.PlayerBar" />
+
+    <style name="AppTheme.TM.PlayerBar.Track.TitleTextAppearance" parent="AppTheme.TM.PlayerBar.Track">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:marqueeRepeatLimit">marquee_forever</item>
+        <item name="android:gravity">start|center_vertical</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/textOnAccent</item>
+        <item name="android:textSize">@dimen/actions_bottom_title_text_size</item>
     </style>
 </resources>

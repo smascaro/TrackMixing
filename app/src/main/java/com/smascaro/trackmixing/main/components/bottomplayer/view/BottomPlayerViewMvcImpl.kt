@@ -8,8 +8,9 @@ import android.view.animation.Animation
 import android.view.animation.AnimationSet
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
+import android.widget.TextSwitcher
+import androidx.core.view.children
 import com.google.android.material.card.MaterialCardView
-import com.google.android.material.textview.MaterialTextView
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.utils.ResourcesWrapper
 import com.smascaro.trackmixing.common.utils.SHARED_PREFERENCES_PLAYBACK_IS_PLAYING
@@ -24,14 +25,14 @@ import javax.inject.Inject
 
 class BottomPlayerViewMvcImpl @Inject constructor(
     private val serviceChecker: MixPlayerServiceChecker,
-    resources: ResourcesWrapper
+    private val resources: ResourcesWrapper
 ) :
     BaseObservableViewMvc<BottomPlayerViewMvc.Listener>(),
     BottomPlayerViewMvc,
     SharedPreferences.OnSharedPreferenceChangeListener {
 
     private lateinit var bottomBar: MaterialCardView
-    private lateinit var bottomBarTextView: MaterialTextView
+    private lateinit var bottomBarTextSwitcher: TextSwitcher
 
     private lateinit var bottomBarActionButton: ImageView
     private lateinit var timestampProgressIndicatorView: View
@@ -69,12 +70,20 @@ class BottomPlayerViewMvcImpl @Inject constructor(
         LayoutInflater.from(getContext())
             .inflate(R.layout.layout_actions_bottom, bottomBarWrapper, false)
         bottomBar = bottomBarWrapper.findViewById(R.id.layout_player_actions_bottom)
-        bottomBarTextView = bottomBarWrapper.findViewById(R.id.tv_track_title_player_bottom)
+        bottomBarTextSwitcher = bottomBarWrapper.findViewById(R.id.tv_track_title_player_bottom)
         bottomBarActionButton = bottomBarWrapper.findViewById(R.id.iv_action_button_player_bottom)
         timestampProgressIndicatorView =
             bottomBarWrapper.findViewById(R.id.v_bottom_player_progress_indicator)
 
-        bottomBarTextView.isSelected = true
+        bottomBarTextSwitcher.isSelected = true
+        bottomBarTextSwitcher.setInAnimation(getContext(), R.anim.slide_in_right)
+        bottomBarTextSwitcher.setOutAnimation(getContext(), R.anim.slide_out_left)
+        initializeMarquee()
+        initializeListeners()
+        setupSharedPreferences()
+    }
+
+    private fun initializeListeners() {
         bottomBarActionButton.setOnClickListener {
             getListeners().forEach {
                 it.onActionButtonClicked()
@@ -96,7 +105,10 @@ class BottomPlayerViewMvcImpl @Inject constructor(
         val gestureDetector = GestureDetector(getContext(), gestureListener)
         val bottomPlayerTouchListener = BottomPlayerOnTouchListener(gestureDetector)
         bottomBar.setOnTouchListener(bottomPlayerTouchListener)
-        setupSharedPreferences()
+    }
+
+    private fun initializeMarquee() {
+        bottomBarTextSwitcher.children.forEach { it.isSelected = true }
     }
 
     private fun handleBottomToTopSwipe() {
@@ -119,22 +131,26 @@ class BottomPlayerViewMvcImpl @Inject constructor(
 
     override fun showPlayerBar(data: BottomPlayerData) {
         if (shouldReloadBottomBar(data)) {
-            resetBottomBarDefaultPosition()
-            bottomBar.visibility = View.VISIBLE
-            if (bottomBarTextView.text != data.title) {
-                bottomBarTextView.text = data.title
+            val textToShow =
+                resources.getString(R.string.player_bottom_title, data.title, data.author)
+            if (isBottomBarShown) {
+                bottomBarTextSwitcher.setText(textToShow)
+            } else {
+                resetBottomBarDefaultPosition()
+                bottomBar.visibility = View.VISIBLE
+                bottomBarTextSwitcher.setText(textToShow)
+                val animation = ResizeAnimation(bottomBar, bottomBarVisibleHeight.toInt()).apply {
+                    duration = inAnimationDuration
+                }
+                bottomBar.startAnimation(animation)
             }
-            val animation = ResizeAnimation(bottomBar, bottomBarVisibleHeight.toInt()).apply {
-                duration = inAnimationDuration
-            }
-            bottomBar.startAnimation(animation)
             isBottomBarShown = true
             currentShownData = data
         }
     }
 
     private fun shouldReloadBottomBar(data: BottomPlayerData) =
-        !isBottomBarShown || currentShownData?.title != data.title || currentShownData?.thumbnailUrl != data.thumbnailUrl
+        !isBottomBarShown || currentShownData?.title != data.title || currentShownData?.author != data.author
 
     override fun hidePlayerBar(mode: HideBarMode) {
         if (isBottomBarShown) {

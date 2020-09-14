@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
@@ -36,27 +36,37 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.material.textview.MaterialTextView
+            <TextSwitcher
                 android:id="@+id/tv_track_title_player_bottom"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="0.8"
-                android:ellipsize="marquee"
-                android:gravity="center"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:paddingHorizontal="@dimen/actions_bottom_title_padding_horizontal"
-                android:singleLine="true"
-                android:text="Desakato - Nueva religión renenejck dwkdwkd kwdkwkdj jjsksdsl"
-                android:textColor="#000"
-                android:textSize="@dimen/actions_bottom_title_text_size" />
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="8dp"
+                android:layout_toStartOf="@id/iv_action_button_player_bottom"
+                android:paddingHorizontal="@dimen/actions_bottom_title_padding_horizontal">
+
+                <com.google.android.material.textview.MaterialTextView
+                    style="@style/AppTheme.TM.PlayerBar.Track.TitleTextAppearance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/player_bottom_title" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    style="@style/AppTheme.TM.PlayerBar.Track.TitleTextAppearance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/player_bottom_title" />
+
+            </TextSwitcher>
 
             <ImageView
                 android:id="@+id/iv_action_button_player_bottom"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.2"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="16dp"
                 android:src="@drawable/ic_play" />
-        </LinearLayout>
+        </RelativeLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

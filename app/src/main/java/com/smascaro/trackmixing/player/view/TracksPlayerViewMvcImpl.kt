@@ -1,11 +1,17 @@
 package com.smascaro.trackmixing.player.view
 
+import android.animation.ArgbEvaluator
+import android.animation.ValueAnimator
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.SeekBar
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.textview.MaterialTextView
 import com.smascaro.trackmixing.R
+import com.smascaro.trackmixing.common.utils.ResourcesWrapper
 import com.smascaro.trackmixing.common.utils.TimeHelper
 import com.smascaro.trackmixing.common.utils.TrackVolumeBundle
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
@@ -13,7 +19,7 @@ import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
 import com.smascaro.trackmixing.player.view.widget.VerticalSeekbar
 import javax.inject.Inject
 
-class TracksPlayerViewMvcImpl @Inject constructor() :
+class TracksPlayerViewMvcImpl @Inject constructor(resourcesWrapper: ResourcesWrapper) :
     BaseObservableViewMvc<TracksPlayerViewMvc.Listener>(),
     TracksPlayerViewMvc {
 
@@ -30,6 +36,12 @@ class TracksPlayerViewMvcImpl @Inject constructor() :
     private lateinit var totalLengthTextView: MaterialTextView
     private lateinit var songProgressSeekbar: SeekBar
     private lateinit var containerLayout: ConstraintLayout
+    private lateinit var backgroundGradientView: View
+
+    private val gradientCenterColor =
+        resourcesWrapper.getColor(R.color.track_player_background_gradient_center_color)
+    private val gradientEndColor =
+        resourcesWrapper.getColor(R.color.track_player_background_gradient_end_color)
 
     override fun bindRootView(rootView: View?) {
         super.bindRootView(rootView)
@@ -48,6 +60,8 @@ class TracksPlayerViewMvcImpl @Inject constructor() :
         totalLengthTextView = findViewById(R.id.tv_track_player_length)
         songProgressSeekbar = findViewById(R.id.sb_track_player_timestamp)
         containerLayout = findViewById(R.id.layout_track_player_container)
+
+        backgroundGradientView = findViewById(R.id.v_background_gradient)
         initializeListeners()
     }
 
@@ -126,8 +140,25 @@ class TracksPlayerViewMvcImpl @Inject constructor() :
         songProgressSeekbar.max = lengthSeconds
     }
 
-    override fun bindBackgroundColor(color: Int) {
-        containerLayout.setBackgroundColor(color)
+    override fun bindBackgroundColor(newBackgroundColor: Int) {
+        val backgroundDrawable = backgroundGradientView.background as GradientDrawable
+        val initialColor =
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                backgroundDrawable.colors?.first() ?: Color.BLACK
+            } else {
+                Color.BLACK
+            }
+        val valueAnimator =
+            ValueAnimator.ofObject(ArgbEvaluator(), initialColor, newBackgroundColor)
+        valueAnimator.duration = 300
+        valueAnimator.interpolator = AccelerateDecelerateInterpolator()
+        val colorsArray =
+            listOf(initialColor, gradientCenterColor, gradientEndColor).toIntArray()
+        valueAnimator.addUpdateListener {
+            colorsArray[0] = it.animatedValue as Int
+            backgroundDrawable.colors = colorsArray
+        }
+        valueAnimator.start()
     }
 
     override fun updateTimestamp(timestamp: Int) {
