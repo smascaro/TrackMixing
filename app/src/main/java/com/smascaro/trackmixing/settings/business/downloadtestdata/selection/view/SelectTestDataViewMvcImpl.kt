@@ -1,5 +1,6 @@
 package com.smascaro.trackmixing.settings.business.downloadtestdata.selection.view
 
+import android.graphics.Color
 import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,6 +28,8 @@ class SelectTestDataViewMvcImpl @Inject constructor(
     private lateinit var startDownloadButton: MaterialButton
     private lateinit var availableSpaceTextView: MaterialTextView
 
+    private var availableBytes = Long.MAX_VALUE
+    private var defaultMaterialTextColor: Int = 0
     override fun bindRootView(rootView: View?) {
         super.bindRootView(rootView)
         initialize()
@@ -45,6 +48,7 @@ class SelectTestDataViewMvcImpl @Inject constructor(
         totalDownloadSizeText = findViewById(R.id.tv_select_test_data_total_size)
         availableSpaceTextView = findViewById(R.id.tv_select_test_data_available_space)
 
+        defaultMaterialTextColor = totalDownloadSizeText.textColors.defaultColor
         startDownloadButton.setOnClickListener {
             getListeners().forEach {
                 it.onDownloadButtonClicked()
@@ -60,6 +64,7 @@ class SelectTestDataViewMvcImpl @Inject constructor(
     }
 
     override fun bindAvailableSpace(availableBytes: Long) {
+        this.availableBytes = availableBytes
         var text = ""
         if (availableBytes > 1 * 1000 * 1000 * 1000) {
             text = availableBytes.asGB
@@ -89,6 +94,11 @@ class SelectTestDataViewMvcImpl @Inject constructor(
 
     override fun updateSizeToDownload(bytesToDownload: Int) {
         updateTotalSize(bytesToDownload)
+        if (bytesToDownload > availableBytes) {
+            totalDownloadSizeText.setTextColor(Color.RED)
+        } else {
+            totalDownloadSizeText.setTextColor(defaultMaterialTextColor)
+        }
     }
 
     override fun showError(message: String?) {
