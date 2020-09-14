@@ -22,9 +22,9 @@ class BottomPlayerFlingDetectorListener : GestureDetector.SimpleOnGestureListene
     ): Boolean {
         val fling =
             if (e1 != null && e2 != null) {
-                if (e2.x - e1.x > 120 && abs(velocityX) > 200) {
+                if (e2.x - e1.x > 120 && abs(velocityX) > 100) {
                     FlingMode.LEFT_TO_RIGHT
-                } else if (e1.y - e2.y > 120 && abs(velocityX) > 200) {
+                } else if (e1.y - e2.y > 120 && abs(velocityX) > 100) {
                     FlingMode.BOTTOM_TO_TOP
                 } else {
                     FlingMode.NONE
