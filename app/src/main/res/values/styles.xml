@@ -27,4 +27,19 @@
         <item name="android:textColor">@color/textOnPrimary</item>¡
         <item name="android:text">@string/app_name</item>
     </style>
+
+    <style name="AppTheme.TM.PlayerBar" />
+
+    <style name="AppTheme.TM.PlayerBar.Track" parent="AppTheme.TM.PlayerBar" />
+
+    <style name="AppTheme.TM.PlayerBar.Track.TitleTextAppearance" parent="AppTheme.TM.PlayerBar.Track">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:marqueeRepeatLimit">marquee_forever</item>
+        <item name="android:gravity">start|center_vertical</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/textOnAccent</item>
+        <item name="android:textSize">@dimen/actions_bottom_title_text_size</item>
+    </style>
 </resources>
