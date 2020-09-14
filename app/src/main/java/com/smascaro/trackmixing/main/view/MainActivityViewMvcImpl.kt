@@ -88,10 +88,19 @@ class MainActivityViewMvcImpl @Inject constructor(
         toolbar.setOnMenuItemClickListener {
             if (it.itemId == R.id.destination_settings) {
                 navigateToSettings()
+            } else if (it.itemId == R.id.destination_search) {
+                navigateToSearch()
             } else {
                 false
             }
         }
+    }
+
+    private fun navigateToSearch(): Boolean {
+        getListeners().forEach {
+            it.onSearchMenuButtonClicked()
+        }
+        return true
     }
 
     private fun navigateToSettings(): Boolean {

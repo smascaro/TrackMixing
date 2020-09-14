@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".trackslist.view.TracksListFragment"
-    android:background="@color/transparent">
+    android:background="@color/transparent"
+    tools:context=".trackslist.view.TracksListFragment">
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -25,6 +25,7 @@
         android:layout_marginEnd="@dimen/fab_margin_right"
         android:layout_marginBottom="@dimen/fab_margin_bottom"
         android:src="@android:drawable/ic_menu_search"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

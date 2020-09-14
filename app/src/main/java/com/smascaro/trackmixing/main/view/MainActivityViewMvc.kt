@@ -8,6 +8,7 @@ interface MainActivityViewMvc :
         fun onToolbarBackButtonPressed()
         fun onSettingsMenuButtonClicked()
         fun onPlayerStateChanged()
+        fun onSearchMenuButtonClicked()
     }
 
     fun showMessage(text: String)

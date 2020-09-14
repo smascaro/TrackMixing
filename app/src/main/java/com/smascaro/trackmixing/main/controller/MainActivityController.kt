@@ -49,6 +49,10 @@ class MainActivityController @Inject constructor(
         updateBackgroundColor()
     }
 
+    override fun onSearchMenuButtonClicked() {
+        navigationHelper.toSearch()
+    }
+
     private fun updateBackgroundColor() {
         val state = playbackStateManager.getPlayingState()
         if (state is PlaybackStateManager.PlaybackState.Stopped) {
