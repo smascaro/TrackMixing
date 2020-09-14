@@ -24,7 +24,7 @@ import javax.inject.Inject
 
 class BottomPlayerViewMvcImpl @Inject constructor(
     private val serviceChecker: MixPlayerServiceChecker,
-    resources: ResourcesWrapper
+    private val resources: ResourcesWrapper
 ) :
     BaseObservableViewMvc<BottomPlayerViewMvc.Listener>(),
     BottomPlayerViewMvc,
@@ -119,22 +119,28 @@ class BottomPlayerViewMvcImpl @Inject constructor(
 
     override fun showPlayerBar(data: BottomPlayerData) {
         if (shouldReloadBottomBar(data)) {
-            resetBottomBarDefaultPosition()
-            bottomBar.visibility = View.VISIBLE
-            if (bottomBarTextView.text != data.title) {
-                bottomBarTextView.text = data.title
+            val textToShow =
+                resources.getString(R.string.player_bottom_title, data.title, data.author)
+            if (isBottomBarShown) {
+                bottomBarTextView.text = textToShow
+            } else {
+                resetBottomBarDefaultPosition()
+                bottomBar.visibility = View.VISIBLE
+                if (bottomBarTextView.text != textToShow) {
+                    bottomBarTextView.text = textToShow
+                }
+                val animation = ResizeAnimation(bottomBar, bottomBarVisibleHeight.toInt()).apply {
+                    duration = inAnimationDuration
+                }
+                bottomBar.startAnimation(animation)
             }
-            val animation = ResizeAnimation(bottomBar, bottomBarVisibleHeight.toInt()).apply {
-                duration = inAnimationDuration
-            }
-            bottomBar.startAnimation(animation)
             isBottomBarShown = true
             currentShownData = data
         }
     }
 
     private fun shouldReloadBottomBar(data: BottomPlayerData) =
-        !isBottomBarShown || currentShownData?.title != data.title || currentShownData?.thumbnailUrl != data.thumbnailUrl
+        !isBottomBarShown || currentShownData?.title != data.title || currentShownData?.author != data.author
 
     override fun hidePlayerBar(mode: HideBarMode) {
         if (isBottomBarShown) {

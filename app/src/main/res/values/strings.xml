@@ -11,4 +11,5 @@
     <string name="item_track_separator_character">·</string>
     <string name="item_test_data_selection_separator_character">·</string>
     <string name="select_test_data_available_space">(%1$s available)</string>
+    <string name="player_bottom_title">%1$s - %2$s</string>
 </resources>

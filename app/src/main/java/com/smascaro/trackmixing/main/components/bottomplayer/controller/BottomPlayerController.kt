@@ -58,6 +58,7 @@ class BottomPlayerController @Inject constructor(
     private fun makeBottomPlayerData(): BottomPlayerData {
         return BottomPlayerData(
             currentTrack!!.title,
+            currentTrack!!.author,
             currentState!!,
             currentTrack!!.thumbnailUrl
         )
