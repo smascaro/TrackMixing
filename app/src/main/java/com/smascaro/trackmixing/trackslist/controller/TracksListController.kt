@@ -22,7 +22,6 @@ class TracksListController @Inject constructor(
     private val mFetchDownloadedTracks: FetchDownloadedTracks,
     private val playbackSession: PlaybackSession,
     private val eventBus: EventBus,
-    private val playbackStateManager: PlaybackStateManager,
     navigationHelper: NavigationHelper
 ) : BaseNavigatorController<TracksListViewMvc>(navigationHelper),
     TracksListViewMvc.Listener,
@@ -30,13 +29,6 @@ class TracksListController @Inject constructor(
 
     override fun onSearchNavigationButtonClicked() {
         navigateToSearch()
-    }
-
-    override fun onPlayerStateChanged() {
-        val state = playbackStateManager.getPlayingState()
-        if (state is PlaybackState.Stopped) {
-            viewMvc.updateBackgroundColorToDefault()
-        }
     }
 
     private fun navigateToSearch() {
@@ -54,7 +46,6 @@ class TracksListController @Inject constructor(
         mFetchDownloadedTracks.registerListener(this)
         eventBus.register(this)
         loadTracks()
-        viewMvc.updateBackgroundColorToDefault()
     }
 
     fun onStop() {
@@ -65,7 +56,6 @@ class TracksListController @Inject constructor(
 
     override fun onTrackClicked(track: Track) {
         playbackSession.startPlayback(track)
-        viewMvc.updateBackgroundColor(track.backgroundColor)
     }
 
     override fun onTracksFetched(tracks: List<Track>) {

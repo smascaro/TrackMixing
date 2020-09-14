@@ -1,23 +1,42 @@
 package com.smascaro.trackmixing.main.view
 
+import android.animation.ArgbEvaluator
+import android.animation.ValueAnimator
+import android.content.SharedPreferences
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
+import android.os.Build
 import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
 import android.widget.Toast
 import com.google.android.material.textview.MaterialTextView
 import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.common.utils.UiUtils
+import com.smascaro.trackmixing.common.utils.*
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
 import com.smascaro.trackmixing.player.business.downloadtrack.TrackDownloadService
 import javax.inject.Inject
 import kotlin.concurrent.thread
 
-class MainActivityViewMvcImpl @Inject constructor(private val uiUtils: UiUtils) :
+class MainActivityViewMvcImpl @Inject constructor(
+    private val uiUtils: UiUtils,
+    resourcesWrapper: ResourcesWrapper
+) :
     MainActivityViewMvc,
-    BaseObservableViewMvc<MainActivityViewMvc.Listener>() {
+    BaseObservableViewMvc<MainActivityViewMvc.Listener>(),
+    SharedPreferences.OnSharedPreferenceChangeListener {
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
     private lateinit var toolbarTitleText: MaterialTextView
     private lateinit var toolbarBackButtonImageView: ImageView
+    private lateinit var backgroundGradient: View
 
+    private val gradientCenterColor =
+        resourcesWrapper.getColor(R.color.track_player_background_gradient_center_color)
+    private val gradientEndColor =
+        resourcesWrapper.getColor(R.color.track_player_background_gradient_end_color)
+    private val defaultGradientStartColor = resourcesWrapper.getColor(R.color.colorAccent)
+
+    private lateinit var sharedPreferences: SharedPreferences
     override fun bindRootView(rootView: View?) {
         super.bindRootView(rootView)
         initialize()
@@ -25,9 +44,25 @@ class MainActivityViewMvcImpl @Inject constructor(private val uiUtils: UiUtils) 
     }
 
     private fun initializeListeners() {
+        backgroundGradient = findViewById(R.id.v_background_gradient)
         toolbarBackButtonImageView.setOnClickListener {
             getListeners().forEach {
                 it.onToolbarBackButtonPressed()
+            }
+        }
+        setupSharedPreferences()
+    }
+
+    private fun setupSharedPreferences() {
+        sharedPreferences =
+            SharedPreferencesFactory.getPlaybackSharedPreferencesFactory(getContext()!!)
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        if (key != null && key == SHARED_PREFERENCES_PLAYBACK_SONG_PLAYING || key == SHARED_PREFERENCES_PLAYBACK_IS_PLAYING) {
+            getListeners().forEach {
+                it.onPlayerStateChanged()
             }
         }
     }
@@ -76,6 +111,35 @@ class MainActivityViewMvcImpl @Inject constructor(private val uiUtils: UiUtils) 
                 TrackDownloadService.start(getContext()!!, url)
             }
         }
+    }
+
+    override fun updateBackgroundColor(newBackgroundColor: Int) {
+        animateBackgroundGradientTo(newBackgroundColor)
+    }
+
+    override fun updateBackgroundColorToDefault() {
+        animateBackgroundGradientTo(defaultGradientStartColor)
+    }
+
+    private fun animateBackgroundGradientTo(newBackgroundColor: Int) {
+        val backgroundDrawable = backgroundGradient.background as GradientDrawable
+        val initialColor =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                backgroundDrawable.colors?.first() ?: Color.BLACK
+            } else {
+                Color.BLACK
+            }
+        val valueAnimator =
+            ValueAnimator.ofObject(ArgbEvaluator(), initialColor, newBackgroundColor)
+        valueAnimator.duration = 700
+        valueAnimator.interpolator = AccelerateDecelerateInterpolator()
+        val colorsArray =
+            listOf(initialColor, gradientCenterColor, gradientEndColor).toIntArray()
+        valueAnimator.addUpdateListener {
+            colorsArray[0] = it.animatedValue as Int
+            backgroundDrawable.colors = colorsArray
+        }
+        valueAnimator.start()
     }
 
 }

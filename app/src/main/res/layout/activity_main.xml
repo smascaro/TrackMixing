@@ -1,59 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        style="@style/AppTheme.TM.ActionBar"
+    <View
+        android:id="@+id/v_background_gradient"
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
-        app:title="TrackMixing">
-
-        <ImageView
-            android:id="@+id/iv_toolbar_back_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_back_24dp"
-            android:layout_marginEnd="8dp"
-            android:visibility="gone" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tv_toolbar_title"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:text="TrackMixing"
-            android:textAppearance="@style/AppTheme.TM.ActionBar.TitleTextStyle" />
-    </androidx.appcompat.widget.Toolbar>
-
-    <include
-        android:id="@+id/layout_player_actions_bottom"
-        layout="@layout/layout_actions_bottom" />
+        android:layout_height="1500dp"
+        android:background="@drawable/background_gradient"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.64" />
 
     <RelativeLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/layout_player_actions_bottom"
-        android:layout_below="@id/toolbar">
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/AppTheme.TM.ActionBar"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            app:title="TrackMixing">
+
+            <ImageView
+                android:id="@+id/iv_toolbar_back_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/ic_back_24dp"
+                android:visibility="gone" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_toolbar_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="TrackMixing"
+                android:textAppearance="@style/AppTheme.TM.ActionBar.TitleTextStyle" />
+        </androidx.appcompat.widget.Toolbar>
 
         <include
-            android:id="@+id/layout_progress_container"
-            layout="@layout/layout_download_progress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true" />
+            android:id="@+id/layout_player_actions_bottom"
+            layout="@layout/layout_actions_bottom" />
 
-        <fragment
-            android:id="@+id/nav_host_fragment"
-            android:name="androidx.navigation.fragment.NavHostFragment"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/layout_progress_container"
-            app:defaultNavHost="true"
-            app:navGraph="@navigation/mobile_navigation" />
+            android:layout_above="@id/layout_player_actions_bottom"
+            android:layout_below="@id/toolbar">
+
+            <include
+                android:id="@+id/layout_progress_container"
+                layout="@layout/layout_download_progress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true" />
+
+            <fragment
+                android:id="@+id/nav_host_fragment"
+                android:name="androidx.navigation.fragment.NavHostFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@id/layout_progress_container"
+                app:defaultNavHost="true"
+                app:navGraph="@navigation/mobile_navigation" />
+        </RelativeLayout>
     </RelativeLayout>
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,6 +16,8 @@
     <color name="item_test_data_selection_title_text_color">#FFFFFF</color>
     <color name="track_player_background_gradient_center_color">#FF202020</color>
     <color name="track_player_background_gradient_end_color">@color/colorBackground</color>
-    <color name="track_player_background_gradient_initial_start_color">@color/colorBackground
+    <color name="track_player_background_gradient_initial_start_color">
+        @color/colorBackground
     </color>
+    <color name="transparent">#00000000</color>
 </resources>

@@ -7,10 +7,13 @@ interface MainActivityViewMvc :
     interface Listener {
         fun onToolbarBackButtonPressed()
         fun onSettingsMenuButtonClicked()
+        fun onPlayerStateChanged()
     }
 
     fun showMessage(text: String)
     fun startProcessingRequest(url: String)
     fun updateTitle(title: String, enableBackNavigation: Boolean)
     fun cleanUp()
+    fun updateBackgroundColor(newBackgroundColor: Int)
+    fun updateBackgroundColorToDefault()
 }

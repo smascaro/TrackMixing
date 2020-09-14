@@ -3,7 +3,6 @@ package com.smascaro.trackmixing.search.controller
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.controller.BaseNavigatorController
 import com.smascaro.trackmixing.common.utils.NavigationHelper
-import com.smascaro.trackmixing.common.utils.PlaybackStateManager
 import com.smascaro.trackmixing.common.utils.ResourcesWrapper
 import com.smascaro.trackmixing.search.business.SearchYoutubeVideosUseCase
 import com.smascaro.trackmixing.search.model.SearchResult
@@ -12,7 +11,6 @@ import javax.inject.Inject
 
 class SearchResultsController @Inject constructor(
     private val searchYoutubeVideosUseCase: SearchYoutubeVideosUseCase,
-    private val playbackStateManager: PlaybackStateManager,
     resourcesWrapper: ResourcesWrapper,
     p_navigationHelper: NavigationHelper
 ) : BaseNavigatorController<SearchResultsViewMvc>(p_navigationHelper),
@@ -31,16 +29,8 @@ class SearchResultsController @Inject constructor(
         navigationHelper.back()
     }
 
-    override fun onPlayerStateChanged() {
-        val state = playbackStateManager.getPlayingState()
-        if (state is PlaybackStateManager.PlaybackState.Stopped) {
-            viewMvc.updateBackgroundColorToDefault()
-        }
-    }
-
     fun onStart() {
         viewMvc.registerListener(this)
-        viewMvc.updateBackgroundColorToDefault()
     }
 
     fun onStop() {
