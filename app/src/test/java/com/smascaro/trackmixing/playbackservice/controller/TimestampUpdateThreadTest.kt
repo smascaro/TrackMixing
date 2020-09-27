@@ -30,7 +30,8 @@ class TimestampUpdateThreadTest {
     // endregion constants
 
     // region helper fields
-    @Mock private lateinit var playbackHelper: PlaybackHelper
+    @Mock
+    private lateinit var playbackHelper: PlaybackHelper
     private lateinit var eventBusTd: EventBusTd
     private val mainThreadSurrogate = newSingleThreadContext("UI thread")
     // endregion helper fields
@@ -90,7 +91,7 @@ class TimestampUpdateThreadTest {
     }
 
     private fun mockPlaybackHelperGetTimestampMillis() {
-        `when`(playbackHelper.getTimestampMillis()).thenReturn(playingTrackTimestampMillis)
+        `when`(playbackHelper.getTimestampSeconds()).thenReturn(playingTrackTimestampMillis)
     }
     // endregion helper methods
 

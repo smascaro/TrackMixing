@@ -164,7 +164,7 @@ class TracksPlayerViewMvcImpl @Inject constructor(resourcesWrapper: ResourcesWra
     override fun updateTimestamp(timestamp: Int) {
         currentTimestampTextView.text =
             transformSecondsToTimeRepresentation(timestamp)
-        songProgressSeekbar.progress = timestamp
+        songProgressSeekbar.progress = timestamp.toInt()
     }
 
     private fun transformSecondsToTimeRepresentation(seconds: Int): String {

@@ -3,8 +3,8 @@ package com.smascaro.trackmixing.player.controller
 import com.smascaro.trackmixing.common.controller.BaseController
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.error.NoLoadedTrackException
-import com.smascaro.trackmixing.common.utils.ui.ColorExtractor
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager
+import com.smascaro.trackmixing.common.utils.ui.ColorExtractor
 import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
 import com.smascaro.trackmixing.playbackservice.utils.PlaybackSession
