@@ -14,13 +14,12 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.data.model.NotificationData
-import com.smascaro.trackmixing.common.error.NonExistentInstrumentException
 import com.smascaro.trackmixing.common.error.WrongArgumentType
 import com.smascaro.trackmixing.common.utils.*
 import com.smascaro.trackmixing.common.utils.ui.NotificationHelper
+import com.smascaro.trackmixing.main.view.MainActivity
 import com.smascaro.trackmixing.playbackservice.MixPlayerService
 import com.smascaro.trackmixing.playbackservice.model.MixPlaybackState
-import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
 import javax.inject.Inject
 
 class PlayerNotificationHelper @Inject constructor(
@@ -73,23 +72,6 @@ class PlayerNotificationHelper @Inject constructor(
             R.drawable.ic_play
         }
 
-        val actionVocals =
-            createIntentTrack(TrackInstrument.VOCALS, playbackState.isVocalsPlaying)
-        val drawableMuteUnmuteVocals =
-            getTrackDrawableId(TrackInstrument.VOCALS, playbackState.isVocalsPlaying)
-
-        val actionOther = createIntentTrack(TrackInstrument.OTHER, playbackState.isOtherPlaying)
-        val drawableMuteUnmuteOther =
-            getTrackDrawableId(TrackInstrument.OTHER, playbackState.isOtherPlaying)
-
-        val actionBass = createIntentTrack(TrackInstrument.BASS, playbackState.isBassPlaying)
-        val drawableMuteUnmuteBass =
-            getTrackDrawableId(TrackInstrument.BASS, playbackState.isBassPlaying)
-
-        val actionDrums = createIntentTrack(TrackInstrument.DRUMS, playbackState.isDrumsPlaying)
-        val drawableMuteUnmuteDrums =
-            getTrackDrawableId(TrackInstrument.DRUMS, playbackState.isDrumsPlaying)
-
         if (mMediaSession == null) {
             mMediaSession =
                 MediaSessionCompat(
@@ -107,15 +89,12 @@ class PlayerNotificationHelper @Inject constructor(
                 setOnlyAlertOnce(true)
                 setShowWhen(false)
                 addAction(drawablePlayPause, "Play/Pause", actionPlayPause)
-                addAction(drawableMuteUnmuteVocals, "Mute/Unmute vocals", actionVocals)
-                addAction(drawableMuteUnmuteOther, "Mute/Unmute guitar", actionOther)
-                addAction(drawableMuteUnmuteBass, "Mute/Unmute bass", actionBass)
-                addAction(drawableMuteUnmuteDrums, "Mute/Unmute drums", actionDrums)
                 setStyle(
                     androidx.media.app.NotificationCompat.MediaStyle()
                         .setShowActionsInCompactView(0)
                         .setMediaSession(mMediaSession?.sessionToken)
                 )
+                setContentIntent(createTapIntent())
                 setDeleteIntent(createDeleteIntent())
                 priority = NotificationCompat.PRIORITY_HIGH
             }
@@ -125,32 +104,14 @@ class PlayerNotificationHelper @Inject constructor(
         notificationManager.notify(PLAYER_NOTIFICATION_ID, notificationBuilder.build())
     }
 
-    private fun getTrackDrawableId(
-        trackInstrument: TrackInstrument,
-        isPlaying: Boolean
-    ): Int {
-        return if (trackInstrument == TrackInstrument.VOCALS && isPlaying) {
-            R.drawable.ic_vocals_mute
-        } else if (trackInstrument == TrackInstrument.VOCALS && !isPlaying) {
-            R.drawable.ic_vocals_unmute
-        } else if (trackInstrument == TrackInstrument.OTHER && isPlaying) {
-            R.drawable.ic_guitar_mute
-        } else if (trackInstrument == TrackInstrument.OTHER && !isPlaying) {
-            R.drawable.ic_guitar_unmute
-        } else if (trackInstrument == TrackInstrument.BASS && isPlaying) {
-            R.drawable.ic_bass_mute
-        } else if (trackInstrument == TrackInstrument.BASS && !isPlaying) {
-            R.drawable.ic_bass_unmute
-        } else if (trackInstrument == TrackInstrument.DRUMS && isPlaying) {
-            R.drawable.ic_drums_mute
-        } else if (trackInstrument == TrackInstrument.DRUMS && !isPlaying) {
-            R.drawable.ic_drums_unmute
-        } else {
-            throw NonExistentInstrumentException(
-                "Instrument $trackInstrument does not exist or is not supported"
-            )
-        }
+    private fun createTapIntent(): PendingIntent? {
+        val intent = Intent(context, MainActivity::class.java)
+        intent.action = PLAYER_NOTIFICATION_ACTION_LAUNCH_PLAYER
+        val pendingIntent =
+            PendingIntent.getActivity(context, 3, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+        return pendingIntent
     }
+
 
     private fun createDeleteIntent(): PendingIntent? {
         val intent = Intent(context, MixPlayerService::class.java)
@@ -161,36 +122,6 @@ class PlayerNotificationHelper @Inject constructor(
             2,
             intent,
             PendingIntent.FLAG_CANCEL_CURRENT
-        )
-        return pendingIntent
-    }
-
-    private fun createIntentTrack(instrument: TrackInstrument, isPlaying: Boolean): PendingIntent {
-        val intent = Intent(context, MixPlayerService::class.java)
-        val action = when (instrument) {
-            TrackInstrument.VOCALS -> when (isPlaying) {
-                true -> PLAYER_NOTIFICATION_ACTION_MUTE_VOCALS
-                false -> PLAYER_NOTIFICATION_ACTION_UNMUTE_VOCALS
-            }
-            TrackInstrument.OTHER -> when (isPlaying) {
-                true -> PLAYER_NOTIFICATION_ACTION_MUTE_OTHER
-                false -> PLAYER_NOTIFICATION_ACTION_UNMUTE_OTHER
-            }
-            TrackInstrument.BASS -> when (isPlaying) {
-                true -> PLAYER_NOTIFICATION_ACTION_MUTE_BASS
-                false -> PLAYER_NOTIFICATION_ACTION_UNMUTE_BASS
-            }
-            TrackInstrument.DRUMS -> when (isPlaying) {
-                true -> PLAYER_NOTIFICATION_ACTION_MUTE_DRUMS
-                false -> PLAYER_NOTIFICATION_ACTION_UNMUTE_DRUMS
-            }
-        }
-        intent.action = action
-        val pendingIntent = PendingIntent.getService(
-            context,
-            1,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT
         )
         return pendingIntent
     }

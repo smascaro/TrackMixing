@@ -17,7 +17,8 @@
         android:theme="@style/AppTheme.TM.NoActionBar">
         <activity
             android:name=".main.view.MainActivity"
-            android:theme="@style/AppTheme.TM.NoActionBar.Fullscreen">
+            android:theme="@style/AppTheme.TM.NoActionBar.Fullscreen"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
