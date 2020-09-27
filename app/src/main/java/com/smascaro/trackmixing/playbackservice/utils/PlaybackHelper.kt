@@ -34,12 +34,9 @@ class PlaybackHelper @Inject constructor(private val context: Context) :
     fun getPlaybackState(): MixPlaybackState {
         return MixPlaybackState().apply {
             trackTitle = getTrack().title
+            author = getTrack().author
             trackThumbnailUrl = getTrack().thumbnailUrl
             isMasterPlaying = isPlaying()
-            isVocalsPlaying = true
-            isOtherPlaying = true
-            isBassPlaying = true
-            isDrumsPlaying = true
         }
     }
 
