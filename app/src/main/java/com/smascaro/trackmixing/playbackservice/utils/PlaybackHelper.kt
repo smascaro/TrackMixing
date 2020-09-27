@@ -132,7 +132,7 @@ class PlaybackHelper @Inject constructor(private val context: Context) :
         }
     }
 
-    fun seekMaster(newTimestampSeconds: Long) {
+    fun seekMaster(newTimestampSeconds: Int) {
         playerRack.seek(newTimestampSeconds)
     }
 
@@ -180,7 +180,7 @@ class PlaybackHelper @Inject constructor(private val context: Context) :
         return playerRack.getVolumesBundle()
     }
 
-    fun getTimestampMillis(): Long {
-        return playerRack.getCurrentPosition()
+    fun getTimestampSeconds(): Int {
+        return (playerRack.getCurrentPosition()).toInt()
     }
 }

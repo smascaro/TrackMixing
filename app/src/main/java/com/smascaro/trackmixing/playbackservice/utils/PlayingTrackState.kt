@@ -145,11 +145,11 @@ class PlayingTrackState(
         return mVolume
     }
 
-    fun getTimestampMillis(): Long {
-        return player.currentPosition
+    fun getTimestampSeconds(): Long {
+        return player.currentPosition / 1000
     }
 
-    fun seek(timestampSeconds: Long) {
-        player.seekTo(timestampSeconds * 1000)
+    fun seek(timestampSeconds: Int) {
+        player.seekTo(timestampSeconds * 1000L)
     }
 }

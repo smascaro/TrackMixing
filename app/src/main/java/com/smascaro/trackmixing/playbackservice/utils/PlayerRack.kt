@@ -26,7 +26,7 @@ class PlayerRack : PlayerActions {
         rack[instrument]?.pause()
     }
 
-    override fun seek(newPosition: Long) {
+    override fun seek(newPosition: Int) {
         rack.forEach { it.value.seek(newPosition) }
     }
 
@@ -51,7 +51,7 @@ class PlayerRack : PlayerActions {
     }
 
     override fun getCurrentPosition(): Long {
-        return rack.values.maxOf { it.getTimestampMillis() }
+        return rack.values.maxOf { it.getTimestampSeconds() }
     }
 
     override fun isCompleted(instrument: TrackInstrument): Boolean {

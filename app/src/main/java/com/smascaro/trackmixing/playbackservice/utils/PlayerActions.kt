@@ -7,7 +7,7 @@ interface PlayerActions {
     fun play(instrument: TrackInstrument)
     fun pause()
     fun pause(instrument: TrackInstrument)
-    fun seek(newPosition: Long)
+    fun seek(newPosition: Int)
     fun getVolume(instrument: TrackInstrument): Float
     fun setVolume(volume: Int, instrument: TrackInstrument? = null)
     fun getCurrentPosition(): Long
