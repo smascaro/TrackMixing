@@ -43,6 +43,8 @@ class TracksPlayerViewMvcImpl @Inject constructor(resourcesWrapper: ResourcesWra
     private val gradientEndColor =
         resourcesWrapper.getColor(R.color.track_player_background_gradient_end_color)
 
+    private var blockTimestampUpdates: Boolean = false
+
     override fun bindRootView(rootView: View?) {
         super.bindRootView(rootView)
         initialize()
@@ -78,16 +80,22 @@ class TracksPlayerViewMvcImpl @Inject constructor(resourcesWrapper: ResourcesWra
         }
 
         val progressChangeListener = ProgressSeekBarChangeListener()
-        progressChangeListener.setOnProgressChanged { _, progress, _ ->
-            currentTimestampTextView.text = transformSecondsToTimeRepresentation(progress)
+
+        progressChangeListener.setOnStartTrackingTouch {
+            blockTimestampUpdates = true
         }
 
         progressChangeListener.setOnStopTrackingTouch { seekBar ->
             if (seekBar != null) {
+                blockTimestampUpdates = false
                 getListeners().forEach {
                     it.onSeekRequestEvent(seekBar.progress)
                 }
             }
+        }
+
+        progressChangeListener.setOnProgressChanged { _, progress, _ ->
+            currentTimestampTextView.text = transformSecondsToTimeRepresentation(progress)
         }
         songProgressSeekbar.setOnSeekBarChangeListener(progressChangeListener)
     }
@@ -162,9 +170,11 @@ class TracksPlayerViewMvcImpl @Inject constructor(resourcesWrapper: ResourcesWra
     }
 
     override fun updateTimestamp(timestamp: Int) {
-        currentTimestampTextView.text =
-            transformSecondsToTimeRepresentation(timestamp)
-        songProgressSeekbar.progress = timestamp.toInt()
+        if (!blockTimestampUpdates) {
+            currentTimestampTextView.text =
+                transformSecondsToTimeRepresentation(timestamp)
+            songProgressSeekbar.progress = timestamp
+        }
     }
 
     private fun transformSecondsToTimeRepresentation(seconds: Int): String {

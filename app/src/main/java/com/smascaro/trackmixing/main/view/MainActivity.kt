@@ -1,5 +1,6 @@
 package com.smascaro.trackmixing.main.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.navigation.NavController
@@ -57,6 +58,7 @@ class MainActivity : BaseActivity(), BaseFragment.OnTitleChangeListener {
 
         bottomPlayerViewMvc.bindRootView(rootView)
         bottomPlayerController.bindViewMvc(bottomPlayerViewMvc)
+        bottomPlayerController.handleIntent(intent)
 
         bottomProgressViewMvc.bindRootView(rootView)
         bottomProgressController.bindViewMvc(bottomProgressViewMvc)
@@ -91,5 +93,10 @@ class MainActivity : BaseActivity(), BaseFragment.OnTitleChangeListener {
 
     override fun changeTitle(title: String, enableBackNavigation: Boolean) {
         mainActivityController.updateTitle(title, enableBackNavigation)
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        bottomPlayerController.handleIntent(intent)
     }
 }

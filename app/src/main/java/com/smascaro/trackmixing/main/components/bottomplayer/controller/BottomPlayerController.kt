@@ -1,9 +1,11 @@
 package com.smascaro.trackmixing.main.components.bottomplayer.controller
 
+import android.content.Intent
 import com.smascaro.trackmixing.common.controller.BaseNavigatorController
 import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepository
 import com.smascaro.trackmixing.common.data.datasource.repository.toModel
 import com.smascaro.trackmixing.common.data.model.Track
+import com.smascaro.trackmixing.common.utils.PLAYER_NOTIFICATION_ACTION_LAUNCH_PLAYER
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager
 import com.smascaro.trackmixing.common.utils.navigation.NavigationHelper
 import com.smascaro.trackmixing.main.components.bottomplayer.model.BottomPlayerData
@@ -30,6 +32,7 @@ class BottomPlayerController @Inject constructor(
     private var currentTrack: Track? = null
     private var currentState: PlaybackStateManager.PlaybackState? = null
 
+    private var openPlayerIntentRequested: Boolean = false
     fun onCreate() {
         ensureViewMvcBound()
         viewMvc.registerListener(this)
@@ -53,6 +56,9 @@ class BottomPlayerController @Inject constructor(
             } else if (currentState is PlaybackStateManager.PlaybackState.Stopped) {
 //                viewMvc.hidePlayerBar(HideBarMode.Vertical())
             }
+            if (openPlayerIntentRequested) {
+                navigateToPlayer()
+            }
         }
 
     private fun makeBottomPlayerData(): BottomPlayerData {
@@ -75,6 +81,7 @@ class BottomPlayerController @Inject constructor(
 
     fun navigateToPlayer() {
         if (currentTrack != null) {
+            openPlayerIntentRequested = false
             navigationHelper.toPlayer(currentTrack!!)
         }
     }
@@ -116,5 +123,12 @@ class BottomPlayerController @Inject constructor(
     private fun handleTimestampChanged(newTimestamp: Int, totalLength: Int) {
         Timber.d("Received timestamp event: $newTimestamp / $totalLength")
         viewMvc.updateTimestamp((newTimestamp.toFloat()) / (totalLength.toFloat()))
+    }
+
+    fun handleIntent(intent: Intent?) {
+        if (intent?.action == PLAYER_NOTIFICATION_ACTION_LAUNCH_PLAYER) {
+            openPlayerIntentRequested = true
+            navigateToPlayer()
+        }
     }
 }
