@@ -22,12 +22,19 @@ class TimestampUpdateThread(
         try {
             while (true) {
                 ensureActive()
-                currentTimestampSeconds = playbackHelper.getTimestampMillis() / 1000
+                currentTimestampSeconds = playbackHelper.getTimestampSeconds()
                 Timber.d(
-                    "Sending timestamp ${TimeHelper.fromSeconds(currentTimestampSeconds.toLong())
-                        .toStringRepresentation()}"
+                    "Sending timestamp ${
+                        TimeHelper.fromSeconds(currentTimestampSeconds.toLong())
+                            .toStringRepresentation()
+                    }"
                 )
-                eventBus.post(PlaybackEvent.TimestampChanged(currentTimestampSeconds, totalLength))
+                eventBus.post(
+                    PlaybackEvent.TimestampChanged(
+                        currentTimestampSeconds,
+                        totalLength
+                    )
+                )
                 delay(1 * 1000)
             }
         } catch (e: CancellationException) {

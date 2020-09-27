@@ -8,7 +8,6 @@ import com.smascaro.trackmixing.common.utils.PlaybackStateManager.PlaybackState
 import com.smascaro.trackmixing.common.utils.ui.NotificationHelper
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable
 import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
-import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
 import com.smascaro.trackmixing.playbackservice.utils.PlaybackHelper
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -139,14 +138,6 @@ class MixPlayerServiceController @Inject constructor(
         when (action) {
             PLAYER_NOTIFICATION_ACTION_PLAY_MASTER -> playMaster()
             PLAYER_NOTIFICATION_ACTION_PAUSE_MASTER -> pauseMaster()
-            PLAYER_NOTIFICATION_ACTION_MUTE_VOCALS -> playbackHelper.muteTrack(TrackInstrument.VOCALS)
-            PLAYER_NOTIFICATION_ACTION_UNMUTE_VOCALS -> playbackHelper.unmuteTrack(TrackInstrument.VOCALS)
-            PLAYER_NOTIFICATION_ACTION_MUTE_OTHER -> playbackHelper.muteTrack(TrackInstrument.OTHER)
-            PLAYER_NOTIFICATION_ACTION_UNMUTE_OTHER -> playbackHelper.unmuteTrack(TrackInstrument.OTHER)
-            PLAYER_NOTIFICATION_ACTION_MUTE_BASS -> playbackHelper.muteTrack(TrackInstrument.BASS)
-            PLAYER_NOTIFICATION_ACTION_UNMUTE_BASS -> playbackHelper.unmuteTrack(TrackInstrument.BASS)
-            PLAYER_NOTIFICATION_ACTION_MUTE_DRUMS -> playbackHelper.muteTrack(TrackInstrument.DRUMS)
-            PLAYER_NOTIFICATION_ACTION_UNMUTE_DRUMS -> playbackHelper.unmuteTrack(TrackInstrument.DRUMS)
             PLAYER_NOTIFICATION_ACTION_START_SERVICE -> onStart()
             PLAYER_NOTIFICATION_ACTION_STOP_SERVICE -> stopService()
         }
