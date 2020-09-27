@@ -10,9 +10,13 @@ import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
 import timber.log.Timber
 import javax.inject.Inject
 
-class PlaybackHelper @Inject constructor(private val context: Context) :
+class PlaybackHelper @Inject constructor(
+    private val context: Context,
+    private val audioStateManager: AudioStateManager
+) :
     BaseObservable<PlaybackHelper.Listener>(),
-    PlayingTrackState.Listener {
+    PlayingTrackState.Listener,
+    AudioStateManager.Listener {
     enum class State {
         PLAYING, PAUSED
     }
@@ -26,6 +30,7 @@ class PlaybackHelper @Inject constructor(private val context: Context) :
     private lateinit var mCurrentPlayingTrack: Track
     private var mIsInitialized: Boolean = false
 
+    private var playRequested: Boolean = false
     private var mCurrentState: State =
         State.PAUSED
     private val playerRack = PlayerRack()
@@ -57,7 +62,7 @@ class PlaybackHelper @Inject constructor(private val context: Context) :
         mCurrentState =
             State.PAUSED
         mCurrentPlayingTrack = track
-
+        audioStateManager.registerListener(this)
         val mVocalsState = PlayingTrackState.create(
             track,
             TrackInstrument.VOCALS,
@@ -96,7 +101,6 @@ class PlaybackHelper @Inject constructor(private val context: Context) :
         getListeners().forEach {
             it.onInitializationFinished()
         }
-
     }
 
     private fun resetPlayersIfInitialized() {
@@ -108,20 +112,29 @@ class PlaybackHelper @Inject constructor(private val context: Context) :
     fun finalize() {
         playerRack.unregisterListener(this)
         playerRack.finalize()
+        audioStateManager.unregisterListener(this)
     }
 
     fun playMaster() {
-        if (mCurrentState != State.PLAYING) {
-            playerRack.play()
-            mCurrentState =
-                State.PLAYING
-            notifyMediaStateChange()
+        val isReady = playerRack.isReadyToPlay()
+        if (mCurrentState != State.PLAYING && isReady) {
+            if (audioStateManager.requestAudioFocus()) {
+                Timber.d("Audio focus request granted")
+                playerRack.play()
+                mCurrentState =
+                    State.PLAYING
+                notifyMediaStateChange()
+            } else {
+                Timber.w("Audio focus request revoked")
+            }
+        } else if (!isReady) {
+            playRequested = true
         }
     }
 
-
     fun pauseMaster() {
         if (mCurrentState == State.PLAYING) {
+            audioStateManager.abandonAudioFocus()
             playerRack.pause()
             mCurrentState =
                 State.PAUSED
@@ -140,9 +153,17 @@ class PlaybackHelper @Inject constructor(private val context: Context) :
     }
 
     override fun onPlayerPrepared(instrument: TrackInstrument) {
-        mCurrentState =
-            State.PLAYING
-        notifyMediaStateChange()
+        Timber.d("[$instrument] is now prepared")
+        if (playerRack.isReadyToPlay()) {
+            Timber.d("All tracks are ready")
+            playMaster()
+            playRequested = false
+            mCurrentState =
+                State.PLAYING
+            notifyMediaStateChange()
+        } else {
+            Timber.d("But not all tracks are ready")
+        }
     }
 
     override fun onPlayerCompletion(instrument: TrackInstrument) {
@@ -179,5 +200,13 @@ class PlaybackHelper @Inject constructor(private val context: Context) :
 
     fun getTimestampSeconds(): Int {
         return (playerRack.getCurrentPosition()).toInt()
+    }
+
+    override fun onAudioFocusLoss() {
+        pauseMaster()
+    }
+
+    override fun onAudioFocusTransientLoss() {
+        pauseMaster()
     }
 }

@@ -12,4 +12,5 @@ interface PlayerActions {
     fun setVolume(volume: Int, instrument: TrackInstrument? = null)
     fun getCurrentPosition(): Long
     fun isCompleted(instrument: TrackInstrument): Boolean
+    fun isReadyToPlay(): Boolean
 }

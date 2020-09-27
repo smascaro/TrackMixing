@@ -10,29 +10,26 @@ class PlayerRack : PlayerActions {
         rack[instrument] = playingTrackState
     }
 
-    override fun play() {
-        rack.forEach { it.value.play() }
-    }
+    override fun play() = rack.forEach { it.value.play() }
+
 
     override fun play(instrument: TrackInstrument) {
         rack[instrument]?.play()
     }
 
-    override fun pause() {
-        rack.forEach { it.value.pause() }
-    }
+
+    override fun pause() = rack.forEach { it.value.pause() }
+
 
     override fun pause(instrument: TrackInstrument) {
         rack[instrument]?.pause()
     }
 
-    override fun seek(newPosition: Int) {
-        rack.forEach { it.value.seek(newPosition) }
-    }
+    override fun seek(newPosition: Int) = rack.forEach { it.value.seek(newPosition) }
 
-    override fun getVolume(instrument: TrackInstrument): Float {
-        return rack[instrument]?.getVolume() ?: 0f
-    }
+
+    override fun getVolume(instrument: TrackInstrument): Float = rack[instrument]?.getVolume() ?: 0f
+
 
     override fun setVolume(volume: Int, instrument: TrackInstrument?) {
         if (instrument == null) {
@@ -42,37 +39,36 @@ class PlayerRack : PlayerActions {
         }
     }
 
-    private fun setVolumeInstrument(instrument: TrackInstrument, volume: Int) {
-        rack[instrument]?.setVolume(volume)
-    }
+    private fun setVolumeInstrument(
+        instrument: TrackInstrument,
+        volume: Int
+    ) = rack[instrument]?.setVolume(volume)
 
-    private fun setVolumeMaster(volume: Int) {
-        rack.forEach { it.value.setVolume(volume) }
-    }
 
-    override fun getCurrentPosition(): Long {
-        return rack.values.maxOf { it.getTimestampSeconds() }
-    }
+    private fun setVolumeMaster(volume: Int) = rack.forEach { it.value.setVolume(volume) }
 
-    override fun isCompleted(instrument: TrackInstrument): Boolean {
-        return rack[instrument]?.isCompleted() ?: true
-    }
 
-    fun allCompleted(): Boolean {
-        return rack.values.all { it.isCompleted() }
-    }
+    override fun getCurrentPosition(): Long = rack.values.maxOf { it.getTimestampSeconds() }
 
-    fun clear() {
-        rack.clear()
-    }
 
-    fun unregisterListener(listener: PlayingTrackState.Listener) {
+    override fun isCompleted(instrument: TrackInstrument): Boolean =
+        rack[instrument]?.isCompleted() ?: true
+
+
+    override fun isReadyToPlay(): Boolean = rack.values.all { it.readyToPlay }
+
+
+    fun allCompleted(): Boolean = rack.values.all { it.isCompleted() }
+
+    fun clear() = rack.clear()
+
+
+    fun unregisterListener(listener: PlayingTrackState.Listener) =
         rack.forEach { it.value.unregisterListener(listener) }
-    }
 
-    fun finalize() {
-        rack.forEach { it.value.finalize() }
-    }
+
+    fun finalize() = rack.forEach { it.value.finalize() }
+
 
     fun getVolumesBundle(): TrackVolumeBundle {
         return TrackVolumeBundle(

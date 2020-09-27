@@ -18,7 +18,7 @@ class TimestampUpdateThread(
         job = run()
     }
 
-    private fun run() = CoroutineScope(Dispatchers.IO).launch {
+    private fun run() = CoroutineScope(Dispatchers.Main).launch {
         try {
             while (true) {
                 ensureActive()
