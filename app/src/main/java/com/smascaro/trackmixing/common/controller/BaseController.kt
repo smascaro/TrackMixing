@@ -15,5 +15,5 @@ abstract class BaseController<VIEW_MVC : ViewMvc> {
         }
     }
 
-    abstract fun dispose()
+    open fun dispose() {}
 }
