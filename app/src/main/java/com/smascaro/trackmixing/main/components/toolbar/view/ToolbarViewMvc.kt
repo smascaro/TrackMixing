@@ -3,7 +3,7 @@ package com.smascaro.trackmixing.main.components.toolbar.view
 import com.smascaro.trackmixing.common.view.architecture.ObservableViewMvc
 import com.smascaro.trackmixing.common.view.ui.BaseActivity
 
-interface ToolbarViewMvc : ObservableViewMvc<ToolbarViewMvc.Listener> {
+interface ToolbarViewMvc : ObservableViewMvc<ToolbarViewMvc.Listener>, ObservableQuerySearch {
     interface Listener {
         fun onToolbarBackButtonPressed()
         fun onSettingsMenuButtonClicked()
