@@ -10,6 +10,8 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.view.iterator
+import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.textview.MaterialTextView
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.utils.ResourcesWrapper
@@ -34,6 +36,7 @@ class MainActivityViewMvcImpl @Inject constructor(
     private lateinit var toolbarTitleText: MaterialTextView
     private lateinit var toolbarBackButtonImageView: ImageView
     private lateinit var backgroundGradient: View
+    private lateinit var toolbarSearchInputLayout: TextInputLayout
 
     private lateinit var activity: BaseActivity
     private val gradientCenterColor =
@@ -44,7 +47,6 @@ class MainActivityViewMvcImpl @Inject constructor(
 
     private lateinit var sharedPreferences: SharedPreferences
 
-    //    private var shouldShowSearchMenuItem = true
     override fun bindRootView(rootView: View?) {
         super.bindRootView(rootView)
         initialize()
@@ -96,6 +98,7 @@ class MainActivityViewMvcImpl @Inject constructor(
         toolbar = findViewById(R.id.toolbar)
         toolbarTitleText = toolbar.findViewById(R.id.tv_toolbar_title)
         toolbarBackButtonImageView = toolbar.findViewById(R.id.iv_toolbar_back_button)
+        toolbarSearchInputLayout = toolbar.findViewById(R.id.toolbar_search_input_layout)
 
         toolbar.inflateMenu(R.menu.options_menu_main)
         toolbar.setOnMenuItemClickListener {
@@ -113,7 +116,6 @@ class MainActivityViewMvcImpl @Inject constructor(
         getListeners().forEach {
             it.onSearchMenuButtonClicked()
         }
-//        shouldShowSearchMenuItem=false
         return true
     }
 
@@ -144,25 +146,13 @@ class MainActivityViewMvcImpl @Inject constructor(
         animateBackgroundGradientTo(defaultGradientStartColor)
     }
 
-    override fun showSearchButton() {
-        val menuItem = toolbar.menu.findItem(R.id.destination_search)
-        menuItem.isVisible = true
-        activity.invalidateOptionsMenu()
-    }
-
-    override fun hideSearchButton() {
-        val menuItem = toolbar.menu.findItem(R.id.destination_search)
-        menuItem.isVisible = false
-        activity.invalidateOptionsMenu()
-    }
-
     private fun animateBackgroundGradientTo(newBackgroundColor: Int) {
         val backgroundDrawable = backgroundGradient.background as GradientDrawable
         val initialColor =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 backgroundDrawable.colors?.first() ?: Color.BLACK
             } else {
-                Color.BLACK
+                Color.BLACK //TODO mantenir l'estat anterior per a pre-Nougat
             }
         val valueAnimator =
             ValueAnimator.ofObject(ArgbEvaluator(), initialColor, newBackgroundColor)
@@ -177,4 +167,47 @@ class MainActivityViewMvcImpl @Inject constructor(
         valueAnimator.start()
     }
 
+    override fun prepareSearchContextLayout() {
+        hideMenu()
+        hideTitle()
+        showSearchInput()
+    }
+
+    private fun hideMenu() {
+        val menuItems = toolbar.menu.iterator()
+        menuItems.forEach {
+            it.isVisible = false
+        }
+        activity.invalidateOptionsMenu()
+    }
+
+    private fun hideTitle() {
+        toolbarTitleText.visibility = View.GONE
+    }
+
+    private fun showSearchInput() {
+        toolbarSearchInputLayout.visibility = View.VISIBLE
+    }
+
+    override fun prepareTracksListContextLayout() {
+        hideSearchInput()
+        showMenu()
+        showTitle()
+    }
+
+    private fun hideSearchInput() {
+        toolbarSearchInputLayout.visibility = View.GONE
+    }
+
+    private fun showMenu() {
+        val menuItems = toolbar.menu.iterator()
+        menuItems.forEach {
+            it.isVisible = true
+        }
+        activity.invalidateOptionsMenu()
+    }
+
+    private fun showTitle() {
+        toolbarTitleText.visibility = View.VISIBLE
+    }
 }

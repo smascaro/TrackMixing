@@ -19,6 +19,6 @@ interface MainActivityViewMvc :
     fun cleanUp()
     fun updateBackgroundColor(newBackgroundColor: Int)
     fun updateBackgroundColorToDefault()
-    fun showSearchButton()
-    fun hideSearchButton()
+    fun prepareSearchContextLayout()
+    fun prepareTracksListContextLayout()
 }

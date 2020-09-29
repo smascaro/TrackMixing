@@ -86,11 +86,11 @@ class MainActivityController @Inject constructor(
     }
 
     private fun handleNavigationToTracksList() {
-        viewMvc.showSearchButton()
+        viewMvc.prepareTracksListContextLayout()
     }
 
     private fun handleNavigationToSearch() {
-        viewMvc.hideSearchButton()
+        viewMvc.prepareSearchContextLayout()
     }
 
 }
