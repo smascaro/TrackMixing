@@ -1,6 +1,5 @@
 package com.smascaro.trackmixing.search.view.resultitem
 
-import android.view.View
 import android.widget.ImageView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -22,22 +21,17 @@ class SearchResultsItemViewMvcImpl(private val glide: RequestManager) :
     private lateinit var searchResultDurationTextView: MaterialTextView
     private lateinit var searchResultStatusTextView: MaterialTextView
 
-    override fun bindRootView(rootView: View?) {
-        super.bindRootView(rootView)
-        initialize()
-    }
-
-    private fun initialize() {
+    override fun initialize() {
+        super.initialize()
         searchResultThumbnailImageView = findViewById(R.id.iv_item_track_thumbnail)
         searchResultTitleTextView = findViewById(R.id.tv_item_track_title)
         searchResultAuthorTextView = findViewById(R.id.tv_item_track_author)
         searchResultDurationTextView = findViewById(R.id.tv_item_track_duration)
         searchResultStatusTextView = findViewById(R.id.tv_item_track_status)
-
-        initializeListeners()
     }
 
-    private fun initializeListeners() {
+    override fun initializeListeners() {
+        super.initializeListeners()
         getRootView().setOnClickListener {
             getListeners().forEach {
                 it.onSearchResultClicked(searchResult)

@@ -1,7 +1,6 @@
 package com.smascaro.trackmixing.settings.business.downloadtestdata.selection.view
 
 import android.graphics.Color
-import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -30,12 +29,9 @@ class SelectTestDataViewMvcImpl @Inject constructor(
 
     private var availableBytes = Long.MAX_VALUE
     private var defaultMaterialTextColor: Int = 0
-    override fun bindRootView(rootView: View?) {
-        super.bindRootView(rootView)
-        initialize()
-    }
 
-    private fun initialize() {
+    override fun initialize() {
+        super.initialize()
         recyclerViewTestDataBundleInfo = findViewById(R.id.rv_select_test_data_tracks)
         recyclerViewTestDataBundleInfo.layoutManager = LinearLayoutManager(getContext())
         (recyclerViewTestDataBundleInfo.itemAnimator as SimpleItemAnimator).supportsChangeAnimations =

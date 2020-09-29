@@ -32,7 +32,8 @@ class TrackDetailsViewMvcImpl @Inject constructor(
         initializeIfReady()
     }
 
-    private fun initialize() {
+    override fun initialize() {
+        super.initialize()
         mImageThumbnail = findViewById(R.id.thumbnail_detail)
         mTrackTitleTxt = findViewById(R.id.track_title_detail)
         getRootView().transitionName = track.videoKey

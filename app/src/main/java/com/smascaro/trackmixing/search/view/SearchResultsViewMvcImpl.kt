@@ -1,7 +1,6 @@
 package com.smascaro.trackmixing.search.view
 
 import android.annotation.SuppressLint
-import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,13 +23,9 @@ class SearchResultsViewMvcImpl @Inject constructor(
     SearchResultsViewMvc, QuerySearchListener {
     private lateinit var resultsRecyclerView: RecyclerView
 
-    override fun bindRootView(rootView: View?) {
-        super.bindRootView(rootView)
-        initialize()
-    }
-
     @SuppressLint("ClickableViewAccessibility")
-    private fun initialize() {
+    override fun initialize() {
+        super.initialize()
         resultsRecyclerView = findViewById(R.id.rv_search_results)
         resultsRecyclerView.layoutManager = LinearLayoutManager(getContext())
         searchResultsAdapter.setOnSearchResultClickedListener(this)

@@ -28,12 +28,9 @@ class BottomProgressViewMvcImpl @Inject constructor(resources: ResourcesWrapper)
         resources.getLong(R.integer.animation_slide_in_bottom_duration)
     private val outAnimationDuration = resources.getLong(R.integer.animation_slide_out_top_duration)
     private var isProgressBarVisible: Boolean = false
-    override fun bindRootView(rootView: View?) {
-        super.bindRootView(rootView)
-        initialize()
-    }
 
-    private fun initialize() {
+    override fun initialize() {
+        super.initialize()
         progressBarWrapper = findViewById(R.id.layout_progress_container)
         LayoutInflater.from(getContext())
             .inflate(R.layout.layout_download_progress, progressBarWrapper, false)
