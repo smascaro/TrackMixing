@@ -14,6 +14,8 @@ import com.smascaro.trackmixing.main.components.bottomplayer.controller.BottomPl
 import com.smascaro.trackmixing.main.components.bottomplayer.view.BottomPlayerViewMvc
 import com.smascaro.trackmixing.main.components.progress.controller.BottomProgressController
 import com.smascaro.trackmixing.main.components.progress.view.BottomProgressViewMvc
+import com.smascaro.trackmixing.main.components.toolbar.controller.ToolbarController
+import com.smascaro.trackmixing.main.components.toolbar.view.ToolbarViewMvc
 import com.smascaro.trackmixing.main.controller.MainActivityController
 import com.smascaro.trackmixing.player.business.downloadtrack.model.ApplicationEvent
 import com.smascaro.trackmixing.player.business.downloadtrack.model.ApplicationEvent.AppState
@@ -39,6 +41,12 @@ class MainActivity : BaseActivity(), BaseFragment.OnTitleChangeListener {
     @Inject
     lateinit var bottomProgressViewMvc: BottomProgressViewMvc
 
+    @Inject
+    lateinit var toolbarController: ToolbarController
+
+    @Inject
+    lateinit var toolbarViewMvc: ToolbarViewMvc
+
     lateinit var mainComponent: MainComponent
     private lateinit var navController: NavController
 
@@ -52,7 +60,6 @@ class MainActivity : BaseActivity(), BaseFragment.OnTitleChangeListener {
 
 
         mainViewMvc.bindRootView(rootView)
-        mainViewMvc.bindActivity(this)
         mainActivityController.bindViewMvc(mainViewMvc)
         mainActivityController.handleIntent(intent)
 
@@ -63,6 +70,10 @@ class MainActivity : BaseActivity(), BaseFragment.OnTitleChangeListener {
         bottomProgressViewMvc.bindRootView(rootView)
         bottomProgressController.bindViewMvc(bottomProgressViewMvc)
 
+        toolbarViewMvc.bindRootView(rootView)
+        toolbarViewMvc.bindActivity(this)
+        toolbarController.bindViewMvc(toolbarViewMvc)
+
         bottomProgressController.onCreate()
         bottomPlayerController.onCreate()
 
@@ -72,10 +83,11 @@ class MainActivity : BaseActivity(), BaseFragment.OnTitleChangeListener {
 
     override fun onStart() {
         super.onStart()
-        mainActivityController.bindNavController(navController)
         bottomPlayerController.bindNavController(navController)
+        toolbarController.bindNavController(navController)
         mainActivityController.onStart()
         bottomProgressController.onStart()
+        toolbarController.onStart()
         EventBus.getDefault().post(ApplicationEvent(AppState.Foreground()))
     }
 
@@ -83,6 +95,7 @@ class MainActivity : BaseActivity(), BaseFragment.OnTitleChangeListener {
         super.onStop()
         mainActivityController.onStop()
         bottomProgressController.onStop()
+        toolbarController.onStop()
         EventBus.getDefault().post(ApplicationEvent(AppState.Background()))
     }
 
@@ -92,7 +105,7 @@ class MainActivity : BaseActivity(), BaseFragment.OnTitleChangeListener {
     }
 
     override fun changeTitle(title: String, enableBackNavigation: Boolean) {
-        mainActivityController.updateTitle(title, enableBackNavigation)
+        toolbarController.updateTitle(title, enableBackNavigation)
     }
 
     override fun onNewIntent(intent: Intent?) {

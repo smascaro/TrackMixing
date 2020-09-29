@@ -1,5 +1,7 @@
 package com.smascaro.trackmixing.common.di
 
+import com.smascaro.trackmixing.main.components.toolbar.view.ToolbarViewMvc
+import com.smascaro.trackmixing.main.components.toolbar.view.ToolbarViewMvcImpl
 import com.smascaro.trackmixing.main.view.MainActivityViewMvc
 import com.smascaro.trackmixing.main.view.MainActivityViewMvcImpl
 import com.smascaro.trackmixing.player.view.TracksPlayerViewMvc
@@ -28,4 +30,8 @@ abstract class ViewMvcBuildersModule {
     @Singleton
     @Binds
     abstract fun provideSearchResultsViewMvc(searchResultsViewMvcImpl: SearchResultsViewMvcImpl): SearchResultsViewMvc
+
+    @Singleton
+    @Binds
+    abstract fun provideToolbarViewMvc(toolbarViewMvcImpl: ToolbarViewMvcImpl): ToolbarViewMvc
 }
