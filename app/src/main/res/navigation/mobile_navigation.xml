@@ -14,9 +14,6 @@
             android:id="@+id/action_destination_tracks_list_to_destination_player"
             app:destination="@id/destination_player" />
         <action
-            android:id="@+id/action_destination_tracks_list_to_destination_track_details"
-            app:destination="@id/destination_track_details" />
-        <action
             android:id="@+id/action_destination_tracks_list_to_destination_search"
             app:destination="@id/destination_search" />
         <action
@@ -31,9 +28,6 @@
         <action
             android:id="@+id/action_destination_search_to_destination_player"
             app:destination="@id/destination_player" />
-        <action
-            android:id="@+id/action_destination_search_to_destination_settings"
-            app:destination="@id/destination_settings" />
     </fragment>
     <activity
         android:id="@+id/destination_player"
@@ -45,18 +39,6 @@
             app:argType="com.smascaro.trackmixing.common.data.model.Track" />
 
     </activity>
-    <fragment
-        android:id="@+id/destination_track_details"
-        android:name="com.smascaro.trackmixing.details.view.TrackDetailsFragment"
-        android:label="fragment_track_details"
-        tools:layout="@layout/fragment_track_details">
-        <argument
-            android:name="track"
-            app:argType="com.smascaro.trackmixing.common.data.model.Track" />
-        <action
-            android:id="@+id/action_destination_track_details_to_destination_player"
-            app:destination="@id/destination_player" />
-    </fragment>
     <activity
         android:id="@+id/destination_settings"
         android:name="com.smascaro.trackmixing.settings.view.SettingsActivity"
