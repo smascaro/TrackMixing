@@ -3,12 +3,11 @@ package com.smascaro.trackmixing.main.view
 import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
 import android.content.SharedPreferences
-import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
-import android.os.Build
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Toast
+import androidx.core.animation.doOnEnd
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.utils.ResourcesWrapper
 import com.smascaro.trackmixing.common.utils.SHARED_PREFERENCES_PLAYBACK_IS_PLAYING
@@ -34,6 +33,8 @@ class MainActivityViewMvcImpl @Inject constructor(
     private val defaultGradientStartColor = resourcesWrapper.getColor(R.color.colorAccent)
 
     private lateinit var sharedPreferences: SharedPreferences
+
+    private var previousBackgroundGradientColor: Int = defaultGradientStartColor
 
     override fun bindRootView(rootView: View?) {
         super.bindRootView(rootView)
@@ -81,12 +82,7 @@ class MainActivityViewMvcImpl @Inject constructor(
 
     private fun animateBackgroundGradientTo(newBackgroundColor: Int) {
         val backgroundDrawable = backgroundGradient.background as GradientDrawable
-        val initialColor =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                backgroundDrawable.colors?.first() ?: Color.BLACK
-            } else {
-                Color.BLACK //TODO mantenir l'estat anterior per a pre-Nougat
-            }
+        val initialColor = previousBackgroundGradientColor
         val valueAnimator =
             ValueAnimator.ofObject(ArgbEvaluator(), initialColor, newBackgroundColor)
         valueAnimator.duration = 700
@@ -96,6 +92,9 @@ class MainActivityViewMvcImpl @Inject constructor(
         valueAnimator.addUpdateListener {
             colorsArray[0] = it.animatedValue as Int
             backgroundDrawable.colors = colorsArray
+        }
+        valueAnimator.doOnEnd {
+            previousBackgroundGradientColor = newBackgroundColor
         }
         valueAnimator.start()
     }
