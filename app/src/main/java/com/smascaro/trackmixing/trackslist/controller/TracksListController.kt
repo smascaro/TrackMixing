@@ -64,4 +64,8 @@ class TracksListController @Inject constructor(
     fun onMessageEvent(event: RefreshListEvent) {
         loadTracks()
     }
+
+    override fun dispose() {
+        viewMvc.unregisterListener(this)
+    }
 }

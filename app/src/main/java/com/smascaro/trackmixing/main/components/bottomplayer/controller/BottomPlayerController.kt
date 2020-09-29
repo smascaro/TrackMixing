@@ -70,11 +70,6 @@ class BottomPlayerController @Inject constructor(
         )
     }
 
-    fun onDestroy() {
-        viewMvc.unregisterListener(this)
-        eventBus.unregister(this)
-    }
-
     override fun onLayoutClick() {
         navigateToPlayer()
     }
@@ -130,5 +125,10 @@ class BottomPlayerController @Inject constructor(
             openPlayerIntentRequested = true
             navigateToPlayer()
         }
+    }
+
+    override fun dispose() {
+        viewMvc.unregisterListener(this)
+        eventBus.unregister(this)
     }
 }

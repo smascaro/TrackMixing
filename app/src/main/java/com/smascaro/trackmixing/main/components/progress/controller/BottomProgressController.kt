@@ -66,6 +66,8 @@ class BottomProgressController @Inject constructor(
         }
     }
 
+    override fun dispose() {}
+
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onMessageEvent(event: UiProgressEvent.ProgressUpdate) =
         CoroutineScope(Dispatchers.Main).launch { handleProgressUpdate(event) }

@@ -55,4 +55,8 @@ class MainActivityController @Inject constructor(
             }
         }
     }
+
+    override fun dispose() {
+        viewMvc.unregisterListener(this)
+    }
 }

@@ -155,4 +155,5 @@ class ToolbarViewMvcImpl @Inject constructor(
     override fun unregisterQuerySearchListener(listener: QuerySearchListener) {
         searchQueryListener = null
     }
+
 }
