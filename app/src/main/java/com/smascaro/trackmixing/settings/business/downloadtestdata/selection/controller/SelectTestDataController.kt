@@ -89,4 +89,8 @@ class SelectTestDataController @Inject constructor(
     private fun getTotalSizeToDownload(): Int {
         return tracksToDownload.sumBy { it.size }
     }
+
+    override fun dispose() {
+        viewMvc.unregisterListener(this)
+    }
 }

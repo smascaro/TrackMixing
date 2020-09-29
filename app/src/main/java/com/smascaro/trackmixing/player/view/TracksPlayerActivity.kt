@@ -54,7 +54,7 @@ class TracksPlayerActivity : BaseActivity() {
     }
 
     override fun onDestroy() {
-        mTracksPlayerController.onDestroy()
         super.onDestroy()
+        mTracksPlayerController.dispose()
     }
 }

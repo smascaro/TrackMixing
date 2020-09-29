@@ -1,6 +1,5 @@
 package com.smascaro.trackmixing.trackslist.view.listitem
 
-import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.RequestManager
@@ -25,22 +24,17 @@ class TracksListItemViewMvcImpl @Inject constructor(
 
     private var mPosition: Int = -1
 
-    override fun bindRootView(rootView: View?) {
-        super.bindRootView(rootView)
-        initialize()
-    }
-
-    private fun initialize() {
+    override fun initialize() {
+        super.initialize()
         mTrackTitleTxt = findViewById(R.id.tv_item_track_title)
         mTrackThumbnailImg = findViewById(R.id.iv_item_track_thumbnail)
         mTrackAuthorTxt = findViewById(R.id.tv_item_track_author)
         mTrackDuration = findViewById(R.id.tv_item_track_duration)
         mTrackState = findViewById(R.id.tv_item_track_status)
-
-        initializeListeners()
     }
 
-    private fun initializeListeners() {
+    override fun initializeListeners() {
+        super.initializeListeners()
         getRootView().setOnClickListener {
             getListeners().forEach {
                 it.onTrackClicked(mTrack)

@@ -45,4 +45,8 @@ class TrackDetailsController @Inject constructor(
     override fun onDownloadTrackError() {
         Timber.e("Error on DownloadTracksUseCase")
     }
+
+    override fun dispose() {
+        viewMvc.unregisterListener(this)
+    }
 }

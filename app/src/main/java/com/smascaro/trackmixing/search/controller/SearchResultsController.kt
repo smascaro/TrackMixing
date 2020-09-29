@@ -38,11 +38,6 @@ class SearchResultsController @Inject constructor(
         viewMvc.unregisterListener(this)
     }
 
-    fun onDestroy() {
-        searchYoutubeVideosUseCase.unregisterListener(this)
-        viewMvc.unregisterListener(this)
-    }
-
     override fun onResultsReady(results: List<SearchResult>) {
         val filteredResults = results.filter {
             it.secondsLong < maxVideoDuration
@@ -54,4 +49,8 @@ class SearchResultsController @Inject constructor(
         viewMvc.showMessage(message)
     }
 
+    override fun dispose() {
+        searchYoutubeVideosUseCase.unregisterListener(this)
+        viewMvc.unregisterListener(this)
+    }
 }

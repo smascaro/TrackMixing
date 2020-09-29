@@ -60,12 +60,8 @@ class BottomPlayerViewMvcImpl @Inject constructor(
         return serviceChecker.ping()
     }
 
-    override fun bindRootView(rootView: View?) {
-        super.bindRootView(rootView)
-        initialize()
-    }
-
-    private fun initialize() {
+    override fun initialize() {
+        super.initialize()
         val bottomBarWrapper = findViewById<MaterialCardView>(R.id.layout_player_actions_bottom)
         LayoutInflater.from(getContext())
             .inflate(R.layout.layout_actions_bottom, bottomBarWrapper, false)
@@ -79,11 +75,11 @@ class BottomPlayerViewMvcImpl @Inject constructor(
         bottomBarTextSwitcher.setInAnimation(getContext(), R.anim.slide_in_right)
         bottomBarTextSwitcher.setOutAnimation(getContext(), R.anim.slide_out_left)
         initializeMarquee()
-        initializeListeners()
         setupSharedPreferences()
     }
 
-    private fun initializeListeners() {
+    override fun initializeListeners() {
+        super.initializeListeners()
         bottomBarActionButton.setOnClickListener {
             getListeners().forEach {
                 it.onActionButtonClicked()

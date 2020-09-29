@@ -18,12 +18,8 @@ class DownloadTestDataViewMvcImpl @Inject constructor() :
     private lateinit var downloadProgressSeekbar: AppCompatSeekBar
     private lateinit var downloadProgressTextFeedback: MaterialTextView
 
-    override fun bindRootView(rootView: View?) {
-        super.bindRootView(rootView)
-        initialize()
-    }
-
-    private fun initialize() {
+    override fun initialize() {
+        super.initialize()
         currentStateTitleTextView = findViewById(R.id.tv_download_test_data_downloading_title)
         downloadingProgressBar = findViewById(R.id.pb_download_test_data_progress)
         downloadProgressSeekbar = findViewById(R.id.sb_download_test_data_progress)

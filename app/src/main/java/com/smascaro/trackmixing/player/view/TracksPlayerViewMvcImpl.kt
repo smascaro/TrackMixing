@@ -45,12 +45,8 @@ class TracksPlayerViewMvcImpl @Inject constructor(resourcesWrapper: ResourcesWra
 
     private var blockTimestampUpdates: Boolean = false
 
-    override fun bindRootView(rootView: View?) {
-        super.bindRootView(rootView)
-        initialize()
-    }
-
-    private fun initialize() {
+    override fun initialize() {
+        super.initialize()
         vocalsVolumeSeekbar = findViewById(R.id.sb_track_player_vocals)
         otherVolumeSeekbar = findViewById(R.id.sb_track_player_other)
         bassVolumeSeekbar = findViewById(R.id.sb_track_player_bass)
@@ -64,10 +60,10 @@ class TracksPlayerViewMvcImpl @Inject constructor(resourcesWrapper: ResourcesWra
         containerLayout = findViewById(R.id.layout_track_player_container)
 
         backgroundGradientView = findViewById(R.id.v_background_gradient)
-        initializeListeners()
     }
 
-    private fun initializeListeners() {
+    override fun initializeListeners() {
+        super.initializeListeners()
         vocalsVolumeSeekbar.setOnSeekBarChangeListener(makeSeekbarChangeListenerFor(TrackInstrument.VOCALS))
         otherVolumeSeekbar.setOnSeekBarChangeListener(makeSeekbarChangeListenerFor(TrackInstrument.OTHER))
         bassVolumeSeekbar.setOnSeekBarChangeListener(makeSeekbarChangeListenerFor(TrackInstrument.BASS))

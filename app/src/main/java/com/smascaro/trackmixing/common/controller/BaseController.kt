@@ -14,4 +14,6 @@ abstract class BaseController<VIEW_MVC : ViewMvc> {
             throw ViewMvcNotInitialized("ViewMvc must be initialized as soon as possible")
         }
     }
+
+    open fun dispose() {}
 }

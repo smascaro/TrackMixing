@@ -101,7 +101,14 @@ class MainActivity : BaseActivity(), BaseFragment.OnTitleChangeListener {
 
     override fun onDestroy() {
         super.onDestroy()
-        bottomPlayerController.onDestroy()
+        disposeControllers()
+    }
+
+    private fun disposeControllers() {
+        mainActivityController.dispose()
+        bottomProgressController.dispose()
+        bottomPlayerController.dispose()
+        toolbarController.dispose()
     }
 
     override fun changeTitle(title: String, enableBackNavigation: Boolean) {

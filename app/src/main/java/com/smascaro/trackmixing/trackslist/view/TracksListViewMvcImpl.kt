@@ -1,13 +1,5 @@
 package com.smascaro.trackmixing.trackslist.view
 
-import android.animation.ArgbEvaluator
-import android.animation.ValueAnimator
-import android.content.SharedPreferences
-import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
-import android.os.Build
-import android.view.View
-import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
@@ -15,9 +7,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.utils.ResourcesWrapper
-import com.smascaro.trackmixing.common.utils.SHARED_PREFERENCES_PLAYBACK_IS_PLAYING
-import com.smascaro.trackmixing.common.utils.SHARED_PREFERENCES_PLAYBACK_SONG_PLAYING
-import com.smascaro.trackmixing.common.utils.SharedPreferencesFactory
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
 import javax.inject.Inject
 
@@ -30,12 +19,8 @@ class TracksListViewMvcImpl @Inject constructor(
 
     private lateinit var mRecyclerViewTracks: RecyclerView
 
-    override fun bindRootView(rootView: View?) {
-        super.bindRootView(rootView)
-        initialize()
-    }
-
-    private fun initialize() {
+    override fun initialize() {
+        super.initialize()
         mRecyclerViewTracks = findViewById(R.id.rvTracks)
 
         initializeRecyclerView()

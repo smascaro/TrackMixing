@@ -36,12 +36,8 @@ class MainActivityViewMvcImpl @Inject constructor(
 
     private var previousBackgroundGradientColor: Int = defaultGradientStartColor
 
-    override fun bindRootView(rootView: View?) {
-        super.bindRootView(rootView)
-        initialize()
-    }
-
-    private fun initialize() {
+    override fun initialize() {
+        super.initialize()
         backgroundGradient = findViewById(R.id.v_background_gradient)
         setupSharedPreferences()
     }

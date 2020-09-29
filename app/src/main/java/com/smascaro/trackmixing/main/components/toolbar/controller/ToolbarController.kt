@@ -52,4 +52,8 @@ class ToolbarController @Inject constructor(p_navigationHelper: NavigationHelper
     private fun handleNavigationToSearch() {
         viewMvc.prepareSearchContextLayout()
     }
+
+    override fun dispose() {
+        viewMvc.unregisterListener(this)
+    }
 }

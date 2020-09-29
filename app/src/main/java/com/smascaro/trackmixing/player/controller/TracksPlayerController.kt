@@ -39,12 +39,6 @@ class TracksPlayerController @Inject constructor(
 
     }
 
-    fun onDestroy() {
-        viewMvc.unregisterListener(this)
-        viewMvc.onDestroy()
-        EventBus.getDefault().unregister(this)
-    }
-
     fun onCreate() {
         ensureViewMvcBound()
         viewMvc.bindVolumes(playbackSession.getVolumes())
@@ -59,24 +53,6 @@ class TracksPlayerController @Inject constructor(
 
     private fun initializeBackgroundColor() {
         viewMvc.bindBackgroundColor(mTrack.backgroundColor)
-
-//        glide
-//            .asBitmap()
-//            .load(mTrack.thumbnailUrl)
-//            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-//            .into(object : CustomTarget<Bitmap>() {
-//                override fun onLoadCleared(placeholder: Drawable?) {
-//                }
-//
-//                override fun onResourceReady(
-//                    resource: Bitmap,
-//                    transition: Transition<in Bitmap>?
-//                ) {
-//                    Palette.Builder(resource).generate {
-//                        val color = it?.getLightVibrantColor(Color.WHITE) ?: Color.WHITE
-//                    }
-//                }
-//            })
     }
 
     private fun initializeActionButton() {
@@ -146,5 +122,11 @@ class TracksPlayerController @Inject constructor(
 
     private fun handleTimestampChanged(timestamp: Int) {
         viewMvc.updateTimestamp(timestamp)
+    }
+
+    override fun dispose() {
+        viewMvc.unregisterListener(this)
+        viewMvc.onDestroy()
+        EventBus.getDefault().unregister(this)
     }
 }
