@@ -9,6 +9,7 @@ import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.utils.ui.UiUtils
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
 import com.smascaro.trackmixing.common.view.ui.BaseActivity
+import com.smascaro.trackmixing.main.components.toolbar.view.ObservableQuerySearch.QuerySearchListener
 import javax.inject.Inject
 
 class ToolbarViewMvcImpl @Inject constructor(
@@ -22,6 +23,8 @@ class ToolbarViewMvcImpl @Inject constructor(
     private lateinit var toolbarTitleText: MaterialTextView
     private lateinit var toolbarBackButtonImageView: ImageView
     private lateinit var toolbarSearchView: SearchView
+
+    private var searchQueryListener: QuerySearchListener? = null
 
     override fun bindRootView(rootView: View?) {
         super.bindRootView(rootView)
@@ -57,7 +60,16 @@ class ToolbarViewMvcImpl @Inject constructor(
             toolbarSearchView.setQuery("", false)
             true
         }
-        toolbarSearchView.setOnSearchClickListener { }
+        toolbarSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                searchQueryListener?.onQuerySearchExecute(toolbarSearchView.query.toString())
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+        })
     }
 
     private fun navigateToSearch(): Boolean {
@@ -107,6 +119,7 @@ class ToolbarViewMvcImpl @Inject constructor(
 
     private fun showSearchInput() {
         toolbarSearchView.visibility = View.VISIBLE
+        toolbarSearchView.requestFocus()
     }
 
     override fun prepareTracksListContextLayout() {
@@ -133,5 +146,13 @@ class ToolbarViewMvcImpl @Inject constructor(
 
     override fun cleanUp() {
         uiUtils.hideKeyboard(getRootView())
+    }
+
+    override fun registerQuerySearchListener(listener: QuerySearchListener) {
+        searchQueryListener = listener
+    }
+
+    override fun unregisterQuerySearchListener(listener: QuerySearchListener) {
+        searchQueryListener = null
     }
 }

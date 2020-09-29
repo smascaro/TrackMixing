@@ -1,47 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".search.view.SongSearchFragment"
-    android:background="@color/transparent">
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/il_search_input_layout"
-        android:layout_width="match_parent"
-        android:layout_height="54dp"
-        android:layout_gravity="center"
-        android:textColorHint="@color/colorAccent"
-        app:boxStrokeColor="@null"
-        app:hintEnabled="false"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:startIconDrawable="@drawable/ic_search_24dp">
-
-
-        <com.google.android.material.textfield.TextInputEditText xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/et_search_input"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_horizontal|center_vertical"
-            android:hint="Type in your favorite song..."
-            android:imeOptions="actionSearch"
-            android:includeFontPadding="false"
-            android:inputType="text"
-            android:maxLines="1"
-            android:paddingVertical="0dp"
-            android:textColorHint="@color/colorAccent"
-            android:textSize="18sp" />
-    </com.google.android.material.textfield.TextInputLayout>
+    android:background="@color/transparent"
+    tools:context=".search.view.SongSearchFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_search_results"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/il_search_input_layout"
+        android:layout_height="match_parent"
         tools:listitem="@layout/item_track" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
