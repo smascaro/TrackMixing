@@ -13,11 +13,6 @@ interface NavigationHelper : Observable<NavigationHelper.Listener> {
 
     fun navigateTo(destination: Int)
     fun bindNavController(navController: NavController)
-    fun toDetails(
-        track: Track,
-        extras: FragmentNavigator.Extras
-    )
-
     fun toPlayer(track: Track)
     fun toSearch()
     fun back(): Boolean

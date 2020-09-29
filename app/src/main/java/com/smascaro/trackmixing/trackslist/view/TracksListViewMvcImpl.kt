@@ -3,16 +3,13 @@ package com.smascaro.trackmixing.trackslist.view
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.data.model.Track
-import com.smascaro.trackmixing.common.utils.ResourcesWrapper
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
 import javax.inject.Inject
 
 class TracksListViewMvcImpl @Inject constructor(
-    private val tracksListAdapter: TracksListAdapter,
-    resourcesWrapper: ResourcesWrapper
+    private val tracksListAdapter: TracksListAdapter
 ) : BaseObservableViewMvc<TracksListViewMvc.Listener>(),
     TracksListAdapter.Listener,
     TracksListViewMvc {
@@ -22,15 +19,7 @@ class TracksListViewMvcImpl @Inject constructor(
     override fun initialize() {
         super.initialize()
         mRecyclerViewTracks = findViewById(R.id.rvTracks)
-
         initializeRecyclerView()
-
-        val fab = findViewById<FloatingActionButton>(R.id.fabTempMode)
-        fab.setOnClickListener {
-            getListeners().forEach {
-                it.onSearchNavigationButtonClicked()
-            }
-        }
     }
 
     private fun initializeRecyclerView() {

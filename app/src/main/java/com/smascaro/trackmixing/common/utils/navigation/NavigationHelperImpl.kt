@@ -1,18 +1,17 @@
 package com.smascaro.trackmixing.common.utils.navigation
 
 import androidx.navigation.NavController
-import androidx.navigation.fragment.FragmentNavigator
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable
-import com.smascaro.trackmixing.details.view.TrackDetailsFragmentDirections
 import com.smascaro.trackmixing.search.view.SongSearchFragmentDirections
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.TestDataBundleInfo
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.view.SelectTestDataFragmentDirections
 import com.smascaro.trackmixing.trackslist.view.TracksListFragmentDirections
 import javax.inject.Inject
 
-class NavigationHelperImpl @Inject constructor() : BaseObservable<NavigationHelper.Listener>(),
+class NavigationHelperImpl @Inject constructor() :
+    BaseObservable<NavigationHelper.Listener>(),
     NavigationHelper {
     private var mNavController: NavController? = null
     override fun navigateTo(destination: Int) {
@@ -42,26 +41,12 @@ class NavigationHelperImpl @Inject constructor() : BaseObservable<NavigationHelp
         }
     }
 
-    override fun toDetails(
-        track: Track,
-        extras: FragmentNavigator.Extras
-    ) {
-        val action =
-            TracksListFragmentDirections.actionDestinationTracksListToDestinationTrackDetails(track)
-        if (action != null) {
-            mNavController?.navigate(action, extras)
-        }
-    }
-
     override fun toPlayer(track: Track) {
         val action = when (mNavController?.currentDestination?.id) {
             R.id.destination_settings -> SongSearchFragmentDirections.actionDestinationSearchToDestinationPlayer(
                 track
             )
             R.id.destination_tracks_list -> TracksListFragmentDirections.actionDestinationTracksListToDestinationPlayer(
-                track
-            )
-            R.id.destination_track_details -> TrackDetailsFragmentDirections.actionDestinationTrackDetailsToDestinationPlayer(
                 track
             )
             else -> null
@@ -88,7 +73,6 @@ class NavigationHelperImpl @Inject constructor() : BaseObservable<NavigationHelp
     override fun toSettings() {
         val action = when (mNavController?.currentDestination?.id) {
             R.id.destination_tracks_list -> TracksListFragmentDirections.actionDestinationTracksListToDestinationSettings()
-            R.id.destination_search -> SongSearchFragmentDirections.actionDestinationSearchToDestinationSettings()
             else -> null
         }
         if (action != null) {
