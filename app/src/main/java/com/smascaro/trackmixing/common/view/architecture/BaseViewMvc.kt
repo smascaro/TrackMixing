@@ -15,7 +15,19 @@ abstract class BaseViewMvc :
         if (rootView != null) {
             mRootView = rootView
         }
+        initialize()
+        initializeListeners()
     }
+
+    /**
+     * Here is where all Ui elements are initialized. Typically <i>findViewById</i> calls will be made in this method.
+     */
+    open fun initialize() {}
+
+    /**
+     * This method will be called after  initialize() method, so any View initialized there, here will be ready to set listeners.
+     */
+    open fun initializeListeners() {}
 
     protected fun getContext(): Context? {
         return getRootView().context

@@ -54,6 +54,6 @@ class SongSearchFragment : BaseFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        searchResultsController.onDestroy()
+        searchResultsController.dispose()
     }
 }

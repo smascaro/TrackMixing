@@ -4,16 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <View
+    <include
         android:id="@+id/v_background_gradient"
-        android:layout_width="match_parent"
-        android:layout_height="1500dp"
-        android:background="@drawable/background_gradient"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.64" />
+        layout="@layout/layout_gradient_background" />
 
     <RelativeLayout
         android:id="@+id/container"
@@ -21,29 +14,9 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <androidx.appcompat.widget.Toolbar
+        <include
             android:id="@+id/toolbar"
-            style="@style/AppTheme.TM.ActionBar"
-            android:layout_width="match_parent"
-            android:layout_height="?android:attr/actionBarSize"
-            app:title="TrackMixing">
-
-            <ImageView
-                android:id="@+id/iv_toolbar_back_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:src="@drawable/ic_back_24dp"
-                android:visibility="gone" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tv_toolbar_title"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="TrackMixing"
-                android:textAppearance="@style/AppTheme.TM.ActionBar.TitleTextStyle" />
-        </androidx.appcompat.widget.Toolbar>
+            layout="@layout/layout_toolbar" />
 
         <include
             android:id="@+id/layout_player_actions_bottom"

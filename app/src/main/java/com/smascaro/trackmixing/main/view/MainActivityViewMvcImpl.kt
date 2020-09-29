@@ -3,39 +3,29 @@ package com.smascaro.trackmixing.main.view
 import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
 import android.content.SharedPreferences
-import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
-import android.os.Build
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.widget.ImageView
 import android.widget.Toast
-import com.google.android.material.textview.MaterialTextView
+import androidx.core.animation.doOnEnd
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.utils.ResourcesWrapper
 import com.smascaro.trackmixing.common.utils.SHARED_PREFERENCES_PLAYBACK_IS_PLAYING
 import com.smascaro.trackmixing.common.utils.SHARED_PREFERENCES_PLAYBACK_SONG_PLAYING
 import com.smascaro.trackmixing.common.utils.SharedPreferencesFactory
-import com.smascaro.trackmixing.common.utils.ui.UiUtils
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
-import com.smascaro.trackmixing.common.view.ui.BaseActivity
 import com.smascaro.trackmixing.player.business.downloadtrack.TrackDownloadService
 import javax.inject.Inject
 import kotlin.concurrent.thread
 
 class MainActivityViewMvcImpl @Inject constructor(
-    private val uiUtils: UiUtils,
     resourcesWrapper: ResourcesWrapper
 ) :
     MainActivityViewMvc,
     BaseObservableViewMvc<MainActivityViewMvc.Listener>(),
     SharedPreferences.OnSharedPreferenceChangeListener {
-    private lateinit var toolbar: androidx.appcompat.widget.Toolbar
-    private lateinit var toolbarTitleText: MaterialTextView
-    private lateinit var toolbarBackButtonImageView: ImageView
     private lateinit var backgroundGradient: View
 
-    private lateinit var activity: BaseActivity
     private val gradientCenterColor =
         resourcesWrapper.getColor(R.color.track_player_background_gradient_center_color)
     private val gradientEndColor =
@@ -44,24 +34,11 @@ class MainActivityViewMvcImpl @Inject constructor(
 
     private lateinit var sharedPreferences: SharedPreferences
 
-    //    private var shouldShowSearchMenuItem = true
-    override fun bindRootView(rootView: View?) {
-        super.bindRootView(rootView)
-        initialize()
-        initializeListeners()
-    }
+    private var previousBackgroundGradientColor: Int = defaultGradientStartColor
 
-    override fun bindActivity(activity: BaseActivity) {
-        this.activity = activity
-    }
-
-    private fun initializeListeners() {
+    override fun initialize() {
+        super.initialize()
         backgroundGradient = findViewById(R.id.v_background_gradient)
-        toolbarBackButtonImageView.setOnClickListener {
-            getListeners().forEach {
-                it.onToolbarBackButtonPressed()
-            }
-        }
         setupSharedPreferences()
     }
 
@@ -77,51 +54,6 @@ class MainActivityViewMvcImpl @Inject constructor(
                 it.onPlayerStateChanged()
             }
         }
-    }
-
-    override fun updateTitle(title: String, enableBackNavigation: Boolean) {
-        toolbarTitleText.text = title
-        if (enableBackNavigation) {
-            toolbarBackButtonImageView.visibility = View.VISIBLE
-        } else {
-            toolbarBackButtonImageView.visibility = View.GONE
-        }
-    }
-
-    override fun cleanUp() {
-        uiUtils.hideKeyboard(getRootView())
-    }
-
-    private fun initialize() {
-        toolbar = findViewById(R.id.toolbar)
-        toolbarTitleText = toolbar.findViewById(R.id.tv_toolbar_title)
-        toolbarBackButtonImageView = toolbar.findViewById(R.id.iv_toolbar_back_button)
-
-        toolbar.inflateMenu(R.menu.options_menu_main)
-        toolbar.setOnMenuItemClickListener {
-            if (it.itemId == R.id.destination_settings) {
-                navigateToSettings()
-            } else if (it.itemId == R.id.destination_search) {
-                navigateToSearch()
-            } else {
-                false
-            }
-        }
-    }
-
-    private fun navigateToSearch(): Boolean {
-        getListeners().forEach {
-            it.onSearchMenuButtonClicked()
-        }
-//        shouldShowSearchMenuItem=false
-        return true
-    }
-
-    private fun navigateToSettings(): Boolean {
-        getListeners().forEach {
-            it.onSettingsMenuButtonClicked()
-        }
-        return true
     }
 
     override fun showMessage(text: String) {
@@ -144,26 +76,9 @@ class MainActivityViewMvcImpl @Inject constructor(
         animateBackgroundGradientTo(defaultGradientStartColor)
     }
 
-    override fun showSearchButton() {
-        val menuItem = toolbar.menu.findItem(R.id.destination_search)
-        menuItem.isVisible = true
-        activity.invalidateOptionsMenu()
-    }
-
-    override fun hideSearchButton() {
-        val menuItem = toolbar.menu.findItem(R.id.destination_search)
-        menuItem.isVisible = false
-        activity.invalidateOptionsMenu()
-    }
-
     private fun animateBackgroundGradientTo(newBackgroundColor: Int) {
         val backgroundDrawable = backgroundGradient.background as GradientDrawable
-        val initialColor =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                backgroundDrawable.colors?.first() ?: Color.BLACK
-            } else {
-                Color.BLACK
-            }
+        val initialColor = previousBackgroundGradientColor
         val valueAnimator =
             ValueAnimator.ofObject(ArgbEvaluator(), initialColor, newBackgroundColor)
         valueAnimator.duration = 700
@@ -174,7 +89,9 @@ class MainActivityViewMvcImpl @Inject constructor(
             colorsArray[0] = it.animatedValue as Int
             backgroundDrawable.colors = colorsArray
         }
+        valueAnimator.doOnEnd {
+            previousBackgroundGradientColor = newBackgroundColor
+        }
         valueAnimator.start()
     }
-
 }

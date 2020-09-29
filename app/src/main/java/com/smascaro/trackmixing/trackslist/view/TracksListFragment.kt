@@ -20,7 +20,6 @@ class TracksListFragment : BaseFragment() {
     @Inject
     lateinit var mTracksListController: TracksListController
 
-
     @Inject
     lateinit var viewMvc: TracksListViewMvc
 
@@ -65,6 +64,11 @@ class TracksListFragment : BaseFragment() {
     override fun onStop() {
         super.onStop()
         mTracksListController.onStop()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mTracksListController.dispose()
     }
 }
 

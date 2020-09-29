@@ -8,6 +8,7 @@ import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.utils.MEDIA_PLAYER_MAX_VOLUME
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
+import timber.log.Timber
 import kotlin.math.ln
 
 class PlayingTrackState(
@@ -64,7 +65,7 @@ class PlayingTrackState(
         hasTrackCompletedPlaying = false
         val renderersFactory = DefaultRenderersFactory(context)
         player = SimpleExoPlayer.Builder(context, renderersFactory).build()
-        player.playWhenReady = true
+        player.playWhenReady = false
         progressiveMediaSourceFactory =
             ProgressiveMediaSource.Factory(DefaultDataSourceFactory(context))
         val mediaSource = progressiveMediaSourceFactory.createMediaSource(MediaItem.fromUri(path))
@@ -75,14 +76,26 @@ class PlayingTrackState(
 
 
     override fun onPlaybackStateChanged(state: Int) {
+        logPlaybackStateChange(state)
         super.onPlaybackStateChanged(state)
         when (state) {
             SimpleExoPlayer.STATE_BUFFERING,
-            SimpleExoPlayer.STATE_READY,
             SimpleExoPlayer.STATE_IDLE -> {
             }
+            SimpleExoPlayer.STATE_READY -> handleReadyState()
             SimpleExoPlayer.STATE_ENDED -> handleTrackCompletion()
         }
+    }
+
+    private fun logPlaybackStateChange(state: Int) {
+        val stateStr = when (state) {
+            SimpleExoPlayer.STATE_BUFFERING -> "SimpleExoPlayer.STATE_BUFFERING"
+            SimpleExoPlayer.STATE_IDLE -> "SimpleExoPlayer.STATE_IDLE"
+            SimpleExoPlayer.STATE_READY -> "SimpleExoPlayer.STATE_READY"
+            SimpleExoPlayer.STATE_ENDED -> "SimpleExoPlayer.STATE_ENDED"
+            else -> "Unkown state"
+        }
+        Timber.d("[$instrument] - State changed to $stateStr")
     }
 
     private fun handleTrackCompletion() {
@@ -93,13 +106,17 @@ class PlayingTrackState(
     }
 
     override fun onIsLoadingChanged(isLoading: Boolean) {
-        if (!isLoading) {
-            mIsPrepared = true
-            getListeners().forEach {
-                it.onPlayerPrepared(instrument)
-            }
-        } else {
-            mIsPrepared = false
+        logIsLoadingChanged(isLoading)
+    }
+
+    private fun logIsLoadingChanged(loading: Boolean) {
+        Timber.d("[$instrument] IsLoading changed to $loading")
+    }
+
+    private fun handleReadyState() {
+        mIsPrepared = true
+        getListeners().forEach {
+            it.onPlayerPrepared(instrument)
         }
     }
 
@@ -114,12 +131,14 @@ class PlayingTrackState(
     }
 
     fun play() {
+        Timber.d("[$instrument] - PLAY")
         player.playbackLooper.thread.run {
             player.play()
         }
     }
 
     fun pause() {
+        Timber.d("[$instrument] - PAUSE")
         player.playbackLooper.thread.run {
             player.pause()
         }

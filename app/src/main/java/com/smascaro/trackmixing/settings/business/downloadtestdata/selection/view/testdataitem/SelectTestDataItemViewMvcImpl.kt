@@ -1,6 +1,5 @@
 package com.smascaro.trackmixing.settings.business.downloadtestdata.selection.view.testdataitem
 
-import android.view.View
 import com.bumptech.glide.RequestManager
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.textview.MaterialTextView
@@ -20,21 +19,21 @@ class SelectTestDataItemViewMvcImpl @Inject constructor(private val glide: Reque
     private lateinit var dataTitleText: MaterialTextView
     private lateinit var dataAuthorText: MaterialTextView
     private lateinit var dataSizeText: MaterialTextView
-    override fun bindRootView(rootView: View?) {
-        super.bindRootView(rootView)
-        initialize()
-    }
 
-    private fun initialize() {
+    override fun initialize() {
+        super.initialize()
         checkboxSelectDataToDownload = findViewById(R.id.cb_item_test_data_selection_selected)
         dataTitleText = findViewById(R.id.tv_item_test_data_selection_title)
         dataAuthorText = findViewById(R.id.tv_item_test_data_selection_author)
         dataSizeText = findViewById(R.id.tv_item_test_data_selection_size)
-
-        initializeCheckboxListener()
     }
 
-    private fun initializeCheckboxListener() {
+    override fun initializeListeners() {
+        super.initializeListeners()
+        setCheckboxListener()
+    }
+
+    private fun setCheckboxListener() {
         checkboxSelectDataToDownload.setOnCheckedChangeListener { buttonView, isChecked ->
             getListeners().forEach {
                 it.onSelectionCheckChanged(data, isChecked)
@@ -59,7 +58,7 @@ class SelectTestDataItemViewMvcImpl @Inject constructor(private val glide: Reque
             checkboxSelectDataToDownload.isChecked = false
             checkboxSelectDataToDownload.isEnabled = true
         }
-        initializeCheckboxListener()
+        setCheckboxListener()
     }
 
     override fun bindPosition(position: Int) {

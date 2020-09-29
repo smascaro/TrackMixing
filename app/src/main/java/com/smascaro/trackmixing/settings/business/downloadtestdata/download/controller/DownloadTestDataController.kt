@@ -91,4 +91,9 @@ class DownloadTestDataController @Inject constructor(
         cancellationFlag = true
         return cancellationFlag
     }
+
+    override fun dispose() {
+        viewMvc.unregisterListener(this)
+        listener = null
+    }
 }

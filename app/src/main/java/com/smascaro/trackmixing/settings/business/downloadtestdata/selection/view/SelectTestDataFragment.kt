@@ -40,4 +40,9 @@ class SelectTestDataFragment : Fragment() {
         super.onStop()
         controller.onStop()
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        controller.dispose()
+    }
 }

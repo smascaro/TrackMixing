@@ -56,4 +56,9 @@ class DownloadTestDataFragment : Fragment(), DownloadTestDataController.Listener
     override fun onBackPressed(): Boolean {
         return controller.cancelDownloads()
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        controller.dispose()
+    }
 }
