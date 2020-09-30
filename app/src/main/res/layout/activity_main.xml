@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.smascaro.trackmixing.common.view.ui.ClickableMotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/motion_layout_main_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layoutDescription="@xml/layout_actions_bottom_scene"
-    app:motionDebug="SHOW_ALL"
-    app:showPaths="true">
+    app:motionDebug="NO_DEBUG">
 
     <include
         android:id="@+id/v_background_gradient"
@@ -22,74 +21,9 @@
         layout="@layout/layout_download_progress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/nav_host_fragment"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/nav_host_fragment" />
-
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/layout_player_actions_bottom"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/actions_bottom_layout_hidden_height"
-        android:animateLayoutChanges="true"
-        android:elevation="8dp"
-        android:visibility="invisible"
-        app:cardBackgroundColor="@color/colorAccent"
-        app:cardCornerRadius="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/v_bottom_player_progress_indicator"
-            android:layout_width="400px"
-            android:layout_height="4dp"
-            app:cardBackgroundColor="#ffffff"
-            app:contentPadding="0dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <RelativeLayout
-            android:id="@+id/rl_bottom_player_card_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:weightSum="1"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <TextSwitcher
-                android:id="@+id/tv_track_title_player_bottom"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="8dp"
-                android:layout_toStartOf="@id/iv_action_button_player_bottom"
-                android:paddingHorizontal="@dimen/actions_bottom_title_padding_horizontal">
-
-                <com.google.android.material.textview.MaterialTextView
-                    style="@style/AppTheme.TM.PlayerBar.Track.TitleTextAppearance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/player_bottom_title" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    style="@style/AppTheme.TM.PlayerBar.Track.TitleTextAppearance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/player_bottom_title" />
-            </TextSwitcher>
-
-            <ImageView
-                android:id="@+id/iv_action_button_player_bottom"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="16dp"
-                android:src="@drawable/ic_play" />
-        </RelativeLayout>
-    </com.google.android.material.card.MaterialCardView>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <fragment xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/nav_host_fragment"
@@ -98,9 +32,257 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/layout_progress_container"
         app:defaultNavHost="true"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:navGraph="@navigation/mobile_navigation"
         tools:layout="@layout/fragment_tracks_list" />
-</androidx.constraintlayout.motion.widget.MotionLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_player"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/exo_white"
+        app:layout_constraintTop_toBottomOf="parent" />
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/v_bottom_player_progress_indicator"
+        android:layout_width="400px"
+        android:layout_height="4dp"
+        app:cardBackgroundColor="#ff0000"
+        app:contentPadding="0dp"
+        app:layout_constraintBottom_toTopOf="@id/layout_player"
+        app:layout_constraintStart_toStartOf="@id/layout_player" />
+
+    <TextSwitcher
+        android:id="@+id/tv_track_title_player_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/layout_player"
+        app:layout_constraintStart_toStartOf="@id/layout_player"
+        app:layout_constraintTop_toTopOf="@id/layout_player">
+
+        <com.google.android.material.textview.MaterialTextView
+            style="@style/AppTheme.TM.PlayerBar.Track.TitleTextAppearance"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/player_bottom_title" />
+
+        <com.google.android.material.textview.MaterialTextView
+            style="@style/AppTheme.TM.PlayerBar.Track.TitleTextAppearance"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/player_bottom_title" />
+    </TextSwitcher>
+
+    <ImageView
+        android:id="@+id/iv_action_button_player_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/ic_play"
+        app:layout_constraintBottom_toBottomOf="@id/layout_player"
+        app:layout_constraintEnd_toEndOf="@id/layout_player"
+        app:layout_constraintTop_toTopOf="@id/layout_player" />
+
+    <View
+        android:id="@+id/draggableArea"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/layout_player"
+        app:layout_constraintTop_toTopOf="@id/layout_player"
+        app:layout_constraintBottom_toBottomOf="@id/layout_player"
+        app:layout_constraintEnd_toStartOf="@id/iv_action_button_player_bottom" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_player_faders"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:alpha="0"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="parent">
+
+        <LinearLayout
+            android:id="@+id/container_faders"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:orientation="horizontal"
+            android:weightSum="4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+
+                <com.smascaro.trackmixing.player.view.widget.VerticalSeekbar
+                    android:id="@+id/sb_track_player_vocals"
+                    android:layout_width="64dp"
+                    android:layout_height="350dp"
+                    android:layout_alignBottom="@id/tv_track_player_vocals"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:max="@integer/seekbar_volume_max_value"
+                    android:progress="@integer/seekbar_volume_max_value"
+                    android:progressDrawable="@drawable/seekbar_volume_progress"
+                    android:splitTrack="false"
+                    android:thumb="@drawable/seekbar_volume_thumb" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_track_player_vocals"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_weight="2"
+                    android:text="Vocals"
+                    android:textColor="@color/textOnAccent"
+                    android:textSize="14dp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <com.smascaro.trackmixing.player.view.widget.VerticalSeekbar
+                    android:id="@+id/sb_track_player_other"
+                    android:layout_width="wrap_content"
+                    android:layout_height="350dp"
+                    android:layout_alignBottom="@id/tv_track_player_other"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_weight="8"
+                    android:max="@integer/seekbar_volume_max_value"
+                    android:progress="@integer/seekbar_volume_max_value"
+                    android:progressDrawable="@drawable/seekbar_volume_progress"
+                    android:splitTrack="false"
+                    android:thumb="@drawable/seekbar_volume_thumb" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_track_player_other"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_weight="2"
+                    android:text="Other"
+                    android:textColor="@color/textOnAccent"
+                    android:textSize="14dp"
+                    app:layout_constraintEnd_toEndOf="@id/sb_track_player_other"
+                    app:layout_constraintStart_toStartOf="@id/sb_track_player_other"
+                    app:layout_constraintTop_toBottomOf="@id/sb_track_player_other" />
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <com.smascaro.trackmixing.player.view.widget.VerticalSeekbar
+                    android:id="@+id/sb_track_player_bass"
+                    android:layout_width="wrap_content"
+                    android:layout_height="350dp"
+                    android:layout_alignBottom="@id/tv_track_player_bass"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_weight="8"
+                    android:max="@integer/seekbar_volume_max_value"
+                    android:progress="@integer/seekbar_volume_max_value"
+                    android:progressDrawable="@drawable/seekbar_volume_progress"
+                    android:splitTrack="false"
+                    android:thumb="@drawable/seekbar_volume_thumb" />
+
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_track_player_bass"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_weight="2"
+                    android:text="Bass"
+                    android:textColor="@color/textOnAccent"
+                    android:textSize="14dp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+
+                <com.smascaro.trackmixing.player.view.widget.VerticalSeekbar
+                    android:id="@+id/sb_track_player_drums"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_alignBottom="@id/tv_track_player_drums"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_weight="8"
+                    android:max="@integer/seekbar_volume_max_value"
+                    android:progress="@integer/seekbar_volume_max_value"
+                    android:progressDrawable="@drawable/seekbar_volume_progress"
+                    android:splitTrack="false"
+                    android:thumb="@drawable/seekbar_volume_thumb" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_track_player_drums"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_weight="2"
+                    android:text="Drums"
+                    android:textColor="@color/textOnPrimary"
+                    android:textSize="14dp"
+                    app:layout_constraintEnd_toEndOf="@id/sb_track_player_drums"
+                    app:layout_constraintStart_toStartOf="@id/sb_track_player_drums"
+                    app:layout_constraintTop_toBottomOf="@id/sb_track_player_drums" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <SeekBar
+            android:id="@+id/sb_track_player_timestamp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/container_faders" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_track_player_current_timestamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00"
+            app:layout_constraintStart_toStartOf="@id/sb_track_player_timestamp"
+            app:layout_constraintTop_toBottomOf="@id/sb_track_player_timestamp" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_track_player_length"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="--:--"
+            app:layout_constraintEnd_toEndOf="@id/sb_track_player_timestamp"
+            app:layout_constraintTop_toBottomOf="@id/sb_track_player_timestamp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.smascaro.trackmixing.common.view.ui.ClickableMotionLayout>

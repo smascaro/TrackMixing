@@ -9,8 +9,8 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
 import android.widget.TextSwitcher
 import androidx.constraintlayout.motion.widget.MotionLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
-import com.google.android.material.card.MaterialCardView
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.utils.ResourcesWrapper
 import com.smascaro.trackmixing.common.utils.SHARED_PREFERENCES_PLAYBACK_IS_PLAYING
@@ -32,7 +32,7 @@ class BottomPlayerViewMvcImpl @Inject constructor(
     BottomPlayerViewMvc,
     SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private lateinit var bottomBar: MaterialCardView
+    private lateinit var bottomBar: ConstraintLayout
     private lateinit var bottomBarWrapper: MotionLayout
     private lateinit var bottomBarTextSwitcher: TextSwitcher
 
@@ -70,7 +70,7 @@ class BottomPlayerViewMvcImpl @Inject constructor(
         bottomBarWrapper = findViewById(R.id.motion_layout_main_activity)
         LayoutInflater.from(getContext())
             .inflate(R.layout.layout_actions_bottom, bottomBarWrapper, false)
-        bottomBar = bottomBarWrapper.findViewById(R.id.layout_player_actions_bottom)
+        bottomBar = bottomBarWrapper.findViewById(R.id.layout_player)
         bottomBarTextSwitcher = bottomBarWrapper.findViewById(R.id.tv_track_title_player_bottom)
         bottomBarActionButton = bottomBarWrapper.findViewById(R.id.iv_action_button_player_bottom)
         timestampProgressIndicatorView =
