@@ -1,7 +1,6 @@
 package com.smascaro.trackmixing.main.components.bottomplayer.view
 
 import android.content.SharedPreferences
-import android.view.GestureDetector
 import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.Animation
@@ -9,6 +8,7 @@ import android.view.animation.AnimationSet
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
 import android.widget.TextSwitcher
+import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.view.children
 import com.google.android.material.card.MaterialCardView
 import com.smascaro.trackmixing.R
@@ -21,6 +21,7 @@ import com.smascaro.trackmixing.main.components.bottomplayer.model.BottomPlayerD
 import com.smascaro.trackmixing.main.components.progress.view.ResizeAnimation
 import com.smascaro.trackmixing.main.components.progress.view.SwipeRightAnimation
 import com.smascaro.trackmixing.playbackservice.MixPlayerServiceChecker
+import timber.log.Timber
 import javax.inject.Inject
 
 class BottomPlayerViewMvcImpl @Inject constructor(
@@ -32,6 +33,7 @@ class BottomPlayerViewMvcImpl @Inject constructor(
     SharedPreferences.OnSharedPreferenceChangeListener {
 
     private lateinit var bottomBar: MaterialCardView
+    private lateinit var bottomBarWrapper: MotionLayout
     private lateinit var bottomBarTextSwitcher: TextSwitcher
 
     private lateinit var bottomBarActionButton: ImageView
@@ -49,6 +51,9 @@ class BottomPlayerViewMvcImpl @Inject constructor(
     private var currentShownData: BottomPlayerData? = null
     private lateinit var sharedPreferences: SharedPreferences
 
+    private var currentMotionState: Int = R.id.player_hidden
+
+
     override fun onCreate() {
         val isServiceRunning = isServiceRunning()
         getListeners().forEach {
@@ -62,7 +67,7 @@ class BottomPlayerViewMvcImpl @Inject constructor(
 
     override fun initialize() {
         super.initialize()
-        val bottomBarWrapper = findViewById<MaterialCardView>(R.id.layout_player_actions_bottom)
+        bottomBarWrapper = findViewById(R.id.motion_layout_main_activity)
         LayoutInflater.from(getContext())
             .inflate(R.layout.layout_actions_bottom, bottomBarWrapper, false)
         bottomBar = bottomBarWrapper.findViewById(R.id.layout_player_actions_bottom)
@@ -74,6 +79,9 @@ class BottomPlayerViewMvcImpl @Inject constructor(
         bottomBarTextSwitcher.isSelected = true
         bottomBarTextSwitcher.setInAnimation(getContext(), R.anim.slide_in_right)
         bottomBarTextSwitcher.setOutAnimation(getContext(), R.anim.slide_out_left)
+//        val initialConstraintSet = bottomBarWrapper.transitionState.(R.id.player_hidden)
+//        bottomBarWrapper.transitionToState(initialConstraintSet)
+//        bottomBarWrapper.transitionToEnd()
         initializeMarquee()
         setupSharedPreferences()
     }
@@ -85,22 +93,70 @@ class BottomPlayerViewMvcImpl @Inject constructor(
                 it.onActionButtonClicked()
             }
         }
-        bottomBar.setOnClickListener {
-            getListeners().forEach {
-                it.onLayoutClick()
+//        bottomBarWrapper.setTransitionListener(object :TransitionAdapter(){
+//            override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {
+//                super.onTransitionCompleted(motionLayout, currentId)
+//            }
+//        })
+        bottomBarWrapper.setTransitionListener(object : MotionLayout.TransitionListener {
+            override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
+
             }
-        }
-        val gestureListener = BottomPlayerFlingDetectorListener()
-        gestureListener.setOnFlingAction {
-            when (it) {
-                BottomPlayerFlingDetectorListener.FlingMode.LEFT_TO_RIGHT -> handleSwipeOut()
-                BottomPlayerFlingDetectorListener.FlingMode.BOTTOM_TO_TOP -> handleBottomToTopSwipe()
-                BottomPlayerFlingDetectorListener.FlingMode.NONE -> null
+
+            override fun onTransitionChange(
+                p0: MotionLayout?,
+                beginState: Int,
+                endState: Int,
+                progress: Float
+            ) {
+                val beginStateName = getStateName(beginState)
+                val endStateName = getStateName(endState)
+                Timber.d("MotionLayout: onTransitionChange - from $beginStateName to $endStateName (${progress * 100f}%")
             }
+
+            override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {
+                val state = getStateName(currentId)
+                Timber.d("MotionLayout: onTransitionCompleted - $state")
+                when (currentId) {
+                    R.id.swiped_out -> handleSwipeOut()
+                }
+//                currentMotionState = currentId
+            }
+
+            override fun onTransitionTrigger(p0: MotionLayout?, p1: Int, p2: Boolean, p3: Float) {
+//                TODO("Not yet implemented")
+            }
+
+        })
+//        bottomBarWrapper.setOnClickListener {
+//            getListeners().forEach {
+//                it.onLayoutClick()
+//            }
+////            bottomBarWrapper.transitionToState(R.id.fullscreen)
+////            bottomBarWrapper.transitionToEnd()
+//        }
+//        val gestureListener = BottomPlayerFlingDetectorListener()
+//        gestureListener.setOnFlingAction {
+//            when (it) {
+//                BottomPlayerFlingDetectorListener.FlingMode.LEFT_TO_RIGHT -> handleSwipeOut()
+//                BottomPlayerFlingDetectorListener.FlingMode.BOTTOM_TO_TOP -> handleBottomToTopSwipe()
+//                BottomPlayerFlingDetectorListener.FlingMode.NONE -> null
+//            }
+//        }
+//        val gestureDetector = GestureDetector(getContext(), gestureListener)
+//        val bottomPlayerTouchListener = BottomPlayerOnTouchListener(gestureDetector)
+//        bottomBarWrapper.setOnTouchListener(bottomPlayerTouchListener)
+    }
+
+    private fun getStateName(currentId: Int): String {
+        return when (currentId) {
+            R.id.swiped_out -> "swiped_out"
+            R.id.pre_swipe_out -> "pre_swipe_out"
+            R.id.player_hidden -> "player_hidden"
+            R.id.player_visible -> "player_visible"
+            R.id.fullscreen -> "fullscreen"
+            else -> "unkown"
         }
-        val gestureDetector = GestureDetector(getContext(), gestureListener)
-        val bottomPlayerTouchListener = BottomPlayerOnTouchListener(gestureDetector)
-        bottomBar.setOnTouchListener(bottomPlayerTouchListener)
     }
 
     private fun initializeMarquee() {
@@ -117,6 +173,7 @@ class BottomPlayerViewMvcImpl @Inject constructor(
         getListeners().forEach {
             it.onSwipeRight()
         }
+        isBottomBarShown = false
     }
 
     private fun setupSharedPreferences() {
@@ -132,13 +189,24 @@ class BottomPlayerViewMvcImpl @Inject constructor(
             if (isBottomBarShown) {
                 bottomBarTextSwitcher.setText(textToShow)
             } else {
-                resetBottomBarDefaultPosition()
-                bottomBar.visibility = View.VISIBLE
+//                resetBottomBarDefaultPosition()
+//                bottomBarWrapper.visibility = View.VISIBLE
                 bottomBarTextSwitcher.setText(textToShow)
-                val animation = ResizeAnimation(bottomBar, bottomBarVisibleHeight.toInt()).apply {
-                    duration = inAnimationDuration
-                }
-                bottomBar.startAnimation(animation)
+//                val animation = ResizeAnimation(bottomBarWrapper, bottomBarVisibleHeight.toInt()).apply {
+//                    duration = inAnimationDuration
+//                }
+//                bottomBar.startAnimation(animation)
+//                bottomBarWrapper.setState(R.id.player_hidden, getRootView().width,getRootView().height)
+//                val initialConstraintSet = bottomBarWrapper.getConstraintSet(R.id.player_hidden)
+//                bottomBarWrapper.updateState(R.id.player_hidden,initialConstraintSet)
+                Timber.d("MotionLayout: Should transition to player_visible state")
+                bottomBarWrapper.transitionToState(R.id.player_hidden)
+                bottomBarWrapper.transitionToState(R.id.player_visible)
+//                bottomBarWrapper.setTransition(R.id.player_hidden, R.id.player_visible)
+                bottomBarWrapper.progress = 0f
+                bottomBarWrapper.transitionToEnd()
+//                bottomBarWrapper.requestLayout()
+//                bottomBarWrapper.transitionToEnd()
             }
             isBottomBarShown = true
             currentShownData = data
@@ -148,32 +216,37 @@ class BottomPlayerViewMvcImpl @Inject constructor(
     private fun shouldReloadBottomBar(data: BottomPlayerData) =
         !isBottomBarShown || currentShownData?.title != data.title || currentShownData?.author != data.author
 
+    private fun isPlayerHidden(): Boolean {
+        return currentMotionState == R.id.player_hidden
+    }
+
     override fun hidePlayerBar(mode: HideBarMode) {
-        if (isBottomBarShown) {
-            when (mode) {
-                is HideBarMode.Vertical -> renderVerticalAnimation()
-                is HideBarMode.Sideway -> renderHorizontalAnimation()
-            }
-        }
+//        if (isBottomBarShown) {
+//            when (mode) {
+//                is HideBarMode.Vertical -> renderVerticalAnimation()
+//                is HideBarMode.Sideway -> renderHorizontalAnimation()
+//            }
+//        }
     }
 
     private fun resetBottomBarDefaultPosition() {
-        bottomBar.x = 0f
-        bottomBar.layoutParams.height = bottomBarHiddenHeight.toInt()
-        bottomBar.alpha = 1f
-        bottomBar.requestLayout()
+        bottomBarWrapper.x = 0f
+        bottomBarWrapper.layoutParams.height = bottomBarHiddenHeight.toInt()
+        bottomBarWrapper.alpha = 1f
+        bottomBarWrapper.requestLayout()
     }
 
     private fun renderHorizontalAnimation() {
         val animationSet = AnimationSet(true)
-        val swipeAnimation = SwipeRightAnimation(bottomBar, getRootView()).apply {
+        val swipeAnimation = SwipeRightAnimation(bottomBarWrapper, getRootView()).apply {
             duration = outAnimationDuration
         }
-        val resizeDownAnimation = ResizeAnimation(bottomBar, bottomBarHiddenHeight.toInt()).apply {
-            duration = outAnimationDuration
-            startOffset = outAnimationDuration
-            interpolator = DecelerateInterpolator()
-        }
+        val resizeDownAnimation =
+            ResizeAnimation(bottomBarWrapper, bottomBarHiddenHeight.toInt()).apply {
+                duration = outAnimationDuration
+                startOffset = outAnimationDuration
+                interpolator = DecelerateInterpolator()
+            }
         animationSet.addAnimation(swipeAnimation)
         animationSet.addAnimation(resizeDownAnimation)
         animationSet.setAnimationListener(object : Animation.AnimationListener {
@@ -185,20 +258,20 @@ class BottomPlayerViewMvcImpl @Inject constructor(
 
             override fun onAnimationStart(animation: Animation?) {}
         })
-        bottomBar.startAnimation(animationSet)
+        bottomBarWrapper.startAnimation(animationSet)
     }
 
     private fun renderVerticalAnimation() {
-        val animation = ResizeAnimation(bottomBar, bottomBarHiddenHeight.toInt()).apply {
+        val animation = ResizeAnimation(bottomBarWrapper, bottomBarHiddenHeight.toInt()).apply {
             duration = outAnimationDuration
             interpolator = DecelerateInterpolator()
         }
-        bottomBar.startAnimation(animation)
+        bottomBarWrapper.startAnimation(animation)
         makeBottomBarInvisible()
     }
 
     private fun makeBottomBarInvisible() {
-        bottomBar.visibility = View.INVISIBLE
+        bottomBarWrapper.visibility = View.INVISIBLE
         isBottomBarShown = false
     }
 
@@ -219,7 +292,7 @@ class BottomPlayerViewMvcImpl @Inject constructor(
     }
 
     override fun updateTimestamp(percentage: Float) {
-        val totalWidth = bottomBar.right - bottomBar.left
+        val totalWidth = bottomBarWrapper.right - bottomBarWrapper.left
         //Set 1px as minimum width because 0 is interpreted as a weighted width => full width
         val progressWidth = (totalWidth * percentage).coerceAtLeast(1f)
         timestampProgressIndicatorView.layoutParams.width = progressWidth.toInt()

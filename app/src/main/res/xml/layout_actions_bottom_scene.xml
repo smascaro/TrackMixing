@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+    <Transition
+        android:id="@+id/transition_show_player"
+        motion:constraintSetEnd="@id/player_visible"
+        motion:constraintSetStart="@id/player_hidden"
+        motion:duration="400"></Transition>
+    <Transition
+        android:id="@+id/open_player"
+        motion:constraintSetEnd="@+id/fullscreen"
+        motion:constraintSetStart="@id/player_visible"
+        motion:motionInterpolator="easeInOut">
+        <KeyFrameSet></KeyFrameSet>
+        <OnSwipe
+            motion:dragDirection="dragUp"
+            motion:dragScale="1"
+            motion:onTouchUp="autoCompleteToStart"
+            motion:touchAnchorId="@id/layout_player_actions_bottom"
+            motion:touchAnchorSide="top"
+            motion:touchRegionId="@id/layout_player_actions_bottom" />
+    </Transition>
+
+    <ConstraintSet android:id="@+id/player_hidden">
+        <Constraint
+            android:id="@+id/layout_player_actions_bottom"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/actions_bottom_layout_hidden_height"
+            android:visibility="invisible"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:alpha="1"
+            motion:layout_constraintEnd_toEndOf="parent" />
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/player_visible">
+        <Constraint
+            android:id="@+id/layout_player_actions_bottom"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/actions_bottom_layout_visible_height"
+            android:visibility="visible"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintEnd_toEndOf="parent" />
+        <Constraint
+            android:id="@+id/nav_host_fragment"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            motion:layout_constraintTop_toBottomOf="@id/toolbar"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:alpha="1" />
+        <Constraint motion:layout_constraintTop_toTopOf="parent" />
+    </ConstraintSet>
+    <ConstraintSet android:id="@+id/fullscreen">
+        <Constraint
+            android:id="@+id/layout_player_actions_bottom"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:elevation="8dp"
+            android:visibility="visible"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:alpha="0" />
+        <Constraint
+            android:id="@+id/nav_host_fragment"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            motion:layout_constraintTop_toBottomOf="@id/toolbar"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:alpha="0" />
+        <Constraint
+            android:id="@+id/toolbar"
+            motion:layout_constraintTop_toTopOf="parent"
+            android:alpha="0"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintEnd_toEndOf="parent" />
+    </ConstraintSet>
+    <ConstraintSet
+        android:id="@+id/pre_swipe_out"
+        android:visibility="visible">
+        <Constraint
+            android:id="@+id/layout_player_actions_bottom"
+            android:layout_height="@dimen/actions_bottom_layout_visible_height"
+            android:layout_marginStart="200dp"
+            android:layout_marginLeft="200dp"
+            android:alpha="0.6"
+            android:visibility="visible"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:layout_width="0dp" />
+    </ConstraintSet>
+    <Transition
+        android:id="@+id/swipe_out"
+        motion:constraintSetEnd="@+id/pre_swipe_out"
+        motion:constraintSetStart="@+id/player_visible"
+        motion:duration="100"
+        motion:motionInterpolator="bounce">
+        <OnSwipe
+            motion:dragDirection="dragEnd"
+            motion:maxAcceleration="800"
+            motion:onTouchUp="autoCompleteToStart"
+            motion:touchAnchorId="@id/layout_player_actions_bottom"
+            motion:touchAnchorSide="end"
+            motion:touchRegionId="@id/layout_player_actions_bottom" />
+    </Transition>
+    <ConstraintSet
+        android:id="@+id/swiped_out"
+        motion:deriveConstraintsFrom="@id/pre_swipe_out">
+        <Constraint
+            android:id="@+id/layout_player_actions_bottom"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/actions_bottom_layout_visible_height"
+            android:alpha="0"
+            android:visibility="invisible"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="500dp"
+            android:layout_marginStart="500dp" />
+    </ConstraintSet>
+    <Transition
+        motion:autoTransition="animateToEnd"
+        motion:constraintSetEnd="@id/swiped_out"
+        motion:constraintSetStart="@id/pre_swipe_out"
+        motion:duration="150"
+        motion:motionInterpolator="easeOut">
+
+    </Transition>
+    <Transition
+        android:id="@+id/reset_player"
+        motion:autoTransition="jumpToEnd"
+        motion:constraintSetEnd="@+id/player_hidden"
+        motion:constraintSetStart="@+id/swiped_out"
+        motion:duration="20" />
+</MotionScene>
