@@ -117,15 +117,15 @@
             motion:layout_constraintBottom_toTopOf="@id/layout_player"
             motion:layout_constraintEnd_toStartOf="parent" />
         <Constraint
-            android:id="@+id/layout_player_faders"
-            android:layout_width="0dp"
-            android:layout_height="400dp"
+            android:id="@+id/layout_faders_wrapper"
             android:alpha="1"
             android:elevation="8dp"
+            android:layout_marginTop="0dp"
+            motion:layout_constraintStart_toStartOf="@id/layout_player"
+            motion:layout_constraintEnd_toEndOf="@id/layout_player"
+            motion:layout_constraintTop_toBottomOf="@id/tv_track_title_player_bottom"
             motion:layout_constraintBottom_toTopOf="@id/iv_action_button_player_bottom"
-            motion:layout_constraintEnd_toEndOf="parent"
-            motion:layout_constraintStart_toStartOf="parent"
-            motion:layout_constraintTop_toBottomOf="@id/tv_track_title_player_bottom" />
+            android:layout_height="wrap_content" />
         <Constraint
             android:id="@+id/draggableArea"
             motion:layout_constraintBottom_toBottomOf="@id/tv_track_title_player_bottom"
