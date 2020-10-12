@@ -11,7 +11,8 @@ import javax.inject.Inject
 
 class DownloadTestDataActivity : BaseActivity() {
     lateinit var settingsComponent: SettingsComponent
-    @Inject lateinit var navigationHelper: NavigationHelper
+    @Inject
+    lateinit var navigationHelper: NavigationHelper
 
     interface BackPressedListener {
         fun onBackPressed(): Boolean

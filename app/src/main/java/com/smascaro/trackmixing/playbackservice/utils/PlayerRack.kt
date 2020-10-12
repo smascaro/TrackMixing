@@ -12,14 +12,11 @@ class PlayerRack : PlayerActions {
 
     override fun play() = rack.forEach { it.value.play() }
 
-
     override fun play(instrument: TrackInstrument) {
         rack[instrument]?.play()
     }
 
-
     override fun pause() = rack.forEach { it.value.pause() }
-
 
     override fun pause(instrument: TrackInstrument) {
         rack[instrument]?.pause()
@@ -27,9 +24,7 @@ class PlayerRack : PlayerActions {
 
     override fun seek(newPosition: Int) = rack.forEach { it.value.seek(newPosition) }
 
-
     override fun getVolume(instrument: TrackInstrument): Float = rack[instrument]?.getVolume() ?: 0f
-
 
     override fun setVolume(volume: Int, instrument: TrackInstrument?) {
         if (instrument == null) {
@@ -44,31 +39,23 @@ class PlayerRack : PlayerActions {
         volume: Int
     ) = rack[instrument]?.setVolume(volume)
 
-
     private fun setVolumeMaster(volume: Int) = rack.forEach { it.value.setVolume(volume) }
 
-
     override fun getCurrentPosition(): Long = rack.values.maxOf { it.getTimestampSeconds() }
-
 
     override fun isCompleted(instrument: TrackInstrument): Boolean =
         rack[instrument]?.isCompleted() ?: true
 
-
     override fun isReadyToPlay(): Boolean = rack.values.all { it.readyToPlay }
-
 
     fun allCompleted(): Boolean = rack.values.all { it.isCompleted() }
 
     fun clear() = rack.clear()
 
-
     fun unregisterListener(listener: PlayingTrackState.Listener) =
         rack.forEach { it.value.unregisterListener(listener) }
 
-
     fun finalize() = rack.forEach { it.value.finalize() }
-
 
     fun getVolumesBundle(): TrackVolumeBundle {
         return TrackVolumeBundle(

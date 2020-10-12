@@ -8,10 +8,7 @@ class SearchResultsRepository @Inject constructor(
 ) {
     fun query(query: String) {
         //Check cache
-
         //Api request if not cached
-
         searchResultsNetworkDataSource.queryAndNotify(query)
-
     }
 }

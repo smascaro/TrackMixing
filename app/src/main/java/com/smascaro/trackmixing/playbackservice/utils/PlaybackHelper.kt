@@ -29,7 +29,6 @@ class PlaybackHelper @Inject constructor(
 
     private lateinit var mCurrentPlayingTrack: Track
     private var mIsInitialized: Boolean = false
-
     private var playRequested: Boolean = false
     private var mCurrentState: State =
         State.PAUSED
@@ -78,7 +77,6 @@ class PlaybackHelper @Inject constructor(
             registerListener(this@PlaybackHelper)
         }
         playerRack.put(mOtherState.instrument, mOtherState)
-
         val mBassState = PlayingTrackState.create(
             track,
             TrackInstrument.BASS,
@@ -87,7 +85,6 @@ class PlaybackHelper @Inject constructor(
             registerListener(this@PlaybackHelper)
         }
         playerRack.put(mBassState.instrument, mBassState)
-
         val mDrumsState = PlayingTrackState.create(
             track,
             TrackInstrument.DRUMS,

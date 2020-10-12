@@ -13,8 +13,10 @@ import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.con
 import javax.inject.Inject
 
 class SelectTestDataFragment : Fragment() {
-    @Inject lateinit var controller: SelectTestDataController
-    @Inject lateinit var viewMvc: SelectTestDataViewMvc
+    @Inject
+    lateinit var controller: SelectTestDataController
+    @Inject
+    lateinit var viewMvc: SelectTestDataViewMvc
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (activity as DownloadTestDataActivity).settingsComponent.inject(this)

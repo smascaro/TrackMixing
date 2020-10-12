@@ -75,6 +75,4 @@ class TestDataListAdapter @Inject constructor(
             notifyItemChanged(idx)
         }
     }
-
-
 }

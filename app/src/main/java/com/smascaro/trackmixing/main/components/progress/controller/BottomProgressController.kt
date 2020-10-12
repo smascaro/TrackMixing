@@ -21,7 +21,6 @@ class BottomProgressController @Inject constructor(
     private val eventBus: EventBus
 ) :
     BaseController<BottomProgressViewMvc>() {
-
     private val delayBeforeHidingMillis =
         resources.getLong(R.integer.download_progress_delay_before_hiding_millis)
 
@@ -45,7 +44,6 @@ class BottomProgressController @Inject constructor(
         viewMvc.showProgressBar()
         viewMvc.updateProgress(event.progress, event.status)
     }
-
 
     private fun handleErrorOccurredEvent(event: UiProgressEvent.ErrorOccurred) {
         Timber.d("BottomProgressController - Received ErrorOccurred event")
@@ -77,6 +75,5 @@ class BottomProgressController @Inject constructor(
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onMessageEvent(event: UiProgressEvent.ErrorOccurred) =
         CoroutineScope(Dispatchers.Main).launch { handleErrorOccurredEvent(event) }
-
 }
 

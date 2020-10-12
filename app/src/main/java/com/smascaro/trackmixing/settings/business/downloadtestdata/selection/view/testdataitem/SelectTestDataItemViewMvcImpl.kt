@@ -14,7 +14,6 @@ class SelectTestDataItemViewMvcImpl @Inject constructor(private val glide: Reque
     SelectTestDataItemViewMvc {
     private lateinit var data: TestDataBundleInfo
     private var position: Int = -1
-
     private lateinit var checkboxSelectDataToDownload: MaterialCheckBox
     private lateinit var dataTitleText: MaterialTextView
     private lateinit var dataAuthorText: MaterialTextView

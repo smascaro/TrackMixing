@@ -12,7 +12,6 @@ import java.util.zip.ZipFile
 import javax.inject.Inject
 
 class FilesStorageHelper @Inject constructor(private val mContext: Context) {
-
     fun getBaseDirectory(): String {
         return mContext.filesDir.path
     }
@@ -33,7 +32,6 @@ class FilesStorageHelper @Inject constructor(private val mContext: Context) {
             Timber.e(e)
             ""
         }
-
     }
 
     fun checkContent(baseDirectory: String): Boolean {
@@ -66,7 +64,6 @@ class FilesStorageHelper @Inject constructor(private val mContext: Context) {
             input.copyTo(output)
         }
     }
-
 
     data class ZipIO(val entry: ZipEntry, val output: File)
 

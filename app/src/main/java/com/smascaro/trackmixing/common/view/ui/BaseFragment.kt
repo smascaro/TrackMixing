@@ -19,7 +19,6 @@ abstract class BaseFragment : Fragment() {
         super.onAttach(context)
         try {
             titleChangeListener = activity as OnTitleChangeListener
-
         } catch (e: ClassCastException) {
             Timber.w("Parent activity does not implement TitleChangeListener. Title won't be updated.")
         }
@@ -39,7 +38,6 @@ abstract class BaseFragment : Fragment() {
             titleChangeListener!!.changeTitle(getFragmentTitle(), isBackNavigable())
         }
         return super.onCreateView(inflater, container, savedInstanceState)
-
     }
 
     abstract fun getFragmentTitle(): String

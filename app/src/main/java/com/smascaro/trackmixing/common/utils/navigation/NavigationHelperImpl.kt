@@ -65,7 +65,6 @@ class NavigationHelperImpl @Inject constructor() :
         return mNavController?.navigateUp() ?: false
     }
 
-
     override fun backAndPop(): Boolean {
         return mNavController?.popBackStack() ?: false
     }

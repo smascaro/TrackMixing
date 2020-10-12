@@ -24,7 +24,6 @@ class TracksListAdapter @Inject constructor(
 
     private var listener: Listener? = null
 
-
     fun setOnTrackClickedListener(listener: Listener) {
         this.listener = listener
     }
@@ -97,16 +96,10 @@ class TracksListAdapter @Inject constructor(
     override fun onExpandOrCollapseDetailsRequest(
         itemPosition: Int
     ) {
-//        if(expandRequest) {
-//            Animations.expandDetails(layoutToExpand)
-//        } else {
-//            Animations.collapseDetails(layoutToExpand)
-//        }
         notifyItemChanged(itemPosition)
     }
 
     override fun getItemCount(): Int {
         return mTracks.size
     }
-
 }

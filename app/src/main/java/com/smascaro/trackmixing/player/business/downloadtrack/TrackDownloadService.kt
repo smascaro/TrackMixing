@@ -43,7 +43,6 @@ class TrackDownloadService : BaseService(), TrackDownloadController.ServiceActio
                         DOWNLOAD_NOTIFICATION_EXTRA_START_SERVICE_PARAM_KEY
                     )
                 )
-
             }
         }
         return START_STICKY

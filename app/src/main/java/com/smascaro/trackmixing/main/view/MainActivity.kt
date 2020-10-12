@@ -46,7 +46,6 @@ class MainActivity : BaseActivity(), BaseFragment.OnTitleChangeListener {
 
     @Inject
     lateinit var toolbarViewMvc: ToolbarViewMvc
-
     lateinit var mainComponent: MainComponent
     private lateinit var navController: NavController
 
@@ -55,7 +54,6 @@ class MainActivity : BaseActivity(), BaseFragment.OnTitleChangeListener {
             (application as TrackMixingApplication).appComponent.mainComponent().create(this)
         mainComponent.inject(this)
         super.onCreate(savedInstanceState)
-
         val rootView = LayoutInflater.from(this).inflate(R.layout.activity_main, null, false)
 
 
@@ -121,7 +119,7 @@ class MainActivity : BaseActivity(), BaseFragment.OnTitleChangeListener {
     }
 
     override fun onBackPressed() {
-        if(!trackPlayerViewMvc.onBackPressed()){
+        if (!trackPlayerViewMvc.onBackPressed()) {
             super.onBackPressed()
         }
     }

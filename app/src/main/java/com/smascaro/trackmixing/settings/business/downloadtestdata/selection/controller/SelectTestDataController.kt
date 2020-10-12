@@ -41,7 +41,6 @@ class SelectTestDataController @Inject constructor(
 
     private fun checkAlreadyDownloadedItems(tracks: List<TestDataBundleInfo>) {
         CoroutineScope(Dispatchers.IO).launch {
-
             val downloads = downloadsDao.getAll()
             val downloadedTestData = tracks.filter { testDataItem ->
                 downloads.contains {
