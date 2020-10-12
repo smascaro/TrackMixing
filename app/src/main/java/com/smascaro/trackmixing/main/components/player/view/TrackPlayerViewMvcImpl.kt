@@ -14,6 +14,7 @@ import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.utils.*
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
 import com.smascaro.trackmixing.main.components.player.model.TrackPlayerData
+import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvcImpl.MotionState.*
 import com.smascaro.trackmixing.main.components.player.view.widget.VerticalSeekbar
 import com.smascaro.trackmixing.playbackservice.MixPlayerServiceChecker
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
@@ -27,6 +28,14 @@ class TrackPlayerViewMvcImpl @Inject constructor(
     BaseObservableViewMvc<TrackPlayerViewMvc.Listener>(),
     TrackPlayerViewMvc,
     SharedPreferences.OnSharedPreferenceChangeListener {
+    private sealed class MotionState {
+        class Initial : MotionState()
+        class PlayerVisible : MotionState()
+        class FullscreenPlayer : MotionState()
+        class PreSwipeOut : MotionState()
+        class SwipedOut : MotionState()
+    }
+
     //Views
     private lateinit var bottomBar: ConstraintLayout
     private lateinit var motionLayout: MotionLayout
@@ -55,7 +64,7 @@ class TrackPlayerViewMvcImpl @Inject constructor(
         resources.getLong(R.integer.animation_slide_out_top_duration)
     private var currentShownData: TrackPlayerData? = null
     private lateinit var sharedPreferences: SharedPreferences
-    private var currentMotionState: Int = R.id.player_hidden
+    private var currentMotionState: MotionState = Initial()
     private var blockTimestampUpdates: Boolean = false
 
     override fun onCreate() {
@@ -137,11 +146,23 @@ class TrackPlayerViewMvcImpl @Inject constructor(
                 when (currentId) {
                     R.id.swiped_out -> handleSwipeOut()
                 }
+                currentMotionState = getMotionStateByResourceId(currentId)
             }
 
             override fun onTransitionTrigger(p0: MotionLayout?, p1: Int, p2: Boolean, p3: Float) {
             }
         })
+    }
+
+    private fun getMotionStateByResourceId(id: Int): MotionState {
+        return when (id) {
+            R.id.player_hidden -> Initial()
+            R.id.player_visible -> PlayerVisible()
+            R.id.fullscreen -> FullscreenPlayer()
+            R.id.pre_swipe_out -> PreSwipeOut()
+            R.id.swiped_out -> SwipedOut()
+            else -> Initial()
+        }
     }
 
     private fun initializeProgressSeekBarListener() {
@@ -281,9 +302,8 @@ class TrackPlayerViewMvcImpl @Inject constructor(
         //Set 1px as minimum width because 0 is interpreted as a weighted width => full width
         val progressWidth = (totalWidth * percentage).coerceAtLeast(1.0)
         timestampProgressIndicatorView.layoutParams.width = progressWidth.toInt()
-        timestampProgressIndicatorView.requestLayout()
 
-        if (!blockTimestampUpdates) {
+        if (currentMotionState is FullscreenPlayer && !blockTimestampUpdates) {
             currentTimestampTextView.text =
                 transformSecondsToTimeRepresentation(newTimestamp)
             songProgressSeekbar.progress = newTimestamp

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layoutDescription="@xml/layout_actions_bottom_scene"
-    app:motionDebug="NO_DEBUG">
+    app:motionDebug="SHOW_PROGRESS">
 
     <include
         android:id="@+id/v_background_gradient"
@@ -58,10 +58,14 @@
         app:layout_constraintBottom_toTopOf="@id/layout_player"
         app:layout_constraintStart_toStartOf="@id/layout_player" />
 
-    <TextSwitcher
+    <com.smascaro.trackmixing.main.components.player.view.widget.InheritingTextSwitcher
         android:id="@+id/tv_track_title_player_bottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:elevation="400dp"
+        android:textAlignment="center"
+        app:childrenTextColor="#000"
+        app:childrenTextSize="8sp"
         app:layout_constraintBottom_toBottomOf="@id/layout_player"
         app:layout_constraintStart_toStartOf="@id/layout_player"
         app:layout_constraintTop_toTopOf="@id/layout_player">
@@ -70,14 +74,16 @@
             style="@style/AppTheme.TM.PlayerBar.Track.TitleTextAppearance"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="@string/player_bottom_title" />
+            android:text="@string/player_bottom_title"
+            android:textAlignment="center" />
 
         <com.google.android.material.textview.MaterialTextView
             style="@style/AppTheme.TM.PlayerBar.Track.TitleTextAppearance"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="@string/player_bottom_title" />
-    </TextSwitcher>
+            android:text="@string/player_bottom_title"
+            android:textAlignment="center" />
+    </com.smascaro.trackmixing.main.components.player.view.widget.InheritingTextSwitcher>
 
     <ImageView
         android:id="@+id/iv_action_button_player_bottom"
@@ -90,6 +96,17 @@
         app:layout_constraintTop_toTopOf="@id/layout_player" />
 
     <View
+        android:id="@+id/v_background_action_button"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:alpha="0"
+        android:background="@drawable/circular_shape"
+        app:layout_constraintBottom_toBottomOf="@id/iv_action_button_player_bottom"
+        app:layout_constraintEnd_toEndOf="@id/iv_action_button_player_bottom"
+        app:layout_constraintStart_toStartOf="@id/iv_action_button_player_bottom"
+        app:layout_constraintTop_toTopOf="@id/iv_action_button_player_bottom" />
+
+    <View
         android:id="@+id/draggableArea"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -100,13 +117,13 @@
 
     <FrameLayout
         android:id="@+id/layout_faders_wrapper"
-        android:alpha="0"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintStart_toStartOf="@id/layout_player"
+        android:alpha="0"
+        app:layout_constraintBottom_toTopOf="@id/iv_action_button_player_bottom"
         app:layout_constraintEnd_toEndOf="@id/layout_player"
-        app:layout_constraintTop_toBottomOf="@id/tv_track_title_player_bottom"
-        app:layout_constraintBottom_toTopOf="@id/iv_action_button_player_bottom">
+        app:layout_constraintStart_toStartOf="@id/layout_player"
+        app:layout_constraintTop_toBottomOf="@id/tv_track_title_player_bottom">
 
         <include layout="@layout/layout_faders" />
     </FrameLayout>

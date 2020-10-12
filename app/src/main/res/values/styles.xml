@@ -45,6 +45,5 @@
         <item name="android:gravity">start|center_vertical</item>
         <item name="android:singleLine">true</item>
         <item name="android:textColor">@color/textOnAccent</item>
-        <item name="android:textSize">@dimen/actions_bottom_title_text_size</item>
     </style>
 </resources>
