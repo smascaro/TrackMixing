@@ -27,23 +27,23 @@ class TrackPlayerViewMvcImpl @Inject constructor(
     BaseObservableViewMvc<TrackPlayerViewMvc.Listener>(),
     TrackPlayerViewMvc,
     SharedPreferences.OnSharedPreferenceChangeListener {
-
+    //Views
     private lateinit var bottomBar: ConstraintLayout
     private lateinit var motionLayout: MotionLayout
     private lateinit var bottomBarTextSwitcher: TextSwitcher
-
     private lateinit var bottomBarActionButton: ImageView
     private lateinit var timestampProgressIndicatorView: View
-
     private lateinit var currentTimestampTextView: MaterialTextView
     private lateinit var totalLengthTextView: MaterialTextView
     private lateinit var songProgressSeekbar: SeekBar
 
+    //SeekBars
     private lateinit var vocalsVolumeSeekbar: VerticalSeekbar
     private lateinit var otherVolumeSeekbar: VerticalSeekbar
     private lateinit var bassVolumeSeekbar: VerticalSeekbar
     private lateinit var drumsVolumeSeekbar: VerticalSeekbar
 
+    //Private fields
     private var isBottomBarShown = false
     private val bottomBarVisibleHeight =
         resources.getDimension(R.dimen.actions_bottom_layout_visible_height)
@@ -55,10 +55,7 @@ class TrackPlayerViewMvcImpl @Inject constructor(
         resources.getLong(R.integer.animation_slide_out_top_duration)
     private var currentShownData: TrackPlayerData? = null
     private lateinit var sharedPreferences: SharedPreferences
-
     private var currentMotionState: Int = R.id.player_hidden
-
-
     private var blockTimestampUpdates: Boolean = false
 
     override fun onCreate() {
@@ -121,7 +118,6 @@ class TrackPlayerViewMvcImpl @Inject constructor(
     private fun initializeMotionLayoutListener() {
         motionLayout.setTransitionListener(object : MotionLayout.TransitionListener {
             override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
-
             }
 
             override fun onTransitionChange(
@@ -145,7 +141,6 @@ class TrackPlayerViewMvcImpl @Inject constructor(
 
             override fun onTransitionTrigger(p0: MotionLayout?, p1: Int, p2: Boolean, p3: Float) {
             }
-
         })
     }
 
@@ -170,7 +165,6 @@ class TrackPlayerViewMvcImpl @Inject constructor(
         }
         songProgressSeekbar.setOnSeekBarChangeListener(progressChangeListener)
     }
-
 
     private fun makeSeekbarChangeListenerFor(trackInstrument: TrackInstrument): TrackMixerSeekBarChangeListener {
         return TrackMixerSeekBarChangeListener { progress ->

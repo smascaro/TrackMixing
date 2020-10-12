@@ -24,9 +24,7 @@ class DownloadTestDataController @Inject constructor(
 
     private var tracksToDownload: Array<TestDataBundleInfo> = arrayOf()
     private var finishedDownloads = 0
-
     private var listener: Listener? = null
-
     private var cancellationFlag: Boolean = false
 
     fun registerListener(listener: Listener) {

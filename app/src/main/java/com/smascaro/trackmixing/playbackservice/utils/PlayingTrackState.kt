@@ -74,14 +74,10 @@ class PlayingTrackState(
         player.addListener(this)
     }
 
-
     override fun onPlaybackStateChanged(state: Int) {
         logPlaybackStateChange(state)
         super.onPlaybackStateChanged(state)
         when (state) {
-            SimpleExoPlayer.STATE_BUFFERING,
-            SimpleExoPlayer.STATE_IDLE -> {
-            }
             SimpleExoPlayer.STATE_READY -> handleReadyState()
             SimpleExoPlayer.STATE_ENDED -> handleTrackCompletion()
         }
