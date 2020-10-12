@@ -10,8 +10,8 @@ import com.smascaro.trackmixing.TrackMixingApplication
 import com.smascaro.trackmixing.common.di.main.MainComponent
 import com.smascaro.trackmixing.common.view.ui.BaseActivity
 import com.smascaro.trackmixing.common.view.ui.BaseFragment
-import com.smascaro.trackmixing.main.components.bottomplayer.controller.BottomPlayerController
-import com.smascaro.trackmixing.main.components.bottomplayer.view.BottomPlayerViewMvc
+import com.smascaro.trackmixing.main.components.player.controller.TrackPlayerController
+import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvc
 import com.smascaro.trackmixing.main.components.progress.controller.BottomProgressController
 import com.smascaro.trackmixing.main.components.progress.view.BottomProgressViewMvc
 import com.smascaro.trackmixing.main.components.toolbar.controller.ToolbarController
@@ -30,10 +30,10 @@ class MainActivity : BaseActivity(), BaseFragment.OnTitleChangeListener {
     lateinit var mainViewMvc: MainActivityViewMvc
 
     @Inject
-    lateinit var bottomPlayerController: BottomPlayerController
+    lateinit var trackPlayerController: TrackPlayerController
 
     @Inject
-    lateinit var bottomPlayerViewMvc: BottomPlayerViewMvc
+    lateinit var trackPlayerViewMvc: TrackPlayerViewMvc
 
     @Inject
     lateinit var bottomProgressController: BottomProgressController
@@ -63,9 +63,9 @@ class MainActivity : BaseActivity(), BaseFragment.OnTitleChangeListener {
         mainActivityController.bindViewMvc(mainViewMvc)
         mainActivityController.handleIntent(intent)
 
-        bottomPlayerViewMvc.bindRootView(rootView)
-        bottomPlayerController.bindViewMvc(bottomPlayerViewMvc)
-        bottomPlayerController.handleIntent(intent)
+        trackPlayerViewMvc.bindRootView(rootView)
+        trackPlayerController.bindViewMvc(trackPlayerViewMvc)
+        trackPlayerController.handleIntent(intent)
 
         bottomProgressViewMvc.bindRootView(rootView)
         bottomProgressController.bindViewMvc(bottomProgressViewMvc)
@@ -75,7 +75,7 @@ class MainActivity : BaseActivity(), BaseFragment.OnTitleChangeListener {
         toolbarController.bindViewMvc(toolbarViewMvc)
 
         bottomProgressController.onCreate()
-        bottomPlayerController.onCreate()
+        trackPlayerController.onCreate()
 
         setContentView(rootView)
         navController = findNavController(R.id.nav_host_fragment)
@@ -83,7 +83,7 @@ class MainActivity : BaseActivity(), BaseFragment.OnTitleChangeListener {
 
     override fun onStart() {
         super.onStart()
-        bottomPlayerController.bindNavController(navController)
+        trackPlayerController.bindNavController(navController)
         toolbarController.bindNavController(navController)
         mainActivityController.onStart()
         bottomProgressController.onStart()
@@ -107,7 +107,7 @@ class MainActivity : BaseActivity(), BaseFragment.OnTitleChangeListener {
     private fun disposeControllers() {
         mainActivityController.dispose()
         bottomProgressController.dispose()
-        bottomPlayerController.dispose()
+        trackPlayerController.dispose()
         toolbarController.dispose()
     }
 
@@ -117,6 +117,12 @@ class MainActivity : BaseActivity(), BaseFragment.OnTitleChangeListener {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        bottomPlayerController.handleIntent(intent)
+        trackPlayerController.handleIntent(intent)
+    }
+
+    override fun onBackPressed() {
+        if(!trackPlayerViewMvc.onBackPressed()){
+            super.onBackPressed()
+        }
     }
 }

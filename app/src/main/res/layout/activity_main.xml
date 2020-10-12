@@ -51,7 +51,7 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/v_bottom_player_progress_indicator"
-        android:layout_width="400px"
+        android:layout_width="1px"
         android:layout_height="4dp"
         app:cardBackgroundColor="#ff0000"
         app:contentPadding="0dp"

@@ -53,7 +53,7 @@
                     app:layout_constraintStart_toStartOf="@id/sb_track_player_vocals"
                     app:layout_constraintTop_toBottomOf="@id/sb_track_player_vocals" />
 
-                <com.smascaro.trackmixing.player.view.widget.VerticalSeekbar
+                <com.smascaro.trackmixing.main.components.player.view.widget.VerticalSeekbar
                     android:id="@+id/sb_track_player_vocals"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
@@ -90,7 +90,7 @@
                     app:layout_constraintStart_toStartOf="@id/sb_track_player_other"
                     app:layout_constraintTop_toBottomOf="@id/sb_track_player_other" />
 
-                <com.smascaro.trackmixing.player.view.widget.VerticalSeekbar
+                <com.smascaro.trackmixing.main.components.player.view.widget.VerticalSeekbar
                     android:id="@+id/sb_track_player_other"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
@@ -126,7 +126,7 @@
                     app:layout_constraintStart_toStartOf="@id/sb_track_player_bass"
                     app:layout_constraintTop_toBottomOf="@id/sb_track_player_bass" />
 
-                <com.smascaro.trackmixing.player.view.widget.VerticalSeekbar
+                <com.smascaro.trackmixing.main.components.player.view.widget.VerticalSeekbar
                     android:id="@+id/sb_track_player_bass"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
@@ -162,7 +162,7 @@
                     app:layout_constraintStart_toStartOf="@id/sb_track_player_drums"
                     app:layout_constraintTop_toBottomOf="@id/sb_track_player_drums" />
 
-                <com.smascaro.trackmixing.player.view.widget.VerticalSeekbar
+                <com.smascaro.trackmixing.main.components.player.view.widget.VerticalSeekbar
                     android:id="@+id/sb_track_player_drums"
                     android:layout_width="0dp"
                     android:layout_height="0dp"

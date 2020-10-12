@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.player.view.widget
+package com.smascaro.trackmixing.main.components.player.view.widget
 
 import android.content.Context
 import android.graphics.Canvas
