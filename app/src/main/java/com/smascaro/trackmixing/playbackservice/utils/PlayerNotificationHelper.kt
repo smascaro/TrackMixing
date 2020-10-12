@@ -26,7 +26,6 @@ class PlayerNotificationHelper @Inject constructor(
     context: Context,
     val glide: RequestManager
 ) : NotificationHelper(context) {
-    //    private var mNotificationManager: NotificationManagerCompat
     private var mThumbnailBitmap: Bitmap? = null
     private var mMediaSession: MediaSessionCompat? = null
 
@@ -62,9 +61,7 @@ class PlayerNotificationHelper @Inject constructor(
                         notificationBuilder.build()
                     )
                 }
-
             })
-
         val actionPlayPause = createIntentMaster(playbackState.isMasterPlaying)
         val drawablePlayPause = if (playbackState.isMasterPlaying) {
             R.drawable.ic_pause
@@ -111,7 +108,6 @@ class PlayerNotificationHelper @Inject constructor(
             PendingIntent.getActivity(context, 3, intent, PendingIntent.FLAG_CANCEL_CURRENT)
         return pendingIntent
     }
-
 
     private fun createDeleteIntent(): PendingIntent? {
         val intent = Intent(context, MixPlayerService::class.java)
