@@ -1,48 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.smascaro.trackmixing.common.view.ui.ClickableMotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/motion_layout_main_activity"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    app:layoutDescription="@xml/layout_actions_bottom_scene"
+    app:motionDebug="NO_DEBUG">
 
     <include
         android:id="@+id/v_background_gradient"
         layout="@layout/layout_gradient_background" />
 
-    <RelativeLayout
-        android:id="@+id/container"
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/layout_toolbar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <include
+        android:id="@+id/layout_progress_container"
+        layout="@layout/layout_download_progress"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/nav_host_fragment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <include
-            android:id="@+id/toolbar"
-            layout="@layout/layout_toolbar" />
+    <fragment xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/nav_host_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/layout_progress_container"
+        app:defaultNavHost="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:navGraph="@navigation/mobile_navigation"
+        tools:layout="@layout/fragment_tracks_list" />
 
-        <include
-            android:id="@+id/layout_player_actions_bottom"
-            layout="@layout/layout_actions_bottom" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_player"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/exo_white"
+        app:layout_constraintTop_toBottomOf="parent" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/v_bottom_player_progress_indicator"
+        android:layout_width="1px"
+        android:layout_height="4dp"
+        app:cardBackgroundColor="#ff0000"
+        app:contentPadding="0dp"
+        app:layout_constraintBottom_toTopOf="@id/layout_player"
+        app:layout_constraintStart_toStartOf="@id/layout_player" />
+
+    <TextSwitcher
+        android:id="@+id/tv_track_title_player_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/layout_player"
+        app:layout_constraintStart_toStartOf="@id/layout_player"
+        app:layout_constraintTop_toTopOf="@id/layout_player">
+
+        <com.google.android.material.textview.MaterialTextView
+            style="@style/AppTheme.TM.PlayerBar.Track.TitleTextAppearance"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_above="@id/layout_player_actions_bottom"
-            android:layout_below="@id/toolbar">
+            android:text="@string/player_bottom_title" />
 
-            <include
-                android:id="@+id/layout_progress_container"
-                layout="@layout/layout_download_progress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true" />
+        <com.google.android.material.textview.MaterialTextView
+            style="@style/AppTheme.TM.PlayerBar.Track.TitleTextAppearance"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/player_bottom_title" />
+    </TextSwitcher>
 
-            <fragment
-                android:id="@+id/nav_host_fragment"
-                android:name="androidx.navigation.fragment.NavHostFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@id/layout_progress_container"
-                app:defaultNavHost="true"
-                app:navGraph="@navigation/mobile_navigation" />
-        </RelativeLayout>
-    </RelativeLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <ImageView
+        android:id="@+id/iv_action_button_player_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/ic_play"
+        app:layout_constraintBottom_toBottomOf="@id/layout_player"
+        app:layout_constraintEnd_toEndOf="@id/layout_player"
+        app:layout_constraintTop_toTopOf="@id/layout_player" />
+
+    <View
+        android:id="@+id/draggableArea"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/layout_player"
+        app:layout_constraintEnd_toStartOf="@id/iv_action_button_player_bottom"
+        app:layout_constraintStart_toStartOf="@id/layout_player"
+        app:layout_constraintTop_toTopOf="@id/layout_player" />
+
+    <FrameLayout
+        android:id="@+id/layout_faders_wrapper"
+        android:alpha="0"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/layout_player"
+        app:layout_constraintEnd_toEndOf="@id/layout_player"
+        app:layout_constraintTop_toBottomOf="@id/tv_track_title_player_bottom"
+        app:layout_constraintBottom_toTopOf="@id/iv_action_button_player_bottom">
+
+        <include layout="@layout/layout_faders" />
+    </FrameLayout>
+</com.smascaro.trackmixing.common.view.ui.ClickableMotionLayout>

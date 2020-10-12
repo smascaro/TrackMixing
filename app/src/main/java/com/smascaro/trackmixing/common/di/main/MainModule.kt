@@ -1,7 +1,7 @@
 package com.smascaro.trackmixing.common.di.main
 
-import com.smascaro.trackmixing.main.components.bottomplayer.view.BottomPlayerViewMvc
-import com.smascaro.trackmixing.main.components.bottomplayer.view.BottomPlayerViewMvcImpl
+import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvc
+import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvcImpl
 import com.smascaro.trackmixing.main.components.progress.view.BottomProgressViewMvc
 import com.smascaro.trackmixing.main.components.progress.view.BottomProgressViewMvcImpl
 import com.smascaro.trackmixing.trackslist.view.TracksListViewMvc
@@ -19,7 +19,7 @@ class MainModule {
 
         @MainScope
         @Binds
-        fun provideBottomPlayerViewMvc(bottomPlayerViewMvcImpl: BottomPlayerViewMvcImpl): BottomPlayerViewMvc
+        fun provideBottomPlayerViewMvc(bottomPlayerViewMvcImpl: TrackPlayerViewMvcImpl): TrackPlayerViewMvc
 
         @MainScope
         @Binds

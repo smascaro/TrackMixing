@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.player.view
+package com.smascaro.trackmixing.main.components.player.view
 
 import android.widget.SeekBar
 

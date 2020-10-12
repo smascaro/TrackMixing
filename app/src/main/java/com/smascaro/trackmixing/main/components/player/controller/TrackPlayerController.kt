@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.main.components.bottomplayer.controller
+package com.smascaro.trackmixing.main.components.player.controller
 
 import android.content.Intent
 import com.smascaro.trackmixing.common.controller.BaseNavigatorController
@@ -8,10 +8,10 @@ import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.utils.PLAYER_NOTIFICATION_ACTION_LAUNCH_PLAYER
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager
 import com.smascaro.trackmixing.common.utils.navigation.NavigationHelper
-import com.smascaro.trackmixing.main.components.bottomplayer.model.BottomPlayerData
-import com.smascaro.trackmixing.main.components.bottomplayer.view.BottomPlayerViewMvc
-import com.smascaro.trackmixing.main.components.bottomplayer.view.HideBarMode
+import com.smascaro.trackmixing.main.components.player.model.TrackPlayerData
+import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvc
 import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
+import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
 import com.smascaro.trackmixing.playbackservice.utils.PlaybackSession
 import kotlinx.coroutines.runBlocking
 import org.greenrobot.eventbus.EventBus
@@ -20,14 +20,14 @@ import org.greenrobot.eventbus.ThreadMode
 import timber.log.Timber
 import javax.inject.Inject
 
-class BottomPlayerController @Inject constructor(
+class TrackPlayerController @Inject constructor(
     private val playbackStateManager: PlaybackStateManager,
     private val tracksRepository: TracksRepository,
     private val eventBus: EventBus,
     private val playbackSession: PlaybackSession,
     navigationHelper: NavigationHelper
-) : BaseNavigatorController<BottomPlayerViewMvc>(navigationHelper),
-    BottomPlayerViewMvc.Listener {
+) : BaseNavigatorController<TrackPlayerViewMvc>(navigationHelper),
+    TrackPlayerViewMvc.Listener {
 
     private var currentTrack: Track? = null
     private var currentState: PlaybackStateManager.PlaybackState? = null
@@ -53,6 +53,9 @@ class BottomPlayerController @Inject constructor(
                 viewMvc.showPlayerBar(
                     makeBottomPlayerData()
                 )
+
+                viewMvc.bindTrackDuration(currentTrack!!.secondsLong)
+                viewMvc.bindVolumes(playbackSession.getVolumes())
             } else if (currentState is PlaybackStateManager.PlaybackState.Stopped) {
 //                viewMvc.hidePlayerBar(HideBarMode.Vertical())
             }
@@ -61,8 +64,8 @@ class BottomPlayerController @Inject constructor(
             }
         }
 
-    private fun makeBottomPlayerData(): BottomPlayerData {
-        return BottomPlayerData(
+    private fun makeBottomPlayerData(): TrackPlayerData {
+        return TrackPlayerData(
             currentTrack!!.title,
             currentTrack!!.author,
             currentState!!,
@@ -77,7 +80,8 @@ class BottomPlayerController @Inject constructor(
     fun navigateToPlayer() {
         if (currentTrack != null) {
             openPlayerIntentRequested = false
-            navigationHelper.toPlayer(currentTrack!!)
+//            navigationHelper.toPlayer(currentTrack!!)
+            viewMvc.openPlayer()
         }
     }
 
@@ -92,6 +96,10 @@ class BottomPlayerController @Inject constructor(
         }
     }
 
+    override fun onSeekRequestEvent(progress: Int) {
+        playbackSession.seek(progress)
+    }
+
     override fun onPlayerStateChanged() {
         updateCurrentPlayingTrack()
     }
@@ -102,13 +110,12 @@ class BottomPlayerController @Inject constructor(
         }
     }
 
-    override fun onSwipeUp() {
-        navigateToPlayer()
+    override fun onPlayerSwipedOut() {
+        playbackSession.stopPlayback()
     }
 
-    override fun onSwipeRight() {
-        viewMvc.hidePlayerBar(HideBarMode.Sideway())
-        playbackSession.stopPlayback()
+    override fun onTrackVolumeChanged(trackInstrument: TrackInstrument, volume: Int) {
+        playbackSession.setTrackVolume(trackInstrument, volume)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -117,7 +124,7 @@ class BottomPlayerController @Inject constructor(
 
     private fun handleTimestampChanged(newTimestamp: Int, totalLength: Int) {
         Timber.d("Received timestamp event: $newTimestamp / $totalLength")
-        viewMvc.updateTimestamp((newTimestamp.toFloat()) / (totalLength.toFloat()))
+        viewMvc.updateTimestamp(newTimestamp,totalLength)
     }
 
     fun handleIntent(intent: Intent?) {

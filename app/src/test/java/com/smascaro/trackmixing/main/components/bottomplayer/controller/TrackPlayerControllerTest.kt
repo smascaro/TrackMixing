@@ -12,9 +12,9 @@ import com.smascaro.trackmixing.common.models.TestModels
 import com.smascaro.trackmixing.common.testdoubles.EventBusTd
 import com.smascaro.trackmixing.common.utils.navigation.NavigationHelper
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager
-import com.smascaro.trackmixing.main.components.bottomplayer.model.BottomPlayerData
-import com.smascaro.trackmixing.main.components.bottomplayer.view.BottomPlayerViewMvc
-import com.smascaro.trackmixing.main.components.bottomplayer.view.HideBarMode
+import com.smascaro.trackmixing.main.components.player.model.TrackPlayerData
+import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvc
+import com.smascaro.trackmixing.main.components.player.controller.TrackPlayerController
 import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
 import com.smascaro.trackmixing.playbackservice.utils.PlaybackSession
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.TestDataBundleInfo
@@ -29,8 +29,8 @@ import org.mockito.Mockito.validateMockitoUsage
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
-class BottomPlayerControllerTest {
-    private lateinit var SUT: BottomPlayerController
+class TrackPlayerControllerTest {
+    private lateinit var SUT: TrackPlayerController
 
     // region constants
     // endregion constants
@@ -39,19 +39,19 @@ class BottomPlayerControllerTest {
     @Mock private lateinit var playbackStateManager: PlaybackStateManager
     @Mock private lateinit var playbackSession: PlaybackSession
     private lateinit var navigationHelper: NavigationHelperTd
-    private lateinit var viewMvc: BottomPlayerViewMvcTd
+    private lateinit var viewMvc: TrackPlayerViewMvcTd
     private lateinit var eventBus: EventBusTd
     private lateinit var tracksRepository: TracksRepository
     // endregion helper fields
 
     @Before
     fun setup() {
-        viewMvc = BottomPlayerViewMvcTd()
+        viewMvc = TrackPlayerViewMvcTd()
         eventBus = EventBusTd()
         tracksRepository = TracksRepositoryTd()
         navigationHelper = NavigationHelperTd()
 
-        SUT = BottomPlayerController(
+        SUT = TrackPlayerController(
             playbackStateManager,
             tracksRepository,
             eventBus,
@@ -338,10 +338,10 @@ class BottomPlayerControllerTest {
 
     }
 
-    class BottomPlayerViewMvcTd : BottomPlayerViewMvc {
+    class TrackPlayerViewMvcTd : TrackPlayerViewMvc {
         var totalInteractions = 0
         var isPlayerBarShown: Boolean = false
-        var dataInPlayerBar: BottomPlayerData? = null
+        var dataInPlayerBar: TrackPlayerData? = null
         var isPlayButtonShown: Boolean = false
         var isPauseButtonShown: Boolean = false
         var registeredListener: Any? = null
@@ -351,17 +351,12 @@ class BottomPlayerControllerTest {
             totalInteractions++
         }
 
-        override fun showPlayerBar(data: BottomPlayerData) {
+        override fun showPlayerBar(data: TrackPlayerData) {
             dataInPlayerBar = data
             isPlayerBarShown = true
             totalInteractions++
         }
 
-        override fun hidePlayerBar(mode: HideBarMode) {
-            dataInPlayerBar = null
-            isPlayerBarShown = false
-            totalInteractions++
-        }
 
         override fun showPlayButton() {
             isPlayButtonShown = true
@@ -378,12 +373,12 @@ class BottomPlayerControllerTest {
             totalInteractions++
         }
 
-        override fun registerListener(listener: BottomPlayerViewMvc.Listener) {
+        override fun registerListener(listener: TrackPlayerViewMvc.Listener) {
             registeredListener = listener
             totalInteractions++
         }
 
-        override fun unregisterListener(listener: BottomPlayerViewMvc.Listener) {
+        override fun unregisterListener(listener: TrackPlayerViewMvc.Listener) {
             unregisteredListener = listener
             totalInteractions++
         }

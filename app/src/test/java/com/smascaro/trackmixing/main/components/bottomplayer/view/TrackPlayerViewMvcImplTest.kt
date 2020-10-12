@@ -2,6 +2,8 @@ package com.smascaro.trackmixing.main.components.bottomplayer.view
 
 import com.bumptech.glide.RequestManager
 import com.smascaro.trackmixing.common.utils.ResourcesWrapper
+import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvc
+import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvcImpl
 import com.smascaro.trackmixing.playbackservice.MixPlayerServiceChecker
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -13,8 +15,8 @@ import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
-class BottomPlayerViewMvcImplTest {
-    private lateinit var SUT: BottomPlayerViewMvcImpl
+class TrackPlayerViewMvcImplTest {
+    private lateinit var SUT: TrackPlayerViewMvcImpl
 
     // region constants
 
@@ -24,13 +26,13 @@ class BottomPlayerViewMvcImplTest {
     @Mock private lateinit var glide: RequestManager
     @Mock private lateinit var resourcesWrapper: ResourcesWrapper
     @Mock private lateinit var serviceChecker: MixPlayerServiceChecker
-    private lateinit var viewMvcListener: BottomPlayerViewMvcListenerImplementator
+    private lateinit var viewMvcListener: TrackPlayerViewMvcListenerImplementator
     // endregion helper fields
 
     @Before
     fun setup() {
-        viewMvcListener = BottomPlayerViewMvcListenerImplementator()
-        SUT = BottomPlayerViewMvcImpl(serviceChecker, resourcesWrapper)
+        viewMvcListener = TrackPlayerViewMvcListenerImplementator()
+        SUT = TrackPlayerViewMvcImpl(serviceChecker, resourcesWrapper)
     }
 
     // region tests
@@ -92,7 +94,7 @@ class BottomPlayerViewMvcImplTest {
     // endregion helper methods
 
     // region helper classes
-    class BottomPlayerViewMvcListenerImplementator : BottomPlayerViewMvc.Listener {
+    class TrackPlayerViewMvcListenerImplementator : TrackPlayerViewMvc.Listener {
         var hasServiceBeenChecked: Boolean = false
         var serviceCheckResult: Boolean? = null
         override fun onLayoutClick() {
@@ -116,7 +118,7 @@ class BottomPlayerViewMvcImplTest {
             TODO("Not yet implemented")
         }
 
-        override fun onSwipeRight() {
+        override fun onPlayerSwipedOut() {
             TODO("Not yet implemented")
         }
 
