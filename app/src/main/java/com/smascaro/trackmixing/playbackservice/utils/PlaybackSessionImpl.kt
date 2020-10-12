@@ -15,12 +15,10 @@ class PlaybackSessionImpl @Inject constructor(
     private val playbackStateManager: PlaybackStateManager
 ) :
     PlaybackSession {
-
     private val eventBus = EventBus.getDefault()
     private var isServiceStarted: Boolean = false
 
     override fun isSessionInitialized() = isServiceStarted
-
 
     override fun startPlayback(track: Track): Boolean {
         isServiceStarted =
@@ -28,12 +26,7 @@ class PlaybackSessionImpl @Inject constructor(
                 context,
                 track
             )
-        initialize(track)
         return isSessionInitialized()
-    }
-
-    private fun initialize(track: Track) {
-        //No actions yet
     }
 
     override fun stopPlayback() {

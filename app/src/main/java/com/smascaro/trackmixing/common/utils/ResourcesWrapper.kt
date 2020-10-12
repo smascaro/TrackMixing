@@ -28,5 +28,4 @@ class ResourcesWrapper @Inject constructor(private val context: Context) {
     fun getColor(id: Int): Int {
         return ContextCompat.getColor(context, id)
     }
-
 }

@@ -1,6 +1,5 @@
 package com.smascaro.trackmixing.trackslist.controller
 
-
 import com.smascaro.trackmixing.common.controller.BaseNavigatorController
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.utils.navigation.NavigationHelper
@@ -15,7 +14,6 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import javax.inject.Inject
 
-
 class TracksListController @Inject constructor(
     private val mFetchDownloadedTracks: FetchDownloadedTracks,
     private val playbackSession: PlaybackSession,
@@ -24,7 +22,6 @@ class TracksListController @Inject constructor(
 ) : BaseNavigatorController<TracksListViewMvc>(navigationHelper),
     TracksListViewMvc.Listener,
     FetchDownloadedTracks.Listener {
-
     override fun onSearchNavigationButtonClicked() {
         navigateToSearch()
     }

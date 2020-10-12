@@ -69,7 +69,6 @@ class SearchResultsNetworkDataSource @Inject constructor(
                                 )
                             }
                         }
-
                     }
                     EventBus.getDefault().post(SearchResultsObtainedEvent.Success(searchResults))
                 }

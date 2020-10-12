@@ -13,12 +13,10 @@ import javax.inject.Inject
 
 class FetchAvailableTracksUseCase @Inject constructor(private val mNodeApi: NodeApi) :
     BaseObservable<FetchAvailableTracksUseCase.Listener>() {
-
     interface Listener {
         fun onAvailableTracksFetched(tracks: List<Track>)
         fun onAvailableTracksFetchFailed()
     }
-
 
     fun fetchAvailableTracksAndNotify() {
         mNodeApi.fetchAvailableTracks("newest", null, null)
@@ -42,10 +40,8 @@ class FetchAvailableTracksUseCase @Inject constructor(private val mNodeApi: Node
                 }
 
                 override fun onFailure(call: Call<AvailableTracksResponseSchema>, t: Throwable) {
-
                     notifyFailure(t.message ?: "Unknown error")
                 }
-
             })
     }
 

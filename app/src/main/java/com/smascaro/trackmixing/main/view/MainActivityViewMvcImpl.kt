@@ -25,15 +25,12 @@ class MainActivityViewMvcImpl @Inject constructor(
     BaseObservableViewMvc<MainActivityViewMvc.Listener>(),
     SharedPreferences.OnSharedPreferenceChangeListener {
     private lateinit var backgroundGradient: View
-
     private val gradientCenterColor =
         resourcesWrapper.getColor(R.color.track_player_background_gradient_center_color)
     private val gradientEndColor =
         resourcesWrapper.getColor(R.color.track_player_background_gradient_end_color)
     private val defaultGradientStartColor = resourcesWrapper.getColor(R.color.colorAccent)
-
     private lateinit var sharedPreferences: SharedPreferences
-
     private var previousBackgroundGradientColor: Int = defaultGradientStartColor
 
     override fun initialize() {

@@ -6,7 +6,6 @@ import com.smascaro.trackmixing.common.di.DaggerAppComponent
 import timber.log.Timber
 
 class TrackMixingApplication : Application() {
-
     override fun onCreate() {
         super.onCreate()
         Timber.plant(Timber.DebugTree())

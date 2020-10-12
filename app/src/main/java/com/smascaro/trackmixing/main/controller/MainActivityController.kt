@@ -14,7 +14,6 @@ class MainActivityController @Inject constructor(
     private val playbackStateManager: PlaybackStateManager
 ) :
     BaseController<MainActivityViewMvc>(), MainActivityViewMvc.Listener {
-
     fun onStart() {
         viewMvc.registerListener(this)
         updateBackgroundColor()
@@ -38,7 +37,6 @@ class MainActivityController @Inject constructor(
 
     fun isYoutubeValidUrl(url: CharSequence): Boolean =
         YoutubeUrlValidator(url.toString()).isValid()
-
 
     override fun onPlayerStateChanged() {
         updateBackgroundColor()

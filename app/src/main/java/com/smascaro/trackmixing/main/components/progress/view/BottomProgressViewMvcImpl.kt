@@ -19,7 +19,6 @@ class BottomProgressViewMvcImpl @Inject constructor(resources: ResourcesWrapper)
     private var currentProgressMessage: String = ""
     private lateinit var textSwitcherProgressValue: TextSwitcher
     private lateinit var textSwitcherProgressText: TextSwitcher
-
     private val progressBarVisibleHeight =
         resources.getDimension(R.dimen.download_progress_layout_visible_height)
     private val progressBarHiddenHeight =
@@ -82,7 +81,6 @@ class BottomProgressViewMvcImpl @Inject constructor(resources: ResourcesWrapper)
         progressBar.visibility = View.INVISIBLE
     }
 
-
     private fun setProgressBarVisibility(visibility: Int) {
         progressBar.visibility = visibility
     }
@@ -108,5 +106,4 @@ class BottomProgressViewMvcImpl @Inject constructor(resources: ResourcesWrapper)
         setProgressBarHeight(progressBarHiddenHeight.toInt())
         setProgressBarVisibility(View.INVISIBLE)
     }
-
 }

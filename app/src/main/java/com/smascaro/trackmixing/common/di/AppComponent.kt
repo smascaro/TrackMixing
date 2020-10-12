@@ -12,7 +12,6 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = [AppModule::class, AppModule.StaticBindings::class, ViewMvcBuildersModule::class, AppSubcomponents::class])
 interface AppComponent {
-
     @Component.Factory
     interface Factory {
         fun create(@BindsInstance context: Context): AppComponent

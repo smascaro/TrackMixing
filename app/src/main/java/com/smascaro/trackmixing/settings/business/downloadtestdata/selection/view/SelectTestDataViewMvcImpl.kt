@@ -26,7 +26,6 @@ class SelectTestDataViewMvcImpl @Inject constructor(
     private lateinit var recyclerViewTestDataBundleInfo: RecyclerView
     private lateinit var startDownloadButton: MaterialButton
     private lateinit var availableSpaceTextView: MaterialTextView
-
     private var availableBytes = Long.MAX_VALUE
     private var defaultMaterialTextColor: Int = 0
 

@@ -10,7 +10,6 @@ class ToolbarController @Inject constructor(p_navigationHelper: NavigationHelper
     BaseNavigatorController<ToolbarViewMvc>(p_navigationHelper),
     ToolbarViewMvc.Listener,
     NavigationHelper.Listener {
-
     fun onStart() {
         viewMvc.registerListener(this)
         navigationHelper.registerListener(this)

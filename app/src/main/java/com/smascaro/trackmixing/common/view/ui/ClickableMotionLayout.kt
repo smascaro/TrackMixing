@@ -6,7 +6,6 @@ import android.view.MotionEvent
 import androidx.constraintlayout.motion.widget.MotionLayout
 
 class ClickableMotionLayout : MotionLayout {
-
     constructor(context: Context) : super(context)
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
@@ -23,5 +22,4 @@ class ClickableMotionLayout : MotionLayout {
         }
         return false
     }
-
 }

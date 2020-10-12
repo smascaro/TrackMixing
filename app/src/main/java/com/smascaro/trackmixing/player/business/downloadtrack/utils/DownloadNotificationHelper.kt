@@ -14,7 +14,6 @@ class DownloadNotificationHelper(context: Context) : NotificationHelper(context)
     override fun updateNotification(data: NotificationData) {
         if (data !is DownloadProgressState) {
             throw WrongArgumentType("Argument for download notification must be of type DownloadProgressState")
-
         }
         val progressState = data
         notificationBuilder =
