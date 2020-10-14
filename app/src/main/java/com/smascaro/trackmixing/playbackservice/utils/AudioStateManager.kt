@@ -52,7 +52,7 @@ class AudioStateManager @Inject constructor(private val context: Context) :
                 ) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
             }
         } else {
-            false
+            true
         }
     }
 
