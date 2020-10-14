@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layoutDescription="@xml/layout_actions_bottom_scene"
-    app:motionDebug="SHOW_PROGRESS">
+    app:motionDebug="NO_DEBUG">
 
     <include
         android:id="@+id/v_background_gradient"

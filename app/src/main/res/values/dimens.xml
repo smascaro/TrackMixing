@@ -31,4 +31,7 @@
     <dimen name="item_test_data_selection_title_text_size">13sp</dimen>
     <dimen name="item_test_data_selection_sub_title_text_size">11sp</dimen>
     <dimen name="item_test_data_selection_sub_title_margin_horizontal">4dp</dimen>
+    <dimen name="track_player_fader_width">64dp</dimen>
+    <dimen name="track_player_fader_height">350dp</dimen>
+    <dimen name="track_player_fader_container_height">400dp</dimen>
 </resources>
