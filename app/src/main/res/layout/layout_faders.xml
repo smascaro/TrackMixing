@@ -12,7 +12,7 @@
     <LinearLayout
         android:id="@+id/container_faders"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="@dimen/track_player_fader_container_height"
         android:orientation="horizontal"
         android:weightSum="4"
         app:layout_constraintBottom_toTopOf="@id/container_progress"
@@ -28,8 +28,8 @@
 
             <com.smascaro.trackmixing.main.components.player.view.widget.VerticalSeekbar
                 android:id="@+id/sb_track_player_vocals"
-                android:layout_width="64dp"
-                android:layout_height="350dp"
+                android:layout_width="@dimen/track_player_fader_width"
+                android:layout_height="@dimen/track_player_fader_height"
                 android:layout_alignBottom="@id/tv_track_player_vocals"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
@@ -68,8 +68,8 @@
 
             <com.smascaro.trackmixing.main.components.player.view.widget.VerticalSeekbar
                 android:id="@+id/sb_track_player_other"
-                android:layout_width="64dp"
-                android:layout_height="350dp"
+                android:layout_width="@dimen/track_player_fader_width"
+                android:layout_height="@dimen/track_player_fader_height"
                 android:layout_alignBottom="@id/tv_track_player_other"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
@@ -110,8 +110,8 @@
 
             <com.smascaro.trackmixing.main.components.player.view.widget.VerticalSeekbar
                 android:id="@+id/sb_track_player_bass"
-                android:layout_width="64dp"
-                android:layout_height="350dp"
+                android:layout_width="@dimen/track_player_fader_width"
+                android:layout_height="@dimen/track_player_fader_height"
                 android:layout_alignBottom="@id/tv_track_player_bass"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
@@ -136,7 +136,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_weight="2"
                 android:text="Bass"
-                android:textColor="@color/textOnAccent"
+                android:textColor="@color/textOnPrimary"
                 android:textSize="14dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -151,8 +151,8 @@
 
             <com.smascaro.trackmixing.main.components.player.view.widget.VerticalSeekbar
                 android:id="@+id/sb_track_player_drums"
-                android:layout_width="64dp"
-                android:layout_height="350dp"
+                android:layout_width="@dimen/track_player_fader_width"
+                android:layout_height="@dimen/track_player_fader_height"
                 android:layout_alignBottom="@id/tv_track_player_drums"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
@@ -177,7 +177,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_weight="2"
                 android:text="Drums"
-                android:textColor="@color/textOnAccent"
+                android:textColor="@color/textOnPrimary"
                 android:textSize="14dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

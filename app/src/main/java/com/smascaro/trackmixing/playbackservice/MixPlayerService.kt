@@ -17,7 +17,6 @@ import javax.inject.Inject
 
 class MixPlayerService : BaseService(),
     MixPlayerServiceController.ServiceActionsDelegate {
-
     companion object {
         fun start(context: Context, track: Track, startPlaying: Boolean = true): Boolean {
             val intent = Intent(context, MixPlayerService::class.java).apply {
@@ -118,5 +117,4 @@ class MixPlayerService : BaseService(),
     override fun onStopForeground(removeNotification: Boolean) {
         stopForeground(removeNotification)
     }
-
 }

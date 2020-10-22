@@ -1,7 +1,6 @@
 package com.smascaro.trackmixing.common.utils.navigation
 
 import androidx.navigation.NavController
-import androidx.navigation.fragment.FragmentNavigator
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.view.architecture.Observable
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.TestDataBundleInfo

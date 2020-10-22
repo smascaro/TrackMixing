@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="track_player_fader_width">32dp</dimen>
+    <dimen name="track_player_fader_height">280dp</dimen>
+    <dimen name="track_player_fader_container_height">320dp</dimen>
+</resources>

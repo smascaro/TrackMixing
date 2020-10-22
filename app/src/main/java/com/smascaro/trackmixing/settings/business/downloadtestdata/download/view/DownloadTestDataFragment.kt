@@ -14,10 +14,10 @@ import javax.inject.Inject
 
 class DownloadTestDataFragment : Fragment(), DownloadTestDataController.Listener,
     DownloadTestDataActivity.BackPressedListener {
-
-    @Inject lateinit var controller: DownloadTestDataController
-    @Inject lateinit var viewMvc: DownloadTestDataViewMvc
-
+    @Inject
+    lateinit var controller: DownloadTestDataController
+    @Inject
+    lateinit var viewMvc: DownloadTestDataViewMvc
     private val arguments: DownloadTestDataFragmentArgs by navArgs()
 
     override fun onAttach(context: Context) {

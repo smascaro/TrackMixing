@@ -13,7 +13,6 @@ import com.smascaro.trackmixing.search.controller.SearchResultsController
 import javax.inject.Inject
 
 class SongSearchFragment : BaseFragment() {
-
     @Inject
     lateinit var searchResultsController: SearchResultsController
 

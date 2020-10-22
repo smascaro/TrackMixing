@@ -12,6 +12,5 @@ data class RequestTrackResponseSchema(
     data class Body(
         val track_id: String
     )
-
 }
 

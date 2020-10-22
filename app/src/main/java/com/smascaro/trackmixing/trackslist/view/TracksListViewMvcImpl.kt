@@ -13,7 +13,6 @@ class TracksListViewMvcImpl @Inject constructor(
 ) : BaseObservableViewMvc<TracksListViewMvc.Listener>(),
     TracksListAdapter.Listener,
     TracksListViewMvc {
-
     private lateinit var mRecyclerViewTracks: RecyclerView
 
     override fun initialize() {

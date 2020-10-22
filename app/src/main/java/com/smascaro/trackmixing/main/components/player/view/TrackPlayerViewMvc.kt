@@ -21,7 +21,7 @@ interface TrackPlayerViewMvc :
     fun showPlayerBar(data: TrackPlayerData)
     fun showPlayButton()
     fun showPauseButton()
-    fun updateTimestamp(newTimestamp:Int, totalLength: Int)
+    fun updateTimestamp(newTimestamp: Int, totalLength: Int)
     fun bindTrackDuration(lengthSeconds: Int)
     fun bindVolumes(volumes: TrackVolumeBundle)
     fun openPlayer()

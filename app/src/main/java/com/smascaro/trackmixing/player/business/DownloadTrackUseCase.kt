@@ -7,8 +7,8 @@ import com.smascaro.trackmixing.common.data.datasource.repository.TracksReposito
 import com.smascaro.trackmixing.common.data.datasource.repository.toModel
 import com.smascaro.trackmixing.common.data.model.DownloadEntity
 import com.smascaro.trackmixing.common.data.model.Track
-import com.smascaro.trackmixing.common.utils.ui.ColorExtractor
 import com.smascaro.trackmixing.common.utils.FilesStorageHelper
+import com.smascaro.trackmixing.common.utils.ui.ColorExtractor
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable
 import com.smascaro.trackmixing.player.business.downloadtrack.model.DownloadEvents
 import com.smascaro.trackmixing.player.business.downloadtrack.model.FetchSteps
@@ -68,7 +68,7 @@ class DownloadTrackUseCase @Inject constructor(
             }
 
             override fun onFailure(call: Call<FetchTrackDetailsResponseSchema>, t: Throwable) {
-                notifyError(t.message ?: "Unknown error")
+                notifyError()
             }
         })
     }
@@ -120,9 +120,8 @@ class DownloadTrackUseCase @Inject constructor(
                             GlobalScope.launch {
                                 setErrorStatusAndUpdate(entity)
                             }
-                            notifyError("Error de red en la descarga")
+                            notifyError()
                         }
-
 
                         override fun onResponse(
                             call: Call<ResponseBody>,
@@ -174,17 +173,15 @@ class DownloadTrackUseCase @Inject constructor(
                                             )
                                         } else {
                                             setErrorStatusAndUpdate(entity)
-                                            notifyError("Error al descomprimir el contenido")
+                                            notifyError()
                                         }
                                     } else {
                                         setErrorStatusAndUpdate(entity)
-                                        notifyError("Error en la descarga")
+                                        notifyError()
                                     }
                                 }
                             }
                         }
-
-
                     })
                 } else {
                     Timber.i("Track ${mTrack!!.videoKey} already in the system, omitting download")
@@ -252,10 +249,9 @@ class DownloadTrackUseCase @Inject constructor(
         }
     }
 
-    private fun notifyError(error: String) {
+    private fun notifyError() {
         getListeners().forEach {
             it.onDownloadTrackError()
         }
     }
-
 }

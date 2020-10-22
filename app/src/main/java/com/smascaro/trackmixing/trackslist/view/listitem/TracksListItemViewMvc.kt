@@ -5,7 +5,6 @@ import com.smascaro.trackmixing.common.view.architecture.ObservableViewMvc
 
 interface TracksListItemViewMvc :
     ObservableViewMvc<TracksListItemViewMvc.Listener> {
-
     interface Listener {
         fun onTrackClicked(track: Track)
         fun onExpandOrCollapseDetailsRequest(itemPosition: Int)

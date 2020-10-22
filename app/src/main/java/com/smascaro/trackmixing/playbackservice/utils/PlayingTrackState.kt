@@ -22,10 +22,10 @@ class PlayingTrackState(
     }
 
     companion object {
-        private val VOCALS_FILENAME = "vocals.mp3"
-        private val OTHER_FILENAME = "other.mp3"
-        private val BASS_FILENAME = "bass.mp3"
-        private val DRUMS_FILENAME = "drums.mp3"
+        private const val VOCALS_FILENAME = "vocals.mp3"
+        private const val OTHER_FILENAME = "other.mp3"
+        private const val BASS_FILENAME = "bass.mp3"
+        private const val DRUMS_FILENAME = "drums.mp3"
         fun create(track: Track, instrument: TrackInstrument, context: Context): PlayingTrackState {
             val filename = when (instrument) {
                 TrackInstrument.VOCALS -> VOCALS_FILENAME
@@ -43,11 +43,7 @@ class PlayingTrackState(
         }
     }
 
-    enum class LogicMediaState {
-        MUTED, PLAYING
-    }
-
-    val maxVolume: Float = MEDIA_PLAYER_MAX_VOLUME
+    private val maxVolume: Float = MEDIA_PLAYER_MAX_VOLUME
     private var mIsPrepared: Boolean = false
     private lateinit var player: ExoPlayer
     private var mVolume = maxVolume
@@ -74,14 +70,10 @@ class PlayingTrackState(
         player.addListener(this)
     }
 
-
     override fun onPlaybackStateChanged(state: Int) {
         logPlaybackStateChange(state)
         super.onPlaybackStateChanged(state)
         when (state) {
-            SimpleExoPlayer.STATE_BUFFERING,
-            SimpleExoPlayer.STATE_IDLE -> {
-            }
             SimpleExoPlayer.STATE_READY -> handleReadyState()
             SimpleExoPlayer.STATE_ENDED -> handleTrackCompletion()
         }
@@ -93,7 +85,7 @@ class PlayingTrackState(
             SimpleExoPlayer.STATE_IDLE -> "SimpleExoPlayer.STATE_IDLE"
             SimpleExoPlayer.STATE_READY -> "SimpleExoPlayer.STATE_READY"
             SimpleExoPlayer.STATE_ENDED -> "SimpleExoPlayer.STATE_ENDED"
-            else -> "Unkown state"
+            else -> "Unknown state"
         }
         Timber.d("[$instrument] - State changed to $stateStr")
     }

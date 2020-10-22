@@ -9,6 +9,7 @@ import com.smascaro.trackmixing.playbackservice.model.MixPlaybackState
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
 import timber.log.Timber
 import javax.inject.Inject
+import kotlin.math.abs
 
 class PlaybackHelper @Inject constructor(
     private val context: Context,
@@ -29,7 +30,6 @@ class PlaybackHelper @Inject constructor(
 
     private lateinit var mCurrentPlayingTrack: Track
     private var mIsInitialized: Boolean = false
-
     private var playRequested: Boolean = false
     private var mCurrentState: State =
         State.PAUSED
@@ -78,7 +78,6 @@ class PlaybackHelper @Inject constructor(
             registerListener(this@PlaybackHelper)
         }
         playerRack.put(mOtherState.instrument, mOtherState)
-
         val mBassState = PlayingTrackState.create(
             track,
             TrackInstrument.BASS,
@@ -87,7 +86,6 @@ class PlaybackHelper @Inject constructor(
             registerListener(this@PlaybackHelper)
         }
         playerRack.put(mBassState.instrument, mBassState)
-
         val mDrumsState = PlayingTrackState.create(
             track,
             TrackInstrument.DRUMS,
@@ -208,5 +206,39 @@ class PlaybackHelper @Inject constructor(
 
     override fun onAudioFocusTransientLoss() {
         pauseMaster()
+    }
+
+    suspend fun reportPlayersOffsets() {
+        playerRack.getCurrentPositionsReport { report ->
+            val sum = report.sumBy { it.second.toInt() }
+            val mean = sum.toDouble() / report.size
+            Timber.i("------------------ BEGIN REPORT TRACKS OFFSET ANALYSIS ---------------------")
+            report.forEach {
+                Timber.i(
+                    "[${
+                        it.first.name.padEnd(
+                            16,
+                            ' '
+                        )
+                    }] at position ${it.second} with offset of ${it.second - mean}"
+                )
+            }
+            val maxDifference = findMaxDifference(report.map { it.second.toInt() })
+            Timber.i("Max difference found is of $maxDifference milliseconds")
+            Timber.i("------------------ END REPORT TRACKS OFFSET ANALYSIS ---------------------")
+            if(maxDifference > 30){
+//                playerRack.seekMillis(mean.toLong())
+            }
+        }
+    }
+
+    private fun findMaxDifference(items: List<Int>): Int {
+        var maxDiff = 0
+        for (i in items.indices) {
+            for (j in i until items.size) {
+                maxDiff = maxOf(abs(items[i] - items[j]), maxDiff)
+            }
+        }
+        return maxDiff
     }
 }

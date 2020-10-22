@@ -14,7 +14,6 @@ class SearchResultsItemViewMvcImpl(private val glide: RequestManager) :
     SearchResultsItemViewMvc {
     private lateinit var searchResult: SearchResult
     private var position: Int = -1
-
     private lateinit var searchResultThumbnailImageView: ImageView
     private lateinit var searchResultTitleTextView: MaterialTextView
     private lateinit var searchResultAuthorTextView: MaterialTextView

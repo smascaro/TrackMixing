@@ -16,14 +16,11 @@ class ToolbarViewMvcImpl @Inject constructor(
     private val uiUtils: UiUtils,
 ) : ToolbarViewMvc,
     BaseObservableViewMvc<ToolbarViewMvc.Listener>() {
-
     private lateinit var activity: BaseActivity
-
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
     private lateinit var toolbarTitleText: MaterialTextView
     private lateinit var toolbarBackButtonImageView: ImageView
     private lateinit var toolbarSearchView: SearchView
-
     private var searchQueryListener: QuerySearchListener? = null
 
     override fun initialize() {
@@ -151,5 +148,4 @@ class ToolbarViewMvcImpl @Inject constructor(
     override fun unregisterQuerySearchListener(listener: QuerySearchListener) {
         searchQueryListener = null
     }
-
 }

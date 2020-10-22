@@ -14,9 +14,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class RequestTrackUseCase @Inject constructor(private val nodeApi: NodeApi) {
-
     private var videoId: String? = null
-
     private var lastProgressState: DownloadEvents.ProgressUpdate? = null
 
     fun execute(url: String) {
@@ -39,7 +37,6 @@ class RequestTrackUseCase @Inject constructor(private val nodeApi: NodeApi) {
                         startProgressCheck(1000)
                     }
                 }
-
             })
     }
 
@@ -90,17 +87,12 @@ class RequestTrackUseCase @Inject constructor(private val nodeApi: NodeApi) {
                             }
                         }
                     }
-
                 })
         }
     }
 
     private fun shouldKeepFetchingProgress(response: FetchProgressResponseSchema) =
         response.body.progress < 100 && response.body.status_code != "ERROR" || response.body.progress == 100 && response.body.status_code != "FINISHED"
-
-    private fun notifyFailure(message: String) {
-        EventBus.getDefault().post(DownloadEvents.ErrorOccurred(message))
-    }
 
     private fun notifyNetworkError(message: String) {
         EventBus.getDefault().post(RequestTrackUseCaseResult.NetworkError(message))

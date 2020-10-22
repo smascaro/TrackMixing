@@ -88,7 +88,6 @@ class AppModule {
         }.build()
     }
 
-
     @Singleton
     @Provides
     fun provideNodeApiForBinaryDownloads(@RetrofitForBinaryData retrofit: Retrofit): NodeDownloadsApi {
@@ -133,7 +132,6 @@ class AppModule {
     fun provideEventBus(): EventBus {
         return EventBus.getDefault()
     }
-
 
     @Module
     interface StaticBindings {

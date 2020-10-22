@@ -16,7 +16,6 @@ import com.smascaro.trackmixing.trackslist.controller.TracksListController
 import javax.inject.Inject
 
 class TracksListFragment : BaseFragment() {
-
     @Inject
     lateinit var mTracksListController: TracksListController
 

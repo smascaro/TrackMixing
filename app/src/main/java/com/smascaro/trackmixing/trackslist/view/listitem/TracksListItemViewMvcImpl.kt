@@ -21,7 +21,6 @@ class TracksListItemViewMvcImpl @Inject constructor(
     private lateinit var mTrackDuration: TextView
     private lateinit var mTrackState: TextView
     private lateinit var mTrackThumbnailImg: ImageView
-
     private var mPosition: Int = -1
 
     override fun initialize() {
@@ -65,5 +64,4 @@ class TracksListItemViewMvcImpl @Inject constructor(
     override fun bindPosition(position: Int) {
         mPosition = position
     }
-
 }

@@ -9,9 +9,10 @@ import com.smascaro.trackmixing.settings.controller.SettingsActivityController
 import javax.inject.Inject
 
 class SettingsActivity : BaseActivity() {
-
-    @Inject lateinit var viewMvc: SettingsActivityViewMvc
-    @Inject lateinit var controller: SettingsActivityController
+    @Inject
+    lateinit var viewMvc: SettingsActivityViewMvc
+    @Inject
+    lateinit var controller: SettingsActivityController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         (application as TrackMixingApplication)

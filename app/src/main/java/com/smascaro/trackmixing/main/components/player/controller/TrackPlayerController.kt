@@ -28,10 +28,8 @@ class TrackPlayerController @Inject constructor(
     navigationHelper: NavigationHelper
 ) : BaseNavigatorController<TrackPlayerViewMvc>(navigationHelper),
     TrackPlayerViewMvc.Listener {
-
     private var currentTrack: Track? = null
     private var currentState: PlaybackStateManager.PlaybackState? = null
-
     private var openPlayerIntentRequested: Boolean = false
     fun onCreate() {
         ensureViewMvcBound()
@@ -124,7 +122,7 @@ class TrackPlayerController @Inject constructor(
 
     private fun handleTimestampChanged(newTimestamp: Int, totalLength: Int) {
         Timber.d("Received timestamp event: $newTimestamp / $totalLength")
-        viewMvc.updateTimestamp(newTimestamp,totalLength)
+        viewMvc.updateTimestamp(newTimestamp, totalLength)
     }
 
     fun handleIntent(intent: Intent?) {

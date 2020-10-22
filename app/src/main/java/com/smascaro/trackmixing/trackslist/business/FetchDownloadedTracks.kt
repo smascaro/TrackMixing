@@ -32,6 +32,5 @@ class FetchDownloadedTracks @Inject constructor(
         getListeners().forEach {
             it.onTracksFetched(tracks)
         }
-
     }
 }

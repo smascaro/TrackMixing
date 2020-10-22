@@ -12,7 +12,6 @@ import javax.inject.Inject
 
 class DownloadTestDataViewMvcImpl @Inject constructor() :
     BaseObservableViewMvc<DownloadTestDataViewMvc.Listener>(), DownloadTestDataViewMvc {
-
     private lateinit var currentStateTitleTextView: MaterialTextView
     private lateinit var downloadingProgressBar: ContentLoadingProgressBar
     private lateinit var downloadProgressSeekbar: AppCompatSeekBar
@@ -29,7 +28,6 @@ class DownloadTestDataViewMvcImpl @Inject constructor() :
     override fun bindDownloadCount(itemsToDownload: Int) {
         downloadProgressTextFeedback.text = "(0/$itemsToDownload)"
     }
-
 
     override fun updateProgress(completed: Int, total: Int) {
         val message = "Total completed: $completed/$total"
