@@ -11,13 +11,6 @@
         android:id="@+id/v_background_gradient"
         layout="@layout/layout_gradient_background" />
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/layout_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/toolbar_marginTop"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <include
         android:id="@+id/layout_progress_container"

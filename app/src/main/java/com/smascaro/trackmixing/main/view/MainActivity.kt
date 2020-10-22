@@ -10,20 +10,17 @@ import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.TrackMixingApplication
 import com.smascaro.trackmixing.common.di.main.MainComponent
 import com.smascaro.trackmixing.common.view.ui.BaseActivity
-import com.smascaro.trackmixing.common.view.ui.BaseFragment
 import com.smascaro.trackmixing.main.components.player.controller.TrackPlayerController
 import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvc
 import com.smascaro.trackmixing.main.components.progress.controller.BottomProgressController
 import com.smascaro.trackmixing.main.components.progress.view.BottomProgressViewMvc
-import com.smascaro.trackmixing.main.components.toolbar.controller.ToolbarController
-import com.smascaro.trackmixing.main.components.toolbar.view.ToolbarViewMvc
 import com.smascaro.trackmixing.main.controller.MainActivityController
 import com.smascaro.trackmixing.player.business.downloadtrack.model.ApplicationEvent
 import com.smascaro.trackmixing.player.business.downloadtrack.model.ApplicationEvent.AppState
 import org.greenrobot.eventbus.EventBus
 import javax.inject.Inject
 
-class MainActivity : BaseActivity(), BaseFragment.OnTitleChangeListener {
+class MainActivity : BaseActivity() {
     @Inject
     lateinit var mainActivityController: MainActivityController
 
@@ -41,12 +38,6 @@ class MainActivity : BaseActivity(), BaseFragment.OnTitleChangeListener {
 
     @Inject
     lateinit var bottomProgressViewMvc: BottomProgressViewMvc
-
-    @Inject
-    lateinit var toolbarController: ToolbarController
-
-    @Inject
-    lateinit var toolbarViewMvc: ToolbarViewMvc
     lateinit var mainComponent: MainComponent
     private lateinit var navController: NavController
 
@@ -73,9 +64,6 @@ class MainActivity : BaseActivity(), BaseFragment.OnTitleChangeListener {
         bottomProgressViewMvc.bindRootView(rootView)
         bottomProgressController.bindViewMvc(bottomProgressViewMvc)
 
-        toolbarViewMvc.bindRootView(rootView)
-        toolbarViewMvc.bindActivity(this)
-        toolbarController.bindViewMvc(toolbarViewMvc)
 
         bottomProgressController.onCreate()
         trackPlayerController.onCreate()
@@ -87,10 +75,8 @@ class MainActivity : BaseActivity(), BaseFragment.OnTitleChangeListener {
     override fun onStart() {
         super.onStart()
         trackPlayerController.bindNavController(navController)
-        toolbarController.bindNavController(navController)
         mainActivityController.onStart()
         bottomProgressController.onStart()
-        toolbarController.onStart()
         EventBus.getDefault().post(ApplicationEvent(AppState.Foreground()))
     }
 
@@ -98,7 +84,6 @@ class MainActivity : BaseActivity(), BaseFragment.OnTitleChangeListener {
         super.onStop()
         mainActivityController.onStop()
         bottomProgressController.onStop()
-        toolbarController.onStop()
         EventBus.getDefault().post(ApplicationEvent(AppState.Background()))
     }
 
@@ -111,11 +96,6 @@ class MainActivity : BaseActivity(), BaseFragment.OnTitleChangeListener {
         mainActivityController.dispose()
         bottomProgressController.dispose()
         trackPlayerController.dispose()
-        toolbarController.dispose()
-    }
-
-    override fun changeTitle(title: String, enableBackNavigation: Boolean) {
-        toolbarController.updateTitle(title, enableBackNavigation)
     }
 
     override fun onNewIntent(intent: Intent?) {

@@ -1,11 +1,11 @@
 package com.smascaro.trackmixing.common.di
 
-import com.smascaro.trackmixing.main.components.toolbar.view.ToolbarViewMvc
-import com.smascaro.trackmixing.main.components.toolbar.view.ToolbarViewMvcImpl
 import com.smascaro.trackmixing.main.view.MainActivityViewMvc
 import com.smascaro.trackmixing.main.view.MainActivityViewMvcImpl
 import com.smascaro.trackmixing.search.view.SearchResultsViewMvc
 import com.smascaro.trackmixing.search.view.SearchResultsViewMvcImpl
+import com.smascaro.trackmixing.trackslist.components.toolbar.view.ToolbarViewMvc
+import com.smascaro.trackmixing.trackslist.components.toolbar.view.ToolbarViewMvcImpl
 import com.smascaro.trackmixing.trackslist.view.listitem.TracksListItemViewMvc
 import com.smascaro.trackmixing.trackslist.view.listitem.TracksListItemViewMvcImpl
 import dagger.Binds

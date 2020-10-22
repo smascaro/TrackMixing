@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.main.components.toolbar.view
+package com.smascaro.trackmixing.trackslist.components.toolbar.view
 
 interface ObservableQuerySearch {
     interface QuerySearchListener {
