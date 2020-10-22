@@ -163,4 +163,12 @@ class PlayingTrackState(
     fun seek(timestampSeconds: Int) {
         player.seekTo(timestampSeconds * 1000L)
     }
+
+    fun seekMillis(timestampMillis: Long) {
+        player.seekTo(timestampMillis)
+    }
+
+    fun getCurrentPosition():Long{
+        return player.currentPosition
+    }
 }

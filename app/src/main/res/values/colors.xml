@@ -20,4 +20,5 @@
         @color/colorBackground
     </color>
     <color name="transparent">#00000000</color>
+    <color name="translucent">#30000000</color>
 </resources>

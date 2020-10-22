@@ -11,15 +11,28 @@
     </style>
 
     <style name="AppTheme.TM.NoActionBar" parent="AppTheme.TM">
-        <item name="windowActionBar">false</item>
+        <item name="windowActionBar">true</item>
+        <item name="actionBarStyle">@style/AppTheme.TM.ActionBarStyle</item>
+        <item name="windowActionBarOverlay">true</item>
+        <item name="android:actionBarStyle">@style/AppTheme.TM.ActionBarStyle</item>
+        <item name="android:windowActionBarOverlay">true</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.TM.ActionBarStyle" parent="Widget.AppCompat.ActionBar.Solid">
+        <item name="background">@color/translucent</item>
+        <item name="android:background">@color/translucent</item>
     </style>
 
     <style name="AppTheme.TM.NoActionBar.Fullscreen" parent="AppTheme.TM.NoActionBar">
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
-
+    <style name="AppTheme.TM.NoActionBar.TranslucentStatusBar" parent="AppTheme.TM.NoActionBar">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:statusBarColor">@color/translucent</item>
+    </style>
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

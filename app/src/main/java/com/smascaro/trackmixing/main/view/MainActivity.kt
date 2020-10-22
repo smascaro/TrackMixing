@@ -3,6 +3,7 @@ package com.smascaro.trackmixing.main.view
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.WindowManager
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.smascaro.trackmixing.R
@@ -53,6 +54,10 @@ class MainActivity : BaseActivity(), BaseFragment.OnTitleChangeListener {
         mainComponent =
             (application as TrackMixingApplication).appComponent.mainComponent().create(this)
         mainComponent.inject(this)
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+        )
         super.onCreate(savedInstanceState)
         val rootView = LayoutInflater.from(this).inflate(R.layout.activity_main, null, false)
 
