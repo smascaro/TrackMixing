@@ -18,7 +18,7 @@
     <dimen name="item_track_sub_title_text_size">11sp</dimen>
     <dimen name="item_track_sub_title_margin_horizontal">4dp</dimen>
     <dimen name="item_track_title_padding_start">0dp</dimen>
-    <dimen name="actions_bottom_layout_visible_height">55dp</dimen>
+    <dimen name="actions_bottom_layout_visible_height">106dp</dimen>
     <dimen name="actions_bottom_layout_hidden_height">0dp</dimen>
     <dimen name="actions_bottom_title_padding_horizontal">10dp</dimen>
     <dimen name="actions_bottom_title_text_size">14sp</dimen>
@@ -34,4 +34,5 @@
     <dimen name="track_player_fader_width">64dp</dimen>
     <dimen name="track_player_fader_height">350dp</dimen>
     <dimen name="track_player_fader_container_height">400dp</dimen>
+    <dimen name="toolbar_marginTop">12dp</dimen>
 </resources>

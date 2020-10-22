@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.transition.MaterialFadeThrough
+import com.google.android.material.transition.MaterialSharedAxis
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.view.ui.BaseFragment
 import com.smascaro.trackmixing.main.view.MainActivity
@@ -19,6 +21,15 @@ class SongSearchFragment : BaseFragment() {
     @Inject
     lateinit var viewMvc: SearchResultsViewMvc
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true).apply {
+            duration=200
+        }
+        returnTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false).apply {
+            duration=200
+        }
+    }
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (activity as MainActivity).mainComponent.inject(this)

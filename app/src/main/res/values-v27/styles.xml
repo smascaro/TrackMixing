@@ -7,4 +7,10 @@
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
         <item name="android:windowTranslucentStatus">true</item>
     </style>
+    <style name="AppTheme.TM.NoActionBar.TranslucentStatusBar" parent="AppTheme.TM.NoActionBar">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:statusBarColor">@color/translucent</item>
+    </style>
 </resources>

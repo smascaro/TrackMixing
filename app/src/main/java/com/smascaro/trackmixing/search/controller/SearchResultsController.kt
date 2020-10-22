@@ -29,13 +29,17 @@ class SearchResultsController @Inject constructor(
         navigationHelper.back()
     }
 
+    override fun onBackButtonPressed() {
+        viewMvc.cleanUp()
+        navigationHelper.back()
+    }
+
     fun onStart() {
         viewMvc.registerListener(this)
     }
 
     fun onStop() {
-        searchYoutubeVideosUseCase.unregisterListener(this)
-        viewMvc.unregisterListener(this)
+        dispose()
     }
 
     override fun onResultsReady(results: List<SearchResult>) {

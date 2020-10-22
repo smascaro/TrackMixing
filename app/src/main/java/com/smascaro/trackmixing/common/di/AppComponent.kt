@@ -1,6 +1,7 @@
 package com.smascaro.trackmixing.common.di
 
 import android.content.Context
+import com.smascaro.trackmixing.common.di.coroutines.CoroutineScopesModule
 import com.smascaro.trackmixing.common.di.main.MainComponent
 import com.smascaro.trackmixing.common.di.player.PlayerComponent
 import com.smascaro.trackmixing.common.di.settings.SettingsComponent
@@ -10,7 +11,7 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [AppModule::class, AppModule.StaticBindings::class, ViewMvcBuildersModule::class, AppSubcomponents::class])
+@Component(modules = [AppModule::class, AppModule.StaticBindings::class, ViewMvcBuildersModule::class, AppSubcomponents::class, CoroutineScopesModule::class])
 interface AppComponent {
     @Component.Factory
     interface Factory {

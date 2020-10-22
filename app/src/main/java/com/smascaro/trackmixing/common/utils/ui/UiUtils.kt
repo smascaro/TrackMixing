@@ -12,4 +12,10 @@ class UiUtils @Inject constructor(private val context: Context) {
             context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(rootView.windowToken, 0)
     }
+
+    fun showKeyboard() {
+        val imm =
+            context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
+    }
 }

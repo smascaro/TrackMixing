@@ -3,11 +3,11 @@ package com.smascaro.trackmixing.main.components.player.view
 import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextSwitcher
 import androidx.constraintlayout.motion.widget.MotionLayout
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import com.google.android.material.textview.MaterialTextView
 import com.smascaro.trackmixing.R
@@ -37,7 +37,7 @@ class TrackPlayerViewMvcImpl @Inject constructor(
     }
 
     //Views
-    private lateinit var bottomBar: ConstraintLayout
+    private lateinit var bottomBar: FrameLayout
     private lateinit var motionLayout: MotionLayout
     private lateinit var bottomBarTextSwitcher: TextSwitcher
     private lateinit var bottomBarActionButton: ImageView

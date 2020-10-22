@@ -7,27 +7,15 @@
     android:layout_height="?android:attr/actionBarSize"
     app:title="TrackMixing">
 
-    <ImageView
-        android:id="@+id/iv_toolbar_back_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:src="@drawable/ic_back_24dp"
-        android:visibility="gone" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_toolbar_title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
-        android:text="TrackMixing"
+        android:text="My studio"
         android:textAppearance="@style/AppTheme.TM.ActionBar.TitleTextStyle"
         android:visibility="visible" />
 
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/toolbar_search_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:iconifiedByDefault="false" />
+
 </androidx.appcompat.widget.Toolbar>

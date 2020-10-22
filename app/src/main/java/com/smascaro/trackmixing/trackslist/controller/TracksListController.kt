@@ -22,11 +22,25 @@ class TracksListController @Inject constructor(
 ) : BaseNavigatorController<TracksListViewMvc>(navigationHelper),
     TracksListViewMvc.Listener,
     FetchDownloadedTracks.Listener {
+    interface NavigationListener {
+        fun beforeNavigationToSearch()
+    }
+
+    var navigationListener: NavigationListener? = null
+    fun registerNavigationListener(listener: NavigationListener) {
+        navigationListener = listener
+    }
+
+    fun unregisterNavigationListener() {
+        navigationListener = null
+    }
+
     override fun onSearchNavigationButtonClicked() {
         navigateToSearch()
     }
 
     private fun navigateToSearch() {
+        navigationListener?.beforeNavigationToSearch()
         navigationHelper.toSearch()
     }
 
