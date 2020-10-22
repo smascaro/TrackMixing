@@ -9,6 +9,7 @@ import com.smascaro.trackmixing.common.utils.ui.NotificationHelper
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable
 import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
 import com.smascaro.trackmixing.playbackservice.utils.PlaybackHelper
+import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -30,6 +31,8 @@ class MixPlayerServiceController @Inject constructor(
     }
 
     private var timestampUpdateThread: TimestampUpdateThread? = null
+    private var reportPlayersOffsetsJob: Job? = null
+
     fun onCreate() {
         playbackHelper.registerListener(this)
         eventBus.register(this)
@@ -108,6 +111,13 @@ class MixPlayerServiceController @Inject constructor(
             timestampUpdateThread = TimestampUpdateThread(playbackHelper, eventBus)
             timestampUpdateThread!!.start()
         }
+        reportPlayersOffsetsJob = CoroutineScope(Dispatchers.Main).launch {
+            while (true) {
+                ensureActive()
+                playbackHelper.reportPlayersOffsets()
+                delay(1000)
+            }
+        }
     }
 
     fun pauseMaster() {
@@ -120,6 +130,8 @@ class MixPlayerServiceController @Inject constructor(
     private fun pauseTimestampThread() {
         timestampUpdateThread?.cancel()
         timestampUpdateThread = null
+        reportPlayersOffsetsJob?.cancel()
+        reportPlayersOffsetsJob = null
     }
 
     private fun startForeground(foregroundNotification: ForegroundNotification) {
