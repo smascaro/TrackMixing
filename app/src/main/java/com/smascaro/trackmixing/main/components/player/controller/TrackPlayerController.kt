@@ -54,13 +54,13 @@ class TrackPlayerController @Inject constructor(
         }
     }
 
-    private fun updateUi() {
+    private suspend fun updateUi() {
         viewMvc.showPlayerBar(
             makeBottomPlayerData()
         )
-
         viewMvc.bindTrackDuration(currentTrack!!.secondsLong)
-        viewMvc.bindVolumes(playbackSession.getVolumes())
+        val volumesBundle = withContext(io.coroutineContext) { playbackSession.getVolumes() }
+        viewMvc.bindVolumes(volumesBundle)
         if (openPlayerIntentRequested) {
             navigateToPlayer()
         }
@@ -87,13 +87,15 @@ class TrackPlayerController @Inject constructor(
     }
 
     override fun onActionButtonClicked() {
-        val currentState = playbackStateManager.getPlayingState()
-        if (currentState is PlaybackStateManager.PlaybackState.Playing) {
-            eventBus.post(PlaybackEvent.PauseMasterEvent())
-            Timber.d("Sent a PauseMasterEvent")
-        } else if (currentState is PlaybackStateManager.PlaybackState.Paused) {
-            eventBus.post(PlaybackEvent.PlayMasterEvent())
-            Timber.d("Sent a PlayMasterEvent")
+        ui.launch {
+            val currentState = playbackStateManager.getPlayingState()
+            if (currentState is PlaybackStateManager.PlaybackState.Playing) {
+                eventBus.post(PlaybackEvent.PauseMasterEvent())
+                Timber.d("Sent a PauseMasterEvent")
+            } else if (currentState is PlaybackStateManager.PlaybackState.Paused) {
+                eventBus.post(PlaybackEvent.PlayMasterEvent())
+                Timber.d("Sent a PlayMasterEvent")
+            }
         }
     }
 

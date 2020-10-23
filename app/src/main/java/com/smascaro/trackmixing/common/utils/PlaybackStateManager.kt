@@ -4,14 +4,17 @@ import android.content.Context
 import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepository
 import com.smascaro.trackmixing.common.data.datasource.repository.toModel
 import com.smascaro.trackmixing.common.data.model.Track
+import com.smascaro.trackmixing.common.di.coroutines.IoCoroutineScope
 import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
+import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import timber.log.Timber
 import javax.inject.Inject
 
 class PlaybackStateManager @Inject constructor(
     context: Context,
-    private val tracksRepository: TracksRepository
+    private val tracksRepository: TracksRepository,
+    private val io: IoCoroutineScope
 ) {
     private val sharedPreferences =
         SharedPreferencesFactory.getPlaybackSharedPreferencesFactory(
@@ -66,16 +69,26 @@ class PlaybackStateManager @Inject constructor(
             .apply()
     }
 
-    fun getPlayingState(): PlaybackState {
-        val stateValue = sharedPreferences.getInt(SHARED_PREFERENCES_PLAYBACK_IS_PLAYING, -1)
+    suspend fun getPlayingState(): PlaybackState {
+        val stateValue = withContext(io.coroutineContext) {
+            sharedPreferences.getInt(
+                SHARED_PREFERENCES_PLAYBACK_IS_PLAYING,
+                -1
+            )
+        }
         return PlaybackState.parse(
             stateValue
         )
             ?: PlaybackState.Stopped()
     }
 
-    fun getCurrentSong(): String {
-        return sharedPreferences.getString(SHARED_PREFERENCES_PLAYBACK_SONG_PLAYING, "") ?: ""
+    suspend fun getCurrentSong(): String {
+        return withContext(io.coroutineContext) {
+            sharedPreferences.getString(
+                SHARED_PREFERENCES_PLAYBACK_SONG_PLAYING,
+                ""
+            ) ?: ""
+        }
     }
 
     suspend fun getCurrentTrack(): Track {
@@ -104,9 +117,14 @@ class PlaybackStateManager @Inject constructor(
             .apply()
     }
 
-    fun getCurrentPlayingVolumes(): TrackVolumeBundle {
+    suspend fun getCurrentPlayingVolumes(): TrackVolumeBundle {
         val jsonBundle =
-            sharedPreferences.getString(SHARED_PREFERENCES_PLAYBACK_CURRENT_VOLUMES, "")
+            withContext(io.coroutineContext) {
+                sharedPreferences.getString(
+                    SHARED_PREFERENCES_PLAYBACK_CURRENT_VOLUMES,
+                    ""
+                )
+            }
         return if (jsonBundle == null || jsonBundle.isEmpty()) {
             TrackVolumeBundle(100, 100, 100, 100)
         } else {

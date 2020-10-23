@@ -3,6 +3,7 @@ package com.smascaro.trackmixing.playbackservice.controller
 import com.smascaro.trackmixing.common.data.model.ForegroundNotification
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.di.PlayerNotificationHelperImplementation
+import com.smascaro.trackmixing.common.di.coroutines.IoCoroutineScope
 import com.smascaro.trackmixing.common.utils.*
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager.PlaybackState
 import com.smascaro.trackmixing.common.utils.ui.NotificationHelper
@@ -21,7 +22,8 @@ class MixPlayerServiceController @Inject constructor(
     val playbackHelper: PlaybackHelper,
     @PlayerNotificationHelperImplementation val notificationHelper: NotificationHelper,
     val playbackStateManager: PlaybackStateManager,
-    private val eventBus: EventBus
+    private val eventBus: EventBus,
+    private val io: IoCoroutineScope
 ) : BaseObservable<MixPlayerServiceController.ServiceActionsDelegate>(),
     PlaybackHelper.Listener {
     interface ServiceActionsDelegate {
@@ -100,10 +102,12 @@ class MixPlayerServiceController @Inject constructor(
                 notificationHelper.getNotification()
             )
         )
-        if (playbackStateManager.getCurrentSong() != playbackHelper.getTrack().videoKey) {
-            playbackStateManager.setCurrentSongIdPlaying(playbackHelper.getTrack().videoKey)
+        io.launch {
+            if (playbackStateManager.getCurrentSong() != playbackHelper.getTrack().videoKey) {
+                playbackStateManager.setCurrentSongIdPlaying(playbackHelper.getTrack().videoKey)
+            }
+            playbackStateManager.setPlayingStateFlag(PlaybackState.Playing())
         }
-        playbackStateManager.setPlayingStateFlag(PlaybackState.Playing())
     }
 
     private fun startTimestampThread() {

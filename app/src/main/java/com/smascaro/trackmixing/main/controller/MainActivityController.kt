@@ -2,16 +2,19 @@ package com.smascaro.trackmixing.main.controller
 
 import android.content.Intent
 import com.smascaro.trackmixing.common.controller.BaseController
+import com.smascaro.trackmixing.common.di.coroutines.IoCoroutineScope
+import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager
 import com.smascaro.trackmixing.main.view.MainActivityViewMvc
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
 class MainActivityController @Inject constructor(
-    private val playbackStateManager: PlaybackStateManager
+    private val playbackStateManager: PlaybackStateManager,
+    private val ui: MainCoroutineScope,
+    private val io: IoCoroutineScope
 ) :
     BaseController<MainActivityViewMvc>(), MainActivityViewMvc.Listener {
     fun onStart() {
@@ -42,15 +45,14 @@ class MainActivityController @Inject constructor(
         updateBackgroundColor()
     }
 
-    private fun updateBackgroundColor() {
+    private fun updateBackgroundColor() = ui.launch {
         val state = playbackStateManager.getPlayingState()
         if (state is PlaybackStateManager.PlaybackState.Stopped) {
             viewMvc.updateBackgroundColorToDefault()
         } else {
-            CoroutineScope(Dispatchers.Main).launch {
-                val playingTrack = playbackStateManager.getCurrentTrack()
-                viewMvc.updateBackgroundColor(playingTrack.backgroundColor)
-            }
+            val playingTrack =
+                withContext(io.coroutineContext) { playbackStateManager.getCurrentTrack() }
+            viewMvc.updateBackgroundColor(playingTrack.backgroundColor)
         }
     }
 
