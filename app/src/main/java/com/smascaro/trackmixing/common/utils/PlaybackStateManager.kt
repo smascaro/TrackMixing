@@ -12,9 +12,9 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class PlaybackStateManager @Inject constructor(
-    context: Context,
     private val tracksRepository: TracksRepository,
-    private val io: IoCoroutineScope
+    private val io: IoCoroutineScope,
+    context: Context
 ) {
     private val sharedPreferences =
         SharedPreferencesFactory.getPlaybackSharedPreferencesFactory(
