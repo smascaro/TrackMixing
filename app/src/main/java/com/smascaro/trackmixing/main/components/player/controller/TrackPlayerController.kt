@@ -2,8 +2,6 @@ package com.smascaro.trackmixing.main.components.player.controller
 
 import android.content.Intent
 import com.smascaro.trackmixing.common.controller.BaseController
-import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepository
-import com.smascaro.trackmixing.common.data.datasource.repository.toModel
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.di.coroutines.IoCoroutineScope
 import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
@@ -23,8 +21,6 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class TrackPlayerController @Inject constructor(
-    private val playbackStateManager: PlaybackStateManager,
-    private val tracksRepository: TracksRepository,
     private val eventBus: EventBus,
     private val playbackSession: PlaybackSession,
     private val ui: MainCoroutineScope,
@@ -42,10 +38,9 @@ class TrackPlayerController @Inject constructor(
     }
 
     private fun updateCurrentPlayingTrack() = ui.launch {
-        currentState = playbackStateManager.getPlayingState()
+        currentState = playbackSession.getState()
         if (currentState is PlaybackStateManager.PlaybackState.Playing || currentState is PlaybackStateManager.PlaybackState.Paused) {
-            val songId = withContext(io.coroutineContext) { playbackStateManager.getCurrentSong() }
-            currentTrack = tracksRepository.get(songId).toModel()
+            currentTrack = withContext(io.coroutineContext) { playbackSession.getTrack() }
             when (currentState) {
                 is PlaybackStateManager.PlaybackState.Playing -> viewMvc.showPauseButton()
                 is PlaybackStateManager.PlaybackState.Paused -> viewMvc.showPlayButton()
@@ -88,12 +83,12 @@ class TrackPlayerController @Inject constructor(
 
     override fun onActionButtonClicked() {
         ui.launch {
-            val currentState = playbackStateManager.getPlayingState()
+            val currentState = playbackSession.getState()
             if (currentState is PlaybackStateManager.PlaybackState.Playing) {
-                eventBus.post(PlaybackEvent.PauseMasterEvent())
+                playbackSession.pause()
                 Timber.d("Sent a PauseMasterEvent")
             } else if (currentState is PlaybackStateManager.PlaybackState.Paused) {
-                eventBus.post(PlaybackEvent.PlayMasterEvent())
+                playbackSession.play()
                 Timber.d("Sent a PlayMasterEvent")
             }
         }

@@ -57,6 +57,10 @@ class PlaybackSessionImpl @Inject constructor(
         return playbackStateManager.getPlayingState()
     }
 
+    override suspend fun getTrack(): Track {
+        return playbackStateManager.getCurrentTrack()
+    }
+
     override suspend fun getVolumes(): TrackVolumeBundle {
         return playbackStateManager.getCurrentPlayingVolumes()
     }
