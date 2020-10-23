@@ -3,6 +3,7 @@ package com.smascaro.trackmixing.player.business.downloadtrack.business
 import com.smascaro.trackmixing.common.data.datasource.network.NodeApi
 import com.smascaro.trackmixing.common.data.network.FetchProgressResponseSchema
 import com.smascaro.trackmixing.common.data.network.RequestTrackResponseSchema
+import com.smascaro.trackmixing.common.di.coroutines.IoCoroutineScope
 import com.smascaro.trackmixing.player.business.downloadtrack.model.DownloadEvents
 import com.smascaro.trackmixing.player.business.downloadtrack.model.FetchSteps
 import kotlinx.coroutines.*
@@ -13,9 +14,27 @@ import retrofit2.Response
 import timber.log.Timber
 import javax.inject.Inject
 
-class RequestTrackUseCase @Inject constructor(private val nodeApi: NodeApi) {
+class RequestTrackUseCase @Inject constructor(
+    private val nodeApi: NodeApi,
+    private val io: IoCoroutineScope
+) {
+    sealed class Result {
+        class Success(val videoId: String) : Result()
+        class Failure(val error: Throwable) : Result()
+    }
+
     private var videoId: String? = null
     private var lastProgressState: DownloadEvents.ProgressUpdate? = null
+
+    suspend fun executeSuspended(url: String): Result {
+        return try {
+            val videoId = nodeApi.requestTrackSuspended(url)
+            Result.Success(videoId.body.track_id)
+        } catch (e: Exception) {
+            Timber.e(e)
+            Result.Failure(e)
+        }
+    }
 
     fun execute(url: String) {
         nodeApi.requestTrack(url)
@@ -24,7 +43,7 @@ class RequestTrackUseCase @Inject constructor(private val nodeApi: NodeApi) {
                     call: Call<RequestTrackResponseSchema>,
                     t: Throwable
                 ) {
-                    notifyNetworkError("Network error while trying to request $url")
+                    notifyNetworkError("Server error")
                 }
 
                 override fun onResponse(

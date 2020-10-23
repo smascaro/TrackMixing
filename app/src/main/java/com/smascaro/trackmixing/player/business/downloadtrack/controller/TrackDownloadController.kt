@@ -8,10 +8,14 @@ import com.smascaro.trackmixing.common.utils.ui.NotificationHelper
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable
 import com.smascaro.trackmixing.main.components.progress.model.UiProgressEvent
 import com.smascaro.trackmixing.player.business.DownloadTrackUseCase
+import com.smascaro.trackmixing.player.business.downloadtrack.business.FetchProgressUseCase
 import com.smascaro.trackmixing.player.business.downloadtrack.business.RequestTrackUseCase
 import com.smascaro.trackmixing.player.business.downloadtrack.business.RequestTrackUseCaseResult
 import com.smascaro.trackmixing.player.business.downloadtrack.model.*
 import com.smascaro.trackmixing.player.business.downloadtrack.model.ApplicationEvent.AppState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -22,6 +26,7 @@ class TrackDownloadController @Inject constructor(
     val nodeApi: NodeApi,
     @DownloadNotificationHelperImplementation val notificationHelper: NotificationHelper,
     private val requestTrackUseCase: RequestTrackUseCase,
+    private val fetchProgressUseCase: FetchProgressUseCase,
     private val downloadTrackUseCase: DownloadTrackUseCase
 ) :
     BaseObservable<TrackDownloadController.ServiceActionsDelegate>() {
@@ -40,7 +45,21 @@ class TrackDownloadController @Inject constructor(
     }
 
     fun startRequest(videoUrl: String) {
-        requestTrackUseCase.execute(videoUrl)
+        CoroutineScope(Dispatchers.Main).launch {
+            val resultRequestUseCase = requestTrackUseCase.executeSuspended(videoUrl)
+            when (resultRequestUseCase) {
+                is RequestTrackUseCase.Result.Success -> handleRequestSuccess(resultRequestUseCase.videoId)
+                is RequestTrackUseCase.Result.Failure -> handleRequestError(resultRequestUseCase.error)
+            }
+        }
+    }
+
+    private fun handleRequestError(error: Throwable) {
+        Timber.e(error)
+    }
+
+    private fun handleRequestSuccess(videoId: String) {
+        fetchProgressUseCase.execute(videoId, 1000)
     }
 
     private fun goBackground() {
