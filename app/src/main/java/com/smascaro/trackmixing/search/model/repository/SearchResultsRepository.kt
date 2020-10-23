@@ -5,12 +5,12 @@ import com.smascaro.trackmixing.search.model.repository.datasource.SearchResults
 import javax.inject.Inject
 
 class SearchResultsRepository @Inject constructor(
-    private val searchResultsNetworkDataSource: SearchResultsNetworkDataSource
+    private val remoteDataSource: SearchResultsNetworkDataSource
 ) {
     suspend fun query(query: String): List<SearchResult> {
         //Check cache
         //Api request if not cached
-        val intermediate = searchResultsNetworkDataSource.query(query)
-        return searchResultsNetworkDataSource.fetchAndMapDetailsFromSearchResponse(intermediate)
+        val intermediate = remoteDataSource.query(query)
+        return remoteDataSource.fetchAndMapDetailsFromSearchResponse(intermediate)
     }
 }
