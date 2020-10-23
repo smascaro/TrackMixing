@@ -26,12 +26,12 @@ class PlaybackStateManager @Inject constructor(
             val PLAYBACK_STATE_PLAYING: Int = 0
             val PLAYBACK_STATE_PAUSED = 1
             val PLAYBACK_STATE_STOPPED = 2
-            fun parse(stateValue: Int): PlaybackState? {
+            fun parse(stateValue: Int): PlaybackState {
                 return when (stateValue) {
                     PLAYBACK_STATE_PLAYING -> Playing()
                     PLAYBACK_STATE_PAUSED -> Paused()
                     PLAYBACK_STATE_STOPPED -> Stopped()
-                    else -> null
+                    else -> throw IllegalArgumentException("Invalid state value does not map to an existing state")
                 }
             }
         }
@@ -79,7 +79,6 @@ class PlaybackStateManager @Inject constructor(
         return PlaybackState.parse(
             stateValue
         )
-            ?: PlaybackState.Stopped()
     }
 
     suspend fun getCurrentSong(): String {
