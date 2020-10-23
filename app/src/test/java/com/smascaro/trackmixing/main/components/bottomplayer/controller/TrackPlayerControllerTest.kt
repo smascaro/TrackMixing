@@ -2,7 +2,6 @@ package com.smascaro.trackmixing.main.components.bottomplayer.controller
 
 import android.view.View
 import androidx.navigation.NavController
-import androidx.navigation.fragment.FragmentNavigator
 import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepository
 import com.smascaro.trackmixing.common.data.model.DownloadEntity
 import com.smascaro.trackmixing.common.data.model.Track
@@ -10,11 +9,12 @@ import com.smascaro.trackmixing.common.models.DOWNLOAD_ENTITY_1_TITLE
 import com.smascaro.trackmixing.common.models.TRACK_VIDEO_KEY
 import com.smascaro.trackmixing.common.models.TestModels
 import com.smascaro.trackmixing.common.testdoubles.EventBusTd
-import com.smascaro.trackmixing.common.utils.navigation.NavigationHelper
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager
+import com.smascaro.trackmixing.common.utils.TrackVolumeBundle
+import com.smascaro.trackmixing.common.utils.navigation.NavigationHelper
+import com.smascaro.trackmixing.main.components.player.controller.TrackPlayerController
 import com.smascaro.trackmixing.main.components.player.model.TrackPlayerData
 import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvc
-import com.smascaro.trackmixing.main.components.player.controller.TrackPlayerController
 import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
 import com.smascaro.trackmixing.playbackservice.utils.PlaybackSession
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.TestDataBundleInfo
@@ -34,29 +34,28 @@ class TrackPlayerControllerTest {
 
     // region constants
     // endregion constants
-
     // region helper fields
-    @Mock private lateinit var playbackStateManager: PlaybackStateManager
-    @Mock private lateinit var playbackSession: PlaybackSession
-    private lateinit var navigationHelper: NavigationHelperTd
+    @Mock
+    private lateinit var playbackStateManager: PlaybackStateManager
+
+    @Mock
+    private lateinit var playbackSession: PlaybackSession
     private lateinit var viewMvc: TrackPlayerViewMvcTd
     private lateinit var eventBus: EventBusTd
     private lateinit var tracksRepository: TracksRepository
-    // endregion helper fields
 
+    // endregion helper fields
     @Before
     fun setup() {
         viewMvc = TrackPlayerViewMvcTd()
         eventBus = EventBusTd()
         tracksRepository = TracksRepositoryTd()
-        navigationHelper = NavigationHelperTd()
 
         SUT = TrackPlayerController(
             playbackStateManager,
             tracksRepository,
             eventBus,
-            playbackSession,
-            navigationHelper
+            playbackSession
         )
         SUT.bindViewMvc(viewMvc)
     }
@@ -87,20 +86,20 @@ class TrackPlayerControllerTest {
     }
 
     @Test
-    fun onDestroy_eventBusListenerIsUnregistered() {
+    fun dispose_eventBusListenerIsUnregistered() {
         // Arrange
         // Act
-        SUT.onDestroy()
+        SUT.dispose()
         // Assert
         assertTrue(eventBus.isListenerUnregistered)
         assertEquals(SUT, eventBus.unregisteredListener)
     }
 
     @Test
-    fun onDestroy_viewMvcListenerIsUnregistered() {
+    fun dispose_viewMvcListenerIsUnregistered() {
         // Arrange
         // Act
-        SUT.onDestroy()
+        SUT.dispose()
         // Assert
         assertEquals(SUT, viewMvc.unregisteredListener)
     }
@@ -256,10 +255,11 @@ class TrackPlayerControllerTest {
         // Act
         SUT.onMessageEvent(event)
         // Assert
-        assertEquals(0.5f, viewMvc.percentageToUpdate)
+        assertEquals(event.newTimestamp, viewMvc.newTimestampToUpdate)
+        assertEquals(event.totalLength, viewMvc.totalLengthToUpdate)
     }
-    // endregion tests
 
+    // endregion tests
     // region helper methods
     private fun setPlayingState() {
         `when`(playbackStateManager.getPlayingState())
@@ -280,8 +280,8 @@ class TrackPlayerControllerTest {
         `when`(playbackStateManager.getCurrentSong())
             .thenReturn(TRACK_VIDEO_KEY)
     }
-    // endregion helper methods
 
+    // endregion helper methods
     // region helper classes
     class TracksRepositoryTd : TracksRepository {
         val entity = TestModels.getDownloadEntity()
@@ -300,42 +300,9 @@ class TrackPlayerControllerTest {
             TODO()
         }
 
-    }
-
-    class NavigationHelperTd : NavigationHelper {
-        var hasNavigatedToPlayer: Boolean = false
-        override fun navigateTo(destination: Int) {
+        override suspend fun delete(videoId: String) {
+            TODO("Not yet implemented")
         }
-
-        override fun bindNavController(navController: NavController) {
-        }
-
-        override fun toDetails(track: Track, extras: FragmentNavigator.Extras) {
-        }
-
-        override fun toPlayer(track: Track) {
-            hasNavigatedToPlayer = true
-        }
-
-        override fun toSearch() {
-        }
-
-        override fun back(): Boolean {
-            return false
-        }
-
-        override fun backAndPop(): Boolean {
-            return false
-        }
-
-        override fun toSettings() {
-
-        }
-
-        override fun toTestDataDownload(data: List<TestDataBundleInfo>) {
-
-        }
-
     }
 
     class TrackPlayerViewMvcTd : TrackPlayerViewMvc {
@@ -346,7 +313,8 @@ class TrackPlayerControllerTest {
         var isPauseButtonShown: Boolean = false
         var registeredListener: Any? = null
         var unregisteredListener: Any? = null
-        var percentageToUpdate: Float = -1.0f
+        var newTimestampToUpdate: Int = 0
+        var totalLengthToUpdate: Int = 0
         override fun onCreate() {
             totalInteractions++
         }
@@ -356,7 +324,6 @@ class TrackPlayerControllerTest {
             isPlayerBarShown = true
             totalInteractions++
         }
-
 
         override fun showPlayButton() {
             isPlayButtonShown = true
@@ -368,11 +335,30 @@ class TrackPlayerControllerTest {
             totalInteractions++
         }
 
-        override fun updateTimestamp(percentage: Float) {
-            percentageToUpdate = percentage
-            totalInteractions++
+        override fun updateTimestamp(newTimestamp: Int, totalLength: Int) {
+            newTimestampToUpdate = newTimestamp
+            totalLengthToUpdate = totalLength
         }
 
+        override fun bindTrackDuration(lengthSeconds: Int) {
+            TODO("Not yet implemented")
+        }
+
+        override fun bindVolumes(volumes: TrackVolumeBundle) {
+            TODO("Not yet implemented")
+        }
+
+        override fun openPlayer() {
+            TODO("Not yet implemented")
+        }
+
+        override fun onBackPressed(): Boolean {
+            TODO("Not yet implemented")
+        }
+//        override fun updateTimestamp(percentage: Float) {
+//            percentageToUpdate = percentage
+//            totalInteractions++
+//        }
         override fun registerListener(listener: TrackPlayerViewMvc.Listener) {
             registeredListener = listener
             totalInteractions++
@@ -391,7 +377,6 @@ class TrackPlayerControllerTest {
         override fun bindRootView(rootView: View?) {
             totalInteractions++
         }
-
     }
     // endregion helper classes
 }
