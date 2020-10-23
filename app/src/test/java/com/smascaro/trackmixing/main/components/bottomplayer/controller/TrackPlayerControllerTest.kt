@@ -1,23 +1,27 @@
 package com.smascaro.trackmixing.main.components.bottomplayer.controller
 
 import android.view.View
-import androidx.navigation.NavController
+import com.smascaro.trackmixing.common.coroutines.IoCoroutineScopeFactory
+import com.smascaro.trackmixing.common.coroutines.MainCoroutineScopeFactory
 import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepository
 import com.smascaro.trackmixing.common.data.model.DownloadEntity
-import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.models.DOWNLOAD_ENTITY_1_TITLE
 import com.smascaro.trackmixing.common.models.TRACK_VIDEO_KEY
 import com.smascaro.trackmixing.common.models.TestModels
 import com.smascaro.trackmixing.common.testdoubles.EventBusTd
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager
 import com.smascaro.trackmixing.common.utils.TrackVolumeBundle
-import com.smascaro.trackmixing.common.utils.navigation.NavigationHelper
 import com.smascaro.trackmixing.main.components.player.controller.TrackPlayerController
 import com.smascaro.trackmixing.main.components.player.model.TrackPlayerData
 import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvc
 import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
 import com.smascaro.trackmixing.playbackservice.utils.PlaybackSession
-import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.TestDataBundleInfo
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.TestCoroutineScope
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
@@ -28,25 +32,26 @@ import org.mockito.Mockito.`when`
 import org.mockito.Mockito.validateMockitoUsage
 import org.mockito.junit.MockitoJUnitRunner
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class TrackPlayerControllerTest {
     private lateinit var SUT: TrackPlayerController
-
     // region constants
     // endregion constants
     // region helper fields
     @Mock
     private lateinit var playbackStateManager: PlaybackStateManager
-
     @Mock
     private lateinit var playbackSession: PlaybackSession
     private lateinit var viewMvc: TrackPlayerViewMvcTd
     private lateinit var eventBus: EventBusTd
     private lateinit var tracksRepository: TracksRepository
-
+    private val testDispatcher = TestCoroutineDispatcher()
+    private val testScope = TestCoroutineScope(testDispatcher)
     // endregion helper fields
     @Before
     fun setup() {
+        Dispatchers.setMain(testDispatcher)
         viewMvc = TrackPlayerViewMvcTd()
         eventBus = EventBusTd()
         tracksRepository = TracksRepositoryTd()
@@ -55,7 +60,9 @@ class TrackPlayerControllerTest {
             playbackStateManager,
             tracksRepository,
             eventBus,
-            playbackSession
+            playbackSession,
+            MainCoroutineScopeFactory.create(testDispatcher),
+            IoCoroutineScopeFactory.create(testDispatcher)
         )
         SUT.bindViewMvc(viewMvc)
     }
@@ -63,6 +70,8 @@ class TrackPlayerControllerTest {
     @After
     fun validate() {
         validateMockitoUsage()
+        Dispatchers.resetMain()
+        testDispatcher.cleanupTestCoroutines()
     }
 
     // region tests
@@ -102,42 +111,6 @@ class TrackPlayerControllerTest {
         SUT.dispose()
         // Assert
         assertEquals(SUT, viewMvc.unregisteredListener)
-    }
-
-    @Test
-    fun onLayoutClick_userClicksOnPlayerLayout_stateIsPlaying_navigatesToPlayerScreen() {
-        // Arrange
-        setPlayingState()
-        setPlaybackStateCurrentSongId()
-        // Act
-        SUT.onPlayerStateChanged()
-        SUT.onLayoutClick()
-        // Assert
-        assertTrue(navigationHelper.hasNavigatedToPlayer)
-    }
-
-    @Test
-    fun onLayoutClick_userClicksOnPlayerLayout_stateIsPaused_navigatesToPlayerScreen() {
-        // Arrange
-        setPausedState()
-        setPlaybackStateCurrentSongId()
-        // Act
-        SUT.onPlayerStateChanged()
-        SUT.onLayoutClick()
-        // Assert
-        assertTrue(navigationHelper.hasNavigatedToPlayer)
-    }
-
-    @Test
-    fun onLayoutClick_userClicksOnPlayerLayout_stateIsStopped_navigatesToPlayerScreen() {
-        // Arrange
-        setStoppedState()
-        setPlaybackStateCurrentSongId()
-        // Act
-        SUT.onPlayerStateChanged()
-        SUT.onLayoutClick()
-        // Assert
-        assertFalse(navigationHelper.hasNavigatedToPlayer)
     }
 
     @Test
@@ -258,7 +231,6 @@ class TrackPlayerControllerTest {
         assertEquals(event.newTimestamp, viewMvc.newTimestampToUpdate)
         assertEquals(event.totalLength, viewMvc.totalLengthToUpdate)
     }
-
     // endregion tests
     // region helper methods
     private fun setPlayingState() {
@@ -280,7 +252,6 @@ class TrackPlayerControllerTest {
         `when`(playbackStateManager.getCurrentSong())
             .thenReturn(TRACK_VIDEO_KEY)
     }
-
     // endregion helper methods
     // region helper classes
     class TracksRepositoryTd : TracksRepository {
@@ -301,7 +272,7 @@ class TrackPlayerControllerTest {
         }
 
         override suspend fun delete(videoId: String) {
-            TODO("Not yet implemented")
+//            TODO("Not yet implemented")
         }
     }
 
@@ -341,24 +312,22 @@ class TrackPlayerControllerTest {
         }
 
         override fun bindTrackDuration(lengthSeconds: Int) {
-            TODO("Not yet implemented")
+//            TODO("Not yet implemented")
         }
 
         override fun bindVolumes(volumes: TrackVolumeBundle) {
-            TODO("Not yet implemented")
+//            TODO("Not yet implemented")
         }
 
         override fun openPlayer() {
-            TODO("Not yet implemented")
+//            TODO("Not yet implemented")
         }
 
         override fun onBackPressed(): Boolean {
-            TODO("Not yet implemented")
+//            TODO("Not yet implemented")
+            return false
         }
-//        override fun updateTimestamp(percentage: Float) {
-//            percentageToUpdate = percentage
-//            totalInteractions++
-//        }
+
         override fun registerListener(listener: TrackPlayerViewMvc.Listener) {
             registeredListener = listener
             totalInteractions++
