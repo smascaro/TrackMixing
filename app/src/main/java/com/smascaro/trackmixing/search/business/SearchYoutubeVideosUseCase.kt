@@ -1,45 +1,23 @@
 package com.smascaro.trackmixing.search.business
 
-import com.smascaro.trackmixing.common.view.architecture.BaseObservable
 import com.smascaro.trackmixing.search.model.SearchResult
 import com.smascaro.trackmixing.search.model.repository.SearchResultsRepository
-import com.smascaro.trackmixing.search.model.repository.events.SearchResultsObtainedEvent
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
+import timber.log.Timber
 import javax.inject.Inject
 
-class SearchYoutubeVideosUseCase @Inject constructor(private val searchResultsRepository: SearchResultsRepository) :
-    BaseObservable<SearchYoutubeVideosUseCase.Listener>() {
-    interface Listener {
-        fun onResultsReady(results: List<SearchResult>)
-        fun onErrorOccurred(message: String)
+class SearchYoutubeVideosUseCase @Inject constructor(private val searchResultsRepository: SearchResultsRepository) {
+    sealed class Result {
+        data class Success(val searchResults: List<SearchResult>) : Result()
+        data class Failure(val error: Throwable) : Result()
     }
 
-    fun execute(query: String) {
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this)
-        }
-        searchResultsRepository.query(query)
-    }
-
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    fun onMessageEvent(searchResultsObtainedEvent: SearchResultsObtainedEvent) {
-        when (searchResultsObtainedEvent) {
-            is SearchResultsObtainedEvent.Success -> handleSearchResults(searchResultsObtainedEvent.results)
-            is SearchResultsObtainedEvent.Failure -> handleError(searchResultsObtainedEvent.message)
-        }
-    }
-
-    private fun handleSearchResults(results: List<SearchResult>) {
-        getListeners().forEach {
-            it.onResultsReady(results)
-        }
-    }
-
-    private fun handleError(message: String) {
-        getListeners().forEach {
-            it.onErrorOccurred(message)
+    suspend fun execute(query: String): Result {
+        return try {
+            val results = searchResultsRepository.query(query)
+            Result.Success(results)
+        } catch (e: Exception) {
+            Timber.e(e)
+            Result.Failure(e)
         }
     }
 }
