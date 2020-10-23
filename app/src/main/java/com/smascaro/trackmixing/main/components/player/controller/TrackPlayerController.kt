@@ -1,13 +1,12 @@
 package com.smascaro.trackmixing.main.components.player.controller
 
 import android.content.Intent
-import com.smascaro.trackmixing.common.controller.BaseNavigatorController
+import com.smascaro.trackmixing.common.controller.BaseController
 import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepository
 import com.smascaro.trackmixing.common.data.datasource.repository.toModel
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.utils.PLAYER_NOTIFICATION_ACTION_LAUNCH_PLAYER
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager
-import com.smascaro.trackmixing.common.utils.navigation.NavigationHelper
 import com.smascaro.trackmixing.main.components.player.model.TrackPlayerData
 import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvc
 import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
@@ -24,9 +23,8 @@ class TrackPlayerController @Inject constructor(
     private val playbackStateManager: PlaybackStateManager,
     private val tracksRepository: TracksRepository,
     private val eventBus: EventBus,
-    private val playbackSession: PlaybackSession,
-    navigationHelper: NavigationHelper
-) : BaseNavigatorController<TrackPlayerViewMvc>(navigationHelper),
+    private val playbackSession: PlaybackSession
+) : BaseController<TrackPlayerViewMvc>(),
     TrackPlayerViewMvc.Listener {
     private var currentTrack: Track? = null
     private var currentState: PlaybackStateManager.PlaybackState? = null
@@ -54,8 +52,6 @@ class TrackPlayerController @Inject constructor(
 
                 viewMvc.bindTrackDuration(currentTrack!!.secondsLong)
                 viewMvc.bindVolumes(playbackSession.getVolumes())
-            } else if (currentState is PlaybackStateManager.PlaybackState.Stopped) {
-//                viewMvc.hidePlayerBar(HideBarMode.Vertical())
             }
             if (openPlayerIntentRequested) {
                 navigateToPlayer()
@@ -78,7 +74,6 @@ class TrackPlayerController @Inject constructor(
     fun navigateToPlayer() {
         if (currentTrack != null) {
             openPlayerIntentRequested = false
-//            navigationHelper.toPlayer(currentTrack!!)
             viewMvc.openPlayer()
         }
     }

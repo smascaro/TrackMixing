@@ -74,7 +74,6 @@ class MainActivity : BaseActivity() {
 
     override fun onStart() {
         super.onStart()
-        trackPlayerController.bindNavController(navController)
         mainActivityController.onStart()
         bottomProgressController.onStart()
         EventBus.getDefault().post(ApplicationEvent(AppState.Foreground()))
