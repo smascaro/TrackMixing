@@ -5,6 +5,8 @@ import com.smascaro.trackmixing.common.controller.BaseController
 import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepository
 import com.smascaro.trackmixing.common.data.datasource.repository.toModel
 import com.smascaro.trackmixing.common.data.model.Track
+import com.smascaro.trackmixing.common.di.coroutines.IoCoroutineScope
+import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
 import com.smascaro.trackmixing.common.utils.PLAYER_NOTIFICATION_ACTION_LAUNCH_PLAYER
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager
 import com.smascaro.trackmixing.main.components.player.model.TrackPlayerData
@@ -12,7 +14,8 @@ import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvc
 import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
 import com.smascaro.trackmixing.playbackservice.utils.PlaybackSession
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -23,7 +26,9 @@ class TrackPlayerController @Inject constructor(
     private val playbackStateManager: PlaybackStateManager,
     private val tracksRepository: TracksRepository,
     private val eventBus: EventBus,
-    private val playbackSession: PlaybackSession
+    private val playbackSession: PlaybackSession,
+    private val ui: MainCoroutineScope,
+    private val io: IoCoroutineScope
 ) : BaseController<TrackPlayerViewMvc>(),
     TrackPlayerViewMvc.Listener {
     private var currentTrack: Track? = null
@@ -36,27 +41,30 @@ class TrackPlayerController @Inject constructor(
         viewMvc.onCreate()
     }
 
-    private fun updateCurrentPlayingTrack() =
-        runBlocking {
-            currentState = playbackStateManager.getPlayingState()
-            if (currentState is PlaybackStateManager.PlaybackState.Playing || currentState is PlaybackStateManager.PlaybackState.Paused) {
-                val songId = playbackStateManager.getCurrentSong()
-                currentTrack = tracksRepository.get(songId).toModel()
-                when (currentState) {
-                    is PlaybackStateManager.PlaybackState.Playing -> viewMvc.showPauseButton()
-                    is PlaybackStateManager.PlaybackState.Paused -> viewMvc.showPlayButton()
-                }
-                viewMvc.showPlayerBar(
-                    makeBottomPlayerData()
-                )
-
-                viewMvc.bindTrackDuration(currentTrack!!.secondsLong)
-                viewMvc.bindVolumes(playbackSession.getVolumes())
+    private fun updateCurrentPlayingTrack() = ui.launch {
+        currentState = playbackStateManager.getPlayingState()
+        if (currentState is PlaybackStateManager.PlaybackState.Playing || currentState is PlaybackStateManager.PlaybackState.Paused) {
+            val songId = withContext(io.coroutineContext) { playbackStateManager.getCurrentSong() }
+            currentTrack = tracksRepository.get(songId).toModel()
+            when (currentState) {
+                is PlaybackStateManager.PlaybackState.Playing -> viewMvc.showPauseButton()
+                is PlaybackStateManager.PlaybackState.Paused -> viewMvc.showPlayButton()
             }
-            if (openPlayerIntentRequested) {
-                navigateToPlayer()
-            }
+            updateUi()
         }
+    }
+
+    private fun updateUi() {
+        viewMvc.showPlayerBar(
+            makeBottomPlayerData()
+        )
+
+        viewMvc.bindTrackDuration(currentTrack!!.secondsLong)
+        viewMvc.bindVolumes(playbackSession.getVolumes())
+        if (openPlayerIntentRequested) {
+            navigateToPlayer()
+        }
+    }
 
     private fun makeBottomPlayerData(): TrackPlayerData {
         return TrackPlayerData(
@@ -71,7 +79,7 @@ class TrackPlayerController @Inject constructor(
         navigateToPlayer()
     }
 
-    fun navigateToPlayer() {
+    private fun navigateToPlayer() {
         if (currentTrack != null) {
             openPlayerIntentRequested = false
             viewMvc.openPlayer()
