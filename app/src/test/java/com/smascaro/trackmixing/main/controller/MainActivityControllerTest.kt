@@ -1,5 +1,6 @@
 package com.smascaro.trackmixing.main.controller
 
+import com.smascaro.trackmixing.common.utils.PlaybackStateManager
 import com.smascaro.trackmixing.common.utils.navigation.NavigationHelperImpl
 import com.smascaro.trackmixing.main.view.MainActivityViewMvc
 import org.junit.Before
@@ -18,14 +19,14 @@ class MainActivityControllerTest {
     // endregion constants
 
     // region helper fields
-    @Mock lateinit var navigationHelper: NavigationHelperImpl
+    @Mock lateinit var playbackStateManager: PlaybackStateManager
 
     @Mock lateinit var viewMvc: MainActivityViewMvc
     // endregion helper fields
 
     @Before
     fun setup() {
-        SUT = MainActivityController(navigationHelper)
+        SUT = MainActivityController(playbackStateManager)
         SUT.bindViewMvc(viewMvc)
     }
 
@@ -48,34 +49,6 @@ class MainActivityControllerTest {
         verify(viewMvc).unregisterListener(SUT)
     }
 
-    @Test
-    fun updateTitle_toolbarTitleIsUpdated() {
-        // Arrange
-        val title = "Test title"
-        val enableBackNavigation = true
-        // Act
-        SUT.updateTitle(title, enableBackNavigation)
-        // Assert
-        verify(viewMvc).updateTitle(title, enableBackNavigation)
-    }
-
-    @Test
-    fun onToolbarBackButtonPressed_viewIsCleanedUp() {
-        // Arrange
-        // Act
-        SUT.onToolbarBackButtonPressed()
-        // Assert
-        verify(viewMvc).cleanUp()
-    }
-
-    @Test
-    fun onToolbarBackButtonPressed_navigatesBack() {
-        // Arrange
-        // Act
-        SUT.onToolbarBackButtonPressed()
-        // Assert
-        verify(navigationHelper).back()
-    }
     // endregion tests
 
     // region helper methods
