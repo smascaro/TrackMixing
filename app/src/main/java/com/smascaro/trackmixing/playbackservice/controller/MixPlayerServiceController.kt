@@ -4,6 +4,7 @@ import com.smascaro.trackmixing.common.data.model.ForegroundNotification
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.di.PlayerNotificationHelperImplementation
 import com.smascaro.trackmixing.common.di.coroutines.IoCoroutineScope
+import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
 import com.smascaro.trackmixing.common.utils.*
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager.PlaybackState
 import com.smascaro.trackmixing.common.utils.ui.NotificationHelper
@@ -23,7 +24,8 @@ class MixPlayerServiceController @Inject constructor(
     @PlayerNotificationHelperImplementation val notificationHelper: NotificationHelper,
     val playbackStateManager: PlaybackStateManager,
     private val eventBus: EventBus,
-    private val io: IoCoroutineScope
+    private val io: IoCoroutineScope,
+    private val uiScope: MainCoroutineScope
 ) : BaseObservable<MixPlayerServiceController.ServiceActionsDelegate>(),
     PlaybackHelper.Listener {
     interface ServiceActionsDelegate {
@@ -112,7 +114,7 @@ class MixPlayerServiceController @Inject constructor(
 
     private fun startTimestampThread() {
         thread {
-            timestampUpdateThread = TimestampUpdateThread(playbackHelper, eventBus)
+            timestampUpdateThread = TimestampUpdateThread(playbackHelper, eventBus, uiScope)
             timestampUpdateThread!!.start()
         }
         reportPlayersOffsetsJob = CoroutineScope(Dispatchers.Main).launch {
