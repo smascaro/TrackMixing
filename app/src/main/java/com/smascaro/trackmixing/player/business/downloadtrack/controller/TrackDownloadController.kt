@@ -35,6 +35,7 @@ class TrackDownloadController @Inject constructor(
         fun onStartForeground(foregroundNotification: ForegroundNotification)
         fun onStopForeground(removeNotification: Boolean)
         fun onStopService()
+        fun onRequestError(error: Throwable)
     }
 
     private var applicationState: AppState = AppState.Foreground()
@@ -58,6 +59,9 @@ class TrackDownloadController @Inject constructor(
 
     private fun handleRequestError(error: Throwable) {
         Timber.e(error)
+        getListeners().forEach {
+            it.onRequestError(error)
+        }
     }
 
     private fun handleRequestSuccess(videoId: String) {

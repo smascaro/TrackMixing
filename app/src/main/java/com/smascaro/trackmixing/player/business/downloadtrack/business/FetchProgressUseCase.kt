@@ -15,11 +15,6 @@ class FetchProgressUseCase @Inject constructor(
     private val nodeApi: NodeApi,
     private val io: IoCoroutineScope
 ) {
-    sealed class Result {
-        class Success(val videoId: String) : Result()
-        class Failure(val error: Throwable) : Result()
-    }
-
     fun execute(videoId: String, waitingTimeMillis: Long) {
         io.launch { executeInternal(videoId, waitingTimeMillis) }
     }
