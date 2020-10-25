@@ -9,9 +9,13 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class ColorExtractor @Inject constructor(private val glide: RequestManager) {
-    fun extractLightVibrant(imageUrl: String, then: (color: Int) -> Unit) {
+    suspend fun extractLightVibrant(
+        imageUrl: String,
+    ) = suspendCoroutine<Int> { cont ->
         glide
             .asBitmap()
             .load(imageUrl)
@@ -26,7 +30,7 @@ class ColorExtractor @Inject constructor(private val glide: RequestManager) {
                 ) {
                     Palette.Builder(resource).generate {
                         val color = it?.getLightVibrantColor(Color.WHITE) ?: Color.WHITE
-                        then((color))
+                        cont.resume(color)
                     }
                 }
             })

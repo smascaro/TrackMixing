@@ -12,30 +12,19 @@ import com.smascaro.trackmixing.common.utils.ui.ColorExtractor
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable
 import com.smascaro.trackmixing.player.business.downloadtrack.model.DownloadEvents
 import com.smascaro.trackmixing.player.business.downloadtrack.model.FetchSteps
-import com.smascaro.trackmixing.player.business.downloadtrack.model.FetchTrackDetailsResponseSchema
 import com.smascaro.trackmixing.player.business.downloadtrack.model.toModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import okhttp3.ResponseBody
 import org.greenrobot.eventbus.EventBus
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import timber.log.Timber
 import java.io.File
 import java.util.*
-import java.util.zip.ZipEntry
-import java.util.zip.ZipFile
 import javax.inject.Inject
 
 class DownloadTrackUseCase @Inject constructor(
-    val nodeApi: NodeApi,
-    val mNodeDownloadsApi: NodeDownloadsApi,
-    val mFilesStorageHelper: FilesStorageHelper,
-    val tracksRepository: TracksRepository,
-    val colorExtractor: ColorExtractor
+    private val nodeApi: NodeApi,
+    private val nodeDownloadsApi: NodeDownloadsApi,
+    private val filesStorageHelper: FilesStorageHelper,
+    private val tracksRepository: TracksRepository,
+    private val colorExtractor: ColorExtractor
 ) :
     BaseObservable<DownloadTrackUseCase.Listener>() {
     interface Listener {
@@ -46,7 +35,10 @@ class DownloadTrackUseCase @Inject constructor(
 
     private var mTrack: Track? = null
 
-    fun execute(videoId: String) {
+    suspend fun execute(videoId: String) =
+        executeInternal(videoId)
+
+    private suspend fun executeInternal(videoId: String) {
         EventBus.getDefault().post(
             DownloadEvents.ProgressUpdate(
                 "",
@@ -55,182 +47,112 @@ class DownloadTrackUseCase @Inject constructor(
                 FetchSteps.DownloadStep()
             )
         )
-        nodeApi.fetchDetails(videoId).enqueue(object : Callback<FetchTrackDetailsResponseSchema> {
-            override fun onResponse(
-                call: Call<FetchTrackDetailsResponseSchema>,
-                response: Response<FetchTrackDetailsResponseSchema>
-            ) {
-                val responseBody = response.body()
-                if (responseBody != null) {
-                    mTrack = responseBody.toModel()
-                    downloadTrackAndNotify(mFilesStorageHelper.getBaseDirectory())
-                }
-            }
-
-            override fun onFailure(call: Call<FetchTrackDetailsResponseSchema>, t: Throwable) {
-                notifyError()
-            }
-        })
-    }
-
-    private fun downloadTrackAndNotify(baseDirectory: String) {
-        if (mTrack != null) {
-            GlobalScope.launch {
-                val trackFromDatabase = try {
-                    tracksRepository.get(mTrack!!.videoKey)
-                } catch (tnfe: TrackNotFoundException) {
-                    null
-                }
-                val filesExist = if (trackFromDatabase != null) {
-                    mFilesStorageHelper.checkContent(trackFromDatabase.downloadPath)
-                } else {
-                    false
-                }
-                if (trackFromDatabase == null || !filesExist) {
-                    this@DownloadTrackUseCase.mTrack = mTrack
-                    var entity =
-                        DownloadEntity(
-                            0,
-                            mTrack!!.videoKey,
-                            "low",
-                            mTrack!!.title,
-                            mTrack!!.author,
-                            mTrack!!.thumbnailUrl,
-                            Calendar.getInstance().toString(),
-                            mFilesStorageHelper.getBaseDirectoryByVideoId(mTrack!!.videoKey),
-                            DownloadEntity.DownloadStatus.PENDING,
-                            mTrack!!.secondsLong,
-                            mTrack!!.backgroundColor
-                        )
-                    entity.id = tracksRepository.insert(entity).toInt()
-                    Timber.d("Downloading track with id ${mTrack!!.videoKey}")
-                    notifyDownloadStarted(mTrack!!)
-                    EventBus.getDefault().post(
-                        DownloadEvents.ProgressUpdate(
-                            mTrack!!.title,
-                            30,
-                            "Downloading files",
-                            FetchSteps.DownloadStep()
-                        )
-                    )
-                    mNodeDownloadsApi.downloadTrack(entity.sourceVideoKey).enqueue(object :
-                        Callback<ResponseBody> {
-                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                            Timber.e(t)
-                            GlobalScope.launch {
-                                setErrorStatusAndUpdate(entity)
-                            }
-                            notifyError()
-                        }
-
-                        override fun onResponse(
-                            call: Call<ResponseBody>,
-                            response: Response<ResponseBody>
-                        ) {
-                            val responseBody = response.body()
-                            if (responseBody != null) {
-                                GlobalScope.launch {
-                                    val downloadedFilePath =
-                                        mFilesStorageHelper.writeFileToStorage(
-                                            baseDirectory,
-                                            entity.sourceVideoKey,
-                                            responseBody
-                                        )
-                                    EventBus.getDefault().post(
-                                        DownloadEvents.ProgressUpdate(
-                                            mTrack!!.title,
-                                            80,
-                                            "Unzipping contents",
-                                            FetchSteps.DownloadStep()
-                                        )
-                                    )
-                                    if (downloadedFilePath.isNotEmpty()) {
-                                        val downloadedBasePath =
-                                            File(downloadedFilePath).parent ?: ""
-                                        if (unzipContent(downloadedFilePath)) {
-                                            EventBus.getDefault().post(
-                                                DownloadEvents.ProgressUpdate(
-                                                    mTrack!!.title,
-                                                    95,
-                                                    "Cleaning unneeded files",
-                                                    FetchSteps.DownloadStep()
-                                                )
-                                            )
-                                            mFilesStorageHelper.deleteFile(downloadedFilePath)
-                                            entity.apply {
-                                                status = DownloadEntity.DownloadStatus.FINISHED
-                                            }
-                                            colorExtractor.extractLightVibrant(entity.thumbnailUrl) {
-                                                entity.backgroundColor = it
-                                                CoroutineScope(Dispatchers.IO).launch {
-                                                    tracksRepository.update(entity)
-                                                    Timber.d("Updated entity -> $entity")
-                                                }
-                                            }
-                                            notifyDownloadFinished(
-                                                entity.toModel(),
-                                                downloadedBasePath
-                                            )
-                                        } else {
-                                            setErrorStatusAndUpdate(entity)
-                                            notifyError()
-                                        }
-                                    } else {
-                                        setErrorStatusAndUpdate(entity)
-                                        notifyError()
-                                    }
-                                }
-                            }
-                        }
-                    })
-                } else {
-                    Timber.i("Track ${mTrack!!.videoKey} already in the system, omitting download")
-                    notifyDownloadFinished(mTrack!!, trackFromDatabase.downloadPath)
-                }
-            }
-        }
-    }
-
-    private suspend fun setErrorStatusAndUpdate(entity: DownloadEntity) {
-        entity.apply {
-            status = DownloadEntity.DownloadStatus.ERROR
-        }
-        tracksRepository.update(entity)
-    }
-
-    data class ZipIO(val entry: ZipEntry, val output: File)
-
-    private fun unzipContent(pathToZipFile: String): Boolean {
-        val zipFile = File(pathToZipFile)
-        return try {
-            ZipFile(pathToZipFile).use { zip ->
-                zip.entries().asSequence().map { entry ->
-                    val outputFile = File(zipFile.parent, entry.name)
-                    ZipIO(
-                        entry,
-                        outputFile
-                    ).also { zipio ->
-                        zipio.output.parentFile?.run {
-                            if (!exists()) {
-                                mkdirs()
-                            }
-                        }
-                    }
-                }.filter {
-                    !it.entry.isDirectory
-                }.forEach { (entry, output) ->
-                    zip.getInputStream(entry).use { input ->
-                        output.outputStream().use { output ->
-                            input.copyTo(output)
-                        }
-                    }
-                }
-            }
-            true
+        try {
+            val detailsResponse = nodeApi.fetchDetails(videoId)
+            Timber.i("Details fetched: $detailsResponse")
+            mTrack = detailsResponse.toModel()
+            downloadTrackAndNotify(filesStorageHelper.getBaseDirectory())
         } catch (e: Exception) {
-            Timber.e(e)
+            notifyError(e)
+        }
+    }
+
+    private suspend fun downloadTrackAndNotify(baseDirectory: String) {
+        if (mTrack == null) return
+        val trackFromDatabase = try {
+            tracksRepository.get(mTrack!!.videoKey)
+        } catch (tnfe: TrackNotFoundException) {
+            null
+        }
+        val filesExist = if (trackFromDatabase != null) {
+            filesStorageHelper.checkContent(trackFromDatabase.downloadPath)
+        } else {
             false
         }
+        if (trackFromDatabase != null && !filesExist) {
+            //if track is in database but there are no files, inconsistency => delete from db
+            tracksRepository.delete(trackFromDatabase.sourceVideoKey)
+        }
+        if (trackFromDatabase == null || !filesExist) {
+            var entity =
+                DownloadEntity(
+                    0,
+                    mTrack!!.videoKey,
+                    "low",
+                    mTrack!!.title,
+                    mTrack!!.author,
+                    mTrack!!.thumbnailUrl,
+                    Calendar.getInstance().toString(),
+                    filesStorageHelper.getBaseDirectoryByVideoId(mTrack!!.videoKey),
+                    DownloadEntity.DownloadStatus.PENDING,
+                    mTrack!!.secondsLong,
+                    mTrack!!.backgroundColor
+                )
+            entity.id = tracksRepository.insert(entity).toInt()
+            Timber.d("Downloading track with id ${mTrack!!.videoKey}")
+            notifyDownloadStarted(mTrack!!)
+            EventBus.getDefault().post(
+                DownloadEvents.ProgressUpdate(
+                    mTrack!!.title,
+                    30,
+                    "Downloading files",
+                    FetchSteps.DownloadStep()
+                )
+            )
+            try {
+                val downloadResponse =
+                    nodeDownloadsApi.downloadTrack(entity.sourceVideoKey)
+                val downloadedFilePath =
+                    filesStorageHelper.writeFileToStorage(
+                        baseDirectory,
+                        entity.sourceVideoKey,
+                        downloadResponse //TODO passar bytestream enlloc de responsebody
+                    )
+                EventBus.getDefault().post(
+                    DownloadEvents.ProgressUpdate(
+                        mTrack!!.title,
+                        80,
+                        "Unzipping contents",
+                        FetchSteps.DownloadStep()
+                    )
+                )
+                val downloadedBasePath =
+                    File(downloadedFilePath).parent
+                        ?: throw Exception("Downloaded file path has no parent")
+                filesStorageHelper.unzipContent(downloadedFilePath)
+                EventBus.getDefault().post(
+                    DownloadEvents.ProgressUpdate(
+                        mTrack!!.title,
+                        95,
+                        "Cleaning unneeded files",
+                        FetchSteps.DownloadStep()
+                    )
+                )
+                filesStorageHelper.deleteFile(downloadedFilePath)
+                entity.status = DownloadEntity.DownloadStatus.FINISHED
+                val extractedColor = colorExtractor.extractLightVibrant(entity.thumbnailUrl)
+                entity.backgroundColor = extractedColor
+                tracksRepository.update(entity)
+                Timber.d("Updated entity -> $entity")
+                notifyDownloadFinished(
+                    entity.toModel(),
+                    downloadedBasePath
+                )
+            } catch (e: Exception) {
+                notifyError(e)
+                Timber.e(e)
+                //If an error happens, any downloaded data is deleted and track is deleted from db
+                rollbackDownload(entity)
+            }
+        } else {
+            Timber.i("Track ${mTrack!!.videoKey} already in the system, omitting download")
+            notifyDownloadFinished(mTrack!!, trackFromDatabase.downloadPath)
+        }
+    }
+
+    private suspend fun rollbackDownload(entity: DownloadEntity) {
+        filesStorageHelper.deleteData(entity.downloadPath)
+        tracksRepository.delete(entity.sourceVideoKey)
     }
 
     private fun notifyDownloadStarted(track: Track) {
@@ -249,7 +171,7 @@ class DownloadTrackUseCase @Inject constructor(
         }
     }
 
-    private fun notifyError() {
+    private fun notifyError(e: Exception) {
         getListeners().forEach {
             it.onDownloadTrackError()
         }

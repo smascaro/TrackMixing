@@ -27,6 +27,7 @@ import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
+//TODO duplicated code --> fix
 class DownloadTestDataUseCase @Inject constructor(
     private val testDataApi: TestDataApi,
     private val testDataFilesApi: TestDataFilesApi,
@@ -111,19 +112,16 @@ class DownloadTestDataUseCase @Inject constructor(
                                 if (downloadFilePath.isNotEmpty()) {
                                     val downloadParentPath =
                                         File(downloadFilePath).parent ?: ""
-                                    if (filesStorageHelper.unzipContent(downloadFilePath)) {
-                                        filesStorageHelper.deleteFile(downloadFilePath)
-                                        entity.status =
-                                            DownloadEntity.DownloadStatus.FINISHED
-                                        colorExtractor.extractLightVibrant(entity.thumbnailUrl) {
-                                            entity.backgroundColor = it
-                                            CoroutineScope(Dispatchers.IO).launch {
-                                                tracksRepository.update(entity)
-                                                Timber.d("Updated entity -> $entity")
-                                            }
-                                        }
-                                        notifyDownloadFinished(bundleInfo)
-                                    }
+                                    filesStorageHelper.unzipContent(downloadFilePath)
+                                    filesStorageHelper.deleteFile(downloadFilePath)
+                                    entity.status =
+                                        DownloadEntity.DownloadStatus.FINISHED
+                                    val extractedColor =
+                                        colorExtractor.extractLightVibrant(entity.thumbnailUrl)
+                                    entity.backgroundColor = extractedColor
+                                    tracksRepository.update(entity)
+                                    Timber.d("Updated entity -> $entity")
+                                    notifyDownloadFinished(bundleInfo)
                                 }
                             } catch (e: Exception) {
                                 Timber.e(e)

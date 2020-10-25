@@ -73,7 +73,7 @@ class PlaybackStateManager @Inject constructor(
         val stateValue = withContext(io.coroutineContext) {
             sharedPreferences.getInt(
                 SHARED_PREFERENCES_PLAYBACK_IS_PLAYING,
-                -1
+                PlaybackState.PLAYBACK_STATE_STOPPED
             )
         }
         return PlaybackState.parse(

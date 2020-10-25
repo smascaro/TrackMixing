@@ -26,7 +26,7 @@ class FetchProgressUseCase @Inject constructor(
 
     private suspend fun executeInternal(videoId: String, waitingTimeMillis: Long) {
         var lastProgressState: DownloadEvents.ProgressUpdate? = null
-        val response = nodeApi.fetchProgressSuspended(videoId)
+        val response = nodeApi.fetchProgress(videoId)
         Timber.d("Progress fetched: ${response.body.progress}%")
         val title = response.body.title ?: ""
         val progress = response.body.progress
@@ -46,7 +46,7 @@ class FetchProgressUseCase @Inject constructor(
             Timber.d("Sleep for $waitingTimeMillis ms")
             delay(waitingTimeMillis)
             Timber.d("Time to check progress again")
-            execute(videoId, waitingTimeMillis)
+            executeInternal(videoId, waitingTimeMillis)
         } else if (response.body.status_code == "FINISHED") {
             EventBus.getDefault().post(DownloadEvents.FinishedProcessing())
         } else if (response.body.status_code == "ERROR") {

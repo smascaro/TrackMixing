@@ -19,17 +19,11 @@ interface NodeApi {
     ): Call<AvailableTracksResponseSchema>
 
     @POST("/demucs/{videoUrl}")
-    fun requestTrack(@Path("videoUrl") videoUrl: String): Call<RequestTrackResponseSchema>
-
-    @POST("/demucs/{videoUrl}")
-    suspend fun requestTrackSuspended(@Path("videoUrl") videoUrl: String): RequestTrackResponseSchema
+    suspend fun requestTrack(@Path("videoUrl") videoUrl: String): RequestTrackResponseSchema
 
     @GET("/progress/{videoId}")
-    fun fetchProgress(@Path("videoId") videoId: String): Call<FetchProgressResponseSchema>
-
-    @GET("/progress/{videoId}")
-    suspend fun fetchProgressSuspended(@Path("videoId") videoId: String): FetchProgressResponseSchema
+    suspend fun fetchProgress(@Path("videoId") videoId: String): FetchProgressResponseSchema
 
     @GET("/details/{videoId}")
-    fun fetchDetails(@Path("videoId") videoId: String): Call<FetchTrackDetailsResponseSchema>
+    suspend fun fetchDetails(@Path("videoId") videoId: String): FetchTrackDetailsResponseSchema
 }

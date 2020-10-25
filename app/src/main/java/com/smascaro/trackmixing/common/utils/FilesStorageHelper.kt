@@ -1,7 +1,6 @@
 package com.smascaro.trackmixing.common.utils
 
 import android.content.Context
-import com.smascaro.trackmixing.player.business.DownloadTrackUseCase
 import okhttp3.ResponseBody
 import timber.log.Timber
 import java.io.File
@@ -30,7 +29,7 @@ class FilesStorageHelper @Inject constructor(private val mContext: Context) {
             targetFile.path
         } catch (e: Exception) {
             Timber.e(e)
-            ""
+            throw e
         }
     }
 
@@ -67,13 +66,13 @@ class FilesStorageHelper @Inject constructor(private val mContext: Context) {
 
     data class ZipIO(val entry: ZipEntry, val output: File)
 
-    fun unzipContent(pathToZipFile: String): Boolean {
+    fun unzipContent(pathToZipFile: String) {
         val zipFile = File(pathToZipFile)
-        return try {
+        try {
             ZipFile(pathToZipFile).use { zip ->
                 zip.entries().asSequence().map { entry ->
                     val outputFile = File(zipFile.parent, entry.name)
-                    DownloadTrackUseCase.ZipIO(
+                    ZipIO(
                         entry,
                         outputFile
                     ).also { zipio ->
@@ -93,10 +92,9 @@ class FilesStorageHelper @Inject constructor(private val mContext: Context) {
                     }
                 }
             }
-            true
         } catch (e: Exception) {
             Timber.e(e)
-            false
+            throw Exception("Exception unzipping contents", e)
         }
     }
 
