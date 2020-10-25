@@ -65,6 +65,10 @@ class AppModule {
     fun provideRetrofitInstanceWithJson(): Retrofit {
         return Retrofit.Builder().apply {
             baseUrl(NODE_BASE_URL)
+            client(
+                OkHttpClient.Builder().readTimeout(120, TimeUnit.SECONDS)
+                    .writeTimeout(3, TimeUnit.SECONDS).build()
+            )
             addConverterFactory(GsonConverterFactory.create())
         }.build()
     }
@@ -80,7 +84,7 @@ class AppModule {
     @RetrofitForBinaryData
     fun provideRetrofitInstanceForBinaryData(): Retrofit {
         val client = OkHttpClient.Builder().apply {
-            readTimeout(30L, TimeUnit.SECONDS)
+            readTimeout(30, TimeUnit.SECONDS)
         }.build()
         return Retrofit.Builder().apply {
             baseUrl(NODE_BASE_URL)

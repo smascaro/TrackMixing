@@ -2,6 +2,8 @@ package com.smascaro.trackmixing.settings.business.downloadtestdata.selection.co
 
 import com.smascaro.trackmixing.common.controller.BaseNavigatorController
 import com.smascaro.trackmixing.common.data.datasource.repository.DownloadsDao
+import com.smascaro.trackmixing.common.di.coroutines.IoCoroutineScope
+import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
 import com.smascaro.trackmixing.common.utils.DiskSpaceHelper
 import com.smascaro.trackmixing.common.utils.navigation.NavigationHelper
 import com.smascaro.trackmixing.player.business.DownloadTrackUseCase
@@ -11,13 +13,15 @@ import com.smascaro.trackmixing.settings.business.downloadtestdata.usecase.Downl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class SelectTestDataController @Inject constructor(
     private val downloadTestDataUseCase: DownloadTestDataUseCase,
-    private val downloadTrackUseCase: DownloadTrackUseCase,
     private val downloadsDao: DownloadsDao,
     private val diskSpaceHelper: DiskSpaceHelper,
+    private val ui:MainCoroutineScope,
+    private val io: IoCoroutineScope,
     p_navigationHelper: NavigationHelper
 ) :
     BaseNavigatorController<SelectTestDataViewMvc>(p_navigationHelper),
@@ -25,29 +29,34 @@ class SelectTestDataController @Inject constructor(
     private var totalDownloadBytes = 0
     private var tracksToDownload = mutableListOf<TestDataBundleInfo>()
     fun onStart() {
-        downloadTestDataUseCase.getTestDataBundleInfo {
-            when (it) {
+        ui.launch {
+            val availableBundlesResult =
+                withContext(Dispatchers.IO) { downloadTestDataUseCase.getTestDataBundleInfo() }
+            when (availableBundlesResult) {
                 is DownloadTestDataUseCase.Result.Success -> {
-                    viewMvc.bindTracks(it.tracks)
-                    checkAlreadyDownloadedItems(it.tracks)
+                    viewMvc.bindTracks(availableBundlesResult.tracks)
+                    checkAlreadyDownloadedItems(availableBundlesResult.tracks)
                 }
-                is DownloadTestDataUseCase.Result.Failure -> viewMvc.showError(it.throwable.localizedMessage)
+                is DownloadTestDataUseCase.Result.Failure -> viewMvc.showError(
+                    availableBundlesResult.throwable.localizedMessage
+                )
             }
         }
+
         viewMvc.registerListener(this)
         viewMvc.disableDownloadButton()
         viewMvc.bindAvailableSpace(diskSpaceHelper.getAvailableBytes())
     }
 
     private fun checkAlreadyDownloadedItems(tracks: List<TestDataBundleInfo>) {
-        CoroutineScope(Dispatchers.IO).launch {
+        io.launch {
             val downloads = downloadsDao.getAll()
             val downloadedTestData = tracks.filter { testDataItem ->
                 downloads.contains {
                     it.sourceVideoKey == testDataItem.videoKey
                 }
             }
-            CoroutineScope(Dispatchers.Main).launch {
+            ui.launch {
                 viewMvc.bindAlreadyDownloadedData(downloadedTestData)
             }
         }

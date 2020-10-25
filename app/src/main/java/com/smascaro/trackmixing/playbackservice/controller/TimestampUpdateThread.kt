@@ -9,16 +9,18 @@ import timber.log.Timber
 
 class TimestampUpdateThread(
     private val playbackHelper: PlaybackHelper,
-    private val eventBus: EventBus
+    private val eventBus: EventBus,
+    private val scope: CoroutineScope
 ) {
     private lateinit var job: Job
     private var currentTimestampSeconds: Int = 0
     private val totalLength = playbackHelper.getTrack().secondsLong
+
     fun start() {
         job = run()
     }
 
-    private fun run() = CoroutineScope(Dispatchers.Main).launch {
+    private fun run() = scope.launch {
         try {
             while (true) {
                 ensureActive()
@@ -43,7 +45,7 @@ class TimestampUpdateThread(
             Timber.e(e)
             Timber.w("Stopping thread ${Thread.currentThread().name} due to exception")
         }
-        Timber.d("Job got cancelled succesfully!")
+        Timber.d("Job got cancelled successfully!")
     }
 
     fun cancel() {

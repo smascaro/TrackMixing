@@ -2,6 +2,7 @@ package com.smascaro.trackmixing.playbackservice.utils
 
 import android.content.Context
 import com.smascaro.trackmixing.common.data.model.Track
+import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
 import com.smascaro.trackmixing.common.error.NoLoadedTrackException
 import com.smascaro.trackmixing.common.utils.TrackVolumeBundle
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable
@@ -13,7 +14,8 @@ import kotlin.math.abs
 
 class PlaybackHelper @Inject constructor(
     private val context: Context,
-    private val audioStateManager: AudioStateManager
+    private val audioStateManager: AudioStateManager,
+    uiScope: MainCoroutineScope
 ) :
     BaseObservable<PlaybackHelper.Listener>(),
     PlayingTrackState.Listener,
@@ -33,7 +35,7 @@ class PlaybackHelper @Inject constructor(
     private var playRequested: Boolean = false
     private var mCurrentState: State =
         State.PAUSED
-    private val playerRack = PlayerRack()
+    private val playerRack = PlayerRack(uiScope)
     fun isPlaying(): Boolean = mCurrentState == State.PLAYING
 
     fun getPlaybackState(): MixPlaybackState {
@@ -226,7 +228,7 @@ class PlaybackHelper @Inject constructor(
             val maxDifference = findMaxDifference(report.map { it.second.toInt() })
             Timber.i("Max difference found is of $maxDifference milliseconds")
             Timber.i("------------------ END REPORT TRACKS OFFSET ANALYSIS ---------------------")
-            if(maxDifference > 30){
+            if (maxDifference > 30) {
 //                playerRack.seekMillis(mean.toLong())
             }
         }

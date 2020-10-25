@@ -53,11 +53,15 @@ class PlaybackSessionImpl @Inject constructor(
         eventBus.post(PlaybackEvent.SetVolumeTrackEvent(trackInstrument, volume))
     }
 
-    override fun getState(): PlaybackStateManager.PlaybackState {
+    override suspend fun getState(): PlaybackStateManager.PlaybackState {
         return playbackStateManager.getPlayingState()
     }
 
-    override fun getVolumes(): TrackVolumeBundle {
+    override suspend fun getTrack(): Track {
+        return playbackStateManager.getCurrentTrack()
+    }
+
+    override suspend fun getVolumes(): TrackVolumeBundle {
         return playbackStateManager.getCurrentPlayingVolumes()
     }
 }

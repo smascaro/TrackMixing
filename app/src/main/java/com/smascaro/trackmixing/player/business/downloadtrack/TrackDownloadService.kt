@@ -3,6 +3,7 @@ package com.smascaro.trackmixing.player.business.downloadtrack
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import com.smascaro.trackmixing.TrackMixingApplication
 import com.smascaro.trackmixing.common.data.model.ForegroundNotification
 import com.smascaro.trackmixing.common.utils.DOWNLOAD_NOTIFICATION_ACTION_START_DOWNLOAD
@@ -66,5 +67,9 @@ class TrackDownloadService : BaseService(), TrackDownloadController.ServiceActio
     override fun onStopService() {
         stopService(Intent(this, TrackDownloadService::class.java))
         controller.unregisterListener(this)
+    }
+
+    override fun onRequestError(error: Throwable) {
+        Toast.makeText(this, "Error: ${error.localizedMessage}", Toast.LENGTH_SHORT).show()
     }
 }
