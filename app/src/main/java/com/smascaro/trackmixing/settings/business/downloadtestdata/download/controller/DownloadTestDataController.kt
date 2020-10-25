@@ -1,12 +1,11 @@
 package com.smascaro.trackmixing.settings.business.downloadtestdata.download.controller
 
 import com.smascaro.trackmixing.common.controller.BaseNavigatorController
+import com.smascaro.trackmixing.common.di.coroutines.IoCoroutineScope
 import com.smascaro.trackmixing.common.utils.navigation.NavigationHelper
 import com.smascaro.trackmixing.settings.business.downloadtestdata.download.view.DownloadTestDataViewMvc
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.TestDataBundleInfo
 import com.smascaro.trackmixing.settings.business.downloadtestdata.usecase.DownloadTestDataUseCase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -14,6 +13,7 @@ import javax.inject.Inject
 
 class DownloadTestDataController @Inject constructor(
     private val downloadTestDataUseCase: DownloadTestDataUseCase,
+    private val io: IoCoroutineScope,
     p_navigationHelper: NavigationHelper
 ) :
     BaseNavigatorController<DownloadTestDataViewMvc>(p_navigationHelper),
@@ -64,13 +64,13 @@ class DownloadTestDataController @Inject constructor(
         if (finishedDownloads == tracksToDownload.size) {
             if (!cancellationFlag) {
                 viewMvc.hideProgressBar()
-                CoroutineScope(Dispatchers.IO).launch {
+                io.launch {
                     delay(500)
                     listener?.onFinishedFlow()
                 }
             } else {
                 downloadTestDataUseCase.rollbackDownloads(tracksToDownload.toList())
-                CoroutineScope(Dispatchers.IO).launch {
+                io.launch {
                     delay(500)
                     listener?.onFinishedFlow()
                 }
@@ -78,8 +78,8 @@ class DownloadTestDataController @Inject constructor(
         }
     }
 
-    override fun onItemDownloadFailed(item: TestDataBundleInfo, throwable: Throwable) {
-        viewMvc.notifyTrackFailure(item.title, throwable.localizedMessage)
+    override fun onItemDownloadFailed(trackId: String, throwable: Throwable) {
+        viewMvc.notifyTrackFailure(trackId, throwable.localizedMessage ?: "Unknown error")
     }
 
     fun cancelDownloads(): Boolean {
