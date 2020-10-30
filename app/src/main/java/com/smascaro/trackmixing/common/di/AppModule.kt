@@ -10,11 +10,11 @@ import com.smascaro.trackmixing.common.data.datasource.repository.DownloadsDatab
 import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepository
 import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepositoryImpl
 import com.smascaro.trackmixing.common.data.network.api.NodeContract
+import com.smascaro.trackmixing.common.data.network.api.YoutubeContract
 import com.smascaro.trackmixing.common.di.main.RetrofitForBinaryData
 import com.smascaro.trackmixing.common.di.main.RetrofitForJsonData
 import com.smascaro.trackmixing.common.di.main.RetrofitForYoutubeApi
 import com.smascaro.trackmixing.common.utils.FilesStorageHelper
-import com.smascaro.trackmixing.common.utils.YOUTUBE_API_BASE_URL
 import com.smascaro.trackmixing.common.utils.navigation.NavigationHelper
 import com.smascaro.trackmixing.common.utils.navigation.NavigationHelperImpl
 import com.smascaro.trackmixing.common.utils.ui.NotificationHelper
@@ -103,7 +103,7 @@ class AppModule {
     @RetrofitForYoutubeApi
     fun provideRetrofitInstanceForYoutubeApi(): Retrofit {
         return Retrofit.Builder().apply {
-            baseUrl(YOUTUBE_API_BASE_URL)
+            baseUrl(YoutubeContract.BASE_URL)
             addConverterFactory(GsonConverterFactory.create())
         }.build()
     }
