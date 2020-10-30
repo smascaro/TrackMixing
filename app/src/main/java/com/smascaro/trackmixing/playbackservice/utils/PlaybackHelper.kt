@@ -65,42 +65,26 @@ class PlaybackHelper @Inject constructor(
             State.PAUSED
         mCurrentPlayingTrack = track
         audioStateManager.registerListener(this)
-        val vocalsState = PlayingTrackState.create(
-            track,
-            TrackInstrument.VOCALS,
-            context
-        ).apply {
-            registerListener(this@PlaybackHelper)
-        }
-        playerRack.put(vocalsState.instrument, vocalsState)
-        val otherState = PlayingTrackState.create(
-            track,
-            TrackInstrument.OTHER, context
-        ).apply {
-            registerListener(this@PlaybackHelper)
-        }
-        playerRack.put(otherState.instrument, otherState)
-        val bassState = PlayingTrackState.create(
-            track,
-            TrackInstrument.BASS,
-            context
-        ).apply {
-            registerListener(this@PlaybackHelper)
-        }
-        playerRack.put(bassState.instrument, bassState)
-        val drumsState = PlayingTrackState.create(
-            track,
-            TrackInstrument.DRUMS,
-            context
-        ).apply {
-            registerListener(this@PlaybackHelper)
-        }
-        playerRack.put(drumsState.instrument, drumsState)
+
+        initializeTrackPlayingState(TrackInstrument.VOCALS, track)
+        initializeTrackPlayingState(TrackInstrument.OTHER, track)
+        initializeTrackPlayingState(TrackInstrument.BASS, track)
+        initializeTrackPlayingState(TrackInstrument.DRUMS, track)
 
         mIsInitialized = true
         getListeners().forEach {
             it.onInitializationFinished()
         }
+    }
+
+    private fun initializeTrackPlayingState(trackInstrument: TrackInstrument, track: Track) {
+        val playingState = PlayingTrackState.Builder {
+            withContext(context)
+            setInstrument(trackInstrument)
+            setTrack(track)
+        }.build()
+        playingState.registerListener(this)
+        playerRack.put(playingState.instrument, playingState)
     }
 
     private fun resetPlayersIfInitialized() {
