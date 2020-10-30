@@ -9,11 +9,11 @@ import com.smascaro.trackmixing.common.data.datasource.repository.DownloadsDao
 import com.smascaro.trackmixing.common.data.datasource.repository.DownloadsDatabase
 import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepository
 import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepositoryImpl
+import com.smascaro.trackmixing.common.data.network.api.NodeContract
 import com.smascaro.trackmixing.common.di.main.RetrofitForBinaryData
 import com.smascaro.trackmixing.common.di.main.RetrofitForJsonData
 import com.smascaro.trackmixing.common.di.main.RetrofitForYoutubeApi
 import com.smascaro.trackmixing.common.utils.FilesStorageHelper
-import com.smascaro.trackmixing.common.utils.NODE_BASE_URL
 import com.smascaro.trackmixing.common.utils.YOUTUBE_API_BASE_URL
 import com.smascaro.trackmixing.common.utils.navigation.NavigationHelper
 import com.smascaro.trackmixing.common.utils.navigation.NavigationHelperImpl
@@ -64,7 +64,7 @@ class AppModule {
     @RetrofitForJsonData
     fun provideRetrofitInstanceWithJson(): Retrofit {
         return Retrofit.Builder().apply {
-            baseUrl(NODE_BASE_URL)
+            baseUrl(NodeContract.BASE_URL)
             client(
                 OkHttpClient.Builder().readTimeout(120, TimeUnit.SECONDS)
                     .writeTimeout(3, TimeUnit.SECONDS).build()
@@ -87,7 +87,7 @@ class AppModule {
             readTimeout(30, TimeUnit.SECONDS)
         }.build()
         return Retrofit.Builder().apply {
-            baseUrl(NODE_BASE_URL)
+            baseUrl(NodeContract.BASE_URL)
             client(client)
         }.build()
     }
