@@ -9,10 +9,10 @@ import kotlinx.coroutines.launch
 import kotlin.system.measureTimeMillis
 
 class PlayerRack(private val ui: MainCoroutineScope) : PlayerActions {
-    private val rack: HashMap<TrackInstrument, PlayingTrackState> = hashMapOf()
+    private val rack: HashMap<TrackInstrument, InstrumentPlayer> = hashMapOf()
 
-    fun put(instrument: TrackInstrument, playingTrackState: PlayingTrackState) {
-        rack[instrument] = playingTrackState
+    fun put(instrument: TrackInstrument, instrumentPlayer: InstrumentPlayer) {
+        rack[instrument] = instrumentPlayer
     }
 
     override fun play() {
@@ -63,7 +63,7 @@ class PlayerRack(private val ui: MainCoroutineScope) : PlayerActions {
 
     fun clear() = rack.clear()
 
-    fun unregisterListener(listener: PlayingTrackState.Listener) =
+    fun unregisterListener(listener: InstrumentPlayer.Listener) =
         rack.forEach { it.value.unregisterListener(listener) }
 
     fun finalize() = rack.forEach { it.value.finalize() }

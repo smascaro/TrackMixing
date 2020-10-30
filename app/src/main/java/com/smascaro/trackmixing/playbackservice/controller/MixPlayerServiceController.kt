@@ -10,7 +10,7 @@ import com.smascaro.trackmixing.common.utils.PlaybackStateManager.PlaybackState
 import com.smascaro.trackmixing.common.utils.ui.NotificationHelper
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable
 import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
-import com.smascaro.trackmixing.playbackservice.utils.PlaybackHelper
+import com.smascaro.trackmixing.playbackservice.utils.BandPlaybackHelper
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -20,14 +20,14 @@ import javax.inject.Inject
 import kotlin.concurrent.thread
 
 class MixPlayerServiceController @Inject constructor(
-    val playbackHelper: PlaybackHelper,
+    val bandPlaybackHelper: BandPlaybackHelper,
     @PlayerNotificationHelperImplementation val notificationHelper: NotificationHelper,
     val playbackStateManager: PlaybackStateManager,
     private val eventBus: EventBus,
     private val io: IoCoroutineScope,
     private val uiScope: MainCoroutineScope
 ) : BaseObservable<MixPlayerServiceController.ServiceActionsDelegate>(),
-    PlaybackHelper.Listener {
+    BandPlaybackHelper.Listener {
     interface ServiceActionsDelegate {
         fun onStopService()
         fun onStartForeground(notification: ForegroundNotification)
@@ -38,14 +38,14 @@ class MixPlayerServiceController @Inject constructor(
     private var reportPlayersOffsetsJob: Job? = null
 
     fun onCreate() {
-        playbackHelper.registerListener(this)
+        bandPlaybackHelper.registerListener(this)
         eventBus.register(this)
         Timber.d("Registered controller to default event bus")
     }
 
     fun stopService() {
         pauseTimestampThread()
-        playbackHelper.finalize()
+        bandPlaybackHelper.finalize()
         getListeners().forEach {
             it.onStopService()
         }
@@ -55,7 +55,7 @@ class MixPlayerServiceController @Inject constructor(
     }
 
     fun createOrUpdateNotification() {
-        notificationHelper.updateNotification(playbackHelper.getPlaybackState())
+        notificationHelper.updateNotification(bandPlaybackHelper.getPlaybackState())
     }
 
     override fun onInitializationFinished() {
@@ -73,15 +73,15 @@ class MixPlayerServiceController @Inject constructor(
     }
 
     fun onDestroy() {
-        playbackHelper.unregisterListener(this)
+        bandPlaybackHelper.unregisterListener(this)
         playbackStateManager.setPlayingStateFlag(PlaybackState.Stopped())
     }
 
     fun loadTrack(track: Track) {
-        val isInitialized = playbackHelper.isInitialized()
-        val isTrackDifferentFromCurrent = isInitialized && track != playbackHelper.getTrack()
+        val isInitialized = bandPlaybackHelper.isInitialized()
+        val isTrackDifferentFromCurrent = isInitialized && track != bandPlaybackHelper.getTrack()
         if (!isInitialized || (isInitialized && isTrackDifferentFromCurrent)) {
-            playbackHelper.initialize(track)
+            bandPlaybackHelper.initialize(track)
             playbackStateManager.setCurrentPlayingVolumes(TrackVolumeBundle.getDefault())
             pauseTimestampThread()
         }
@@ -95,7 +95,7 @@ class MixPlayerServiceController @Inject constructor(
                 notificationHelper.getNotification()
             )
         )
-        playbackHelper.playMaster()
+        bandPlaybackHelper.playMaster()
         startTimestampThread()
         createOrUpdateNotification()
         startForeground(
@@ -105,8 +105,8 @@ class MixPlayerServiceController @Inject constructor(
             )
         )
         io.launch {
-            if (playbackStateManager.getCurrentSong() != playbackHelper.getTrack().videoKey) {
-                playbackStateManager.setCurrentSongIdPlaying(playbackHelper.getTrack().videoKey)
+            if (playbackStateManager.getCurrentSong() != bandPlaybackHelper.getTrack().videoKey) {
+                playbackStateManager.setCurrentSongIdPlaying(bandPlaybackHelper.getTrack().videoKey)
             }
             playbackStateManager.setPlayingStateFlag(PlaybackState.Playing())
         }
@@ -114,13 +114,13 @@ class MixPlayerServiceController @Inject constructor(
 
     private fun startTimestampThread() {
         thread {
-            timestampUpdateThread = TimestampUpdateThread(playbackHelper, eventBus, uiScope)
+            timestampUpdateThread = TimestampUpdateThread(bandPlaybackHelper, eventBus, uiScope)
             timestampUpdateThread!!.start()
         }
         reportPlayersOffsetsJob = CoroutineScope(Dispatchers.Main).launch {
             while (true) {
                 ensureActive()
-                playbackHelper.reportPlayersOffsets()
+                bandPlaybackHelper.reportPlayersOffsets()
                 delay(1000)
             }
         }
@@ -128,7 +128,7 @@ class MixPlayerServiceController @Inject constructor(
 
     fun pauseMaster() {
         pauseTimestampThread()
-        playbackHelper.pauseMaster()
+        bandPlaybackHelper.pauseMaster()
         stopForeground(false)
         playbackStateManager.setPlayingStateFlag(PlaybackState.Paused())
     }
@@ -197,19 +197,22 @@ class MixPlayerServiceController @Inject constructor(
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(setVolumeMasterEvent: PlaybackEvent.SetVolumeMasterEvent) {
         Timber.d("Event of type SetVolumeMasterEvent received")
-        playbackHelper.setMasterVolume(setVolumeMasterEvent.volume)
+        bandPlaybackHelper.setMasterVolume(setVolumeMasterEvent.volume)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(setVolumeTrackEvent: PlaybackEvent.SetVolumeTrackEvent) {
         Timber.d("Event of type SetVolumeTrackEvent received")
-        playbackHelper.setVolume(setVolumeTrackEvent.trackInstrument, setVolumeTrackEvent.volume)
-        playbackStateManager.setCurrentPlayingVolumes(playbackHelper.getVolumesBundle())
+        bandPlaybackHelper.setVolume(
+            setVolumeTrackEvent.trackInstrument,
+            setVolumeTrackEvent.volume
+        )
+        playbackStateManager.setCurrentPlayingVolumes(bandPlaybackHelper.getVolumesBundle())
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(seekEvent: PlaybackEvent.SeekMaster) {
         Timber.d("Event of type SeekMaster received")
-        playbackHelper.seekMaster(seekEvent.seconds)
+        bandPlaybackHelper.seekMaster(seekEvent.seconds)
     }
 }
