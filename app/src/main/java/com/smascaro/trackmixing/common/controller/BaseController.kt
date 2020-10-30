@@ -15,5 +15,10 @@ abstract class BaseController<VIEW_MVC : ViewMvc> {
         }
     }
 
-    open fun dispose() {}
+    /**
+     * Method to be called when instance is not needed anymore. Release resources here.
+     */
+    open fun dispose() {
+        // To be overridden by implementors.
+    }
 }
