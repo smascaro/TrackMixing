@@ -20,9 +20,9 @@ import javax.inject.Inject
 import kotlin.concurrent.thread
 
 class MixPlayerServiceController @Inject constructor(
-    val bandPlaybackHelper: BandPlaybackHelper,
+    private val bandPlaybackHelper: BandPlaybackHelper,
     @PlayerNotificationHelperImplementation val notificationHelper: NotificationHelper,
-    val playbackStateManager: PlaybackStateManager,
+    private val playbackStateManager: PlaybackStateManager,
     private val eventBus: EventBus,
     private val io: IoCoroutineScope,
     private val uiScope: MainCoroutineScope
@@ -54,7 +54,7 @@ class MixPlayerServiceController @Inject constructor(
         Timber.d("Unregistered controller from default event bus")
     }
 
-    fun createOrUpdateNotification() {
+    private fun createOrUpdateNotification() {
         notificationHelper.updateNotification(bandPlaybackHelper.getPlaybackState())
     }
 
