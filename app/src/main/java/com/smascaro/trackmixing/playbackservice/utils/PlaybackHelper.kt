@@ -65,37 +65,37 @@ class PlaybackHelper @Inject constructor(
             State.PAUSED
         mCurrentPlayingTrack = track
         audioStateManager.registerListener(this)
-        val mVocalsState = PlayingTrackState.create(
+        val vocalsState = PlayingTrackState.create(
             track,
             TrackInstrument.VOCALS,
             context
         ).apply {
             registerListener(this@PlaybackHelper)
         }
-        playerRack.put(mVocalsState.instrument, mVocalsState)
-        val mOtherState = PlayingTrackState.create(
+        playerRack.put(vocalsState.instrument, vocalsState)
+        val otherState = PlayingTrackState.create(
             track,
             TrackInstrument.OTHER, context
         ).apply {
             registerListener(this@PlaybackHelper)
         }
-        playerRack.put(mOtherState.instrument, mOtherState)
-        val mBassState = PlayingTrackState.create(
+        playerRack.put(otherState.instrument, otherState)
+        val bassState = PlayingTrackState.create(
             track,
             TrackInstrument.BASS,
             context
         ).apply {
             registerListener(this@PlaybackHelper)
         }
-        playerRack.put(mBassState.instrument, mBassState)
-        val mDrumsState = PlayingTrackState.create(
+        playerRack.put(bassState.instrument, bassState)
+        val drumsState = PlayingTrackState.create(
             track,
             TrackInstrument.DRUMS,
             context
         ).apply {
             registerListener(this@PlaybackHelper)
         }
-        playerRack.put(mDrumsState.instrument, mDrumsState)
+        playerRack.put(drumsState.instrument, drumsState)
 
         mIsInitialized = true
         getListeners().forEach {
