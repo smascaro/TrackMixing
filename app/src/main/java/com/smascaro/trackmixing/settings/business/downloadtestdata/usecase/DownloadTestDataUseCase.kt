@@ -2,9 +2,9 @@ package com.smascaro.trackmixing.settings.business.downloadtestdata.usecase
 
 import com.smascaro.trackmixing.common.data.datasource.TrackDownloader
 import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepository
+import com.smascaro.trackmixing.common.data.network.api.AwsContract
 import com.smascaro.trackmixing.common.di.coroutines.IoCoroutineScope
 import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
-import com.smascaro.trackmixing.common.utils.AWS_S3_TEST_DATA_INFO_FILE_RESOURCE
 import com.smascaro.trackmixing.common.utils.FilesStorageHelper
 import com.smascaro.trackmixing.common.utils.TimeHelper
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable
@@ -44,7 +44,7 @@ class DownloadTestDataUseCase @Inject constructor(
     suspend fun getTestDataBundleInfo(): Result {
         return try {
             val response =
-                testDataApi.downloadTestDataBundleFile(AWS_S3_TEST_DATA_INFO_FILE_RESOURCE)
+                testDataApi.downloadTestDataBundleFile(AwsContract.INFO_FILE_RESOURCE)
             Timber.i(response.toString())
             Result.Success(response.toModelList())
         } catch (e: Exception) {

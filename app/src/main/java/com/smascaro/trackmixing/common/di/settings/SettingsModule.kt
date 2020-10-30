@@ -1,7 +1,6 @@
 package com.smascaro.trackmixing.common.di.settings
 
-import com.smascaro.trackmixing.common.utils.AWS_S3_DOWNLOAD_DATA_BUNDLES_BASE_URL
-import com.smascaro.trackmixing.common.utils.AWS_S3_DOWNLOAD_DATA_INFO_FILE_BASE_URL
+import com.smascaro.trackmixing.common.data.network.api.AwsContract
 import com.smascaro.trackmixing.settings.business.downloadtestdata.download.view.DownloadTestDataViewMvc
 import com.smascaro.trackmixing.settings.business.downloadtestdata.download.view.DownloadTestDataViewMvcImpl
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.view.SelectTestDataViewMvc
@@ -28,7 +27,7 @@ class SettingsModule {
             readTimeout(10, TimeUnit.SECONDS)
         }.build()
         return Retrofit.Builder().apply {
-            baseUrl(AWS_S3_DOWNLOAD_DATA_INFO_FILE_BASE_URL)
+            baseUrl(AwsContract.INFO_FILE_URL)
             addConverterFactory(GsonConverterFactory.create())
             client(client)
         }.build()
@@ -48,7 +47,7 @@ class SettingsModule {
             readTimeout(10, TimeUnit.SECONDS)
         }.build()
         return Retrofit.Builder().apply {
-            baseUrl(AWS_S3_DOWNLOAD_DATA_BUNDLES_BASE_URL)
+            baseUrl(AwsContract.BUNDLES_BASE_URL)
             client(client)
         }.build()
     }
