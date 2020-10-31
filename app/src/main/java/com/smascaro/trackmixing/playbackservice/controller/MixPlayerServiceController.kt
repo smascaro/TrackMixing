@@ -121,7 +121,7 @@ class MixPlayerServiceController @Inject constructor(
     }
 
     private fun startForeground(foregroundNotification: ForegroundNotification) {
-        callbackStartForeground(foregroundNotification)
+        handleStartForeground(foregroundNotification)
     }
 
     private fun startTimestampThread() {
@@ -152,7 +152,7 @@ class MixPlayerServiceController @Inject constructor(
         reportPlayersOffsetsJob = null
     }
 
-    private fun stopForeground(removeNotification: Boolean) = callbackStopForeground(removeNotification)
+    private fun stopForeground(removeNotification: Boolean) = handleStopForeground(removeNotification)
 
     private fun seek(args: ActionArgs?) {
         if (validateSeekExtras(args)) {
@@ -190,7 +190,7 @@ class MixPlayerServiceController @Inject constructor(
     private fun stopService() {
         pauseTimestampThread()
         bandPlaybackHelper.finalize()
-        callbackStopService()
+        handleStopService()
         playbackStateManager.setPlayingStateFlag(PlaybackState.Stopped())
     }
 
