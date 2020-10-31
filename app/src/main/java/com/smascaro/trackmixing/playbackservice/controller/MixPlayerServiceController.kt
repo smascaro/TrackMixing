@@ -1,5 +1,6 @@
 package com.smascaro.trackmixing.playbackservice.controller
 
+import android.os.Bundle
 import com.smascaro.trackmixing.common.data.model.ForegroundNotification
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.di.PlayerNotificationHelperImplementation
@@ -9,14 +10,12 @@ import com.smascaro.trackmixing.common.utils.PlaybackStateManager
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager.PlaybackState
 import com.smascaro.trackmixing.common.utils.TrackVolumeBundle
 import com.smascaro.trackmixing.common.utils.ui.NotificationHelper
-import com.smascaro.trackmixing.common.view.architecture.BaseObservable
-import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
+import com.smascaro.trackmixing.playbackservice.MixPlayerService
+import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
 import com.smascaro.trackmixing.playbackservice.utils.BandPlaybackHelper
 import com.smascaro.trackmixing.playbackservice.utils.PlayerNotificationHelper
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import timber.log.Timber
 import javax.inject.Inject
 import kotlin.concurrent.thread
@@ -28,58 +27,72 @@ class MixPlayerServiceController @Inject constructor(
     private val eventBus: EventBus,
     private val io: IoCoroutineScope,
     private val ui: MainCoroutineScope
-) : BaseObservable<MixPlayerServiceController.ServiceActionsDelegate>(),
+) : ServiceCallbackHandler(),
     BandPlaybackHelper.Listener {
-    interface ServiceActionsDelegate {
-        fun onStopService()
-        fun onStartForeground(notification: ForegroundNotification)
-        fun onStopForeground(removeNotification: Boolean)
-    }
+    data class ActionArgs(val bundle: Bundle?)
 
     private var timestampUpdateThread: TimestampUpdateThread? = null
     private var reportPlayersOffsetsJob: Job? = null
 
+    // region Lifecycle
     fun onCreate() {
         bandPlaybackHelper.registerListener(this)
-        eventBus.register(this)
-        Timber.d("Registered controller to default event bus")
-    }
-
-    fun stopService() {
-        pauseTimestampThread()
-        bandPlaybackHelper.finalize()
-        getListeners().forEach {
-            it.onStopService()
-        }
-        playbackStateManager.setPlayingStateFlag(PlaybackState.Stopped())
-        eventBus.unregister(this)
-        Timber.d("Unregistered controller from default event bus")
-    }
-
-    private fun createOrUpdateNotification() {
-        notificationHelper.updateNotification(bandPlaybackHelper.getPlaybackState())
-    }
-
-    override fun onInitializationFinished() {
-        notificationHelper.createNotificationChannel()
-        createOrUpdateNotification()
-    }
-
-    override fun onMediaStateChange() {
-        createOrUpdateNotification()
-    }
-
-    override fun onSongFinished() {
-        playbackStateManager.setPlayingStateFlag(PlaybackState.Paused())
-        stopForeground(false)
     }
 
     fun onDestroy() {
         bandPlaybackHelper.unregisterListener(this)
         playbackStateManager.setPlayingStateFlag(PlaybackState.Stopped())
     }
+    // endregion
 
-    fun loadTrack(track: Track) {
+    // region BandPlaybackHelper events
+    override fun onInitializationFinished() {
+        notificationHelper.createNotificationChannel()
+        updateNotification()
+    }
+
+    override fun onMediaStateChange() {
+        updateNotification()
+    }
+
+    override fun onSongFinished() {
+        playbackStateManager.setPlayingStateFlag(PlaybackState.Paused())
+        stopForeground(false)
+    }
+    // endregion
+
+    // region Actions
+    fun executeAction(action: String?, args: ActionArgs? = null) {
+        when (action) {
+            MixPlayerService.ACTION_LOAD_TRACK -> handleLoadTrack(args)
+            MixPlayerService.ACTION_PLAY_MASTER -> playMaster()
+            MixPlayerService.ACTION_PAUSE_MASTER -> pauseMaster()
+            MixPlayerService.ACTION_INSTRUMENT_VOLUME -> changeVolumeInstrument(args)
+            MixPlayerService.ACTION_SEEK -> seek(args)
+            MixPlayerService.ACTION_STOP_SERVICE -> stopService()
+        }
+    }
+
+    private fun handleLoadTrack(args: ActionArgs?) {
+        if (validateLoadTrackExtras(args)) {
+            val track =
+                args!!.bundle!!.get(MixPlayerService.EXTRA_LOAD_TRACK_PARAM_KEY) as Track
+            loadTrack(track)
+            if (shouldStartPlaying(args.bundle!!)) {
+                playMaster()
+            }
+        } else {
+            Timber.e("Load track action called but no track argument supplied.")
+        }
+    }
+
+    private fun validateLoadTrackExtras(args: ActionArgs?) =
+        args?.bundle != null && args.bundle.containsKey(MixPlayerService.EXTRA_LOAD_TRACK_PARAM_KEY)
+
+    private fun shouldStartPlaying(extras: Bundle): Boolean =
+        extras.getBoolean(MixPlayerService.EXTRA_START_PLAYING_PARAM_KEY, false)
+
+    private fun loadTrack(track: Track) {
         val isInitialized = bandPlaybackHelper.isInitialized()
         val isTrackDifferentFromCurrent = isInitialized && track != bandPlaybackHelper.getTrack()
         if (!isInitialized || (isInitialized && isTrackDifferentFromCurrent)) {
@@ -89,17 +102,10 @@ class MixPlayerServiceController @Inject constructor(
         }
     }
 
-    fun playMaster() {
-        createOrUpdateNotification()
-        startForeground(
-            ForegroundNotification(
-                PlayerNotificationHelper.NOTIFICATION_ID,
-                notificationHelper.getNotification()
-            )
-        )
+    private fun playMaster() {
         bandPlaybackHelper.playMaster()
         startTimestampThread()
-        createOrUpdateNotification()
+        updateNotification()
         startForeground(
             ForegroundNotification(
                 PlayerNotificationHelper.NOTIFICATION_ID,
@@ -112,6 +118,10 @@ class MixPlayerServiceController @Inject constructor(
             }
             playbackStateManager.setPlayingStateFlag(PlaybackState.Playing())
         }
+    }
+
+    private fun startForeground(foregroundNotification: ForegroundNotification) {
+        handleStartForeground(foregroundNotification)
     }
 
     private fun startTimestampThread() {
@@ -128,7 +138,7 @@ class MixPlayerServiceController @Inject constructor(
         }
     }
 
-    fun pauseMaster() {
+    private fun pauseMaster() {
         pauseTimestampThread()
         bandPlaybackHelper.pauseMaster()
         stopForeground(false)
@@ -142,79 +152,50 @@ class MixPlayerServiceController @Inject constructor(
         reportPlayersOffsetsJob = null
     }
 
-    private fun startForeground(foregroundNotification: ForegroundNotification) {
-        getListeners().forEach {
-            it.onStartForeground(foregroundNotification)
+    private fun stopForeground(removeNotification: Boolean) = handleStopForeground(removeNotification)
+
+    private fun seek(args: ActionArgs?) {
+        if (validateSeekExtras(args)) {
+            val seconds = args!!.bundle!!.getInt(MixPlayerService.EXTRA_SEEK_SECONDS_PARAM_KEY)
+            bandPlaybackHelper.seekMaster(seconds)
         }
     }
 
-    private fun stopForeground(removeNotification: Boolean) {
-        getListeners().forEach {
-            it.onStopForeground(removeNotification)
+    private fun validateSeekExtras(args: ActionArgs?): Boolean {
+        return args?.bundle != null &&
+                args.bundle.containsKey(MixPlayerService.EXTRA_SEEK_SECONDS_PARAM_KEY)
+    }
+
+    private fun changeVolumeInstrument(args: ActionArgs?) {
+        if (validateVolumeChangeExtras(args)) {
+            val instrument =
+                args!!.bundle!!.getSerializable(MixPlayerService.EXTRA_VOLUME_INSTRUMENT_PARAM_KEY) as TrackInstrument
+            val volume = args.bundle!!.getInt(MixPlayerService.EXTRA_VOLUME_VALUE_PARAM_KEY)
+            bandPlaybackHelper.setVolume(
+                instrument,
+                volume
+            )
+            playbackStateManager.setCurrentPlayingVolumes(bandPlaybackHelper.getVolumesBundle())
+        } else {
+            Timber.e("There are missing extras in ChangeVolume action.")
         }
     }
 
-    fun executeAction(action: String?) {
-        when (action) {
-            PlayerNotificationHelper.ACTION_PLAY_MASTER -> playMaster()
-            PlayerNotificationHelper.ACTION_PAUSE_MASTER -> pauseMaster()
-            PlayerNotificationHelper.ACTION_START_SERVICE -> onStart()
-            PlayerNotificationHelper.ACTION_STOP_SERVICE -> stopService()
-        }
+    private fun validateVolumeChangeExtras(args: ActionArgs?): Boolean {
+        return args?.bundle != null &&
+                args.bundle.containsKey(MixPlayerService.EXTRA_VOLUME_INSTRUMENT_PARAM_KEY)
+                && args.bundle.containsKey(MixPlayerService.EXTRA_VOLUME_VALUE_PARAM_KEY)
     }
 
-    private fun onStart() {
-        eventBus.register(this)
+    private fun stopService() {
+        pauseTimestampThread()
+        bandPlaybackHelper.finalize()
+        handleStopService()
+        playbackStateManager.setPlayingStateFlag(PlaybackState.Stopped())
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(startServiceEvent: PlaybackEvent.StartServiceEvent) {
-        Timber.d("Event of type StartServiceEvent received")
+    private fun updateNotification() {
+        notificationHelper.updateNotification(bandPlaybackHelper.getPlaybackState())
     }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(playMasterEvent: PlaybackEvent.PlayMasterEvent) {
-        Timber.d("Event of type PlayMasterEvent received")
-        playMaster()
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(pauseMasterEvent: PlaybackEvent.PauseMasterEvent) {
-        Timber.d("Event of type PauseMasterEvent received")
-        pauseMaster()
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(pauseMasterEvent: PlaybackEvent.StopMasterEvent) {
-        Timber.d("Event of type StopMasterEvent received")
-        stopService()
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(loadTrackEvent: PlaybackEvent.LoadTrackEvent) {
-        Timber.d("Event of type LoadTrackEvent received")
-        loadTrack(loadTrackEvent.track)
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(setVolumeMasterEvent: PlaybackEvent.SetVolumeMasterEvent) {
-        Timber.d("Event of type SetVolumeMasterEvent received")
-        bandPlaybackHelper.setMasterVolume(setVolumeMasterEvent.volume)
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(setVolumeTrackEvent: PlaybackEvent.SetVolumeTrackEvent) {
-        Timber.d("Event of type SetVolumeTrackEvent received")
-        bandPlaybackHelper.setVolume(
-            setVolumeTrackEvent.trackInstrument,
-            setVolumeTrackEvent.volume
-        )
-        playbackStateManager.setCurrentPlayingVolumes(bandPlaybackHelper.getVolumesBundle())
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(seekEvent: PlaybackEvent.SeekMaster) {
-        Timber.d("Event of type SeekMaster received")
-        bandPlaybackHelper.seekMaster(seekEvent.seconds)
-    }
+    // endregion
 }

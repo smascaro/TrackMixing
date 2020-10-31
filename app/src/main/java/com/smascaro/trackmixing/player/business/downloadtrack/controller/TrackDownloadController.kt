@@ -5,8 +5,8 @@ import com.smascaro.trackmixing.common.di.DownloadNotificationHelperImplementati
 import com.smascaro.trackmixing.common.di.coroutines.IoCoroutineScope
 import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
 import com.smascaro.trackmixing.common.utils.ui.NotificationHelper
-import com.smascaro.trackmixing.common.view.architecture.BaseObservable
 import com.smascaro.trackmixing.main.components.progress.model.UiProgressEvent
+import com.smascaro.trackmixing.playbackservice.controller.ServiceCallbackHandler
 import com.smascaro.trackmixing.player.business.DownloadTrackUseCase
 import com.smascaro.trackmixing.player.business.downloadtrack.business.FetchProgressUseCase
 import com.smascaro.trackmixing.player.business.downloadtrack.business.RequestTrackUseCase
@@ -29,14 +29,7 @@ class TrackDownloadController @Inject constructor(
     private val eventBus: EventBus,
     private val io: IoCoroutineScope,
     private val ui: MainCoroutineScope
-) :
-    BaseObservable<TrackDownloadController.ServiceActionsDelegate>() {
-    interface ServiceActionsDelegate {
-        fun onStartForeground(foregroundNotification: ForegroundNotification)
-        fun onStopForeground(removeNotification: Boolean)
-        fun onStopService()
-        fun onRequestError(error: Throwable)
-    }
+) : ServiceCallbackHandler() {
 
     private var applicationState: AppState = AppState.Foreground()
     private var lastProgressEvent: DownloadEvents.ProgressUpdate =
@@ -59,9 +52,7 @@ class TrackDownloadController @Inject constructor(
 
     private fun handleRequestError(error: Throwable) {
         Timber.e(error)
-        getListeners().forEach {
-            it.onRequestError(error)
-        }
+        handleError(error)
     }
 
     private fun handleRequestSuccess(videoId: String) {
@@ -100,9 +91,8 @@ class TrackDownloadController @Inject constructor(
         lastProgressEvent = progressUpdate
     }
 
-    private fun handleProgressBackground(progressUpdate: DownloadEvents.ProgressUpdate) {
+    private fun handleProgressBackground(progressUpdate: DownloadEvents.ProgressUpdate) =
         notificationHelper.updateNotification(progressUpdate.toNotificationData())
-    }
 
     private fun handleProgressForeground(progressUpdate: DownloadEvents.ProgressUpdate) {
         val progress = progressUpdate.evaluateOverallProgress()
@@ -118,9 +108,8 @@ class TrackDownloadController @Inject constructor(
         }
     }
 
-    private suspend fun downloadGeneratedTracks() {
+    private suspend fun downloadGeneratedTracks() =
         downloadTrackUseCase.execute(currentRequestedTrackId!!)
-    }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onMessageEvent(finishedDownloading: DownloadEvents.FinishedDownloading) {
@@ -152,26 +141,18 @@ class TrackDownloadController @Inject constructor(
         notifyStopService()
     }
 
-    private fun notifyStopForeground(removeNotification: Boolean) {
-        getListeners().forEach {
-            it.onStopForeground(removeNotification)
-        }
-    }
+    private fun notifyStopForeground(removeNotification: Boolean) =
+        handleStopForeground(removeNotification)
 
-    private fun notifyStopService() {
-        getListeners().forEach {
-            it.onStopService()
-        }
-    }
+    private fun notifyStopService() =
+        handleStopService()
 
     private fun notifyStartForeground() {
-        getListeners().forEach {
-            it.onStartForeground(
-                ForegroundNotification(
-                    DownloadNotificationHelper.NOTIFICATION_ID,
-                    notificationHelper.getNotification()
-                )
+        handleStartForeground(
+            ForegroundNotification(
+                DownloadNotificationHelper.NOTIFICATION_ID,
+                notificationHelper.getNotification()
             )
-        }
+        )
     }
 }
