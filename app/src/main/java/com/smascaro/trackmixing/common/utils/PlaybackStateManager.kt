@@ -16,6 +16,17 @@ class PlaybackStateManager @Inject constructor(
     private val io: IoCoroutineScope,
     context: Context
 ) {
+    companion object {
+        const val SHARED_PREFERENCES_PLAYBACK = "SHARED_PREFERENCES_PLAYBACK"
+        const val SHARED_PREFERENCES_PLAYBACK_IS_PLAYING = "SHARED_PREFERENCES_PLAYBACK_IS_PLAYING"
+        const val SHARED_PREFERENCES_PLAYBACK_SONG_PLAYING =
+            "SHARED_PREFERENCES_PLAYBACK_SONG_PLAYING"
+        const val SHARED_PREFERENCES_PLAYBACK_CURRENT_TIMESTAMP_MILLIS =
+            "SHARED_PREFERENCES_PLAYBACK_CURRENT_TIMESTAMP_MILLIS"
+        const val SHARED_PREFERENCES_PLAYBACK_CURRENT_VOLUMES =
+            "SHARED_PREFERENCES_PLAYBACK_CURRENT_VOLUMES"
+    }
+
     private val sharedPreferences =
         SharedPreferencesFactory.getPlaybackSharedPreferencesFactory(
             context
