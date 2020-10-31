@@ -41,10 +41,6 @@ class MixPlayerService : BaseService(),
     @Inject
     lateinit var controller: MixPlayerServiceController
 
-    override fun onBind(intent: Intent?): IBinder? {
-        return null
-    }
-
     override fun onCreate() {
         (application as TrackMixingApplication).appComponent.playerComponent().create().inject(this)
         super.onCreate()
