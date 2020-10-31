@@ -1,16 +1,14 @@
 package com.smascaro.trackmixing.playbackservice
 
-import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.IBinder
 import com.smascaro.trackmixing.TrackMixingApplication
 import com.smascaro.trackmixing.common.data.model.ForegroundNotification
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.playbackservice.controller.MixPlayerServiceController
+import com.smascaro.trackmixing.playbackservice.controller.MixPlayerServiceController.ActionArgs
 import com.smascaro.trackmixing.playbackservice.utils.PlayerNotificationHelper
-import timber.log.Timber
 import javax.inject.Inject
 
 class MixPlayerService : BaseService(),
@@ -24,17 +22,10 @@ class MixPlayerService : BaseService(),
                 putSerializable(PlayerNotificationHelper.EXTRA_LOAD_TRACK_PARAM_KEY, track)
                 putBoolean(PlayerNotificationHelper.EXTRA_START_PLAYING_PARAM_KEY, startPlaying)
             }
+
             intent.putExtras(extras)
             val startedComponentName = context.startService(intent)
             return startedComponentName != null
-        }
-
-        fun ping(context: Context): Boolean {
-            val activityManager =
-                context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-            return activityManager.getRunningServices(Int.MAX_VALUE).any {
-                it.service.className == MixPlayerService::class.java.name
-            }
         }
     }
 
@@ -48,10 +39,6 @@ class MixPlayerService : BaseService(),
         controller.registerListener(this)
     }
 
-    fun stopService() {
-        controller.stopService()
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         controller.onDestroy()
@@ -60,43 +47,9 @@ class MixPlayerService : BaseService(),
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent != null) {
-            val action = intent.action
-            when (action) {
-                PlayerNotificationHelper.ACTION_LOAD_TRACK -> loadTrackFromIntent(intent, action)
-                else -> controller.executeAction(action)
-            }
+            controller.executeAction(intent.action, ActionArgs(intent.extras))
         }
         return START_STICKY
-    }
-
-    private fun loadTrackFromIntent(intent: Intent, action: String?) {
-        if (intent.extras != null &&
-            intent.extras!!.containsKey(PlayerNotificationHelper.EXTRA_LOAD_TRACK_PARAM_KEY)
-        ) {
-            val track =
-                intent.extras!!.get(PlayerNotificationHelper.EXTRA_LOAD_TRACK_PARAM_KEY) as Track
-            loadTrack(track)
-            if (intent.extras!!.containsKey(PlayerNotificationHelper.EXTRA_START_PLAYING_PARAM_KEY) && intent.extras!!.getBoolean(
-                    PlayerNotificationHelper.EXTRA_START_PLAYING_PARAM_KEY
-                )
-            ) {
-                playMaster()
-            }
-        } else {
-            Timber.w("$action action called but no track parameter supplied")
-        }
-    }
-
-    private fun loadTrack(track: Track) {
-        controller.loadTrack(track)
-    }
-
-    private fun playMaster() {
-        controller.playMaster()
-    }
-
-    private fun pauseMaster() {
-        controller.pauseMaster()
     }
 
     override fun onStopService() {

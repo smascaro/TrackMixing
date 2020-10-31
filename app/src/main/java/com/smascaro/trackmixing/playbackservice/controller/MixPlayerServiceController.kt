@@ -1,5 +1,6 @@
 package com.smascaro.trackmixing.playbackservice.controller
 
+import android.os.Bundle
 import com.smascaro.trackmixing.common.data.model.ForegroundNotification
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.di.PlayerNotificationHelperImplementation
@@ -35,6 +36,8 @@ class MixPlayerServiceController @Inject constructor(
         fun onStartForeground(notification: ForegroundNotification)
         fun onStopForeground(removeNotification: Boolean)
     }
+
+    data class ActionArgs(val bundle: Bundle?)
 
     private var timestampUpdateThread: TimestampUpdateThread? = null
     private var reportPlayersOffsetsJob: Job? = null
@@ -154,14 +157,32 @@ class MixPlayerServiceController @Inject constructor(
         }
     }
 
-    fun executeAction(action: String?) {
+    fun executeAction(action: String?, args: ActionArgs? = null) {
         when (action) {
+            PlayerNotificationHelper.ACTION_LOAD_TRACK -> handleLoadTrack(args)
             PlayerNotificationHelper.ACTION_PLAY_MASTER -> playMaster()
             PlayerNotificationHelper.ACTION_PAUSE_MASTER -> pauseMaster()
             PlayerNotificationHelper.ACTION_START_SERVICE -> onStart()
             PlayerNotificationHelper.ACTION_STOP_SERVICE -> stopService()
         }
     }
+
+    private fun handleLoadTrack(args: ActionArgs?) {
+        if (args != null && args.bundle?.containsKey(PlayerNotificationHelper.EXTRA_LOAD_TRACK_PARAM_KEY) == true) {
+            val track =
+                args.bundle.get(PlayerNotificationHelper.EXTRA_LOAD_TRACK_PARAM_KEY) as Track
+            loadTrack(track)
+            if (shouldStartPlaying(args.bundle)) {
+                playMaster()
+            }
+        } else {
+            Timber.e("Load track action called but no track argument supplied.")
+        }
+    }
+
+    private fun shouldStartPlaying(extras: Bundle): Boolean =
+        extras.containsKey(PlayerNotificationHelper.EXTRA_START_PLAYING_PARAM_KEY) &&
+                extras.getBoolean(PlayerNotificationHelper.EXTRA_START_PLAYING_PARAM_KEY)
 
     private fun onStart() {
         eventBus.register(this)
