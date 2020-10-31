@@ -206,6 +206,5 @@ class MixPlayerServiceController @Inject constructor(
         args?.bundle != null && args.bundle.containsKey(MixPlayerService.EXTRA_LOAD_TRACK_PARAM_KEY)
 
     private fun shouldStartPlaying(extras: Bundle): Boolean =
-        extras.containsKey(MixPlayerService.EXTRA_START_PLAYING_PARAM_KEY) &&
-                extras.getBoolean(MixPlayerService.EXTRA_START_PLAYING_PARAM_KEY)
+                extras.getBoolean(MixPlayerService.EXTRA_START_PLAYING_PARAM_KEY, false)
 }
