@@ -10,7 +10,6 @@ import com.smascaro.trackmixing.common.utils.PlaybackStateManager
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager.PlaybackState
 import com.smascaro.trackmixing.common.utils.TrackVolumeBundle
 import com.smascaro.trackmixing.common.utils.ui.NotificationHelper
-import com.smascaro.trackmixing.common.view.architecture.BaseObservable
 import com.smascaro.trackmixing.playbackservice.MixPlayerService
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
 import com.smascaro.trackmixing.playbackservice.utils.BandPlaybackHelper
@@ -28,14 +27,8 @@ class MixPlayerServiceController @Inject constructor(
     private val eventBus: EventBus,
     private val io: IoCoroutineScope,
     private val ui: MainCoroutineScope
-) : BaseObservable<MixPlayerServiceController.ServiceActionsDelegate>(),
+) : ServiceCallbackHandler(),
     BandPlaybackHelper.Listener {
-    interface ServiceActionsDelegate {
-        fun onStopService()
-        fun onStartForeground(notification: ForegroundNotification)
-        fun onStopForeground(removeNotification: Boolean)
-    }
-
     data class ActionArgs(val bundle: Bundle?)
 
     private var timestampUpdateThread: TimestampUpdateThread? = null
@@ -48,9 +41,7 @@ class MixPlayerServiceController @Inject constructor(
     private fun stopService() {
         pauseTimestampThread()
         bandPlaybackHelper.finalize()
-        getListeners().forEach {
-            it.onStopService()
-        }
+        callbackStopService()
         playbackStateManager.setPlayingStateFlag(PlaybackState.Stopped())
     }
 
@@ -134,15 +125,11 @@ class MixPlayerServiceController @Inject constructor(
     }
 
     private fun startForeground(foregroundNotification: ForegroundNotification) {
-        getListeners().forEach {
-            it.onStartForeground(foregroundNotification)
-        }
+        callbackStartForeground(foregroundNotification)
     }
 
     private fun stopForeground(removeNotification: Boolean) {
-        getListeners().forEach {
-            it.onStopForeground(removeNotification)
-        }
+        callbackStopForeground(removeNotification)
     }
 
     fun executeAction(action: String?, args: ActionArgs? = null) {
@@ -206,5 +193,5 @@ class MixPlayerServiceController @Inject constructor(
         args?.bundle != null && args.bundle.containsKey(MixPlayerService.EXTRA_LOAD_TRACK_PARAM_KEY)
 
     private fun shouldStartPlaying(extras: Bundle): Boolean =
-                extras.getBoolean(MixPlayerService.EXTRA_START_PLAYING_PARAM_KEY, false)
+        extras.getBoolean(MixPlayerService.EXTRA_START_PLAYING_PARAM_KEY, false)
 }
