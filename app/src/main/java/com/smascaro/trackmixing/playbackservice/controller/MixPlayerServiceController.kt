@@ -82,7 +82,7 @@ class MixPlayerServiceController @Inject constructor(
         playbackStateManager.setPlayingStateFlag(PlaybackState.Stopped())
     }
 
-    fun loadTrack(track: Track) {
+    private fun loadTrack(track: Track) {
         val isInitialized = bandPlaybackHelper.isInitialized()
         val isTrackDifferentFromCurrent = isInitialized && track != bandPlaybackHelper.getTrack()
         if (!isInitialized || (isInitialized && isTrackDifferentFromCurrent)) {
@@ -92,7 +92,7 @@ class MixPlayerServiceController @Inject constructor(
         }
     }
 
-    fun playMaster() {
+    private fun playMaster() {
         createOrUpdateNotification()
         startForeground(
             ForegroundNotification(
@@ -131,7 +131,7 @@ class MixPlayerServiceController @Inject constructor(
         }
     }
 
-    fun pauseMaster() {
+    private fun pauseMaster() {
         pauseTimestampThread()
         bandPlaybackHelper.pauseMaster()
         stopForeground(false)
@@ -162,7 +162,6 @@ class MixPlayerServiceController @Inject constructor(
             PlayerNotificationHelper.ACTION_LOAD_TRACK -> handleLoadTrack(args)
             PlayerNotificationHelper.ACTION_PLAY_MASTER -> playMaster()
             PlayerNotificationHelper.ACTION_PAUSE_MASTER -> pauseMaster()
-            PlayerNotificationHelper.ACTION_START_SERVICE -> onStart()
             PlayerNotificationHelper.ACTION_STOP_SERVICE -> stopService()
         }
     }
@@ -183,10 +182,6 @@ class MixPlayerServiceController @Inject constructor(
     private fun shouldStartPlaying(extras: Bundle): Boolean =
         extras.containsKey(PlayerNotificationHelper.EXTRA_START_PLAYING_PARAM_KEY) &&
                 extras.getBoolean(PlayerNotificationHelper.EXTRA_START_PLAYING_PARAM_KEY)
-
-    private fun onStart() {
-        eventBus.register(this)
-    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(startServiceEvent: PlaybackEvent.StartServiceEvent) {
@@ -209,12 +204,6 @@ class MixPlayerServiceController @Inject constructor(
     fun onMessageEvent(pauseMasterEvent: PlaybackEvent.StopMasterEvent) {
         Timber.d("Event of type StopMasterEvent received")
         stopService()
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(loadTrackEvent: PlaybackEvent.LoadTrackEvent) {
-        Timber.d("Event of type LoadTrackEvent received")
-        loadTrack(loadTrackEvent.track)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

@@ -31,7 +31,6 @@ class PlayerNotificationHelper @Inject constructor(
         const val ACTION_PLAY_MASTER = "ACTION_PLAY_MASTER"
         const val ACTION_PAUSE_MASTER = "ACTION_PAUSE_MASTER"
         const val ACTION_LAUNCH_PLAYER = "ACTION_LAUNCH_PLAYER"
-        const val ACTION_START_SERVICE = "ACTION_START_SERVICE"
         const val ACTION_STOP_SERVICE = "ACTION_STOP_SERVICE"
         const val ACTION_LOAD_TRACK = "ACTION_LOAD_TRACK"
         const val EXTRA_LOAD_TRACK_PARAM_KEY = "EXTRA_LOAD_TRACK_PARAM_KEY"
