@@ -34,39 +34,63 @@ class MixPlayerServiceController @Inject constructor(
     private var timestampUpdateThread: TimestampUpdateThread? = null
     private var reportPlayersOffsetsJob: Job? = null
 
+    // region Lifecycle
     fun onCreate() {
         bandPlaybackHelper.registerListener(this)
-    }
-
-    private fun stopService() {
-        pauseTimestampThread()
-        bandPlaybackHelper.finalize()
-        callbackStopService()
-        playbackStateManager.setPlayingStateFlag(PlaybackState.Stopped())
-    }
-
-    private fun createOrUpdateNotification() {
-        notificationHelper.updateNotification(bandPlaybackHelper.getPlaybackState())
-    }
-
-    override fun onInitializationFinished() {
-        notificationHelper.createNotificationChannel()
-        createOrUpdateNotification()
-    }
-
-    override fun onMediaStateChange() {
-        createOrUpdateNotification()
-    }
-
-    override fun onSongFinished() {
-        playbackStateManager.setPlayingStateFlag(PlaybackState.Paused())
-        stopForeground(false)
     }
 
     fun onDestroy() {
         bandPlaybackHelper.unregisterListener(this)
         playbackStateManager.setPlayingStateFlag(PlaybackState.Stopped())
     }
+    // endregion
+
+    // region BandPlaybackHelper events
+    override fun onInitializationFinished() {
+        notificationHelper.createNotificationChannel()
+        updateNotification()
+    }
+
+    override fun onMediaStateChange() {
+        updateNotification()
+    }
+
+    override fun onSongFinished() {
+        playbackStateManager.setPlayingStateFlag(PlaybackState.Paused())
+        stopForeground(false)
+    }
+    // endregion
+
+    // region Actions
+    fun executeAction(action: String?, args: ActionArgs? = null) {
+        when (action) {
+            MixPlayerService.ACTION_LOAD_TRACK -> handleLoadTrack(args)
+            MixPlayerService.ACTION_PLAY_MASTER -> playMaster()
+            MixPlayerService.ACTION_PAUSE_MASTER -> pauseMaster()
+            MixPlayerService.ACTION_INSTRUMENT_VOLUME -> changeVolumeInstrument(args)
+            MixPlayerService.ACTION_SEEK -> seek(args)
+            MixPlayerService.ACTION_STOP_SERVICE -> stopService()
+        }
+    }
+
+    private fun handleLoadTrack(args: ActionArgs?) {
+        if (validateLoadTrackExtras(args)) {
+            val track =
+                args!!.bundle!!.get(MixPlayerService.EXTRA_LOAD_TRACK_PARAM_KEY) as Track
+            loadTrack(track)
+            if (shouldStartPlaying(args.bundle!!)) {
+                playMaster()
+            }
+        } else {
+            Timber.e("Load track action called but no track argument supplied.")
+        }
+    }
+
+    private fun validateLoadTrackExtras(args: ActionArgs?) =
+        args?.bundle != null && args.bundle.containsKey(MixPlayerService.EXTRA_LOAD_TRACK_PARAM_KEY)
+
+    private fun shouldStartPlaying(extras: Bundle): Boolean =
+        extras.getBoolean(MixPlayerService.EXTRA_START_PLAYING_PARAM_KEY, false)
 
     private fun loadTrack(track: Track) {
         val isInitialized = bandPlaybackHelper.isInitialized()
@@ -81,7 +105,7 @@ class MixPlayerServiceController @Inject constructor(
     private fun playMaster() {
         bandPlaybackHelper.playMaster()
         startTimestampThread()
-        createOrUpdateNotification()
+        updateNotification()
         startForeground(
             ForegroundNotification(
                 PlayerNotificationHelper.NOTIFICATION_ID,
@@ -94,6 +118,10 @@ class MixPlayerServiceController @Inject constructor(
             }
             playbackStateManager.setPlayingStateFlag(PlaybackState.Playing())
         }
+    }
+
+    private fun startForeground(foregroundNotification: ForegroundNotification) {
+        callbackStartForeground(foregroundNotification)
     }
 
     private fun startTimestampThread() {
@@ -124,24 +152,7 @@ class MixPlayerServiceController @Inject constructor(
         reportPlayersOffsetsJob = null
     }
 
-    private fun startForeground(foregroundNotification: ForegroundNotification) {
-        callbackStartForeground(foregroundNotification)
-    }
-
-    private fun stopForeground(removeNotification: Boolean) {
-        callbackStopForeground(removeNotification)
-    }
-
-    fun executeAction(action: String?, args: ActionArgs? = null) {
-        when (action) {
-            MixPlayerService.ACTION_LOAD_TRACK -> handleLoadTrack(args)
-            MixPlayerService.ACTION_PLAY_MASTER -> playMaster()
-            MixPlayerService.ACTION_PAUSE_MASTER -> pauseMaster()
-            MixPlayerService.ACTION_INSTRUMENT_VOLUME -> changeVolumeInstrument(args)
-            MixPlayerService.ACTION_SEEK -> seek(args)
-            MixPlayerService.ACTION_STOP_SERVICE -> stopService()
-        }
-    }
+    private fun stopForeground(removeNotification: Boolean) = callbackStopForeground(removeNotification)
 
     private fun seek(args: ActionArgs?) {
         if (validateSeekExtras(args)) {
@@ -176,22 +187,15 @@ class MixPlayerServiceController @Inject constructor(
                 && args.bundle.containsKey(MixPlayerService.EXTRA_VOLUME_VALUE_PARAM_KEY)
     }
 
-    private fun handleLoadTrack(args: ActionArgs?) {
-        if (validateLoadTrackExtras(args)) {
-            val track =
-                args!!.bundle!!.get(MixPlayerService.EXTRA_LOAD_TRACK_PARAM_KEY) as Track
-            loadTrack(track)
-            if (shouldStartPlaying(args.bundle!!)) {
-                playMaster()
-            }
-        } else {
-            Timber.e("Load track action called but no track argument supplied.")
-        }
+    private fun stopService() {
+        pauseTimestampThread()
+        bandPlaybackHelper.finalize()
+        callbackStopService()
+        playbackStateManager.setPlayingStateFlag(PlaybackState.Stopped())
     }
 
-    private fun validateLoadTrackExtras(args: ActionArgs?) =
-        args?.bundle != null && args.bundle.containsKey(MixPlayerService.EXTRA_LOAD_TRACK_PARAM_KEY)
-
-    private fun shouldStartPlaying(extras: Bundle): Boolean =
-        extras.getBoolean(MixPlayerService.EXTRA_START_PLAYING_PARAM_KEY, false)
+    private fun updateNotification() {
+        notificationHelper.updateNotification(bandPlaybackHelper.getPlaybackState())
+    }
+    // endregion
 }
