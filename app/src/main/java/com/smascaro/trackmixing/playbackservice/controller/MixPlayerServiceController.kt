@@ -5,12 +5,14 @@ import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.di.PlayerNotificationHelperImplementation
 import com.smascaro.trackmixing.common.di.coroutines.IoCoroutineScope
 import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
-import com.smascaro.trackmixing.common.utils.*
+import com.smascaro.trackmixing.common.utils.PlaybackStateManager
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager.PlaybackState
+import com.smascaro.trackmixing.common.utils.TrackVolumeBundle
 import com.smascaro.trackmixing.common.utils.ui.NotificationHelper
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable
 import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
 import com.smascaro.trackmixing.playbackservice.utils.BandPlaybackHelper
+import com.smascaro.trackmixing.playbackservice.utils.PlayerNotificationHelper
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -25,7 +27,7 @@ class MixPlayerServiceController @Inject constructor(
     private val playbackStateManager: PlaybackStateManager,
     private val eventBus: EventBus,
     private val io: IoCoroutineScope,
-    private val uiScope: MainCoroutineScope
+    private val ui: MainCoroutineScope
 ) : BaseObservable<MixPlayerServiceController.ServiceActionsDelegate>(),
     BandPlaybackHelper.Listener {
     interface ServiceActionsDelegate {
@@ -91,7 +93,7 @@ class MixPlayerServiceController @Inject constructor(
         createOrUpdateNotification()
         startForeground(
             ForegroundNotification(
-                PLAYER_NOTIFICATION_ID,
+                PlayerNotificationHelper.NOTIFICATION_ID,
                 notificationHelper.getNotification()
             )
         )
@@ -100,7 +102,7 @@ class MixPlayerServiceController @Inject constructor(
         createOrUpdateNotification()
         startForeground(
             ForegroundNotification(
-                PLAYER_NOTIFICATION_ID,
+                PlayerNotificationHelper.NOTIFICATION_ID,
                 notificationHelper.getNotification()
             )
         )
@@ -114,7 +116,7 @@ class MixPlayerServiceController @Inject constructor(
 
     private fun startTimestampThread() {
         thread {
-            timestampUpdateThread = TimestampUpdateThread(bandPlaybackHelper, eventBus, uiScope)
+            timestampUpdateThread = TimestampUpdateThread(bandPlaybackHelper, eventBus, ui)
             timestampUpdateThread!!.start()
         }
         reportPlayersOffsetsJob = CoroutineScope(Dispatchers.Main).launch {
@@ -154,10 +156,10 @@ class MixPlayerServiceController @Inject constructor(
 
     fun executeAction(action: String?) {
         when (action) {
-            PLAYER_NOTIFICATION_ACTION_PLAY_MASTER -> playMaster()
-            PLAYER_NOTIFICATION_ACTION_PAUSE_MASTER -> pauseMaster()
-            PLAYER_NOTIFICATION_ACTION_START_SERVICE -> onStart()
-            PLAYER_NOTIFICATION_ACTION_STOP_SERVICE -> stopService()
+            PlayerNotificationHelper.ACTION_PLAY_MASTER -> playMaster()
+            PlayerNotificationHelper.ACTION_PAUSE_MASTER -> pauseMaster()
+            PlayerNotificationHelper.ACTION_START_SERVICE -> onStart()
+            PlayerNotificationHelper.ACTION_STOP_SERVICE -> stopService()
         }
     }
 

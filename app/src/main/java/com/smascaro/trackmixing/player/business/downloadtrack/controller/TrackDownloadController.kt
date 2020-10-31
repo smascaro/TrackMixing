@@ -4,7 +4,6 @@ import com.smascaro.trackmixing.common.data.model.ForegroundNotification
 import com.smascaro.trackmixing.common.di.DownloadNotificationHelperImplementation
 import com.smascaro.trackmixing.common.di.coroutines.IoCoroutineScope
 import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
-import com.smascaro.trackmixing.common.utils.DOWNLOAD_NOTIFICATION_ID
 import com.smascaro.trackmixing.common.utils.ui.NotificationHelper
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable
 import com.smascaro.trackmixing.main.components.progress.model.UiProgressEvent
@@ -14,6 +13,7 @@ import com.smascaro.trackmixing.player.business.downloadtrack.business.RequestTr
 import com.smascaro.trackmixing.player.business.downloadtrack.business.RequestTrackUseCaseResult
 import com.smascaro.trackmixing.player.business.downloadtrack.model.*
 import com.smascaro.trackmixing.player.business.downloadtrack.model.ApplicationEvent.AppState
+import com.smascaro.trackmixing.player.business.downloadtrack.utils.DownloadNotificationHelper
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -168,7 +168,7 @@ class TrackDownloadController @Inject constructor(
         getListeners().forEach {
             it.onStartForeground(
                 ForegroundNotification(
-                    DOWNLOAD_NOTIFICATION_ID,
+                    DownloadNotificationHelper.NOTIFICATION_ID,
                     notificationHelper.getNotification()
                 )
             )

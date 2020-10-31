@@ -6,19 +6,18 @@ import android.os.Bundle
 import android.widget.Toast
 import com.smascaro.trackmixing.TrackMixingApplication
 import com.smascaro.trackmixing.common.data.model.ForegroundNotification
-import com.smascaro.trackmixing.common.utils.DOWNLOAD_NOTIFICATION_ACTION_START_DOWNLOAD
-import com.smascaro.trackmixing.common.utils.DOWNLOAD_NOTIFICATION_EXTRA_START_SERVICE_PARAM_KEY
 import com.smascaro.trackmixing.playbackservice.BaseService
 import com.smascaro.trackmixing.player.business.downloadtrack.controller.TrackDownloadController
+import com.smascaro.trackmixing.player.business.downloadtrack.utils.DownloadNotificationHelper
 import javax.inject.Inject
 
 class TrackDownloadService : BaseService(), TrackDownloadController.ServiceActionsDelegate {
     companion object {
         fun start(context: Context, youtubeUrl: String): Boolean {
             val intent = Intent(context, TrackDownloadService::class.java)
-            intent.action = DOWNLOAD_NOTIFICATION_ACTION_START_DOWNLOAD
+            intent.action = DownloadNotificationHelper.ACTION_START_DOWNLOAD
             val extras = Bundle().apply {
-                putString(DOWNLOAD_NOTIFICATION_EXTRA_START_SERVICE_PARAM_KEY, youtubeUrl)
+                putString(DownloadNotificationHelper.EXTRA_START_SERVICE_PARAM_KEY, youtubeUrl)
             }
             intent.putExtras(extras)
             val componentName = context.startService(intent)
@@ -39,9 +38,9 @@ class TrackDownloadService : BaseService(), TrackDownloadController.ServiceActio
         val action = intent?.action
         if (action != null) {
             when (action) {
-                DOWNLOAD_NOTIFICATION_ACTION_START_DOWNLOAD -> startDownload(
+                DownloadNotificationHelper.ACTION_START_DOWNLOAD -> startDownload(
                     intent.extras?.getString(
-                        DOWNLOAD_NOTIFICATION_EXTRA_START_SERVICE_PARAM_KEY
+                        DownloadNotificationHelper.EXTRA_START_SERVICE_PARAM_KEY
                     )
                 )
             }

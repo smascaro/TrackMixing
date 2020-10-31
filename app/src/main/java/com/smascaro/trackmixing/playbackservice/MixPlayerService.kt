@@ -8,10 +8,8 @@ import android.os.IBinder
 import com.smascaro.trackmixing.TrackMixingApplication
 import com.smascaro.trackmixing.common.data.model.ForegroundNotification
 import com.smascaro.trackmixing.common.data.model.Track
-import com.smascaro.trackmixing.common.utils.PLAYER_NOTIFICATION_ACTION_LOAD_TRACK
-import com.smascaro.trackmixing.common.utils.PLAYER_NOTIFICATION_EXTRA_LOAD_TRACK_PARAM_KEY
-import com.smascaro.trackmixing.common.utils.PLAYER_NOTIFICATION_EXTRA_START_PLAYING_PARAM_KEY
 import com.smascaro.trackmixing.playbackservice.controller.MixPlayerServiceController
+import com.smascaro.trackmixing.playbackservice.utils.PlayerNotificationHelper
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -20,12 +18,11 @@ class MixPlayerService : BaseService(),
     companion object {
         fun start(context: Context, track: Track, startPlaying: Boolean = true): Boolean {
             val intent = Intent(context, MixPlayerService::class.java).apply {
-                action =
-                    PLAYER_NOTIFICATION_ACTION_LOAD_TRACK
+                action = PlayerNotificationHelper.ACTION_LOAD_TRACK
             }
             val extras = Bundle().apply {
-                putSerializable(PLAYER_NOTIFICATION_EXTRA_LOAD_TRACK_PARAM_KEY, track)
-                putBoolean(PLAYER_NOTIFICATION_EXTRA_START_PLAYING_PARAM_KEY, startPlaying)
+                putSerializable(PlayerNotificationHelper.EXTRA_LOAD_TRACK_PARAM_KEY, track)
+                putBoolean(PlayerNotificationHelper.EXTRA_START_PLAYING_PARAM_KEY, startPlaying)
             }
             intent.putExtras(extras)
             val startedComponentName = context.startService(intent)
@@ -69,22 +66,22 @@ class MixPlayerService : BaseService(),
         if (intent != null) {
             val action = intent.action
             when (action) {
-                PLAYER_NOTIFICATION_ACTION_LOAD_TRACK -> loadTrackFromIntent(intent, action)
+                PlayerNotificationHelper.ACTION_LOAD_TRACK -> loadTrackFromIntent(intent, action)
                 else -> controller.executeAction(action)
             }
         }
-
         return START_STICKY
     }
 
     private fun loadTrackFromIntent(intent: Intent, action: String?) {
         if (intent.extras != null &&
-            intent.extras!!.containsKey(PLAYER_NOTIFICATION_EXTRA_LOAD_TRACK_PARAM_KEY)
+            intent.extras!!.containsKey(PlayerNotificationHelper.EXTRA_LOAD_TRACK_PARAM_KEY)
         ) {
-            val track = intent.extras!!.get(PLAYER_NOTIFICATION_EXTRA_LOAD_TRACK_PARAM_KEY) as Track
+            val track =
+                intent.extras!!.get(PlayerNotificationHelper.EXTRA_LOAD_TRACK_PARAM_KEY) as Track
             loadTrack(track)
-            if (intent.extras!!.containsKey(PLAYER_NOTIFICATION_EXTRA_START_PLAYING_PARAM_KEY) && intent.extras!!.getBoolean(
-                    PLAYER_NOTIFICATION_EXTRA_START_PLAYING_PARAM_KEY
+            if (intent.extras!!.containsKey(PlayerNotificationHelper.EXTRA_START_PLAYING_PARAM_KEY) && intent.extras!!.getBoolean(
+                    PlayerNotificationHelper.EXTRA_START_PLAYING_PARAM_KEY
                 )
             ) {
                 playMaster()

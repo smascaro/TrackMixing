@@ -15,7 +15,6 @@ import com.bumptech.glide.request.transition.Transition
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.data.model.NotificationData
 import com.smascaro.trackmixing.common.error.WrongArgumentType
-import com.smascaro.trackmixing.common.utils.*
 import com.smascaro.trackmixing.common.utils.ui.NotificationHelper
 import com.smascaro.trackmixing.main.view.MainActivity
 import com.smascaro.trackmixing.playbackservice.MixPlayerService
@@ -26,6 +25,19 @@ class PlayerNotificationHelper @Inject constructor(
     context: Context,
     val glide: RequestManager
 ) : NotificationHelper(context) {
+    companion object {
+        const val NOTIFICATION_ID = 2000
+        const val MEDIA_SESSION_TAG = "MEDIA_SESSION_TAG"
+        const val ACTION_PLAY_MASTER = "ACTION_PLAY_MASTER"
+        const val ACTION_PAUSE_MASTER = "ACTION_PAUSE_MASTER"
+        const val ACTION_LAUNCH_PLAYER = "ACTION_LAUNCH_PLAYER"
+        const val ACTION_START_SERVICE = "ACTION_START_SERVICE"
+        const val ACTION_STOP_SERVICE = "ACTION_STOP_SERVICE"
+        const val ACTION_LOAD_TRACK = "ACTION_LOAD_TRACK"
+        const val EXTRA_LOAD_TRACK_PARAM_KEY = "EXTRA_LOAD_TRACK_PARAM_KEY"
+        const val EXTRA_START_PLAYING_PARAM_KEY = "EXTRA_START_PLAYING_PARAM_KEY"
+    }
+
     private var mThumbnailBitmap: Bitmap? = null
     private var mMediaSession: MediaSessionCompat? = null
 
@@ -57,7 +69,7 @@ class PlayerNotificationHelper @Inject constructor(
                     mThumbnailBitmap = resource
                     notificationBuilder.setLargeIcon(mThumbnailBitmap)
                     notificationManager.notify(
-                        PLAYER_NOTIFICATION_ID,
+                        NOTIFICATION_ID,
                         notificationBuilder.build()
                     )
                 }
@@ -73,13 +85,13 @@ class PlayerNotificationHelper @Inject constructor(
             mMediaSession =
                 MediaSessionCompat(
                     context,
-                    PLAYER_NOTIFICATION_MEDIA_SESSION_TAG
+                    MEDIA_SESSION_TAG
                 )
         }
         notificationBuilder =
             NotificationCompat.Builder(
                 context,
-                NOTIFICATION_CHANNEL_ID
+                CHANNEL_ID
             ).apply {
                 setSmallIcon(R.drawable.ic_note)
                 setContentTitle(playbackState.trackTitle)
@@ -98,12 +110,12 @@ class PlayerNotificationHelper @Inject constructor(
         if (mThumbnailBitmap != null) {
             notificationBuilder.setLargeIcon(mThumbnailBitmap)
         }
-        notificationManager.notify(PLAYER_NOTIFICATION_ID, notificationBuilder.build())
+        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
     }
 
     private fun createTapIntent(): PendingIntent? {
         val intent = Intent(context, MainActivity::class.java)
-        intent.action = PLAYER_NOTIFICATION_ACTION_LAUNCH_PLAYER
+        intent.action = ACTION_LAUNCH_PLAYER
         val pendingIntent =
             PendingIntent.getActivity(context, 3, intent, PendingIntent.FLAG_CANCEL_CURRENT)
         return pendingIntent
@@ -112,7 +124,7 @@ class PlayerNotificationHelper @Inject constructor(
     private fun createDeleteIntent(): PendingIntent? {
         val intent = Intent(context, MixPlayerService::class.java)
         intent.action =
-            PLAYER_NOTIFICATION_ACTION_STOP_SERVICE
+            ACTION_STOP_SERVICE
         val pendingIntent = PendingIntent.getService(
             context,
             2,
@@ -125,8 +137,8 @@ class PlayerNotificationHelper @Inject constructor(
     private fun createIntentMaster(isPlaying: Boolean): PendingIntent {
         val intent = Intent(context, MixPlayerService::class.java)
         val action = when (isPlaying) {
-            true -> PLAYER_NOTIFICATION_ACTION_PAUSE_MASTER
-            false -> PLAYER_NOTIFICATION_ACTION_PLAY_MASTER
+            true -> ACTION_PAUSE_MASTER
+            false -> ACTION_PLAY_MASTER
         }
 
         intent.action = action
