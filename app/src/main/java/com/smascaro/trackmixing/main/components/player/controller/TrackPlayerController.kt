@@ -8,10 +8,10 @@ import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager
 import com.smascaro.trackmixing.main.components.player.model.TrackPlayerData
 import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvc
-import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
+import com.smascaro.trackmixing.playbackservice.MixPlayerService
+import com.smascaro.trackmixing.playbackservice.model.TimestampChangedEvent
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
 import com.smascaro.trackmixing.playbackservice.utils.PlaybackSession
-import com.smascaro.trackmixing.playbackservice.utils.PlayerNotificationHelper
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
@@ -117,7 +117,7 @@ class TrackPlayerController @Inject constructor(
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: PlaybackEvent.TimestampChanged) =
+    fun onMessageEvent(event: TimestampChangedEvent) =
         handleTimestampChanged(event.newTimestamp, event.totalLength)
 
     private fun handleTimestampChanged(newTimestamp: Int, totalLength: Int) {
@@ -126,7 +126,7 @@ class TrackPlayerController @Inject constructor(
     }
 
     fun handleIntent(intent: Intent?) {
-        if (intent?.action == PlayerNotificationHelper.ACTION_LAUNCH_PLAYER) {
+        if (intent?.action == MixPlayerService.ACTION_LAUNCH_PLAYER) {
             openPlayerIntentRequested = true
             navigateToPlayer()
         }

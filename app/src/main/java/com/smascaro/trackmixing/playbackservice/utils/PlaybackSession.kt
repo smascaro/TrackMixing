@@ -12,7 +12,6 @@ interface PlaybackSession {
     fun play()
     fun pause()
     fun seek(seconds: Int)
-    fun setMasterVolume(volume: Int)
     fun setTrackVolume(trackInstrument: TrackInstrument, volume: Int)
     suspend fun getState(): PlaybackStateManager.PlaybackState
     suspend fun getTrack(): Track

@@ -1,7 +1,7 @@
 package com.smascaro.trackmixing.playbackservice.controller
 
 import com.smascaro.trackmixing.common.utils.TimeHelper
-import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
+import com.smascaro.trackmixing.playbackservice.model.TimestampChangedEvent
 import com.smascaro.trackmixing.playbackservice.utils.BandPlaybackHelper
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
@@ -32,7 +32,7 @@ class TimestampUpdateThread(
                     }"
                 )
                 eventBus.post(
-                    PlaybackEvent.TimestampChanged(
+                    TimestampChangedEvent(
                         currentTimestampSeconds,
                         totalLength
                     )
