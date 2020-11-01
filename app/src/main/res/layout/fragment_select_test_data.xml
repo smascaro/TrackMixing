@@ -33,6 +33,14 @@
 
     </LinearLayout>
 
+    <ProgressBar
+        android:id="@+id/pb_fetch_test_data_loading_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="120dp" />
+
     <androidx.recyclerview.widget.RecyclerView xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/rv_select_test_data_tracks"
         android:layout_width="match_parent"
