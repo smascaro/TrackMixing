@@ -5,9 +5,7 @@ import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager
 import com.smascaro.trackmixing.common.utils.TrackVolumeBundle
 import com.smascaro.trackmixing.playbackservice.MixPlayerService
-import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
-import org.greenrobot.eventbus.EventBus
 import javax.inject.Inject
 
 class PlaybackSessionImpl @Inject constructor(
@@ -15,49 +13,44 @@ class PlaybackSessionImpl @Inject constructor(
     private val playbackStateManager: PlaybackStateManager
 ) :
     PlaybackSession {
-    private val eventBus = EventBus.getDefault()
     private var isServiceStarted: Boolean = false
 
     override fun isSessionInitialized() = isServiceStarted
 
     override fun startPlayback(track: Track): Boolean {
-        isServiceStarted =
-            MixPlayerService.start(
-                context,
-                track
-            )
+        isServiceStarted = MixPlayerService.start(context, track)
         return isSessionInitialized()
     }
 
     override fun stopPlayback() {
-        eventBus.post(PlaybackEvent.StopMasterEvent())
+        MixPlayerService.stop(context)
     }
 
     override fun play() {
-        eventBus.post(PlaybackEvent.PlayMasterEvent())
+        MixPlayerService.play(context)
     }
 
     override fun pause() {
-        eventBus.post(PlaybackEvent.PauseMasterEvent())
+        MixPlayerService.pause(context)
     }
 
     override fun seek(seconds: Int) {
-        eventBus.post(PlaybackEvent.SeekMaster(seconds))
-    }
-
-    override fun setMasterVolume(volume: Int) {
-        eventBus.post(PlaybackEvent.SetVolumeMasterEvent(volume))
+        MixPlayerService.seek(context, seconds)
     }
 
     override fun setTrackVolume(trackInstrument: TrackInstrument, volume: Int) {
-        eventBus.post(PlaybackEvent.SetVolumeTrackEvent(trackInstrument, volume))
+        MixPlayerService.setVolume(context, trackInstrument, volume)
     }
 
-    override fun getState(): PlaybackStateManager.PlaybackState {
+    override suspend fun getState(): PlaybackStateManager.PlaybackState {
         return playbackStateManager.getPlayingState()
     }
 
-    override fun getVolumes(): TrackVolumeBundle {
+    override suspend fun getTrack(): Track {
+        return playbackStateManager.getCurrentTrack()
+    }
+
+    override suspend fun getVolumes(): TrackVolumeBundle {
         return playbackStateManager.getCurrentPlayingVolumes()
     }
 }

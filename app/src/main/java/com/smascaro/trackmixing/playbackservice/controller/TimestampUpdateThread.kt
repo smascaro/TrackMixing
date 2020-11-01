@@ -1,28 +1,30 @@
 package com.smascaro.trackmixing.playbackservice.controller
 
 import com.smascaro.trackmixing.common.utils.TimeHelper
-import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
-import com.smascaro.trackmixing.playbackservice.utils.PlaybackHelper
+import com.smascaro.trackmixing.playbackservice.model.TimestampChangedEvent
+import com.smascaro.trackmixing.playbackservice.utils.BandPlaybackHelper
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 import timber.log.Timber
 
 class TimestampUpdateThread(
-    private val playbackHelper: PlaybackHelper,
-    private val eventBus: EventBus
+    private val bandPlaybackHelper: BandPlaybackHelper,
+    private val eventBus: EventBus,
+    private val scope: CoroutineScope
 ) {
     private lateinit var job: Job
     private var currentTimestampSeconds: Int = 0
-    private val totalLength = playbackHelper.getTrack().secondsLong
+    private val totalLength = bandPlaybackHelper.getTrack().secondsLong
+
     fun start() {
         job = run()
     }
 
-    private fun run() = CoroutineScope(Dispatchers.Main).launch {
+    private fun run() = scope.launch {
         try {
             while (true) {
                 ensureActive()
-                currentTimestampSeconds = playbackHelper.getTimestampSeconds()
+                currentTimestampSeconds = bandPlaybackHelper.getTimestampSeconds()
                 Timber.d(
                     "Sending timestamp ${
                         TimeHelper.fromSeconds(currentTimestampSeconds.toLong())
@@ -30,7 +32,7 @@ class TimestampUpdateThread(
                     }"
                 )
                 eventBus.post(
-                    PlaybackEvent.TimestampChanged(
+                    TimestampChangedEvent(
                         currentTimestampSeconds,
                         totalLength
                     )
@@ -43,7 +45,7 @@ class TimestampUpdateThread(
             Timber.e(e)
             Timber.w("Stopping thread ${Thread.currentThread().name} due to exception")
         }
-        Timber.d("Job got cancelled succesfully!")
+        Timber.d("Job got cancelled successfully!")
     }
 
     fun cancel() {

@@ -1,28 +1,21 @@
 package com.smascaro.trackmixing.settings.business.downloadtestdata.usecase
 
+import com.smascaro.trackmixing.common.data.datasource.TrackDownloader
 import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepository
-import com.smascaro.trackmixing.common.data.model.DownloadEntity
-import com.smascaro.trackmixing.common.utils.AWS_S3_TEST_DATA_INFO_FILE_RESOURCE
+import com.smascaro.trackmixing.common.data.network.api.AwsContract
+import com.smascaro.trackmixing.common.di.coroutines.IoCoroutineScope
+import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
 import com.smascaro.trackmixing.common.utils.FilesStorageHelper
 import com.smascaro.trackmixing.common.utils.TimeHelper
-import com.smascaro.trackmixing.common.utils.ui.ColorExtractor
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable
 import com.smascaro.trackmixing.main.components.progress.model.UiProgressEvent
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.TestDataBundleInfo
-import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.TestDataBundleInfoResponseSchema
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.toModelList
 import com.smascaro.trackmixing.settings.business.downloadtestdata.usecase.data.TestDataApi
 import com.smascaro.trackmixing.settings.business.downloadtestdata.usecase.data.TestDataFilesApi
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.ResponseBody
 import org.greenrobot.eventbus.EventBus
-import retrofit2.Call
-import retrofit2.Response
 import timber.log.Timber
-import java.io.File
-import java.io.IOException
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
@@ -32,8 +25,11 @@ class DownloadTestDataUseCase @Inject constructor(
     private val testDataFilesApi: TestDataFilesApi,
     private val filesStorageHelper: FilesStorageHelper,
     private val tracksRepository: TracksRepository,
-    private val colorExtractor: ColorExtractor
-) : BaseObservable<DownloadTestDataUseCase.Listener>() {
+    private val trackDownloader: TrackDownloader,
+    private val ui: MainCoroutineScope,
+    private val io: IoCoroutineScope,
+    private val eventBus: EventBus
+) : BaseObservable<DownloadTestDataUseCase.Listener>(), TrackDownloader.Listener {
     sealed class Result {
         class Success(val tracks: List<TestDataBundleInfo>) : Result()
         class Failure(val throwable: Throwable) : Result()
@@ -41,116 +37,53 @@ class DownloadTestDataUseCase @Inject constructor(
 
     interface Listener {
         fun onFinishedItemDownload(videoKey: String)
-        fun onItemDownloadFailed(item: TestDataBundleInfo, throwable: Throwable)
+        fun onItemDownloadFailed(trackId: String, throwable: Throwable)
     }
 
     private val cancellationFlag: AtomicBoolean = AtomicBoolean(false)
-    fun getTestDataBundleInfo(callback: (Result) -> Unit) {
-        testDataApi.downloadTestDataBundleFile(AWS_S3_TEST_DATA_INFO_FILE_RESOURCE)
-            .enqueue(object : retrofit2.Callback<TestDataBundleInfoResponseSchema> {
-                override fun onFailure(
-                    call: Call<TestDataBundleInfoResponseSchema>,
-                    t: Throwable
-                ) {
-                    callback(Result.Failure(t))
-                }
-
-                override fun onResponse(
-                    call: Call<TestDataBundleInfoResponseSchema>,
-                    response: Response<TestDataBundleInfoResponseSchema>
-                ) {
-                    if (!response.isSuccessful) {
-                        throw IOException("Unexpected code $response")
-                    }
-                    response.body()?.let { body ->
-                        Timber.d(body.toString())
-                        val tracksList = body.toModelList()
-                        callback(Result.Success(tracksList))
-                    }
-                }
-            })
+    suspend fun getTestDataBundleInfo(): Result {
+        return try {
+            val response =
+                testDataApi.downloadTestDataBundleFile(AwsContract.INFO_FILE_RESOURCE)
+            Timber.i(response.toString())
+            Result.Success(response.toModelList())
+        } catch (e: Exception) {
+            Result.Failure(e)
+        }
     }
 
     fun downloadItemBundle(bundleInfo: TestDataBundleInfo) {
-        testDataFilesApi.downloadTestItemBundle(bundleInfo.resourceFilename)
-            .enqueue(object : retrofit2.Callback<ResponseBody> {
-                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    notifyDownloadError(bundleInfo, t)
-                }
-
-                override fun onResponse(
-                    call: Call<ResponseBody>,
-                    response: Response<ResponseBody>
-                ) {
-                    val body = response.body()
-                    if (response.isSuccessful && body != null) {
-                        CoroutineScope(Dispatchers.IO).launch {
-                            try {
-                                val downloadPath =
-                                    filesStorageHelper.getBaseDirectoryByVideoId(bundleInfo.videoKey)
-                                val baseDirectory = filesStorageHelper.getBaseDirectory()
-                                val entity = DownloadEntity(
-                                    0,
-                                    bundleInfo.videoKey,
-                                    "low",
-                                    bundleInfo.title,
-                                    bundleInfo.author,
-                                    bundleInfo.thumbnailUrl,
-                                    Calendar.getInstance().toString(),
-                                    downloadPath,
-                                    DownloadEntity.DownloadStatus.PENDING,
-                                    TimeHelper.fromString(bundleInfo.duration).toSeconds()
-                                )
-                                entity.id = tracksRepository.insert(entity).toInt()
-                                val downloadFilePath =
-                                    filesStorageHelper.writeFileToStorage(
-                                        baseDirectory,
-                                        entity.sourceVideoKey,
-                                        body
-                                    )
-                                if (downloadFilePath.isNotEmpty()) {
-                                    val downloadParentPath =
-                                        File(downloadFilePath).parent ?: ""
-                                    if (filesStorageHelper.unzipContent(downloadFilePath)) {
-                                        filesStorageHelper.deleteFile(downloadFilePath)
-                                        entity.status =
-                                            DownloadEntity.DownloadStatus.FINISHED
-                                        colorExtractor.extractLightVibrant(entity.thumbnailUrl) {
-                                            entity.backgroundColor = it
-                                            CoroutineScope(Dispatchers.IO).launch {
-                                                tracksRepository.update(entity)
-                                                Timber.d("Updated entity -> $entity")
-                                            }
-                                        }
-                                        notifyDownloadFinished(bundleInfo)
-                                    }
-                                }
-                            } catch (e: Exception) {
-                                Timber.e(e)
-                                notifyDownloadError(bundleInfo, e)
-                            }
-                            Timber.d("Coroutine finished execution")
-                        }
-                    }
-                }
-            })
+        io.launch {
+            val downloadResponse =
+                testDataFilesApi.downloadTestItemBundle(bundleInfo.resourceFilename)
+            trackDownloader.registerListener(this@DownloadTestDataUseCase)
+            val data = TrackDownloader.EntityData(
+                bundleInfo.videoKey,
+                title = bundleInfo.title,
+                author = bundleInfo.author,
+                thumbnailUrl = bundleInfo.thumbnailUrl,
+                secondsLong = TimeHelper.fromString(bundleInfo.duration).toSeconds(),
+                date = Calendar.getInstance().toString()
+            )
+            trackDownloader.startDownload(downloadResponse.byteStream(), data)
+        }
     }
 
-    private fun notifyDownloadFinished(bundleInfo: TestDataBundleInfo) =
-        CoroutineScope(Dispatchers.Main).launch {
+    private fun notifyDownloadFinished(videoId: String) =
+        ui.launch {
             if (!cancellationFlag.get()) {
                 //If it is marked for cancellation, do not post Ui event
-                EventBus.getDefault().post(UiProgressEvent.ProgressFinished())
+                eventBus.post(UiProgressEvent.ProgressFinished())
             }
             getListeners().forEach {
-                it.onFinishedItemDownload(bundleInfo.videoKey)
+                it.onFinishedItemDownload(videoId)
             }
         }
 
-    private fun notifyDownloadError(item: TestDataBundleInfo, e: Throwable) =
-        CoroutineScope(Dispatchers.Main).launch {
+    private fun notifyDownloadError(videoId: String, e: Throwable) =
+        ui.launch {
             getListeners().forEach {
-                it.onItemDownloadFailed(item, e)
+                it.onItemDownloadFailed(videoId, e)
             }
         }
 
@@ -159,7 +92,7 @@ class DownloadTestDataUseCase @Inject constructor(
         items.forEach {
             Timber.d("Deleting files for item ${it.videoKey}")
             filesStorageHelper.deleteData(filesStorageHelper.getBaseDirectoryByVideoId(it.videoKey))
-            CoroutineScope(Dispatchers.IO).launch {
+            io.launch {
                 Timber.d("Deleting database registry for item ${it.videoKey}")
                 tracksRepository.delete(it.videoKey)
             }
@@ -168,5 +101,19 @@ class DownloadTestDataUseCase @Inject constructor(
 
     fun markForCancellation() {
         cancellationFlag.set(true)
+    }
+
+    override fun onProgressFeedback(videoId: String, progress: Int, message: String) {
+        Timber.d("Download progress update: $videoId at $progress%: $message")
+    }
+
+    override fun onDownloadFinished(videoId: String) {
+        trackDownloader.unregisterListener(this)
+        notifyDownloadFinished(videoId)
+    }
+
+    override fun onDownloadError(videoId: String, e: Exception) {
+        trackDownloader.unregisterListener(this)
+        notifyDownloadError(videoId, e)
     }
 }

@@ -9,7 +9,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.common.di.coroutines.MainDispatcher
+import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
 import com.smascaro.trackmixing.common.utils.ui.UiUtils
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
 import com.smascaro.trackmixing.player.business.downloadtrack.TrackDownloadService
@@ -22,7 +22,7 @@ import javax.inject.Inject
 class SearchResultsViewMvcImpl @Inject constructor(
     private val searchResultsAdapter: SearchResultsAdapter,
     private val uiUtils: UiUtils,
-    @MainDispatcher private val ui: CoroutineScope
+    private val ui: MainCoroutineScope
 ) : BaseObservableViewMvc<SearchResultsViewMvc.Listener>(),
     SearchResultsAdapter.Listener,
     SearchResultsViewMvc {

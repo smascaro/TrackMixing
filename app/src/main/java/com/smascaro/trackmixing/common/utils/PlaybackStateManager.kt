@@ -4,15 +4,27 @@ import android.content.Context
 import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepository
 import com.smascaro.trackmixing.common.data.datasource.repository.toModel
 import com.smascaro.trackmixing.common.data.model.Track
-import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
-import org.greenrobot.eventbus.EventBus
+import com.smascaro.trackmixing.common.di.coroutines.IoCoroutineScope
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
 class PlaybackStateManager @Inject constructor(
-    context: Context,
-    private val tracksRepository: TracksRepository
+    private val tracksRepository: TracksRepository,
+    private val io: IoCoroutineScope,
+    context: Context
 ) {
+    companion object {
+        const val SHARED_PREFERENCES_PLAYBACK = "SHARED_PREFERENCES_PLAYBACK"
+        const val SHARED_PREFERENCES_PLAYBACK_IS_PLAYING = "SHARED_PREFERENCES_PLAYBACK_IS_PLAYING"
+        const val SHARED_PREFERENCES_PLAYBACK_SONG_PLAYING =
+            "SHARED_PREFERENCES_PLAYBACK_SONG_PLAYING"
+        const val SHARED_PREFERENCES_PLAYBACK_CURRENT_TIMESTAMP_MILLIS =
+            "SHARED_PREFERENCES_PLAYBACK_CURRENT_TIMESTAMP_MILLIS"
+        const val SHARED_PREFERENCES_PLAYBACK_CURRENT_VOLUMES =
+            "SHARED_PREFERENCES_PLAYBACK_CURRENT_VOLUMES"
+    }
+
     private val sharedPreferences =
         SharedPreferencesFactory.getPlaybackSharedPreferencesFactory(
             context
@@ -23,12 +35,12 @@ class PlaybackStateManager @Inject constructor(
             val PLAYBACK_STATE_PLAYING: Int = 0
             val PLAYBACK_STATE_PAUSED = 1
             val PLAYBACK_STATE_STOPPED = 2
-            fun parse(stateValue: Int): PlaybackState? {
+            fun parse(stateValue: Int): PlaybackState {
                 return when (stateValue) {
                     PLAYBACK_STATE_PLAYING -> Playing()
                     PLAYBACK_STATE_PAUSED -> Paused()
                     PLAYBACK_STATE_STOPPED -> Stopped()
-                    else -> null
+                    else -> throw IllegalArgumentException("Invalid state value does not map to an existing state")
                 }
             }
         }
@@ -49,7 +61,6 @@ class PlaybackStateManager @Inject constructor(
 
     fun setPlayingStateFlag(state: PlaybackState) {
         setPlayingStateFlag(state.getIntValue())
-        EventBus.getDefault().post(PlaybackEvent.StateChanged(state))
     }
 
     private fun setPlayingStateFlag(state: Int) {
@@ -66,16 +77,25 @@ class PlaybackStateManager @Inject constructor(
             .apply()
     }
 
-    fun getPlayingState(): PlaybackState {
-        val stateValue = sharedPreferences.getInt(SHARED_PREFERENCES_PLAYBACK_IS_PLAYING, -1)
+    suspend fun getPlayingState(): PlaybackState {
+        val stateValue = withContext(io.coroutineContext) {
+            sharedPreferences.getInt(
+                SHARED_PREFERENCES_PLAYBACK_IS_PLAYING,
+                PlaybackState.PLAYBACK_STATE_STOPPED
+            )
+        }
         return PlaybackState.parse(
             stateValue
         )
-            ?: PlaybackState.Stopped()
     }
 
-    fun getCurrentSong(): String {
-        return sharedPreferences.getString(SHARED_PREFERENCES_PLAYBACK_SONG_PLAYING, "") ?: ""
+    suspend fun getCurrentSong(): String {
+        return withContext(io.coroutineContext) {
+            sharedPreferences.getString(
+                SHARED_PREFERENCES_PLAYBACK_SONG_PLAYING,
+                ""
+            ) ?: ""
+        }
     }
 
     suspend fun getCurrentTrack(): Track {
@@ -104,9 +124,14 @@ class PlaybackStateManager @Inject constructor(
             .apply()
     }
 
-    fun getCurrentPlayingVolumes(): TrackVolumeBundle {
+    suspend fun getCurrentPlayingVolumes(): TrackVolumeBundle {
         val jsonBundle =
-            sharedPreferences.getString(SHARED_PREFERENCES_PLAYBACK_CURRENT_VOLUMES, "")
+            withContext(io.coroutineContext) {
+                sharedPreferences.getString(
+                    SHARED_PREFERENCES_PLAYBACK_CURRENT_VOLUMES,
+                    ""
+                )
+            }
         return if (jsonBundle == null || jsonBundle.isEmpty()) {
             TrackVolumeBundle(100, 100, 100, 100)
         } else {

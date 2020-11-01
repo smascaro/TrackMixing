@@ -22,12 +22,16 @@ abstract class BaseViewMvc :
     /**
      * Here is where all Ui elements are initialized. Typically <i>findViewById</i> calls will be made in this method.
      */
-    open fun initialize() {}
+    open fun initialize() {
+        // To be overridden by implementors.
+    }
 
     /**
      * This method will be called after  initialize() method, so any View initialized there, here will be ready to set listeners.
      */
-    open fun initializeListeners() {}
+    open fun initializeListeners() {
+        // To be overridden by implementors.
+    }
 
     protected fun getContext(): Context? {
         return getRootView().context

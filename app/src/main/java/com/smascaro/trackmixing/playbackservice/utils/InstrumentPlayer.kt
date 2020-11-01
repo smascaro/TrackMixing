@@ -5,20 +5,64 @@ import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.smascaro.trackmixing.common.data.model.Track
-import com.smascaro.trackmixing.common.utils.MEDIA_PLAYER_MAX_VOLUME
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
 import timber.log.Timber
 import kotlin.math.ln
 
-class PlayingTrackState(
-    val instrument: TrackInstrument,
-    private val context: Context
-) : BaseObservable<PlayingTrackState.Listener>(), Player.EventListener {
+class InstrumentPlayer @Deprecated(
+    "Use the provided Builder to create an instance.",
+    ReplaceWith("PlayingTrackState.Builder { }")
+) constructor() : BaseObservable<InstrumentPlayer.Listener>(), Player.EventListener {
     interface Listener {
         fun onPlayerPrepared(instrument: TrackInstrument)
         fun onPlayerCompletion(instrument: TrackInstrument)
         fun onPlayerError(instrument: TrackInstrument, errorMessage: String)
+    }
+
+    private constructor(instrument: TrackInstrument, context: Context) : this() {
+        this.instrument = instrument
+        this.context = context
+    }
+
+    class Builder(buildBlock: Builder.() -> Unit) {
+        private var track: Track? = null
+        private var context: Context? = null
+        private var instrument: TrackInstrument? = null
+
+        init {
+            buildBlock()
+        }
+
+        fun setInstrument(trackInstrument: TrackInstrument): Builder {
+            this.instrument = trackInstrument
+            return this
+        }
+
+        fun withContext(context: Context): Builder {
+            this.context = context
+            return this
+        }
+
+        fun setTrack(track: Track): Builder {
+            this.track = track
+            return this
+        }
+
+        fun build(): InstrumentPlayer {
+            if (instrument == null || context == null || track == null) {
+                throw IllegalArgumentException("Instrument, context and track must be set in order for build to succeed")
+            }
+            val filename = when (instrument!!) {
+                TrackInstrument.VOCALS -> VOCALS_FILENAME
+                TrackInstrument.OTHER -> OTHER_FILENAME
+                TrackInstrument.BASS -> BASS_FILENAME
+                TrackInstrument.DRUMS -> DRUMS_FILENAME
+            }
+            return InstrumentPlayer(instrument!!, context!!).apply {
+                initialize("${track!!.downloadPath}/$filename")
+            }
+        }
     }
 
     companion object {
@@ -26,24 +70,12 @@ class PlayingTrackState(
         private const val OTHER_FILENAME = "other.mp3"
         private const val BASS_FILENAME = "bass.mp3"
         private const val DRUMS_FILENAME = "drums.mp3"
-        fun create(track: Track, instrument: TrackInstrument, context: Context): PlayingTrackState {
-            val filename = when (instrument) {
-                TrackInstrument.VOCALS -> VOCALS_FILENAME
-                TrackInstrument.OTHER -> OTHER_FILENAME
-                TrackInstrument.BASS -> BASS_FILENAME
-                TrackInstrument.DRUMS -> DRUMS_FILENAME
-            }
-            val playingTrackState = PlayingTrackState(
-                instrument,
-                context
-            ).apply {
-                initialize("${track.downloadPath}/$filename")
-            }
-            return playingTrackState
-        }
+        private const val PLAYER_MAX_VOLUME = 100f;
     }
 
-    private val maxVolume: Float = MEDIA_PLAYER_MAX_VOLUME
+    lateinit var instrument: TrackInstrument
+    private lateinit var context: Context
+    private val maxVolume: Float = PLAYER_MAX_VOLUME
     private var mIsPrepared: Boolean = false
     private lateinit var player: ExoPlayer
     private var mVolume = maxVolume
@@ -168,7 +200,7 @@ class PlayingTrackState(
         player.seekTo(timestampMillis)
     }
 
-    fun getCurrentPosition():Long{
+    fun getCurrentPosition(): Long {
         return player.currentPosition
     }
 }

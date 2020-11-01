@@ -5,6 +5,7 @@ import com.smascaro.trackmixing.common.utils.ResourcesWrapper
 import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvc
 import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvcImpl
 import com.smascaro.trackmixing.playbackservice.MixPlayerServiceChecker
+import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -114,14 +115,17 @@ class TrackPlayerViewMvcImplTest {
             serviceCheckResult = running
         }
 
-        override fun onSwipeUp() {
-            TODO("Not yet implemented")
-        }
-
         override fun onPlayerSwipedOut() {
             TODO("Not yet implemented")
         }
 
+        override fun onSeekRequestEvent(progress: Int) {
+            TODO("Not yet implemented")
+        }
+
+        override fun onTrackVolumeChanged(trackInstrument: TrackInstrument, volume: Int) {
+            TODO("Not yet implemented")
+        }
     }
     // endregion helper classes
 }

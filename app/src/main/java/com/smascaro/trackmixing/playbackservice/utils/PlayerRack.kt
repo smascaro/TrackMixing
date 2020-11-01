@@ -1,22 +1,24 @@
 package com.smascaro.trackmixing.playbackservice.utils
 
+import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
 import com.smascaro.trackmixing.common.utils.TrackVolumeBundle
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
-import kotlinx.coroutines.*
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.launch
 import kotlin.system.measureTimeMillis
 
-class PlayerRack : PlayerActions {
-    private val rack: HashMap<TrackInstrument, PlayingTrackState> = hashMapOf()
+class PlayerRack(private val ui: MainCoroutineScope) : PlayerActions {
+    private val rack: HashMap<TrackInstrument, InstrumentPlayer> = hashMapOf()
 
-    fun put(instrument: TrackInstrument, playingTrackState: PlayingTrackState) {
-        rack[instrument] = playingTrackState
+    fun put(instrument: TrackInstrument, instrumentPlayer: InstrumentPlayer) {
+        rack[instrument] = instrumentPlayer
     }
 
     override fun play() {
-        CoroutineScope(Dispatchers.Main).launch {
+        ui.launch {
             rack.map { async { it.value.play() } }.awaitAll()
         }
-//        rack.forEach { it.value.play() }
     }
 
     override fun play(instrument: TrackInstrument) {
@@ -61,7 +63,7 @@ class PlayerRack : PlayerActions {
 
     fun clear() = rack.clear()
 
-    fun unregisterListener(listener: PlayingTrackState.Listener) =
+    fun unregisterListener(listener: InstrumentPlayer.Listener) =
         rack.forEach { it.value.unregisterListener(listener) }
 
     fun finalize() = rack.forEach { it.value.finalize() }
@@ -76,7 +78,7 @@ class PlayerRack : PlayerActions {
     }
 
     suspend fun getCurrentPositionsReport(cb: (report: List<Pair<TrackInstrument, Long>>) -> Unit) =
-        CoroutineScope(Dispatchers.Main).launch {
+        ui.launch {
             var report = listOf<Pair<TrackInstrument, Long>>()
             val millisGetPositions = measureTimeMillis {
                 val asyncJobVocals =

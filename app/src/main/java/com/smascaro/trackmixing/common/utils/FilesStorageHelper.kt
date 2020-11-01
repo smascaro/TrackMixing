@@ -1,8 +1,6 @@
 package com.smascaro.trackmixing.common.utils
 
 import android.content.Context
-import com.smascaro.trackmixing.player.business.DownloadTrackUseCase
-import okhttp3.ResponseBody
 import timber.log.Timber
 import java.io.File
 import java.io.FileNotFoundException
@@ -20,17 +18,17 @@ class FilesStorageHelper @Inject constructor(private val mContext: Context) {
         return "${mContext.filesDir}/$videoId"
     }
 
-    fun writeFileToStorage(baseDirectory: String, videoId: String, body: ResponseBody): String {
-        Timber.d("Writing to storage download with id $videoId and a length of ${body.contentLength()} bytes")
+    fun writeFileToStorage(baseDirectory: String, videoId: String, stream: InputStream): String {
+        Timber.d("Writing to storage download with id $videoId and a length of ${stream.available()} bytes")
         val targetDirectoryFile = File(baseDirectory, videoId)
         targetDirectoryFile.mkdirs()
         val targetFile = File(targetDirectoryFile, "$videoId.zip")
         return try {
-            body.byteStream().saveToFile(targetFile.path)
+            stream.saveToFile(targetFile.path)
             targetFile.path
         } catch (e: Exception) {
             Timber.e(e)
-            ""
+            throw e
         }
     }
 
@@ -67,13 +65,13 @@ class FilesStorageHelper @Inject constructor(private val mContext: Context) {
 
     data class ZipIO(val entry: ZipEntry, val output: File)
 
-    fun unzipContent(pathToZipFile: String): Boolean {
+    fun unzipContent(pathToZipFile: String) {
         val zipFile = File(pathToZipFile)
-        return try {
+        try {
             ZipFile(pathToZipFile).use { zip ->
                 zip.entries().asSequence().map { entry ->
                     val outputFile = File(zipFile.parent, entry.name)
-                    DownloadTrackUseCase.ZipIO(
+                    ZipIO(
                         entry,
                         outputFile
                     ).also { zipio ->
@@ -93,10 +91,9 @@ class FilesStorageHelper @Inject constructor(private val mContext: Context) {
                     }
                 }
             }
-            true
         } catch (e: Exception) {
             Timber.e(e)
-            false
+            throw Exception("Exception unzipping contents", e)
         }
     }
 

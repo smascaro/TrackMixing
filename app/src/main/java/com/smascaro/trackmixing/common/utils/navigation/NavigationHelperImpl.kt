@@ -3,7 +3,6 @@ package com.smascaro.trackmixing.common.utils.navigation
 import androidx.navigation.NavController
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.data.model.Track
-import com.smascaro.trackmixing.common.view.architecture.BaseObservable
 import com.smascaro.trackmixing.search.view.SongSearchFragmentDirections
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.TestDataBundleInfo
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.view.SelectTestDataFragmentDirections
@@ -11,7 +10,6 @@ import com.smascaro.trackmixing.trackslist.view.TracksListFragmentDirections
 import javax.inject.Inject
 
 class NavigationHelperImpl @Inject constructor() :
-    BaseObservable<NavigationHelper.Listener>(),
     NavigationHelper {
     private var mNavController: NavController? = null
     override fun navigateTo(destination: Int) {
@@ -33,11 +31,11 @@ class NavigationHelperImpl @Inject constructor() :
                 R.id.destination_download_test_data -> NavigationDestination.DownloadTestData()
                 else -> null
             }
-            if (destination != null) {
-                getListeners().forEach {
-                    it.onDestinationChange(destination)
-                }
-            }
+//            if (destination != null) {
+//                getListeners().forEach {
+//                    it.onDestinationChange(destination)
+//                }
+//            }
         }
     }
 
