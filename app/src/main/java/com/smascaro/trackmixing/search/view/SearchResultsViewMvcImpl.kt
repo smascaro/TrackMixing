@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,6 +31,7 @@ class SearchResultsViewMvcImpl @Inject constructor(
     private lateinit var clearInputButton: View
     private lateinit var resultsRecyclerView: RecyclerView
     private lateinit var backButton: View
+    private lateinit var loadingProgressBar: ProgressBar
 
     override fun initialize() {
         super.initialize()
@@ -37,10 +39,12 @@ class SearchResultsViewMvcImpl @Inject constructor(
         searchInput = findViewById(R.id.et_toolbar_search_input)
         clearInputButton = findViewById(R.id.iv_toolbar_search_clear)
         backButton = findViewById(R.id.iv_toolbar_back_button)
+        loadingProgressBar = findViewById(R.id.pb_search_loading_progress)
 
         initializeBackButton()
         initializeSearchInput()
         initializeRecyclerView()
+        initializeLoadingProgressBar()
 
         focusSearchInput()
     }
@@ -88,6 +92,10 @@ class SearchResultsViewMvcImpl @Inject constructor(
         }
     }
 
+    private fun initializeLoadingProgressBar() {
+        loadingProgressBar.visibility = View.INVISIBLE
+    }
+
     private fun focusSearchInput() {
         uiUtils.showKeyboard()
         searchInput.requestFocus()
@@ -98,6 +106,14 @@ class SearchResultsViewMvcImpl @Inject constructor(
         getListeners().forEach {
             it.onSearchResultClicked(searchResult)
         }
+    }
+
+    override fun showProgressBar() {
+        loadingProgressBar.visibility = View.VISIBLE
+    }
+
+    override fun hideProgressBar() {
+        loadingProgressBar.visibility = View.INVISIBLE
     }
 
     override fun bindResults(results: List<SearchResult>) {

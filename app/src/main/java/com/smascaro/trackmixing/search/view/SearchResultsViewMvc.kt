@@ -10,6 +10,8 @@ interface SearchResultsViewMvc : ObservableViewMvc<SearchResultsViewMvc.Listener
         fun onBackButtonPressed()
     }
 
+    fun showProgressBar()
+    fun hideProgressBar()
     fun bindResults(results: List<SearchResult>)
     fun showMessage(message: String)
     fun startRequest(url: String)
