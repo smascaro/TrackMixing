@@ -1,6 +1,8 @@
 package com.smascaro.trackmixing.settings.business.downloadtestdata.selection.view
 
 import android.graphics.Color
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,6 +28,8 @@ class SelectTestDataViewMvcImpl @Inject constructor(
     private lateinit var recyclerViewTestDataBundleInfo: RecyclerView
     private lateinit var startDownloadButton: MaterialButton
     private lateinit var availableSpaceTextView: MaterialTextView
+    private lateinit var loadingProgressBar: ProgressBar
+
     private var availableBytes = Long.MAX_VALUE
     private var defaultMaterialTextColor: Int = 0
 
@@ -42,7 +46,9 @@ class SelectTestDataViewMvcImpl @Inject constructor(
         startDownloadButton = findViewById(R.id.btn_select_test_data_start_download)
         totalDownloadSizeText = findViewById(R.id.tv_select_test_data_total_size)
         availableSpaceTextView = findViewById(R.id.tv_select_test_data_available_space)
+        loadingProgressBar = findViewById(R.id.pb_fetch_test_data_loading_progress)
 
+        loadingProgressBar.visibility = View.INVISIBLE
         defaultMaterialTextColor = totalDownloadSizeText.textColors.defaultColor
         startDownloadButton.setOnClickListener {
             getListeners().forEach {
@@ -52,6 +58,14 @@ class SelectTestDataViewMvcImpl @Inject constructor(
 
         availableSpaceTextView.text = ""
         updateTotalSize(0)
+    }
+
+    override fun showProgress() {
+        loadingProgressBar.visibility = View.VISIBLE
+    }
+
+    override fun hideProgress() {
+        loadingProgressBar.visibility = View.INVISIBLE
     }
 
     override fun bindTracks(tracks: List<TestDataBundleInfo>) {

@@ -6,11 +6,9 @@ import com.smascaro.trackmixing.common.di.coroutines.IoCoroutineScope
 import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
 import com.smascaro.trackmixing.common.utils.DiskSpaceHelper
 import com.smascaro.trackmixing.common.utils.navigation.NavigationHelper
-import com.smascaro.trackmixing.player.business.DownloadTrackUseCase
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.TestDataBundleInfo
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.view.SelectTestDataViewMvc
 import com.smascaro.trackmixing.settings.business.downloadtestdata.usecase.DownloadTestDataUseCase
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -20,7 +18,7 @@ class SelectTestDataController @Inject constructor(
     private val downloadTestDataUseCase: DownloadTestDataUseCase,
     private val downloadsDao: DownloadsDao,
     private val diskSpaceHelper: DiskSpaceHelper,
-    private val ui:MainCoroutineScope,
+    private val ui: MainCoroutineScope,
     private val io: IoCoroutineScope,
     p_navigationHelper: NavigationHelper
 ) :
@@ -30,6 +28,7 @@ class SelectTestDataController @Inject constructor(
     private var tracksToDownload = mutableListOf<TestDataBundleInfo>()
     fun onStart() {
         ui.launch {
+            viewMvc.showProgress()
             val availableBundlesResult =
                 withContext(Dispatchers.IO) { downloadTestDataUseCase.getTestDataBundleInfo() }
             when (availableBundlesResult) {
@@ -41,6 +40,7 @@ class SelectTestDataController @Inject constructor(
                     availableBundlesResult.throwable.localizedMessage
                 )
             }
+            viewMvc.hideProgress()
         }
 
         viewMvc.registerListener(this)
