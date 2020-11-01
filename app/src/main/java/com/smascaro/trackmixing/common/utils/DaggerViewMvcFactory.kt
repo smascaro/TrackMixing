@@ -10,16 +10,18 @@ import com.smascaro.trackmixing.trackslist.view.listitem.TracksListItemViewMvcIm
 import javax.inject.Inject
 
 class DaggerViewMvcFactory @Inject constructor(
-    private val glide: RequestManager
+    private val glide: RequestManager,
+    private val resourcesWrapper: ResourcesWrapper
 ) {
     fun getTracksListItemViewMvc(): TracksListItemViewMvc {
         return TracksListItemViewMvcImpl(
-            glide
+            glide,
+            resourcesWrapper
         )
     }
 
     fun getSearchResultsItemViewMvc(): SearchResultsItemViewMvc {
-        return SearchResultsItemViewMvcImpl(glide)
+        return SearchResultsItemViewMvcImpl(glide, resourcesWrapper)
     }
 
     fun getSelectTestDataItemViewMvc(): SelectTestDataItemViewMvc {
