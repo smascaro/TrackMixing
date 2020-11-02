@@ -12,4 +12,5 @@
     <string name="item_test_data_selection_separator_character">·</string>
     <string name="select_test_data_available_space">(%1$s available)</string>
     <string name="player_bottom_title">%1$s - %2$s</string>
+    <string name="track_item_data_template">%1$s\u0020\u0020|\u0020\u0020%2$s\u0020\u0020|\u0020\u0020%3$s</string>
 </resources>

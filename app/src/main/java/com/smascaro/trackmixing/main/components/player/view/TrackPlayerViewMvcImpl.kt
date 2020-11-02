@@ -81,8 +81,6 @@ class TrackPlayerViewMvcImpl @Inject constructor(
     override fun initialize() {
         super.initialize()
         motionLayout = findViewById(R.id.motion_layout_main_activity)
-        LayoutInflater.from(getContext())
-            .inflate(R.layout.layout_actions_bottom, motionLayout, false)
         bottomBar = motionLayout.findViewById(R.id.layout_player)
         bottomBarTextSwitcher = motionLayout.findViewById(R.id.tv_track_title_player_bottom)
         bottomBarActionButton = motionLayout.findViewById(R.id.iv_action_button_player_bottom)

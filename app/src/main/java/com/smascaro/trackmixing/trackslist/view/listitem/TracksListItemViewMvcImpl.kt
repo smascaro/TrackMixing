@@ -6,37 +6,35 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.data.model.Track
+import com.smascaro.trackmixing.common.utils.ResourcesWrapper
 import com.smascaro.trackmixing.common.utils.TimeHelper
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
 import javax.inject.Inject
 
 class TracksListItemViewMvcImpl @Inject constructor(
-    val glide: RequestManager
+    val glide: RequestManager,
+    val resources: ResourcesWrapper
 ) :
     BaseObservableViewMvc<TracksListItemViewMvc.Listener>(),
     TracksListItemViewMvc {
-    private lateinit var mTrack: Track
-    private lateinit var mTrackTitleTxt: TextView
-    private lateinit var mTrackAuthorTxt: TextView
-    private lateinit var mTrackDuration: TextView
-    private lateinit var mTrackState: TextView
-    private lateinit var mTrackThumbnailImg: ImageView
-    private var mPosition: Int = -1
+    private lateinit var track: Track
+    private lateinit var trackTitleTxt: TextView
+    private lateinit var trackDetailsTxt: TextView
+    private lateinit var trackThumbnailImg: ImageView
+    private var position: Int = -1
 
     override fun initialize() {
         super.initialize()
-        mTrackTitleTxt = findViewById(R.id.tv_item_track_title)
-        mTrackThumbnailImg = findViewById(R.id.iv_item_track_thumbnail)
-        mTrackAuthorTxt = findViewById(R.id.tv_item_track_author)
-        mTrackDuration = findViewById(R.id.tv_item_track_duration)
-        mTrackState = findViewById(R.id.tv_item_track_status)
+        trackTitleTxt = findViewById(R.id.tv_item_track_title)
+        trackThumbnailImg = findViewById(R.id.iv_item_track_thumbnail)
+        trackDetailsTxt = findViewById(R.id.tv_item_track_details)
     }
 
     override fun initializeListeners() {
         super.initializeListeners()
         getRootView().setOnClickListener {
             getListeners().forEach {
-                it.onTrackClicked(mTrack)
+                it.onTrackClicked(track)
             }
         }
 
@@ -47,21 +45,22 @@ class TracksListItemViewMvcImpl @Inject constructor(
     }
 
     override fun bindTrack(track: Track) {
-        mTrack = track
-        mTrackTitleTxt.text = track.title
-        mTrackAuthorTxt.text = track.author
-        mTrackDuration.text =
-            TimeHelper.fromSeconds(track.secondsLong.toLong()).toStringRepresentation()
-        mTrackState.text = "Downloaded"
+        this.track = track
+        trackTitleTxt.text = track.title
+        val authorText = track.author
+        val durationText = TimeHelper.fromSeconds(track.secondsLong.toLong()).toStringRepresentation()
+        val stateText = "Downloaded"
+        trackDetailsTxt.text =
+            resources.getString(R.string.track_item_data_template, authorText, durationText, stateText)
         glide
             .asBitmap()
-            .load(mTrack.thumbnailUrl)
+            .load(this.track.thumbnailUrl)
             .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-            .into(mTrackThumbnailImg)
-        mTrackTitleTxt.transitionName = track.title
+            .into(trackThumbnailImg)
+        trackTitleTxt.transitionName = track.title
     }
 
     override fun bindPosition(position: Int) {
-        mPosition = position
+        this.position = position
     }
 }
