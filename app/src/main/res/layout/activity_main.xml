@@ -37,7 +37,7 @@
     <FrameLayout
         android:id="@+id/layout_player"
         android:layout_width="0dp"
-        android:layout_height="54dp"
+        android:layout_height="@dimen/track_player_when_visible_height"
         android:padding="@dimen/track_player_inner_padding"
         app:layout_constraintTop_toBottomOf="parent">
 
