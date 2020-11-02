@@ -14,9 +14,9 @@ MAX_FILE=""
 MIN_LINES=99999
 MIN_FILE=""
 declare -A files
-REPORT_FILE_PATH="$PWD/lines_report_$1.txt"
+REPORT_FILE_PATH="$(realpath $PWD/../report)/lines_report_$1.txt"
 echo -e "\e[33m\e[1mGenerating report on $REPORT_FILE_PATH..."
-for file in ./app/src/**/*.*$1; do
+for file in ../app/src/**/*.*$1; do
 	CURRENT_LINES=$(wc -l $file|cut -f1 -d' ')
 	files["$file"]=$CURRENT_LINES
 	if [[ $CURRENT_LINES -gt $MAX_LINES ]] ; then
