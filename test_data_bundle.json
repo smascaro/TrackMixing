@@ -1,0 +1,95 @@
+{
+  "files_count": 9,
+  "files": [
+    {
+      "author": "Nirvana",
+      "secondsLong": 278,
+      "thumbnailUrl": "https://i.ytimg.com/vi/hTWKbfoikeg/maxresdefault.jpg",
+      "title": "Smells Like Teen Spirit",
+      "videoKey": "hTWKbfoikeg",
+      "s3_filename": "hTWKbfoikeg.zip",
+      "download_size": 26701080
+    },
+    {
+      "author": "AC/DC",
+      "secondsLong": 207,
+      "thumbnailUrl": "https://i.ytimg.com/vi/l482T0yNkeo/maxresdefault.jpg",
+      "title": "Highway to Hell",
+      "videoKey": "l482T0yNkeo",
+      "s3_filename": "l482T0yNkeo.zip",
+      "download_size": 19860932
+    },
+    {
+      "author": "Rage against the machine",
+      "secondsLong": 316,
+      "thumbnailUrl": "https://i.ytimg.com/vi/bWXazVhlyxQ/maxresdefault.jpg",
+      "title": "Killing In the Name",
+      "videoKey": "bWXazVhlyxQ",
+      "s3_filename": "bWXazVhlyxQ.zip",
+      "download_size": 30348303
+    },
+    {
+      "author": "Bon Jovi",
+      "secondsLong": 241,
+      "thumbnailUrl": "https://i.ytimg.com/vi/B4KCdo4NYI4/hqdefault.jpg",
+      "title": "It's my life",
+      "videoKey": "9SKFwtgUJHs",
+      "s3_filename": "9SKFwtgUJHs.zip",
+      "download_size": 23104102
+    },
+    {
+      "author": "Smash Mouth",
+      "secondsLong": 204,
+      "thumbnailUrl": "https://i.ytimg.com/vi/N2QxDxzMGa8/hqdefault.jpg",
+      "title": "All Star",
+      "videoKey": "N2QxDxzMGa8",
+      "s3_filename": "N2QxDxzMGa8.zip",
+      "download_size": 19503569
+    },
+    {
+      "author": "Red Hot Chili Peppers",
+      "secondsLong": 336,
+      "thumbnailUrl": "https://i.ytimg.com/vi/ifXalt3MJtM/hqdefault.jpg",
+      "title": "Snow (Hey Oh)",
+      "videoKey": "ifXalt3MJtM",
+      "s3_filename": "ifXalt3MJtM.zip",
+      "download_size": 32166455
+    },
+    {
+      "author": "Guns N' Roses",
+      "secondsLong": 409,
+      "thumbnailUrl": "https://i.ytimg.com/vi/Rbm6GXllBiw/hqdefault.jpg",
+      "title": "Paradise City",
+      "videoKey": "Rbm6GXllBiw",
+      "s3_filename": "Rbm6GXllBiw.zip",
+      "download_size": 39157551
+    },
+    {
+      "author": "Gatibu",
+      "secondsLong": 291,
+      "thumbnailUrl": "https://i.ytimg.com/vi/woS1uqEq17M/hqdefault.jpg",
+      "title": "Euritan Dantzan",
+      "videoKey": "woS1uqEq17M",
+      "s3_filename": "woS1uqEq17M.zip",
+      "download_size": 27862901
+    },
+    {
+      "author": "Extremoduro",
+      "secondsLong": 243,
+      "thumbnailUrl": "https://i.ytimg.com/vi/pM3JPhWApvY/hqdefault.jpg",
+      "title": "La Vereda de la Puerta de Atrás",
+      "videoKey": "pM3JPhWApvY",
+      "s3_filename": "pM3JPhWApvY.zip",
+      "download_size": 39157551
+    },
+    {
+      "author": "Extremoduro",
+      "secondsLong": 703,
+      "thumbnailUrl": "https://i.ytimg.com/vi/pM3JPhWApvY/hqdefault.jpg",
+      "title": "Segundo movimiento: Lo de fuera",
+      "videoKey": "2vuSCv_vCIk",
+      "s3_filename": "2vuSCv_vCIk.zip",
+      "download_size": 67489792
+    }
+  ]
+}
