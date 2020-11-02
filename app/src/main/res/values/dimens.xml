@@ -35,4 +35,5 @@
     <dimen name="track_player_fader_height">350dp</dimen>
     <dimen name="track_player_fader_container_height">400dp</dimen>
     <dimen name="toolbar_marginTop">12dp</dimen>
+    <dimen name="track_player_inner_padding">12dp</dimen>
 </resources>

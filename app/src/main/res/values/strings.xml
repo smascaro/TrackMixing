@@ -14,4 +14,5 @@
     <string name="player_bottom_title">%1$s - %2$s</string>
     <string name="track_item_data_template">%1$s\u0020\u0020|\u0020\u0020%2$s\u0020\u0020|\u0020\u0020%3$s</string>
     <string name="tracks_list_toolbar_title">My studio</string>
+    <string name="track_player_action_button_content_description">Play or pause current media</string>
 </resources>

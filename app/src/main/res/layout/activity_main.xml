@@ -11,6 +11,18 @@
         android:id="@+id/v_background_gradient"
         layout="@layout/layout_gradient_background" />
 
+    <fragment xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/nav_host_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:defaultNavHost="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navGraph="@navigation/mobile_navigation"
+        tools:layout="@layout/fragment_tracks_list" />
 
     <include
         android:id="@+id/layout_progress_container"
@@ -21,24 +33,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <fragment xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/nav_host_fragment"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:defaultNavHost="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:navGraph="@navigation/mobile_navigation"
-        tools:layout="@layout/fragment_tracks_list" />
 
     <FrameLayout
         android:id="@+id/layout_player"
         android:layout_width="0dp"
         android:layout_height="54dp"
-        android:padding="12dp"
+        android:padding="@dimen/track_player_inner_padding"
         app:layout_constraintTop_toBottomOf="parent">
 
         <FrameLayout
@@ -50,58 +50,36 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/v_bottom_player_progress_indicator"
-        android:layout_width="1px"
-        android:layout_height="4dp"
-        app:cardBackgroundColor="#ff0000"
-        app:contentPadding="0dp"
-        android:paddingHorizontal="12dp"
+        style="@style/MainTrackPlayerProgressIndicatorStyle"
         app:layout_constraintBottom_toTopOf="@id/layout_player"
         app:layout_constraintStart_toStartOf="@id/layout_player" />
 
     <com.smascaro.trackmixing.main.components.player.view.widget.InheritingTextSwitcher
         android:id="@+id/tv_track_title_player_bottom"
+        style="@style/MainTrackPlayerTitleTextSwitcherStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:elevation="400dp"
-        android:padding="12dp"
-        android:textAlignment="center"
-        app:childrenTextColor="#000"
-        app:childrenTextSize="8sp"
         app:layout_constraintBottom_toBottomOf="@id/layout_player"
         app:layout_constraintStart_toStartOf="@id/layout_player"
         app:layout_constraintTop_toTopOf="@id/layout_player">
 
-        <com.google.android.material.textview.MaterialTextView
-            style="@style/AppTheme.TM.PlayerBar.Track.TitleTextAppearance"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/player_bottom_title"
-            android:textAlignment="center" />
+        <com.google.android.material.textview.MaterialTextView style="@style/AppTheme.TM.PlayerBar.Track.TitleTextAppearance" />
 
-        <com.google.android.material.textview.MaterialTextView
-            style="@style/AppTheme.TM.PlayerBar.Track.TitleTextAppearance"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/player_bottom_title"
-            android:textAlignment="center" />
+        <com.google.android.material.textview.MaterialTextView style="@style/AppTheme.TM.PlayerBar.Track.TitleTextAppearance" />
     </com.smascaro.trackmixing.main.components.player.view.widget.InheritingTextSwitcher>
 
     <ImageView
         android:id="@+id/iv_action_button_player_bottom"
+        style="@style/MainTrackPlayerActionButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:src="@drawable/ic_play"
         app:layout_constraintBottom_toBottomOf="@id/layout_player"
         app:layout_constraintEnd_toEndOf="@id/layout_player"
         app:layout_constraintTop_toTopOf="@id/layout_player" />
 
     <View
         android:id="@+id/v_background_action_button"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:alpha="0"
-        android:background="@drawable/circular_shape"
+        style="@style/MainTrackPlayerActionButtonBackgroundStyle"
         app:layout_constraintBottom_toBottomOf="@id/iv_action_button_player_bottom"
         app:layout_constraintEnd_toEndOf="@id/iv_action_button_player_bottom"
         app:layout_constraintStart_toStartOf="@id/iv_action_button_player_bottom"
@@ -109,9 +87,7 @@
 
     <View
         android:id="@+id/draggableArea"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:padding="12dp"
+        style="@style/MainTrackPlayerDraggableAreaStyle"
         app:layout_constraintBottom_toBottomOf="@id/layout_player"
         app:layout_constraintEnd_toStartOf="@id/iv_action_button_player_bottom"
         app:layout_constraintStart_toStartOf="@id/layout_player"
@@ -119,9 +95,7 @@
 
     <FrameLayout
         android:id="@+id/layout_faders_wrapper"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:alpha="0"
+        style="@style/MainTrackPlayerFadersLayoutStyle"
         app:layout_constraintBottom_toTopOf="@id/iv_action_button_player_bottom"
         app:layout_constraintEnd_toEndOf="@id/layout_player"
         app:layout_constraintStart_toStartOf="@id/layout_player"

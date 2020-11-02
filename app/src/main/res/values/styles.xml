@@ -28,11 +28,13 @@
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
+
     <style name="AppTheme.TM.NoActionBar.TranslucentStatusBar" parent="AppTheme.TM.NoActionBar">
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:statusBarColor">@color/translucent</item>
     </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
@@ -58,5 +60,49 @@
         <item name="android:gravity">start|center_vertical</item>
         <item name="android:singleLine">true</item>
         <item name="android:textColor">@color/textOnAccent</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:text">@string/player_bottom_title</item>
+    </style>
+
+    <style name="MainTrackPlayerProgressIndicatorStyle">
+        <item name="android:layout_width">1px</item>
+        <item name="android:layout_height">4dp</item>
+        <item name="android:paddingRight">@dimen/track_player_inner_padding</item>
+        <item name="android:paddingLeft">@dimen/track_player_inner_padding</item>
+        <item name="cardBackgroundColor">@color/track_player_progress_indicator_color</item>
+        <item name="contentPadding">0dp</item>
+    </style>
+
+    <style name="MainTrackPlayerTitleTextSwitcherStyle">
+        <item name="android:padding">@dimen/track_player_inner_padding</item>
+        <item name="android:textAlignment">center</item>
+        <item name="childrenTextColor">@color/textOnSecondary</item>
+        <item name="childrenTextSize">8sp</item>
+    </style>
+
+    <style name="MainTrackPlayerActionButtonStyle">
+        <item name="android:layout_marginEnd">16dp</item>
+        <item name="android:src">@drawable/ic_play</item>
+        <item name="android:contentDescription">@string/track_player_action_button_content_description</item>
+    </style>
+
+    <style name="MainTrackPlayerActionButtonBackgroundStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:alpha">0</item>
+        <item name="android:background">@drawable/circular_shape</item>
+    </style>
+
+    <style name="MainTrackPlayerDraggableAreaStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:padding">@dimen/track_player_inner_padding</item>
+    </style>
+
+    <style name="MainTrackPlayerFadersLayoutStyle">
+
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:alpha">0</item>
     </style>
 </resources>
