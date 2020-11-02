@@ -13,3 +13,8 @@
 /captures
 .externalNativeBuild
 .cxx
+/app/release
+/app/debug
+/keys
+/design
+/app/src/main/res/values/keys.xml
