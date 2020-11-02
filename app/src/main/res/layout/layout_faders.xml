@@ -1,24 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_player_faders"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="parent"
-    app:layout_constraintTop_toTopOf="parent">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:id="@+id/container_faders"
         android:layout_width="match_parent"
         android:layout_height="@dimen/track_player_fader_container_height"
+        android:layout_alignParentTop="true"
         android:orientation="horizontal"
-        android:weightSum="4"
-        app:layout_constraintBottom_toTopOf="@id/container_progress"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:baselineAligned="false">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -86,38 +78,30 @@
 
     </LinearLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:id="@+id/container_progress"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/container_faders">
+        android:layout_height="wrap_content"
+        android:layout_below="@id/container_faders">
 
         <SeekBar
             android:id="@+id/sb_track_player_timestamp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="24dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            style="@style/TrackPlayerFadersProgressSeekBar" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_track_player_current_timestamp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="00:00"
-            app:layout_constraintStart_toStartOf="@id/sb_track_player_timestamp"
-            app:layout_constraintTop_toBottomOf="@id/sb_track_player_timestamp" />
+            android:layout_below="@id/sb_track_player_timestamp"
+            android:layout_alignStart="@id/sb_track_player_timestamp"
+            android:text="@string/track_player_progress_current_timestamp_default_text" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_track_player_length"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="--:--"
-            app:layout_constraintEnd_toEndOf="@id/sb_track_player_timestamp"
-            app:layout_constraintTop_toBottomOf="@id/sb_track_player_timestamp" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_below="@id/sb_track_player_timestamp"
+            android:layout_alignEnd="@id/sb_track_player_timestamp"
+            android:text="@string/track_player_progress_length_default_text" />
+    </RelativeLayout>
+</RelativeLayout>
