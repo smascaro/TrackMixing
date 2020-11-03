@@ -52,7 +52,9 @@ class MixPlayerServiceController @Inject constructor(
     }
 
     override fun onMediaStateChange() {
-        updateNotification()
+        ui.launch {
+            updateNotification()
+        }
     }
 
     override fun onSongFinished() {

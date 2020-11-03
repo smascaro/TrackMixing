@@ -11,6 +11,7 @@ import com.smascaro.trackmixing.common.data.datasource.repository.TracksReposito
 import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepositoryImpl
 import com.smascaro.trackmixing.common.data.network.api.NodeContract
 import com.smascaro.trackmixing.common.data.network.api.YoutubeContract
+import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
 import com.smascaro.trackmixing.common.di.main.RetrofitForBinaryData
 import com.smascaro.trackmixing.common.di.main.RetrofitForJsonData
 import com.smascaro.trackmixing.common.di.main.RetrofitForYoutubeApi
@@ -126,9 +127,10 @@ class AppModule {
     @PlayerNotificationHelperImplementation
     fun providePlayerNotificationHelper(
         context: Context,
-        requestManager: RequestManager
+        requestManager: RequestManager,
+        ui: MainCoroutineScope
     ): NotificationHelper {
-        return PlayerNotificationHelper(context, requestManager)
+        return PlayerNotificationHelper(context, requestManager, ui)
     }
 
     @Singleton

@@ -14,14 +14,14 @@ abstract class NotificationHelper(protected val context: Context) {
         const val CHANNEL_ID = "NOTIFICATION_CHANNEL_ID"
     }
 
-    protected val notificationManager: NotificationManagerCompat
-    protected lateinit var notificationBuilder: NotificationCompat.Builder
+    protected val notificationManager: NotificationManagerCompat = NotificationManagerCompat.from(context)
+    protected var notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
 
     init {
-        notificationManager = NotificationManagerCompat.from(context)
         createNotificationChannel()
     }
 
+    fun createBuilder() = NotificationCompat.Builder(context, CHANNEL_ID)
     fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationChannel = NotificationChannel(

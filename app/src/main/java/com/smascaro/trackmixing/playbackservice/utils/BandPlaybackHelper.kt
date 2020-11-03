@@ -44,6 +44,8 @@ class BandPlaybackHelper @Inject constructor(
             author = getTrack().author
             trackThumbnailUrl = getTrack().thumbnailUrl
             isMasterPlaying = isPlaying()
+            duration = getTrack().secondsLong.toLong()
+            currentPosition = getTimestampSeconds().toLong()
         }
     }
 

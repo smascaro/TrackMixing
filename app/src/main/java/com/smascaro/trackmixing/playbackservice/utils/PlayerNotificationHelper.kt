@@ -4,25 +4,28 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
+import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
+import android.support.v4.media.session.PlaybackStateCompat
 import androidx.core.app.NotificationCompat
 import com.bumptech.glide.RequestManager
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.data.model.NotificationData
+import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
 import com.smascaro.trackmixing.common.error.WrongArgumentType
 import com.smascaro.trackmixing.common.utils.ui.NotificationHelper
+import com.smascaro.trackmixing.common.utils.ui.loadBitmap
 import com.smascaro.trackmixing.main.view.MainActivity
 import com.smascaro.trackmixing.playbackservice.MixPlayerService
 import com.smascaro.trackmixing.playbackservice.model.MixPlaybackState
+import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 class PlayerNotificationHelper @Inject constructor(
     context: Context,
-    val glide: RequestManager
+    val glide: RequestManager,
+    private val ui: MainCoroutineScope
 ) : NotificationHelper(context) {
     companion object {
         const val NOTIFICATION_ID = 2000
@@ -36,32 +39,45 @@ class PlayerNotificationHelper @Inject constructor(
         if (data !is MixPlaybackState) {
             throw WrongArgumentType("Argument for player notification must be of type MixPlaybackState")
         }
-        val playbackState = data
-        glide
-            .asBitmap()
-            .load(playbackState.trackThumbnailUrl)
-            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-            .into(object : CustomTarget<Bitmap>() {
-                override fun onLoadCleared(placeholder: Drawable?) {
-                    if (mThumbnailBitmap != null) {
-                        mThumbnailBitmap!!.recycle()
-                    }
-                }
+        Timber.d("Notification data: $data")
+        //        glide
+//            .asBitmap()
+//            .load(playbackState.trackThumbnailUrl)
+//            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+//            .into(object : CustomTarget<Bitmap>() {
+//                override fun onLoadCleared(placeholder: Drawable?) {
+//                    if (mThumbnailBitmap != null) {
+//                        mThumbnailBitmap!!.recycle()
+//                    }
+//                }
+//
+//                override fun onResourceReady(
+//                    resource: Bitmap,
+//                    transition: Transition<in Bitmap>?
+//                ) {
+//                    mThumbnailBitmap = resource
+//                    notificationBuilder.setLargeIcon(mThumbnailBitmap)
+//                    notificationManager.notify(
+//                        NOTIFICATION_ID,
+//                        notificationBuilder.build()
+//                    )
+//                }
+//            })
+        notificationBuilder = createBuilder()
+        ui.launch {
+            val thumbnailBitmap = glide.loadBitmap(data.trackThumbnailUrl)
+            if (thumbnailBitmap != null) {
+                mThumbnailBitmap = thumbnailBitmap
+                notificationBuilder.setLargeIcon(mThumbnailBitmap)
+//            notificationManager.notify(
+//                NOTIFICATION_ID,
+//                notificationBuilder.build()
+//            )
+            }
 
-                override fun onResourceReady(
-                    resource: Bitmap,
-                    transition: Transition<in Bitmap>?
-                ) {
-                    mThumbnailBitmap = resource
-                    notificationBuilder.setLargeIcon(mThumbnailBitmap)
-                    notificationManager.notify(
-                        NOTIFICATION_ID,
-                        notificationBuilder.build()
-                    )
-                }
-            })
-        val actionPlayPause = createIntentMaster(playbackState.isMasterPlaying)
-        val drawablePlayPause = if (playbackState.isMasterPlaying) {
+        }
+        val actionPlayPause = createIntentMaster(data.isMasterPlaying)
+        val drawablePlayPause = if (data.isMasterPlaying) {
             R.drawable.ic_pause
         } else {
             R.drawable.ic_play
@@ -74,25 +90,53 @@ class PlayerNotificationHelper @Inject constructor(
                     MEDIA_SESSION_TAG
                 )
         }
-        notificationBuilder =
-            NotificationCompat.Builder(
-                context,
-                CHANNEL_ID
-            ).apply {
-                setSmallIcon(R.drawable.ic_note)
-                setContentTitle(playbackState.trackTitle)
-                setOnlyAlertOnce(true)
-                setShowWhen(false)
-                addAction(drawablePlayPause, "Play/Pause", actionPlayPause)
-                setStyle(
-                    androidx.media.app.NotificationCompat.MediaStyle()
-                        .setShowActionsInCompactView(0)
-                        .setMediaSession(mMediaSession?.sessionToken)
-                )
-                setContentIntent(createTapIntent())
-                setDeleteIntent(createDeleteIntent())
-                priority = NotificationCompat.PRIORITY_HIGH
+        val mediaMetadataBuilder = MediaMetadataCompat.Builder().apply {
+            putString(MediaMetadataCompat.METADATA_KEY_ARTIST, data.author)
+            putString(MediaMetadataCompat.METADATA_KEY_TITLE, data.trackTitle)
+            putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, data.trackThumbnailUrl)
+            putLong(MediaMetadataCompat.METADATA_KEY_DURATION, data.duration * 1000)
+        }
+        val playbackStateBuilder = PlaybackStateCompat.Builder().apply {
+            setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE or PlaybackStateCompat.ACTION_SEEK_TO)
+            setState(
+                when (data.isMasterPlaying) {
+                    true -> PlaybackStateCompat.STATE_PLAYING
+                    false -> PlaybackStateCompat.STATE_PAUSED
+                },
+                data.currentPosition,
+                1f
+            )
+        }
+        mMediaSession?.setMetadata(mediaMetadataBuilder.build())
+        mMediaSession?.setPlaybackState(playbackStateBuilder.build())
+        mMediaSession?.setCallback(object : MediaSessionCompat.Callback() {
+            override fun onPlay() {
+                super.onPlay()
+                Timber.d("Player notification. Overridden onPlay")
+                createIntentMaster(false).send()
             }
+
+            override fun onPause() {
+                super.onPause()
+                Timber.d("Player notification. Overridden onPause")
+                createIntentMaster(true).send()
+            }
+        })
+        notificationBuilder.apply {
+            setSmallIcon(R.drawable.ic_note)
+            setContentTitle(data.trackTitle)
+            setOnlyAlertOnce(true)
+            setShowWhen(false)
+            addAction(drawablePlayPause, "Play/Pause", actionPlayPause)
+            setStyle(
+                androidx.media.app.NotificationCompat.MediaStyle()
+                    .setShowActionsInCompactView(0)
+                    .setMediaSession(mMediaSession?.sessionToken)
+            )
+            setContentIntent(createTapIntent())
+            setDeleteIntent(createDeleteIntent())
+            priority = NotificationCompat.PRIORITY_HIGH
+        }
         if (mThumbnailBitmap != null) {
             notificationBuilder.setLargeIcon(mThumbnailBitmap)
         }

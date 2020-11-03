@@ -20,20 +20,18 @@ class DownloadNotificationHelper(context: Context) : NotificationHelper(context)
             throw WrongArgumentType("Argument for download notification must be of type DownloadProgressState")
         }
         val progressState = data
-        notificationBuilder =
-            NotificationCompat.Builder(context, CHANNEL_ID)
-                .apply {
-                    setSmallIcon(R.drawable.ic_note)
-                    setContentTitle(progressState.trackTitle)
-                    setOnlyAlertOnce(true)
-                    setShowWhen(true)
-                    setOngoing(true)
-                    setStyle(
-                        NotificationCompat.BigTextStyle()
-                            .bigText("${progressState.statusMessage} - ${progressState.progress}%")
-                    )
-                    priority = NotificationCompat.PRIORITY_HIGH
-                }
+        notificationBuilder.apply {
+            setSmallIcon(R.drawable.ic_note)
+            setContentTitle(progressState.trackTitle)
+            setOnlyAlertOnce(true)
+            setShowWhen(true)
+            setOngoing(true)
+            setStyle(
+                NotificationCompat.BigTextStyle()
+                    .bigText("${progressState.statusMessage} - ${progressState.progress}%")
+            )
+            priority = NotificationCompat.PRIORITY_HIGH
+        }
         notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
     }
 }
