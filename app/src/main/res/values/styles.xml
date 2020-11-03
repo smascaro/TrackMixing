@@ -118,8 +118,10 @@
         <item name="android:thumb">@drawable/seekbar_volume_thumb</item>
         <item name="showNumericProgress">true</item>
         <item name="progress_position">dynamic_trespass</item>
-        <item name="trespass_mode">start|end</item>
+        <item name="trespass_mode">end</item>
         <item name="suffixText">%</item>
+        <item name="orientation">vertical</item>
+        <item name="textSize">18sp</item>
     </style>
 
     <style name="TrackPlayerFadersLabel">
