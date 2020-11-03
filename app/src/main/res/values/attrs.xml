@@ -4,4 +4,8 @@
         <attr name="childrenTextSize" format="dimension" />
         <attr name="childrenTextColor" format="color" />
     </declare-styleable>
+
+    <declare-styleable name="VerticalSeekbar">
+        <attr name="showNumericProgress" format="boolean" />
+    </declare-styleable>
 </resources>
