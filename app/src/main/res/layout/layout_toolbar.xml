@@ -5,17 +5,4 @@
     style="@style/AppTheme.TM.ActionBar"
     android:layout_width="match_parent"
     android:layout_height="?android:attr/actionBarSize"
-    app:title="TrackMixing">
-
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tv_toolbar_title"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:text="My studio"
-        android:textAppearance="@style/AppTheme.TM.ActionBar.TitleTextStyle"
-        android:visibility="visible" />
-
-
-</androidx.appcompat.widget.Toolbar>
+    app:title="@string/tracks_list_toolbar_title" />

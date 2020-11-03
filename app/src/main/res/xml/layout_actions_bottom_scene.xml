@@ -63,7 +63,7 @@
         <Constraint
             android:id="@+id/layout_player"
             android:layout_width="0dp"
-            android:layout_height="106dp"
+            android:layout_height="@dimen/track_player_when_visible_height"
             android:visibility="visible"
             motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintEnd_toEndOf="parent"
@@ -136,7 +136,7 @@
             android:id="@+id/tv_track_title_player_bottom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="120dp"
+            android:layout_marginTop="80dp"
             motion:layout_constraintEnd_toEndOf="@id/layout_player"
             motion:layout_constraintStart_toStartOf="@id/layout_player"
             motion:layout_constraintTop_toTopOf="@id/layout_player">

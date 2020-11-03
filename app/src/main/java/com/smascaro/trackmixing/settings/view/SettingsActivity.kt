@@ -27,7 +27,7 @@ class SettingsActivity : BaseActivity() {
         setContentView(rootView)
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.settings_fragment_container, SettingsFragment.create())
+            .replace(R.id.activity_settings_container, SettingsFragment.create())
             .commit()
     }
 }
