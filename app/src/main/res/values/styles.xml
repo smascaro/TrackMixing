@@ -117,6 +117,9 @@
         <item name="android:splitTrack">false</item>
         <item name="android:thumb">@drawable/seekbar_volume_thumb</item>
         <item name="showNumericProgress">true</item>
+        <item name="progress_position">dynamic_trespass</item>
+        <item name="trespass_mode">start|end</item>
+        <item name="suffixText">%</item>
     </style>
 
     <style name="TrackPlayerFadersLabel">
