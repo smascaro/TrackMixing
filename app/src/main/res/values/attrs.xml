@@ -4,4 +4,25 @@
         <attr name="childrenTextSize" format="dimension" />
         <attr name="childrenTextColor" format="color" />
     </declare-styleable>
+
+    <declare-styleable name="PivotableSeekbar">
+        <attr name="showNumericProgress" format="boolean" />
+        <attr name="suffixText" format="string" />
+        <attr name="prefixText" format="string" />
+        <attr name="progress_position" format="enum">
+            <enum name="center_fixed" value="0" />
+            <enum name="dynamic_trespass" value="1" />
+            <!-- The dynamic_no_trespass mode is the equivalent to set dynamic_trespass and not setting trespass_mode -->
+            <enum name="dynamic_no_trespass" value="2" />
+        </attr>
+        <attr name="trespass_mode" format="flags">
+            <flag name="start" value="1" />
+            <flag name="end" value="2" />
+        </attr>
+        <attr name="orientation" format="enum">
+            <enum name="horizontal" value="0" />
+            <enum name="vertical" value="1" />
+        </attr>
+        <attr name="textSize" format="dimension" />
+    </declare-styleable>
 </resources>

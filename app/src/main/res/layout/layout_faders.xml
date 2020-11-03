@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
-            <com.smascaro.trackmixing.main.components.player.view.widget.VerticalSeekbar
+            <com.smascaro.trackmixing.main.components.player.view.widget.PivotableSeekbar
                 android:id="@+id/sb_track_player_vocals"
                 style="@style/TrackPlayerFadersSeekBarStyle"
                 android:layout_alignBottom="@id/tv_track_player_vocals" />
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
-            <com.smascaro.trackmixing.main.components.player.view.widget.VerticalSeekbar
+            <com.smascaro.trackmixing.main.components.player.view.widget.PivotableSeekbar
                 android:id="@+id/sb_track_player_other"
                 style="@style/TrackPlayerFadersSeekBarStyle"
                 android:layout_alignBottom="@id/tv_track_player_other" />
@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
-            <com.smascaro.trackmixing.main.components.player.view.widget.VerticalSeekbar
+            <com.smascaro.trackmixing.main.components.player.view.widget.PivotableSeekbar
                 android:id="@+id/sb_track_player_bass"
                 style="@style/TrackPlayerFadersSeekBarStyle"
                 android:layout_alignBottom="@id/tv_track_player_bass" />
@@ -65,7 +65,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
-            <com.smascaro.trackmixing.main.components.player.view.widget.VerticalSeekbar
+            <com.smascaro.trackmixing.main.components.player.view.widget.PivotableSeekbar
                 android:id="@+id/sb_track_player_drums"
                 style="@style/TrackPlayerFadersSeekBarStyle"
                 android:layout_alignBottom="@id/tv_track_player_drums" />

@@ -1,7 +1,6 @@
 package com.smascaro.trackmixing.main.components.player.view
 
 import android.content.SharedPreferences
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -15,7 +14,7 @@ import com.smascaro.trackmixing.common.utils.*
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
 import com.smascaro.trackmixing.main.components.player.model.TrackPlayerData
 import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvcImpl.MotionState.*
-import com.smascaro.trackmixing.main.components.player.view.widget.VerticalSeekbar
+import com.smascaro.trackmixing.main.components.player.view.widget.PivotableSeekbar
 import com.smascaro.trackmixing.playbackservice.MixPlayerServiceChecker
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
 import timber.log.Timber
@@ -47,10 +46,10 @@ class TrackPlayerViewMvcImpl @Inject constructor(
     private lateinit var songProgressSeekbar: SeekBar
 
     //SeekBars
-    private lateinit var vocalsVolumeSeekbar: VerticalSeekbar
-    private lateinit var otherVolumeSeekbar: VerticalSeekbar
-    private lateinit var bassVolumeSeekbar: VerticalSeekbar
-    private lateinit var drumsVolumeSeekbar: VerticalSeekbar
+    private lateinit var vocalsVolumeSeekbar: PivotableSeekbar
+    private lateinit var otherVolumeSeekbar: PivotableSeekbar
+    private lateinit var bassVolumeSeekbar: PivotableSeekbar
+    private lateinit var drumsVolumeSeekbar: PivotableSeekbar
 
     //Private fields
     private var isBottomBarShown = false
