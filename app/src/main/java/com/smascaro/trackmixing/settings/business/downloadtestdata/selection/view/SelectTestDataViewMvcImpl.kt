@@ -2,11 +2,11 @@ package com.smascaro.trackmixing.settings.business.downloadtestdata.selection.vi
 
 import android.graphics.Color
 import android.view.View
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textview.MaterialTextView
 import com.smascaro.trackmixing.R
@@ -28,7 +28,7 @@ class SelectTestDataViewMvcImpl @Inject constructor(
     private lateinit var recyclerViewTestDataBundleInfo: RecyclerView
     private lateinit var startDownloadButton: MaterialButton
     private lateinit var availableSpaceTextView: MaterialTextView
-    private lateinit var loadingProgressBar: ProgressBar
+    private lateinit var shimmerContainer: ShimmerFrameLayout
 
     private var availableBytes = Long.MAX_VALUE
     private var defaultMaterialTextColor: Int = 0
@@ -46,9 +46,8 @@ class SelectTestDataViewMvcImpl @Inject constructor(
         startDownloadButton = findViewById(R.id.btn_select_test_data_start_download)
         totalDownloadSizeText = findViewById(R.id.tv_select_test_data_total_size)
         availableSpaceTextView = findViewById(R.id.tv_select_test_data_available_space)
-        loadingProgressBar = findViewById(R.id.pb_fetch_test_data_loading_progress)
+        shimmerContainer = findViewById(R.id.shimmer_container_test_data)
 
-        loadingProgressBar.visibility = View.INVISIBLE
         defaultMaterialTextColor = totalDownloadSizeText.textColors.defaultColor
         startDownloadButton.setOnClickListener {
             getListeners().forEach {
@@ -61,11 +60,13 @@ class SelectTestDataViewMvcImpl @Inject constructor(
     }
 
     override fun showProgress() {
-        loadingProgressBar.visibility = View.VISIBLE
+        shimmerContainer.visibility = View.VISIBLE
+        shimmerContainer.startShimmer()
     }
 
     override fun hideProgress() {
-        loadingProgressBar.visibility = View.INVISIBLE
+        shimmerContainer.visibility = View.GONE
+        shimmerContainer.stopShimmer()
     }
 
     override fun bindTracks(tracks: List<TestDataBundleInfo>) {

@@ -4,11 +4,11 @@ import android.annotation.SuppressLint
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
 import com.smascaro.trackmixing.common.utils.ui.UiUtils
@@ -31,7 +31,7 @@ class SearchResultsViewMvcImpl @Inject constructor(
     private lateinit var clearInputButton: View
     private lateinit var resultsRecyclerView: RecyclerView
     private lateinit var backButton: View
-    private lateinit var loadingProgressBar: ProgressBar
+    private lateinit var shimmerContainer: ShimmerFrameLayout
 
     override fun initialize() {
         super.initialize()
@@ -39,12 +39,11 @@ class SearchResultsViewMvcImpl @Inject constructor(
         searchInput = findViewById(R.id.et_toolbar_search_input)
         clearInputButton = findViewById(R.id.iv_toolbar_search_clear)
         backButton = findViewById(R.id.iv_toolbar_back_button)
-        loadingProgressBar = findViewById(R.id.pb_search_loading_progress)
+        shimmerContainer = findViewById(R.id.shimmer_container)
 
         initializeBackButton()
         initializeSearchInput()
         initializeRecyclerView()
-        initializeLoadingProgressBar()
 
         focusSearchInput()
     }
@@ -92,10 +91,6 @@ class SearchResultsViewMvcImpl @Inject constructor(
         }
     }
 
-    private fun initializeLoadingProgressBar() {
-        loadingProgressBar.visibility = View.INVISIBLE
-    }
-
     private fun focusSearchInput() {
         uiUtils.showKeyboard()
         searchInput.requestFocus()
@@ -108,12 +103,14 @@ class SearchResultsViewMvcImpl @Inject constructor(
         }
     }
 
-    override fun showProgressBar() {
-        loadingProgressBar.visibility = View.VISIBLE
+    override fun showProgress() {
+        shimmerContainer.visibility = View.VISIBLE
+        shimmerContainer.startShimmer()
     }
 
-    override fun hideProgressBar() {
-        loadingProgressBar.visibility = View.INVISIBLE
+    override fun hideProgress() {
+        shimmerContainer.visibility = View.GONE
+        shimmerContainer.stopShimmer()
     }
 
     override fun bindResults(results: List<SearchResult>) {
