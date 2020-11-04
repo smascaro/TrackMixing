@@ -7,7 +7,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.utils.ResourcesWrapper
-import com.smascaro.trackmixing.common.utils.TimeHelper
+import com.smascaro.trackmixing.common.utils.time.TimeHelper
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
 import javax.inject.Inject
 
@@ -48,7 +48,7 @@ class TracksListItemViewMvcImpl @Inject constructor(
         this.track = track
         trackTitleTxt.text = track.title
         val authorText = track.author
-        val durationText = TimeHelper.fromSeconds(track.secondsLong.toLong()).toStringRepresentation()
+        val durationText = TimeHelper.fromSeconds(track.secondsLong.value).toStringRepresentation()
         val stateText = "Downloaded"
         trackDetailsTxt.text =
             resources.getString(R.string.track_item_data_template, authorText, durationText, stateText)

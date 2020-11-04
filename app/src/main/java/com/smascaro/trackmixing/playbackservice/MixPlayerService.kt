@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.smascaro.trackmixing.TrackMixingApplication
 import com.smascaro.trackmixing.common.data.model.Track
+import com.smascaro.trackmixing.common.utils.time.Seconds
 import com.smascaro.trackmixing.playbackservice.controller.MixPlayerServiceController
 import com.smascaro.trackmixing.playbackservice.controller.MixPlayerServiceController.ActionArgs
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
@@ -44,12 +45,12 @@ class MixPlayerService : BaseService() {
                 putInt(EXTRA_VOLUME_VALUE_PARAM_KEY, volume)
             })
 
-        fun seek(context: Context, seconds: Int) =
+        fun seek(context: Context, seconds: Seconds) =
             runCommand(
                 context,
                 ACTION_SEEK,
                 Bundle().apply {
-                    putInt(EXTRA_SEEK_SECONDS_PARAM_KEY, seconds)
+                    putInt(EXTRA_SEEK_SECONDS_PARAM_KEY, seconds.value.toInt())
                 }
             )
 

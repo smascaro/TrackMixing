@@ -16,6 +16,7 @@ import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.data.model.NotificationData
 import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
 import com.smascaro.trackmixing.common.error.WrongArgumentType
+import com.smascaro.trackmixing.common.utils.time.asMillis
 import com.smascaro.trackmixing.common.utils.ui.NotificationHelper
 import com.smascaro.trackmixing.common.utils.ui.loadBitmap
 import com.smascaro.trackmixing.main.view.MainActivity
@@ -28,7 +29,8 @@ import javax.inject.Inject
 class PlayerNotificationHelper @Inject constructor(
     context: Context,
     val glide: RequestManager,
-    private val ui: MainCoroutineScope
+    private val ui: MainCoroutineScope,
+    private val playbackSession: PlaybackSession
 ) : NotificationHelper(context) {
     companion object {
         const val NOTIFICATION_ID = 2000
@@ -70,7 +72,7 @@ class PlayerNotificationHelper @Inject constructor(
             putString(MediaMetadataCompat.METADATA_KEY_ARTIST, data.author)
             putString(MediaMetadataCompat.METADATA_KEY_TITLE, data.trackTitle)
             putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, data.trackThumbnailUrl)
-            putLong(MediaMetadataCompat.METADATA_KEY_DURATION, data.duration * 1000)
+            putLong(MediaMetadataCompat.METADATA_KEY_DURATION, data.duration.value)
         }
         val playbackStateBuilder = PlaybackStateCompat.Builder().apply {
             setActions(ACTION_PLAY or ACTION_PAUSE or ACTION_SEEK_TO)
@@ -79,7 +81,7 @@ class PlayerNotificationHelper @Inject constructor(
                     true -> PlaybackStateCompat.STATE_PLAYING
                     false -> PlaybackStateCompat.STATE_PAUSED
                 },
-                data.currentPosition * 1000,
+                data.currentPosition.value,
                 1f
             )
 
@@ -88,7 +90,7 @@ class PlayerNotificationHelper @Inject constructor(
         mMediaSession?.setPlaybackState(playbackStateBuilder.build())
         mMediaSession?.setCallback(object : MediaSessionCompat.Callback() {
             override fun onSeekTo(pos: Long) {
-                MixPlayerService.seek(context, (pos / 1000).toInt())
+                playbackSession.seek(pos.asMillis().seconds())
             }
         })
         notificationBuilder.apply {

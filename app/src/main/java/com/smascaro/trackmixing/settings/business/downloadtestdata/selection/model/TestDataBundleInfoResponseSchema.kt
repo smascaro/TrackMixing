@@ -1,6 +1,6 @@
 package com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model
 
-import com.smascaro.trackmixing.common.utils.TimeHelper
+import com.smascaro.trackmixing.common.utils.time.TimeHelper
 
 data class TestDataBundleInfoResponseSchema(
     val files: List<File>,

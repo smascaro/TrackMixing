@@ -1,9 +1,16 @@
 package com.smascaro.trackmixing.playbackservice.controller
 
-import com.smascaro.trackmixing.common.utils.TimeHelper
+import com.smascaro.trackmixing.common.utils.time.Milliseconds
+import com.smascaro.trackmixing.common.utils.time.TimeHelper
+import com.smascaro.trackmixing.common.utils.time.asMillis
 import com.smascaro.trackmixing.playbackservice.model.TimestampChangedEvent
 import com.smascaro.trackmixing.playbackservice.utils.BandPlaybackHelper
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import timber.log.Timber
 
@@ -13,7 +20,7 @@ class TimestampUpdateThread(
     private val scope: CoroutineScope
 ) {
     private lateinit var job: Job
-    private var currentTimestampSeconds: Int = 0
+    private var currentTimestamp: Milliseconds = 0.asMillis()
     private val totalLength = bandPlaybackHelper.getTrack().secondsLong
 
     fun start() {
@@ -24,16 +31,16 @@ class TimestampUpdateThread(
         try {
             while (true) {
                 ensureActive()
-                currentTimestampSeconds = bandPlaybackHelper.getTimestampSeconds()
+                currentTimestamp = bandPlaybackHelper.getTimestamp()
                 Timber.d(
                     "Sending timestamp ${
-                        TimeHelper.fromSeconds(currentTimestampSeconds.toLong())
+                        TimeHelper.fromSeconds(currentTimestamp.seconds().value)
                             .toStringRepresentation()
                     }"
                 )
                 eventBus.post(
                     TimestampChangedEvent(
-                        currentTimestampSeconds,
+                        currentTimestamp.seconds(),
                         totalLength
                     )
                 )

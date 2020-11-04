@@ -104,17 +104,6 @@ class PlaybackStateManager @Inject constructor(
         return track.toModel()
     }
 
-    fun setCurrentPlayingTimestamp(timestampMillis: Long) {
-        sharedPreferences
-            .edit()
-            .putLong(SHARED_PREFERENCES_PLAYBACK_CURRENT_TIMESTAMP_MILLIS, timestampMillis)
-            .apply()
-    }
-
-    fun getCurrentPlayingTimestampMillis(): Long {
-        return sharedPreferences.getLong(SHARED_PREFERENCES_PLAYBACK_CURRENT_TIMESTAMP_MILLIS, 0)
-    }
-
     fun setCurrentPlayingVolumes(trackVolumeBundle: TrackVolumeBundle) {
         Timber.d("Storing volumes preferences")
         val jsonBundle = trackVolumeBundle.bundleAsString()

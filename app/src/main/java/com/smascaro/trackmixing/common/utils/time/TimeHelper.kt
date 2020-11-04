@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.common.utils
+package com.smascaro.trackmixing.common.utils.time
 
 class TimeHelper {
     companion object {

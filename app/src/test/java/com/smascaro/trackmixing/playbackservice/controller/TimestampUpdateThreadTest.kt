@@ -4,7 +4,12 @@ import com.smascaro.trackmixing.common.models.TestModels
 import com.smascaro.trackmixing.common.testdoubles.EventBusTd
 import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
 import com.smascaro.trackmixing.playbackservice.utils.BandPlaybackHelper
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.ObsoleteCoroutinesApi
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.After
@@ -88,7 +93,7 @@ class TimestampUpdateThreadTest {
     }
 
     private fun mockPlaybackHelperGetTimestampMillis() {
-        `when`(bandPlaybackHelper.getTimestampSeconds()).thenReturn(playingTrackTimestampMillis)
+        `when`(bandPlaybackHelper.getTimestamp()).thenReturn(playingTrackTimestampMillis)
     }
     // endregion helper methods
     // region helper classes

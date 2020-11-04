@@ -50,7 +50,7 @@ class DownloadTrackUseCase @Inject constructor(
                 author = track.author,
                 date = Calendar.getInstance().toString(),
                 thumbnailUrl = track.thumbnailUrl,
-                secondsLong = track.secondsLong
+                secondsLong = track.secondsLong.value.toInt()
             )
             trackDownloader.startDownload(downloadResponse.byteStream(), data)
         } catch (e: Exception) {

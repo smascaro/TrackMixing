@@ -1,10 +1,18 @@
 package com.smascaro.trackmixing.playbackservice.utils
 
 import android.content.Context
-import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.DefaultRenderersFactory
+import com.google.android.exoplayer2.ExoPlaybackException
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.smascaro.trackmixing.common.data.model.Track
+import com.smascaro.trackmixing.common.utils.time.Milliseconds
+import com.smascaro.trackmixing.common.utils.time.Seconds
+import com.smascaro.trackmixing.common.utils.time.asMillis
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
 import timber.log.Timber
@@ -70,7 +78,7 @@ class InstrumentPlayer @Deprecated(
         private const val OTHER_FILENAME = "other.mp3"
         private const val BASS_FILENAME = "bass.mp3"
         private const val DRUMS_FILENAME = "drums.mp3"
-        private const val PLAYER_MAX_VOLUME = 100f;
+        private const val PLAYER_MAX_VOLUME = 100f
     }
 
     lateinit var instrument: TrackInstrument
@@ -188,19 +196,19 @@ class InstrumentPlayer @Deprecated(
         return mVolume
     }
 
-    fun getTimestampSeconds(): Long {
-        return player.currentPosition / 1000
+    fun getTimestamp(): Milliseconds {
+        return player.currentPosition.asMillis()
     }
 
-    fun seek(timestampSeconds: Int) {
-        player.seekTo(timestampSeconds * 1000L)
+    fun seek(timestampSeconds: Seconds) {
+        seekMillis(timestampSeconds.millis())
     }
 
-    fun seekMillis(timestampMillis: Long) {
-        player.seekTo(timestampMillis)
+    fun seekMillis(timestampMillis: Milliseconds) {
+        player.seekTo(timestampMillis.value)
     }
 
-    fun getCurrentPosition(): Long {
-        return player.currentPosition
+    fun getCurrentPosition(): Milliseconds {
+        return player.currentPosition.asMillis()
     }
 }

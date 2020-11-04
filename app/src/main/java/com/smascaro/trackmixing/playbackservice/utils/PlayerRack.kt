@@ -2,6 +2,9 @@ package com.smascaro.trackmixing.playbackservice.utils
 
 import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
 import com.smascaro.trackmixing.common.utils.TrackVolumeBundle
+import com.smascaro.trackmixing.common.utils.time.Milliseconds
+import com.smascaro.trackmixing.common.utils.time.Seconds
+import com.smascaro.trackmixing.common.utils.time.asMillis
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -31,8 +34,8 @@ class PlayerRack(private val ui: MainCoroutineScope) : PlayerActions {
         rack[instrument]?.pause()
     }
 
-    override fun seek(newPosition: Int) = rack.forEach { it.value.seek(newPosition) }
-    override fun seekMillis(newPositionMillis: Long) =
+    override fun seek(newPosition: Seconds) = rack.forEach { it.value.seek(newPosition) }
+    override fun seekMillis(newPositionMillis: Milliseconds) =
         rack.forEach { it.value.seekMillis(newPositionMillis) }
 
     override fun getVolume(instrument: TrackInstrument): Float = rack[instrument]?.getVolume() ?: 0f
@@ -52,7 +55,7 @@ class PlayerRack(private val ui: MainCoroutineScope) : PlayerActions {
 
     private fun setVolumeMaster(volume: Int) = rack.forEach { it.value.setVolume(volume) }
 
-    override fun getCurrentPosition(): Long = rack.values.maxOf { it.getTimestampSeconds() }
+    override fun getCurrentPosition(): Milliseconds = rack.values.maxOf { it.getTimestamp().value }.asMillis()
 
     override fun isCompleted(instrument: TrackInstrument): Boolean =
         rack[instrument]?.isCompleted() ?: true
@@ -77,9 +80,9 @@ class PlayerRack(private val ui: MainCoroutineScope) : PlayerActions {
         )
     }
 
-    suspend fun getCurrentPositionsReport(cb: (report: List<Pair<TrackInstrument, Long>>) -> Unit) =
+    suspend fun getCurrentPositionsReport(cb: (report: List<Pair<TrackInstrument, Milliseconds>>) -> Unit) =
         ui.launch {
-            var report = listOf<Pair<TrackInstrument, Long>>()
+            var report = listOf<Pair<TrackInstrument, Milliseconds>>()
             val millisGetPositions = measureTimeMillis {
                 val asyncJobVocals =
                     async { TrackInstrument.VOCALS to rack[TrackInstrument.VOCALS]!!.getCurrentPosition() }
