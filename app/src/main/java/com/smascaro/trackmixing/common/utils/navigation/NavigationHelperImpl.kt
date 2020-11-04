@@ -20,23 +20,6 @@ class NavigationHelperImpl @Inject constructor() :
 
     override fun bindNavController(navController: NavController) {
         mNavController = navController
-        mNavController?.addOnDestinationChangedListener { controller, navDestination, arguments ->
-            var destination: NavigationDestination? = null
-            destination = when (navDestination.id) {
-                R.id.destination_search -> NavigationDestination.Search()
-                R.id.destination_tracks_list -> NavigationDestination.TracksList()
-                R.id.destination_player -> NavigationDestination.Player()
-                R.id.destination_settings -> NavigationDestination.Settings()
-                R.id.destination_select_test_data -> NavigationDestination.SelectTestData()
-                R.id.destination_download_test_data -> NavigationDestination.DownloadTestData()
-                else -> null
-            }
-//            if (destination != null) {
-//                getListeners().forEach {
-//                    it.onDestinationChange(destination)
-//                }
-//            }
-        }
     }
 
     override fun toPlayer(track: Track) {
