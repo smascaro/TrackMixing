@@ -11,9 +11,6 @@
         android:label="fragment_tracks_list"
         tools:layout="@layout/fragment_tracks_list">
         <action
-            android:id="@+id/action_destination_tracks_list_to_destination_player"
-            app:destination="@id/destination_player" />
-        <action
             android:id="@+id/action_destination_tracks_list_to_destination_search"
             app:destination="@id/destination_search" />
         <action
@@ -24,21 +21,7 @@
         android:id="@+id/destination_search"
         android:name="com.smascaro.trackmixing.search.view.SongSearchFragment"
         android:label="fragment_song_search"
-        tools:layout="@layout/fragment_song_search">
-        <action
-            android:id="@+id/action_destination_search_to_destination_player"
-            app:destination="@id/destination_player" />
-    </fragment>
-    <activity
-        android:id="@+id/destination_player"
-        android:name="com.smascaro.trackmixing.player.view.TracksPlayerActivity"
-        android:label="TracksPlayerActivity"
-        tools:layout="@layout/activity_track_player">
-        <argument
-            android:name="track"
-            app:argType="com.smascaro.trackmixing.common.data.model.Track" />
-
-    </activity>
+        tools:layout="@layout/fragment_song_search" />
     <activity
         android:id="@+id/destination_settings"
         android:name="com.smascaro.trackmixing.settings.view.SettingsActivity"

@@ -2,8 +2,6 @@ package com.smascaro.trackmixing.common.utils.navigation
 
 import androidx.navigation.NavController
 import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.common.data.model.Track
-import com.smascaro.trackmixing.search.view.SongSearchFragmentDirections
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.TestDataBundleInfo
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.view.SelectTestDataFragmentDirections
 import com.smascaro.trackmixing.trackslist.view.TracksListFragmentDirections
@@ -20,21 +18,6 @@ class NavigationHelperImpl @Inject constructor() :
 
     override fun bindNavController(navController: NavController) {
         mNavController = navController
-    }
-
-    override fun toPlayer(track: Track) {
-        val action = when (mNavController?.currentDestination?.id) {
-            R.id.destination_settings -> SongSearchFragmentDirections.actionDestinationSearchToDestinationPlayer(
-                track
-            )
-            R.id.destination_tracks_list -> TracksListFragmentDirections.actionDestinationTracksListToDestinationPlayer(
-                track
-            )
-            else -> null
-        }
-        if (action != null) {
-            mNavController?.navigate(action)
-        }
     }
 
     override fun toSearch() {
