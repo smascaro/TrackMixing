@@ -47,7 +47,7 @@
             android:theme="@style/Theme.MaterialComponents.Dialog" />
 
         <service android:name=".playbackservice.MixPlayerService" />
-        <service android:name=".player.business.downloadtrack.TrackDownloadService" />
+        <service android:name=".search.business.download.TrackDownloadService" />
     </application>
 
 

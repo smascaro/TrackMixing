@@ -13,7 +13,7 @@ import com.smascaro.trackmixing.common.utils.PlaybackStateManager
 import com.smascaro.trackmixing.common.utils.ResourcesWrapper
 import com.smascaro.trackmixing.common.utils.SharedPreferencesFactory
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
-import com.smascaro.trackmixing.player.business.downloadtrack.TrackDownloadService
+import com.smascaro.trackmixing.search.business.download.TrackDownloadService
 import javax.inject.Inject
 import kotlin.concurrent.thread
 

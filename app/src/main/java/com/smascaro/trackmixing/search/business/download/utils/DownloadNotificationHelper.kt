@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.player.business.downloadtrack.utils
+package com.smascaro.trackmixing.search.business.download.utils
 
 import android.content.Context
 import androidx.core.app.NotificationCompat
@@ -6,7 +6,7 @@ import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.data.model.NotificationData
 import com.smascaro.trackmixing.common.error.WrongArgumentType
 import com.smascaro.trackmixing.common.utils.ui.NotificationHelper
-import com.smascaro.trackmixing.player.business.downloadtrack.model.DownloadProgressState
+import com.smascaro.trackmixing.search.business.download.model.DownloadProgressState
 
 class DownloadNotificationHelper(context: Context) : NotificationHelper(context) {
     companion object {

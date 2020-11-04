@@ -1,5 +1,6 @@
 package com.smascaro.trackmixing.search.business
 
+import com.smascaro.trackmixing.search.business.search.SearchYoutubeVideosUseCase
 import org.junit.Before
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner

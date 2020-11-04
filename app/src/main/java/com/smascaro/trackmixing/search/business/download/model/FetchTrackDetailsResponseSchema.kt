@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.player.business.downloadtrack.model
+package com.smascaro.trackmixing.search.business.download.model
 
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.utils.time.asSeconds

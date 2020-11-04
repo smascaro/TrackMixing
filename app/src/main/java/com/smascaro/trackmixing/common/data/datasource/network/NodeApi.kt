@@ -3,7 +3,7 @@ package com.smascaro.trackmixing.common.data.datasource.network
 import com.smascaro.trackmixing.common.data.network.AvailableTracksResponseSchema
 import com.smascaro.trackmixing.common.data.network.FetchProgressResponseSchema
 import com.smascaro.trackmixing.common.data.network.RequestTrackResponseSchema
-import com.smascaro.trackmixing.player.business.downloadtrack.model.FetchTrackDetailsResponseSchema
+import com.smascaro.trackmixing.search.business.download.model.FetchTrackDetailsResponseSchema
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.POST

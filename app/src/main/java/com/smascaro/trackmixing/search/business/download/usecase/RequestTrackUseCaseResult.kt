@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.player.business.downloadtrack.business
+package com.smascaro.trackmixing.search.business.download.usecase
 
 sealed class RequestTrackUseCaseResult {
     class Success : RequestTrackUseCaseResult()

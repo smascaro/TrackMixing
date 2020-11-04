@@ -22,7 +22,7 @@ import com.smascaro.trackmixing.common.utils.ui.NotificationHelper
 import com.smascaro.trackmixing.playbackservice.utils.PlaybackSession
 import com.smascaro.trackmixing.playbackservice.utils.PlaybackSessionImpl
 import com.smascaro.trackmixing.playbackservice.utils.PlayerNotificationHelper
-import com.smascaro.trackmixing.player.business.downloadtrack.utils.DownloadNotificationHelper
+import com.smascaro.trackmixing.search.business.download.utils.DownloadNotificationHelper
 import com.smascaro.trackmixing.search.model.repository.YoutubeApi
 import dagger.Binds
 import dagger.Module

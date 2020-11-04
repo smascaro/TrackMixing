@@ -5,7 +5,7 @@ import com.smascaro.trackmixing.common.di.coroutines.CoroutineScopesModule
 import com.smascaro.trackmixing.common.di.main.MainComponent
 import com.smascaro.trackmixing.common.di.player.PlayerComponent
 import com.smascaro.trackmixing.common.di.settings.SettingsComponent
-import com.smascaro.trackmixing.player.business.downloadtrack.TrackDownloadService
+import com.smascaro.trackmixing.search.business.download.TrackDownloadService
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
