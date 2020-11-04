@@ -7,6 +7,9 @@ import android.graphics.Bitmap
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import android.support.v4.media.session.PlaybackStateCompat.ACTION_PAUSE
+import android.support.v4.media.session.PlaybackStateCompat.ACTION_PLAY
+import android.support.v4.media.session.PlaybackStateCompat.ACTION_SEEK_TO
 import androidx.core.app.NotificationCompat
 import com.bumptech.glide.RequestManager
 import com.smascaro.trackmixing.R
@@ -40,39 +43,12 @@ class PlayerNotificationHelper @Inject constructor(
             throw WrongArgumentType("Argument for player notification must be of type MixPlaybackState")
         }
         Timber.d("Notification data: $data")
-        //        glide
-//            .asBitmap()
-//            .load(playbackState.trackThumbnailUrl)
-//            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-//            .into(object : CustomTarget<Bitmap>() {
-//                override fun onLoadCleared(placeholder: Drawable?) {
-//                    if (mThumbnailBitmap != null) {
-//                        mThumbnailBitmap!!.recycle()
-//                    }
-//                }
-//
-//                override fun onResourceReady(
-//                    resource: Bitmap,
-//                    transition: Transition<in Bitmap>?
-//                ) {
-//                    mThumbnailBitmap = resource
-//                    notificationBuilder.setLargeIcon(mThumbnailBitmap)
-//                    notificationManager.notify(
-//                        NOTIFICATION_ID,
-//                        notificationBuilder.build()
-//                    )
-//                }
-//            })
         notificationBuilder = createBuilder()
         ui.launch {
             val thumbnailBitmap = glide.loadBitmap(data.trackThumbnailUrl)
             if (thumbnailBitmap != null) {
                 mThumbnailBitmap = thumbnailBitmap
                 notificationBuilder.setLargeIcon(mThumbnailBitmap)
-//            notificationManager.notify(
-//                NOTIFICATION_ID,
-//                notificationBuilder.build()
-//            )
             }
 
         }
@@ -97,29 +73,22 @@ class PlayerNotificationHelper @Inject constructor(
             putLong(MediaMetadataCompat.METADATA_KEY_DURATION, data.duration * 1000)
         }
         val playbackStateBuilder = PlaybackStateCompat.Builder().apply {
-            setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE or PlaybackStateCompat.ACTION_SEEK_TO)
+            setActions(ACTION_PLAY or ACTION_PAUSE or ACTION_SEEK_TO)
             setState(
                 when (data.isMasterPlaying) {
                     true -> PlaybackStateCompat.STATE_PLAYING
                     false -> PlaybackStateCompat.STATE_PAUSED
                 },
-                data.currentPosition,
+                data.currentPosition * 1000,
                 1f
             )
+
         }
         mMediaSession?.setMetadata(mediaMetadataBuilder.build())
         mMediaSession?.setPlaybackState(playbackStateBuilder.build())
         mMediaSession?.setCallback(object : MediaSessionCompat.Callback() {
-            override fun onPlay() {
-                super.onPlay()
-                Timber.d("Player notification. Overridden onPlay")
-                createIntentMaster(false).send()
-            }
-
-            override fun onPause() {
-                super.onPause()
-                Timber.d("Player notification. Overridden onPause")
-                createIntentMaster(true).send()
+            override fun onSeekTo(pos: Long) {
+                MixPlayerService.seek(context, (pos / 1000).toInt())
             }
         })
         notificationBuilder.apply {
@@ -132,6 +101,8 @@ class PlayerNotificationHelper @Inject constructor(
                 androidx.media.app.NotificationCompat.MediaStyle()
                     .setShowActionsInCompactView(0)
                     .setMediaSession(mMediaSession?.sessionToken)
+                    .setShowCancelButton(true)
+                    .setCancelButtonIntent(createDeleteIntent())
             )
             setContentIntent(createTapIntent())
             setDeleteIntent(createDeleteIntent())
@@ -146,9 +117,7 @@ class PlayerNotificationHelper @Inject constructor(
     private fun createTapIntent(): PendingIntent? {
         val intent = Intent(context, MainActivity::class.java)
         intent.action = MixPlayerService.ACTION_LAUNCH_PLAYER
-        val pendingIntent =
-            PendingIntent.getActivity(context, 3, intent, PendingIntent.FLAG_CANCEL_CURRENT)
-        return pendingIntent
+        return PendingIntent.getActivity(context, 3, intent, PendingIntent.FLAG_CANCEL_CURRENT)
     }
 
     private fun createDeleteIntent(): PendingIntent? {
