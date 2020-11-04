@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.player.business.downloadtrack.controller
+package com.smascaro.trackmixing.search.business.download.controller
 
 import com.smascaro.trackmixing.common.data.model.ForegroundNotification
 import com.smascaro.trackmixing.common.di.DownloadNotificationHelperImplementation
@@ -7,13 +7,17 @@ import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
 import com.smascaro.trackmixing.common.utils.ui.NotificationHelper
 import com.smascaro.trackmixing.main.components.progress.model.UiProgressEvent
 import com.smascaro.trackmixing.playbackservice.controller.ServiceCallbackHandler
-import com.smascaro.trackmixing.player.business.DownloadTrackUseCase
-import com.smascaro.trackmixing.player.business.downloadtrack.business.FetchProgressUseCase
-import com.smascaro.trackmixing.player.business.downloadtrack.business.RequestTrackUseCase
-import com.smascaro.trackmixing.player.business.downloadtrack.business.RequestTrackUseCaseResult
-import com.smascaro.trackmixing.player.business.downloadtrack.model.*
-import com.smascaro.trackmixing.player.business.downloadtrack.model.ApplicationEvent.AppState
-import com.smascaro.trackmixing.player.business.downloadtrack.utils.DownloadNotificationHelper
+import com.smascaro.trackmixing.search.business.download.model.ApplicationEvent
+import com.smascaro.trackmixing.search.business.download.model.ApplicationEvent.AppState
+import com.smascaro.trackmixing.search.business.download.model.DownloadEvents
+import com.smascaro.trackmixing.search.business.download.model.FetchSteps
+import com.smascaro.trackmixing.search.business.download.model.evaluateOverallProgress
+import com.smascaro.trackmixing.search.business.download.model.toNotificationData
+import com.smascaro.trackmixing.search.business.download.usecase.DownloadTrackUseCase
+import com.smascaro.trackmixing.search.business.download.usecase.FetchProgressUseCase
+import com.smascaro.trackmixing.search.business.download.usecase.RequestTrackUseCase
+import com.smascaro.trackmixing.search.business.download.usecase.RequestTrackUseCaseResult
+import com.smascaro.trackmixing.search.business.download.utils.DownloadNotificationHelper
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe

@@ -6,7 +6,7 @@ import com.smascaro.trackmixing.common.di.coroutines.IoCoroutineScope
 import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
 import com.smascaro.trackmixing.common.utils.ResourcesWrapper
 import com.smascaro.trackmixing.common.utils.navigation.NavigationHelper
-import com.smascaro.trackmixing.search.business.SearchYoutubeVideosUseCase
+import com.smascaro.trackmixing.search.business.search.SearchYoutubeVideosUseCase
 import com.smascaro.trackmixing.search.model.SearchResult
 import com.smascaro.trackmixing.search.view.SearchResultsViewMvc
 import kotlinx.coroutines.launch

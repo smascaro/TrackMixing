@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.search.business
+package com.smascaro.trackmixing.search.business.search
 
 import com.smascaro.trackmixing.search.model.SearchResult
 import com.smascaro.trackmixing.search.model.repository.SearchResultsRepository

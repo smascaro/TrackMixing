@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.player.business.downloadtrack.model
+package com.smascaro.trackmixing.search.business.download.model
 
 sealed class DownloadEvents {
     data class ProgressUpdate(

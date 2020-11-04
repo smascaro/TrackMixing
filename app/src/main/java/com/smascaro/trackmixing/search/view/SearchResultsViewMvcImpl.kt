@@ -13,7 +13,7 @@ import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
 import com.smascaro.trackmixing.common.utils.ui.UiUtils
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
-import com.smascaro.trackmixing.player.business.downloadtrack.TrackDownloadService
+import com.smascaro.trackmixing.search.business.download.TrackDownloadService
 import com.smascaro.trackmixing.search.model.SearchResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

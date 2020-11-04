@@ -15,8 +15,8 @@ import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvc
 import com.smascaro.trackmixing.main.components.progress.controller.BottomProgressController
 import com.smascaro.trackmixing.main.components.progress.view.BottomProgressViewMvc
 import com.smascaro.trackmixing.main.controller.MainActivityController
-import com.smascaro.trackmixing.player.business.downloadtrack.model.ApplicationEvent
-import com.smascaro.trackmixing.player.business.downloadtrack.model.ApplicationEvent.AppState
+import com.smascaro.trackmixing.search.business.download.model.ApplicationEvent
+import com.smascaro.trackmixing.search.business.download.model.ApplicationEvent.AppState
 import org.greenrobot.eventbus.EventBus
 import javax.inject.Inject
 

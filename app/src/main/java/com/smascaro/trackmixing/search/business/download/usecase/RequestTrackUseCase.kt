@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.player.business.downloadtrack.business
+package com.smascaro.trackmixing.search.business.download.usecase
 
 import com.smascaro.trackmixing.common.data.datasource.network.NodeApi
 import timber.log.Timber

@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.player.business.downloadtrack
+package com.smascaro.trackmixing.search.business.download
 
 import android.content.Context
 import android.content.Intent
@@ -6,8 +6,8 @@ import android.os.Bundle
 import android.widget.Toast
 import com.smascaro.trackmixing.TrackMixingApplication
 import com.smascaro.trackmixing.playbackservice.BaseService
-import com.smascaro.trackmixing.player.business.downloadtrack.controller.TrackDownloadController
-import com.smascaro.trackmixing.player.business.downloadtrack.utils.DownloadNotificationHelper
+import com.smascaro.trackmixing.search.business.download.controller.TrackDownloadController
+import com.smascaro.trackmixing.search.business.download.utils.DownloadNotificationHelper
 import javax.inject.Inject
 
 class TrackDownloadService : BaseService() {
