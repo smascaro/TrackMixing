@@ -24,7 +24,7 @@ class SearchResultsController @Inject constructor(
         resourcesWrapper.getInteger(R.integer.youtube_api_results_max_duration_minutes) * 60
 
     override fun onSearchButtonClicked(currentText: String) {
-        viewMvc.showProgressBar()
+        viewMvc.showProgress()
         viewMvc.bindResults(listOf())
         io.launch {
             val useCaseResult = searchYoutubeVideosUseCase.execute(currentText)
@@ -35,7 +35,7 @@ class SearchResultsController @Inject constructor(
                     )
                     is SearchYoutubeVideosUseCase.Result.Failure -> handleSearchError(useCaseResult.error)
                 }
-                viewMvc.hideProgressBar()
+                viewMvc.hideProgress()
             }
         }
     }
