@@ -49,7 +49,7 @@ class TracksListItemViewMvcImpl @Inject constructor(
         trackTitleTxt.text = track.title
         val authorText = track.author
         val durationText = TimeHelper.fromSeconds(track.secondsLong.value).toStringRepresentation()
-        val stateText = "Downloaded"
+        val stateText = TimeHelper.elapsedTime(track.requestedTimestamp)
         trackDetailsTxt.text =
             resources.getString(R.string.track_item_data_template, authorText, durationText, stateText)
         glide

@@ -10,7 +10,7 @@ data class Track(
     val videoKey: String,
     val thumbnailUrl: String,
     val secondsLong: Seconds,
-    val requestedTimestamp: String,
+    val requestedTimestamp: Long,
     val downloadPath: String,
     val backgroundColor: Int = Color.BLACK
 ) : Serializable

@@ -13,7 +13,7 @@ data class DownloadEntity(
     val title: String,
     val author: String,
     val thumbnailUrl: String,
-    val downloadTimestamp: String,//TODO pasar a millis
+    val downloadTimestamp: Long,
     var downloadPath: String,
     var status: Int,
     var secondsLong: Int,

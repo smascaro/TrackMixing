@@ -59,7 +59,7 @@ class TrackDownloader @Inject constructor(
                         entity.title,
                         entity.author,
                         entity.thumbnailUrl,
-                        entity.date,
+                        System.currentTimeMillis(),
                         filesStorageHelper.getBaseDirectoryByVideoId(entity.videoId),
                         DownloadEntity.DownloadStatus.PENDING,
                         entity.secondsLong

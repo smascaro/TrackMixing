@@ -12,7 +12,7 @@ fun AvailableTracksResponseSchema.Item.toModel(): Track {
         videoId,
         thumbnailUrl ?: "",
         secondsLong.asSeconds(),
-        this.requestedTimestamp,
+        0,
         ""
     )
 }
