@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fragment_select_test_data_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -34,14 +35,6 @@
 
     </LinearLayout>
 
-    <ProgressBar
-        android:id="@+id/pb_fetch_test_data_loading_progress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="visible"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="120dp" />
-
     <androidx.recyclerview.widget.RecyclerView xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/rv_select_test_data_tracks"
         android:layout_width="match_parent"
@@ -50,6 +43,42 @@
         android:layout_below="@id/layout_select_test_data_header"
         tools:itemCount="16"
         tools:listitem="@layout/item_test_data_selection" />
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmer_container_test_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/btn_select_test_data_start_download"
+        android:layout_below="@id/layout_select_test_data_header"
+        app:shimmer_duration="900"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/layout_placeholder_item_test_data_selection" />
+
+            <include layout="@layout/layout_placeholder_item_test_data_selection" />
+
+            <include layout="@layout/layout_placeholder_item_test_data_selection" />
+
+            <include layout="@layout/layout_placeholder_item_test_data_selection" />
+
+            <include layout="@layout/layout_placeholder_item_test_data_selection" />
+
+            <include layout="@layout/layout_placeholder_item_test_data_selection" />
+
+            <include layout="@layout/layout_placeholder_item_test_data_selection" />
+
+            <include layout="@layout/layout_placeholder_item_test_data_selection" />
+
+            <include layout="@layout/layout_placeholder_item_test_data_selection" />
+
+            <include layout="@layout/layout_placeholder_item_test_data_selection" />
+        </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_select_test_data_start_download"
