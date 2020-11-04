@@ -10,10 +10,19 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.view.children
 import com.google.android.material.textview.MaterialTextView
 import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.common.utils.*
+import com.smascaro.trackmixing.common.utils.PlaybackStateManager
+import com.smascaro.trackmixing.common.utils.ResourcesWrapper
+import com.smascaro.trackmixing.common.utils.SharedPreferencesFactory
+import com.smascaro.trackmixing.common.utils.TrackVolumeBundle
+import com.smascaro.trackmixing.common.utils.time.Seconds
+import com.smascaro.trackmixing.common.utils.time.TimeHelper
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
 import com.smascaro.trackmixing.main.components.player.model.TrackPlayerData
-import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvcImpl.MotionState.*
+import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvcImpl.MotionState.FullscreenPlayer
+import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvcImpl.MotionState.Initial
+import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvcImpl.MotionState.PlayerVisible
+import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvcImpl.MotionState.PreSwipeOut
+import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvcImpl.MotionState.SwipedOut
 import com.smascaro.trackmixing.main.components.player.view.widget.PivotableSeekbar
 import com.smascaro.trackmixing.playbackservice.MixPlayerServiceChecker
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
@@ -207,10 +216,10 @@ class TrackPlayerViewMvcImpl @Inject constructor(
         bottomBarTextSwitcher.children.forEach { it.isSelected = true }
     }
 
-    override fun bindTrackDuration(lengthSeconds: Int) {
+    override fun bindTrackDuration(length: Seconds) {
         totalLengthTextView.text =
-            transformSecondsToTimeRepresentation(lengthSeconds)
-        songProgressSeekbar.max = lengthSeconds
+            transformSecondsToTimeRepresentation(length.value.toInt())
+        songProgressSeekbar.max = length.value.toInt()
     }
 
     override fun bindVolumes(

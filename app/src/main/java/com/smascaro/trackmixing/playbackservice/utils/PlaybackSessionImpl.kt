@@ -4,6 +4,7 @@ import android.content.Context
 import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager
 import com.smascaro.trackmixing.common.utils.TrackVolumeBundle
+import com.smascaro.trackmixing.common.utils.time.Seconds
 import com.smascaro.trackmixing.playbackservice.MixPlayerService
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
 import javax.inject.Inject
@@ -34,7 +35,7 @@ class PlaybackSessionImpl @Inject constructor(
         MixPlayerService.pause(context)
     }
 
-    override fun seek(seconds: Int) {
+    override fun seek(seconds: Seconds) {
         MixPlayerService.seek(context, seconds)
     }
 

@@ -1,6 +1,7 @@
 package com.smascaro.trackmixing.main.components.player.view
 
 import com.smascaro.trackmixing.common.utils.TrackVolumeBundle
+import com.smascaro.trackmixing.common.utils.time.Seconds
 import com.smascaro.trackmixing.common.view.architecture.ObservableViewMvc
 import com.smascaro.trackmixing.main.components.player.model.TrackPlayerData
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
@@ -22,7 +23,7 @@ interface TrackPlayerViewMvc :
     fun showPlayButton()
     fun showPauseButton()
     fun updateTimestamp(newTimestamp: Int, totalLength: Int)
-    fun bindTrackDuration(lengthSeconds: Int)
+    fun bindTrackDuration(length: Seconds)
     fun bindVolumes(volumes: TrackVolumeBundle)
     fun openPlayer()
     fun onBackPressed(): Boolean

@@ -128,9 +128,10 @@ class AppModule {
     fun providePlayerNotificationHelper(
         context: Context,
         requestManager: RequestManager,
-        ui: MainCoroutineScope
+        ui: MainCoroutineScope,
+        playbackSession: PlaybackSession
     ): NotificationHelper {
-        return PlayerNotificationHelper(context, requestManager, ui)
+        return PlayerNotificationHelper(context, requestManager, ui, playbackSession)
     }
 
     @Singleton

@@ -9,7 +9,6 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.appcompat.widget.AppCompatSeekBar
 import com.smascaro.trackmixing.R
-import timber.log.Timber
 
 class PivotableSeekbar(context: Context, attributeSet: AttributeSet) :
     AppCompatSeekBar(context, attributeSet) {
@@ -251,7 +250,6 @@ class PivotableSeekbar(context: Context, attributeSet: AttributeSet) :
     private fun getProgressPercentage() = (progress.toFloat() / max.toFloat())
 
     private fun checkFlag(flag: Int): Boolean {
-        Timber.v("CheckFlag - TrespassMode: $trespassMode - Flag: $flag --> Result: ${(trespassMode or flag) == trespassMode}")
         return (trespassMode or flag) == trespassMode
     }
 

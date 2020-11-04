@@ -6,6 +6,7 @@ import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.di.coroutines.IoCoroutineScope
 import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager
+import com.smascaro.trackmixing.common.utils.time.asSeconds
 import com.smascaro.trackmixing.main.components.player.model.TrackPlayerData
 import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvc
 import com.smascaro.trackmixing.playbackservice.MixPlayerService
@@ -95,7 +96,7 @@ class TrackPlayerController @Inject constructor(
     }
 
     override fun onSeekRequestEvent(progress: Int) {
-        playbackSession.seek(progress)
+        playbackSession.seek(progress.asSeconds())
     }
 
     override fun onPlayerStateChanged() {
@@ -118,7 +119,7 @@ class TrackPlayerController @Inject constructor(
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: TimestampChangedEvent) =
-        handleTimestampChanged(event.newTimestamp, event.totalLength)
+        handleTimestampChanged(event.newTimestamp.value.toInt(), event.totalLength.value.toInt())
 
     private fun handleTimestampChanged(newTimestamp: Int, totalLength: Int) {
         Timber.d("Received timestamp event: $newTimestamp / $totalLength")

@@ -5,6 +5,8 @@ import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
 import com.smascaro.trackmixing.common.error.NoLoadedTrackException
 import com.smascaro.trackmixing.common.utils.TrackVolumeBundle
+import com.smascaro.trackmixing.common.utils.time.Milliseconds
+import com.smascaro.trackmixing.common.utils.time.Seconds
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable
 import com.smascaro.trackmixing.playbackservice.model.MixPlaybackState
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
@@ -44,8 +46,8 @@ class BandPlaybackHelper @Inject constructor(
             author = getTrack().author
             trackThumbnailUrl = getTrack().thumbnailUrl
             isMasterPlaying = isPlaying()
-            duration = getTrack().secondsLong.toLong()
-            currentPosition = getTimestampSeconds().toLong()
+            duration = getTrack().secondsLong.millis()
+            currentPosition = getTimestamp()
         }
     }
 
@@ -128,7 +130,7 @@ class BandPlaybackHelper @Inject constructor(
         }
     }
 
-    fun seekMaster(newTimestampSeconds: Int) {
+    fun seekMaster(newTimestampSeconds: Seconds) {
         playerRack.seek(newTimestampSeconds)
     }
 
@@ -184,8 +186,8 @@ class BandPlaybackHelper @Inject constructor(
         return playerRack.getVolumesBundle()
     }
 
-    fun getTimestampSeconds(): Int {
-        return (playerRack.getCurrentPosition()).toInt()
+    fun getTimestamp(): Milliseconds {
+        return playerRack.getCurrentPosition()
     }
 
     override fun onAudioFocusLoss() {
@@ -198,7 +200,7 @@ class BandPlaybackHelper @Inject constructor(
 
     suspend fun reportPlayersOffsets() {
         playerRack.getCurrentPositionsReport { report ->
-            val sum = report.sumBy { it.second.toInt() }
+            val sum = report.sumBy { it.second.value.toInt() }
             val mean = sum.toDouble() / report.size
             Timber.i("------------------ BEGIN REPORT TRACKS OFFSET ANALYSIS ---------------------")
             report.forEach {
@@ -208,10 +210,10 @@ class BandPlaybackHelper @Inject constructor(
                             16,
                             ' '
                         )
-                    }] at position ${it.second} with offset of ${it.second - mean}"
+                    }] at position ${it.second} with offset of ${it.second.value - mean}"
                 )
             }
-            val maxDifference = findMaxDifference(report.map { it.second.toInt() })
+            val maxDifference = findMaxDifference(report.map { it.second.value.toInt() })
             Timber.i("Max difference found is of $maxDifference milliseconds")
             Timber.i("------------------ END REPORT TRACKS OFFSET ANALYSIS ---------------------")
             if (maxDifference > 30) {

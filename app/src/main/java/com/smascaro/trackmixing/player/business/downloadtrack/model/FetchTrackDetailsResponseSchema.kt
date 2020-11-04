@@ -1,6 +1,7 @@
 package com.smascaro.trackmixing.player.business.downloadtrack.model
 
 import com.smascaro.trackmixing.common.data.model.Track
+import com.smascaro.trackmixing.common.utils.time.asSeconds
 
 data class FetchTrackDetailsResponseSchema(
     val body: Body,
@@ -34,7 +35,7 @@ fun FetchTrackDetailsResponseSchema.toModel(): Track = Track(
     body.channelTitle,
     body.videoId,
     body.thumbnailUrl,
-    body.secondsLong,
+    body.secondsLong.asSeconds(),
     body.requestedTimestamp,
     ""
 )

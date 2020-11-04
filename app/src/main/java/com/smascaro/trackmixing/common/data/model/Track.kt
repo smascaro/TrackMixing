@@ -1,6 +1,7 @@
 package com.smascaro.trackmixing.common.data.model
 
 import android.graphics.Color
+import com.smascaro.trackmixing.common.utils.time.Seconds
 import java.io.Serializable
 
 data class Track(
@@ -8,7 +9,7 @@ data class Track(
     val author: String,
     val videoKey: String,
     val thumbnailUrl: String,
-    val secondsLong: Int,
+    val secondsLong: Seconds,
     val requestedTimestamp: String,
     val downloadPath: String,
     val backgroundColor: Int = Color.BLACK

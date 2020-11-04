@@ -1,5 +1,6 @@
 package com.smascaro.trackmixing.common.utils
 
+import com.smascaro.trackmixing.common.utils.time.TimeHelper
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -22,7 +23,6 @@ class TimeHelperTest {
     fun setup() {
         SUT = TimeHelper()
     }
-
 
     // region tests
 

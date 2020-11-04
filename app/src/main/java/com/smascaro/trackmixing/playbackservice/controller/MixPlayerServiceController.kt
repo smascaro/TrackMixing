@@ -9,12 +9,18 @@ import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager.PlaybackState
 import com.smascaro.trackmixing.common.utils.TrackVolumeBundle
+import com.smascaro.trackmixing.common.utils.time.asSeconds
 import com.smascaro.trackmixing.common.utils.ui.NotificationHelper
 import com.smascaro.trackmixing.playbackservice.MixPlayerService
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
 import com.smascaro.trackmixing.playbackservice.utils.BandPlaybackHelper
 import com.smascaro.trackmixing.playbackservice.utils.PlayerNotificationHelper
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import timber.log.Timber
 import javax.inject.Inject
@@ -159,13 +165,13 @@ class MixPlayerServiceController @Inject constructor(
     private fun seek(args: ActionArgs?) {
         if (validateSeekExtras(args)) {
             val seconds = args!!.bundle!!.getInt(MixPlayerService.EXTRA_SEEK_SECONDS_PARAM_KEY)
-            bandPlaybackHelper.seekMaster(seconds)
+            bandPlaybackHelper.seekMaster(seconds.asSeconds())
         }
     }
 
     private fun validateSeekExtras(args: ActionArgs?): Boolean {
         return args?.bundle != null &&
-                args.bundle.containsKey(MixPlayerService.EXTRA_SEEK_SECONDS_PARAM_KEY)
+            args.bundle.containsKey(MixPlayerService.EXTRA_SEEK_SECONDS_PARAM_KEY)
     }
 
     private fun changeVolumeInstrument(args: ActionArgs?) {
@@ -185,8 +191,8 @@ class MixPlayerServiceController @Inject constructor(
 
     private fun validateVolumeChangeExtras(args: ActionArgs?): Boolean {
         return args?.bundle != null &&
-                args.bundle.containsKey(MixPlayerService.EXTRA_VOLUME_INSTRUMENT_PARAM_KEY)
-                && args.bundle.containsKey(MixPlayerService.EXTRA_VOLUME_VALUE_PARAM_KEY)
+            args.bundle.containsKey(MixPlayerService.EXTRA_VOLUME_INSTRUMENT_PARAM_KEY)
+            && args.bundle.containsKey(MixPlayerService.EXTRA_VOLUME_VALUE_PARAM_KEY)
     }
 
     private fun stopService() {
