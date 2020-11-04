@@ -36,6 +36,6 @@ fun FetchTrackDetailsResponseSchema.toModel(): Track = Track(
     body.videoId,
     body.thumbnailUrl,
     body.secondsLong.asSeconds(),
-    body.requestedTimestamp,
+    0,
     ""
 )
