@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.base.model
+package com.smascaro.trackmixing.base.data.model
 
 import android.graphics.Color
 import com.smascaro.trackmixing.base.time.Seconds

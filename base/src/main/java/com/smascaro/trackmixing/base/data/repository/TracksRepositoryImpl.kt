@@ -1,6 +1,6 @@
-package com.smascaro.trackmixing.common.data.datasource.repository
+package com.smascaro.trackmixing.base.data.repository
 
-import com.smascaro.trackmixing.common.data.model.DownloadEntity
+import com.smascaro.trackmixing.base.data.model.DownloadEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject

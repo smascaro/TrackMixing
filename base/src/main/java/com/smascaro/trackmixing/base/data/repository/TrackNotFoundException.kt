@@ -1,3 +1,3 @@
-package com.smascaro.trackmixing.common.data.datasource.repository
+package com.smascaro.trackmixing.base.data.repository
 
 class TrackNotFoundException(message: String) : Exception(message)

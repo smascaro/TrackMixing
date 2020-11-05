@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.base.di.module
+package com.smascaro.trackmixing.base.di.module.network
 
 import javax.inject.Qualifier
 

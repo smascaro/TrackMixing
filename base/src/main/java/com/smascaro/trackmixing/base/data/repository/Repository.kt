@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.common.data.datasource.repository
+package com.smascaro.trackmixing.base.data.repository
 
 interface Repository<T> {
     suspend fun get(videoId: String): T

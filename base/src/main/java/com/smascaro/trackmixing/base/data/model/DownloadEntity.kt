@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.common.data.model
+package com.smascaro.trackmixing.base.data.model
 
 import android.graphics.Color
 import androidx.room.Entity

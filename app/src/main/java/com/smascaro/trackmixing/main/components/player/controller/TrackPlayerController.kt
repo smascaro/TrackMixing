@@ -3,7 +3,7 @@ package com.smascaro.trackmixing.main.components.player.controller
 import android.content.Intent
 import com.smascaro.trackmixing.base.coroutine.IoCoroutineScope
 import com.smascaro.trackmixing.base.coroutine.MainCoroutineScope
-import com.smascaro.trackmixing.base.model.Track
+import com.smascaro.trackmixing.base.data.model.Track
 import com.smascaro.trackmixing.base.time.asSeconds
 import com.smascaro.trackmixing.common.controller.BaseController
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager

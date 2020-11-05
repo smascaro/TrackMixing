@@ -1,9 +1,9 @@
 package com.smascaro.trackmixing.common.data.datasource
 
 import com.smascaro.trackmixing.base.coroutine.IoCoroutineScope
-import com.smascaro.trackmixing.common.data.datasource.repository.TrackNotFoundException
-import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepository
-import com.smascaro.trackmixing.common.data.model.DownloadEntity
+import com.smascaro.trackmixing.base.data.model.DownloadEntity
+import com.smascaro.trackmixing.base.data.repository.TrackNotFoundException
+import com.smascaro.trackmixing.base.data.repository.TracksRepository
 import com.smascaro.trackmixing.common.utils.FilesStorageHelper
 import com.smascaro.trackmixing.common.utils.ui.ColorExtractor
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable

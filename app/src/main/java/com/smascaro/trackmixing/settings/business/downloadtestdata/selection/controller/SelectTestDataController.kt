@@ -2,8 +2,8 @@ package com.smascaro.trackmixing.settings.business.downloadtestdata.selection.co
 
 import com.smascaro.trackmixing.base.coroutine.IoCoroutineScope
 import com.smascaro.trackmixing.base.coroutine.MainCoroutineScope
+import com.smascaro.trackmixing.base.data.repository.TracksRepository
 import com.smascaro.trackmixing.common.controller.BaseNavigatorController
-import com.smascaro.trackmixing.common.data.datasource.repository.DownloadsDao
 import com.smascaro.trackmixing.common.utils.DiskSpaceHelper
 import com.smascaro.trackmixing.common.utils.navigation.NavigationHelper
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.TestDataBundleInfo
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 class SelectTestDataController @Inject constructor(
     private val downloadTestDataUseCase: DownloadTestDataUseCase,
-    private val downloadsDao: DownloadsDao,
+    private val tracksRepository: TracksRepository,
     private val diskSpaceHelper: DiskSpaceHelper,
     private val ui: MainCoroutineScope,
     private val io: IoCoroutineScope,
@@ -50,7 +50,7 @@ class SelectTestDataController @Inject constructor(
 
     private fun checkAlreadyDownloadedItems(tracks: List<TestDataBundleInfo>) {
         io.launch {
-            val downloads = downloadsDao.getAll()
+            val downloads = tracksRepository.getAll()
             val downloadedTestData = tracks.filter { testDataItem ->
                 downloads.contains {
                     it.sourceVideoKey == testDataItem.videoKey

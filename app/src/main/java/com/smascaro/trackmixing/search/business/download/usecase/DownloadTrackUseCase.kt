@@ -1,7 +1,7 @@
 package com.smascaro.trackmixing.search.business.download.usecase
 
 import com.smascaro.trackmixing.base.coroutine.MainCoroutineScope
-import com.smascaro.trackmixing.base.model.Track
+import com.smascaro.trackmixing.base.data.model.Track
 import com.smascaro.trackmixing.base.network.node.api.NodeApi
 import com.smascaro.trackmixing.base.network.node.api.NodeDownloadsApi
 import com.smascaro.trackmixing.base.network.youtube.model.toModel

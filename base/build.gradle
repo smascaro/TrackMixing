@@ -36,6 +36,12 @@ dependencies {
     //Timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
+    // Room
+    implementation 'androidx.room:room-runtime:2.2.5'
+    implementation "androidx.room:room-ktx:2.2.5"
+    annotationProcessor 'androidx.room:room-compiler:2.2.5'
+    kapt "androidx.room:room-compiler:2.2.5"
+
     // Dagger
     def dagger_version = "2.28"
 
@@ -53,7 +59,11 @@ dependencies {
 
 
     //Glide
-    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    api 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+
+
+    //EventBus
+    api "org.greenrobot:eventbus:3.2.0"
 
 }

@@ -3,7 +3,7 @@ package com.smascaro.trackmixing.playbackservice
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import com.smascaro.trackmixing.base.model.Track
+import com.smascaro.trackmixing.base.data.model.Track
 import com.smascaro.trackmixing.base.time.Seconds
 import com.smascaro.trackmixing.common.di.main.MainComponentProvider
 import com.smascaro.trackmixing.playbackservice.controller.MixPlayerServiceController

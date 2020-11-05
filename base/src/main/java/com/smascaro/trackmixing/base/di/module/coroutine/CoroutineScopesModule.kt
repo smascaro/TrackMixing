@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.base.di.module
+package com.smascaro.trackmixing.base.di.module.coroutine
 
 import com.smascaro.trackmixing.base.coroutine.IoCoroutineScope
 import com.smascaro.trackmixing.base.coroutine.MainCoroutineScope

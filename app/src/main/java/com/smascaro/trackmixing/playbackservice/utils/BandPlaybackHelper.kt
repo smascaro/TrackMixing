@@ -2,7 +2,7 @@ package com.smascaro.trackmixing.playbackservice.utils
 
 import android.content.Context
 import com.smascaro.trackmixing.base.coroutine.MainCoroutineScope
-import com.smascaro.trackmixing.base.model.Track
+import com.smascaro.trackmixing.base.data.model.Track
 import com.smascaro.trackmixing.base.time.Milliseconds
 import com.smascaro.trackmixing.base.time.Seconds
 import com.smascaro.trackmixing.common.error.NoLoadedTrackException

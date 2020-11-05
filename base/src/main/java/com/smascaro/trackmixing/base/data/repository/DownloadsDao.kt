@@ -1,7 +1,11 @@
-package com.smascaro.trackmixing.common.data.datasource.repository
+package com.smascaro.trackmixing.base.data.repository
 
-import androidx.room.*
-import com.smascaro.trackmixing.common.data.model.DownloadEntity
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Update
+import com.smascaro.trackmixing.base.data.model.DownloadEntity
 
 @Dao
 interface DownloadsDao {

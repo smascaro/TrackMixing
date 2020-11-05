@@ -1,9 +1,9 @@
-package com.smascaro.trackmixing.common.data.datasource.repository
+package com.smascaro.trackmixing.base.data.repository
 
-import com.smascaro.trackmixing.base.model.Track
+import com.smascaro.trackmixing.base.data.model.DownloadEntity
+import com.smascaro.trackmixing.base.data.model.Track
 import com.smascaro.trackmixing.base.network.node.model.AvailableTracksResponseSchema
 import com.smascaro.trackmixing.base.time.asSeconds
-import com.smascaro.trackmixing.common.data.model.DownloadEntity
 
 fun AvailableTracksResponseSchema.Item.toModel(): Track {
     return Track(

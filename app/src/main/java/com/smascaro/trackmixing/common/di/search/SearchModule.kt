@@ -1,10 +1,6 @@
 package com.smascaro.trackmixing.common.di.search
 
 import android.content.Context
-import com.smascaro.trackmixing.common.data.datasource.repository.DownloadsDao
-import com.smascaro.trackmixing.common.data.datasource.repository.DownloadsDatabase
-import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepository
-import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepositoryImpl
 import com.smascaro.trackmixing.common.di.DownloadNotificationHelperImplementation
 import com.smascaro.trackmixing.common.di.main.MainScope
 import com.smascaro.trackmixing.common.utils.navigation.NavigationHelper
@@ -16,7 +12,6 @@ import com.smascaro.trackmixing.search.view.SearchResultsViewMvcImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import org.greenrobot.eventbus.EventBus
 
 @Module
 class SearchModule {
@@ -27,23 +22,6 @@ class SearchModule {
         return DownloadNotificationHelper(context)
     }
 
-    @MainScope
-    @Provides
-    fun provideEventBus(): EventBus {
-        return EventBus.getDefault()
-    }
-
-    @MainScope
-    @Provides
-    fun provideDownloadsDatabase(context: Context): DownloadsDatabase {
-        return DownloadsDatabase.getDatabase(context)
-    }
-
-    @MainScope
-    @Provides
-    fun provideDownloadsDao(downloadsDatabase: DownloadsDatabase): DownloadsDao {
-        return downloadsDatabase.getDao()
-    }
     @Module
     interface Bindings {
         @MainScope
@@ -53,10 +31,6 @@ class SearchModule {
         @MainScope
         @Binds
         fun provideNavigationHelper(navigationHelperImpl: NavigationHelperImpl): NavigationHelper
-
-        @MainScope
-        @Binds
-        fun provideTracksRepository(tracksRepositoryImpl: TracksRepositoryImpl): TracksRepository
     }
 }
 // @Module

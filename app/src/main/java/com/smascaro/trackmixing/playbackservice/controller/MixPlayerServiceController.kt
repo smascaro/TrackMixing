@@ -3,7 +3,7 @@ package com.smascaro.trackmixing.playbackservice.controller
 import android.os.Bundle
 import com.smascaro.trackmixing.base.coroutine.IoCoroutineScope
 import com.smascaro.trackmixing.base.coroutine.MainCoroutineScope
-import com.smascaro.trackmixing.base.model.Track
+import com.smascaro.trackmixing.base.data.model.Track
 import com.smascaro.trackmixing.base.time.asSeconds
 import com.smascaro.trackmixing.common.data.model.ForegroundNotification
 import com.smascaro.trackmixing.common.di.PlayerNotificationHelperImplementation

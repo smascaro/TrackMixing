@@ -1,10 +1,10 @@
 package com.smascaro.trackmixing.main.components.bottomplayer.controller
 
 import android.view.View
+import com.smascaro.trackmixing.base.data.model.DownloadEntity
+import com.smascaro.trackmixing.base.data.repository.TracksRepository
 import com.smascaro.trackmixing.common.coroutines.IoCoroutineScopeFactory
 import com.smascaro.trackmixing.common.coroutines.MainCoroutineScopeFactory
-import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepository
-import com.smascaro.trackmixing.common.data.model.DownloadEntity
 import com.smascaro.trackmixing.common.models.DOWNLOAD_ENTITY_1_TITLE
 import com.smascaro.trackmixing.common.models.TRACK_VIDEO_KEY
 import com.smascaro.trackmixing.common.models.TestModels
@@ -24,7 +24,10 @@ import kotlinx.coroutines.test.TestCoroutineScope
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.After
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith

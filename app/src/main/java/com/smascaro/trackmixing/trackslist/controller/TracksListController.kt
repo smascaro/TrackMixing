@@ -1,6 +1,6 @@
 package com.smascaro.trackmixing.trackslist.controller
 
-import com.smascaro.trackmixing.base.model.Track
+import com.smascaro.trackmixing.base.data.model.Track
 import com.smascaro.trackmixing.common.controller.BaseNavigatorController
 import com.smascaro.trackmixing.common.utils.navigation.NavigationHelper
 import com.smascaro.trackmixing.playbackservice.utils.PlaybackSession

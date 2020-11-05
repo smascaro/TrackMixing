@@ -1,7 +1,7 @@
 package com.smascaro.trackmixing.trackslist.business
 
-import com.smascaro.trackmixing.base.model.Track
-import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepository
+import com.smascaro.trackmixing.base.data.model.Track
+import com.smascaro.trackmixing.base.data.repository.TracksRepository
 import com.smascaro.trackmixing.common.models.TestModels
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert

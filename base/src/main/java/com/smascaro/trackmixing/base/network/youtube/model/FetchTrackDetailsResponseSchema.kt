@@ -1,6 +1,6 @@
 package com.smascaro.trackmixing.base.network.youtube.model
 
-import com.smascaro.trackmixing.base.model.Track
+import com.smascaro.trackmixing.base.data.model.Track
 import com.smascaro.trackmixing.base.time.asSeconds
 
 data class FetchTrackDetailsResponseSchema(

@@ -5,7 +5,7 @@ import android.widget.TextView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.base.model.Track
+import com.smascaro.trackmixing.base.data.model.Track
 import com.smascaro.trackmixing.base.time.TimeHelper
 import com.smascaro.trackmixing.common.utils.ResourcesWrapper
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc

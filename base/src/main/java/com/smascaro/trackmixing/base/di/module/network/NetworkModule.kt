@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.base.di.module
+package com.smascaro.trackmixing.base.di.module.network
 
 import com.smascaro.trackmixing.base.network.node.api.NodeApi
 import com.smascaro.trackmixing.base.network.node.api.NodeContract

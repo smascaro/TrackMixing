@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.base.di.module
+package com.smascaro.trackmixing.base.di.module.glide
 
 import android.content.Context
 import com.bumptech.glide.Glide

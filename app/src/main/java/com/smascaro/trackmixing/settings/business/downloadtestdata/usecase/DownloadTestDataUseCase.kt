@@ -2,12 +2,12 @@ package com.smascaro.trackmixing.settings.business.downloadtestdata.usecase
 
 import com.smascaro.trackmixing.base.coroutine.IoCoroutineScope
 import com.smascaro.trackmixing.base.coroutine.MainCoroutineScope
+import com.smascaro.trackmixing.base.data.repository.TracksRepository
 import com.smascaro.trackmixing.base.network.testdata.api.AwsContract
 import com.smascaro.trackmixing.base.network.testdata.api.TestDataApi
 import com.smascaro.trackmixing.base.network.testdata.api.TestDataFilesApi
 import com.smascaro.trackmixing.base.time.TimeHelper
 import com.smascaro.trackmixing.common.data.datasource.TrackDownloader
-import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepository
 import com.smascaro.trackmixing.common.utils.FilesStorageHelper
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable
 import com.smascaro.trackmixing.main.components.progress.model.UiProgressEvent
