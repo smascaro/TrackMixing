@@ -1,8 +1,8 @@
 package com.smascaro.trackmixing.trackslist.business
 
+import com.smascaro.trackmixing.base.model.Track
 import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepository
 import com.smascaro.trackmixing.common.data.datasource.repository.toModel
-import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

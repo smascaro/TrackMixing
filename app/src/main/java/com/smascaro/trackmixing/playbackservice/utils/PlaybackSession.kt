@@ -1,9 +1,9 @@
 package com.smascaro.trackmixing.playbackservice.utils
 
-import com.smascaro.trackmixing.common.data.model.Track
+import com.smascaro.trackmixing.base.model.Track
+import com.smascaro.trackmixing.base.time.Seconds
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager
 import com.smascaro.trackmixing.common.utils.TrackVolumeBundle
-import com.smascaro.trackmixing.common.utils.time.Seconds
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
 
 interface PlaybackSession {

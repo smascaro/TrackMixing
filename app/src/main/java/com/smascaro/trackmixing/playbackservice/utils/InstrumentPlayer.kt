@@ -9,10 +9,10 @@ import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.smascaro.trackmixing.common.data.model.Track
-import com.smascaro.trackmixing.common.utils.time.Milliseconds
-import com.smascaro.trackmixing.common.utils.time.Seconds
-import com.smascaro.trackmixing.common.utils.time.asMillis
+import com.smascaro.trackmixing.base.model.Track
+import com.smascaro.trackmixing.base.time.Milliseconds
+import com.smascaro.trackmixing.base.time.Seconds
+import com.smascaro.trackmixing.base.time.asMillis
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
 import timber.log.Timber

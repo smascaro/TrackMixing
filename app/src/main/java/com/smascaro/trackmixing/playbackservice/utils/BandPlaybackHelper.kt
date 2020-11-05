@@ -1,12 +1,12 @@
 package com.smascaro.trackmixing.playbackservice.utils
 
 import android.content.Context
-import com.smascaro.trackmixing.common.data.model.Track
-import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
+import com.smascaro.trackmixing.base.coroutine.MainCoroutineScope
+import com.smascaro.trackmixing.base.model.Track
+import com.smascaro.trackmixing.base.time.Milliseconds
+import com.smascaro.trackmixing.base.time.Seconds
 import com.smascaro.trackmixing.common.error.NoLoadedTrackException
 import com.smascaro.trackmixing.common.utils.TrackVolumeBundle
-import com.smascaro.trackmixing.common.utils.time.Milliseconds
-import com.smascaro.trackmixing.common.utils.time.Seconds
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable
 import com.smascaro.trackmixing.playbackservice.model.MixPlaybackState
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument

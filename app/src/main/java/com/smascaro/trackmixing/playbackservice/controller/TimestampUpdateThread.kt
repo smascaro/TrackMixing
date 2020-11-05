@@ -1,8 +1,8 @@
 package com.smascaro.trackmixing.playbackservice.controller
 
-import com.smascaro.trackmixing.common.utils.time.Milliseconds
-import com.smascaro.trackmixing.common.utils.time.TimeHelper
-import com.smascaro.trackmixing.common.utils.time.asMillis
+import com.smascaro.trackmixing.base.time.Milliseconds
+import com.smascaro.trackmixing.base.time.TimeHelper
+import com.smascaro.trackmixing.base.time.asMillis
 import com.smascaro.trackmixing.playbackservice.model.TimestampChangedEvent
 import com.smascaro.trackmixing.playbackservice.utils.BandPlaybackHelper
 import kotlinx.coroutines.CancellationException

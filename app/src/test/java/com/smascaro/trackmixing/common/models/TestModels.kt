@@ -1,7 +1,7 @@
 package com.smascaro.trackmixing.common.models
 
+import com.smascaro.trackmixing.base.model.Track
 import com.smascaro.trackmixing.common.data.model.DownloadEntity
-import com.smascaro.trackmixing.common.data.model.Track
 
 class TestModels {
     companion object {

@@ -1,9 +1,9 @@
 package com.smascaro.trackmixing.settings.business.downloadtestdata.selection.controller
 
+import com.smascaro.trackmixing.base.coroutine.IoCoroutineScope
+import com.smascaro.trackmixing.base.coroutine.MainCoroutineScope
 import com.smascaro.trackmixing.common.controller.BaseNavigatorController
 import com.smascaro.trackmixing.common.data.datasource.repository.DownloadsDao
-import com.smascaro.trackmixing.common.di.coroutines.IoCoroutineScope
-import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
 import com.smascaro.trackmixing.common.utils.DiskSpaceHelper
 import com.smascaro.trackmixing.common.utils.navigation.NavigationHelper
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.TestDataBundleInfo

@@ -1,9 +1,9 @@
 package com.smascaro.trackmixing.search.business.download.controller
 
+import com.smascaro.trackmixing.base.coroutine.IoCoroutineScope
+import com.smascaro.trackmixing.base.coroutine.MainCoroutineScope
 import com.smascaro.trackmixing.common.data.model.ForegroundNotification
 import com.smascaro.trackmixing.common.di.DownloadNotificationHelperImplementation
-import com.smascaro.trackmixing.common.di.coroutines.IoCoroutineScope
-import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
 import com.smascaro.trackmixing.common.utils.ui.NotificationHelper
 import com.smascaro.trackmixing.main.components.progress.model.UiProgressEvent
 import com.smascaro.trackmixing.playbackservice.controller.ServiceCallbackHandler

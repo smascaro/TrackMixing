@@ -1,12 +1,12 @@
 package com.smascaro.trackmixing.main.components.player.controller
 
 import android.content.Intent
+import com.smascaro.trackmixing.base.coroutine.IoCoroutineScope
+import com.smascaro.trackmixing.base.coroutine.MainCoroutineScope
+import com.smascaro.trackmixing.base.model.Track
+import com.smascaro.trackmixing.base.time.asSeconds
 import com.smascaro.trackmixing.common.controller.BaseController
-import com.smascaro.trackmixing.common.data.model.Track
-import com.smascaro.trackmixing.common.di.coroutines.IoCoroutineScope
-import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager
-import com.smascaro.trackmixing.common.utils.time.asSeconds
 import com.smascaro.trackmixing.main.components.player.model.TrackPlayerData
 import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvc
 import com.smascaro.trackmixing.playbackservice.MixPlayerService

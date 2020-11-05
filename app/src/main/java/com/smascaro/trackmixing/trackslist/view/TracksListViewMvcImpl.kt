@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.common.data.model.Track
+import com.smascaro.trackmixing.base.model.Track
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
 import javax.inject.Inject
 

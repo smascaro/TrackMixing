@@ -1,8 +1,8 @@
 package com.smascaro.trackmixing.search.business.download.usecase
 
-import com.smascaro.trackmixing.common.data.datasource.network.NodeApi
-import com.smascaro.trackmixing.common.data.network.FetchProgressResponseSchema
-import com.smascaro.trackmixing.common.di.coroutines.IoCoroutineScope
+import com.smascaro.trackmixing.base.coroutine.IoCoroutineScope
+import com.smascaro.trackmixing.base.network.node.api.NodeApi
+import com.smascaro.trackmixing.base.network.node.model.FetchProgressResponseSchema
 import com.smascaro.trackmixing.search.business.download.model.DownloadEvents
 import com.smascaro.trackmixing.search.business.download.model.FetchSteps
 import kotlinx.coroutines.delay

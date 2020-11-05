@@ -1,8 +1,8 @@
 package com.smascaro.trackmixing.search.model.repository.datasource
 
+import com.smascaro.trackmixing.base.network.youtube.model.SearchResultResponseSchema
+import com.smascaro.trackmixing.base.network.youtube.model.VideoDetailsResponseSchema
 import com.smascaro.trackmixing.search.model.SearchResult
-import com.smascaro.trackmixing.search.model.SearchResultResponseSchema
-import com.smascaro.trackmixing.search.model.VideoDetailsResponseSchema
 
 class SearchResultMapper {
     companion object {

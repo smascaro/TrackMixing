@@ -1,13 +1,13 @@
 package com.smascaro.trackmixing.search.business.download.usecase
 
+import com.smascaro.trackmixing.base.coroutine.MainCoroutineScope
+import com.smascaro.trackmixing.base.model.Track
+import com.smascaro.trackmixing.base.network.node.api.NodeApi
+import com.smascaro.trackmixing.base.network.node.api.NodeDownloadsApi
+import com.smascaro.trackmixing.base.network.youtube.model.toModel
 import com.smascaro.trackmixing.common.data.datasource.TrackDownloader
-import com.smascaro.trackmixing.common.data.datasource.network.NodeApi
-import com.smascaro.trackmixing.common.data.datasource.network.NodeDownloadsApi
-import com.smascaro.trackmixing.common.data.model.Track
-import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
 import com.smascaro.trackmixing.search.business.download.model.DownloadEvents
 import com.smascaro.trackmixing.search.business.download.model.FetchSteps
-import com.smascaro.trackmixing.search.business.download.model.toModel
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import timber.log.Timber

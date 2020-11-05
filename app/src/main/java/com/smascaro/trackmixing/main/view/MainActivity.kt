@@ -7,8 +7,7 @@ import android.view.WindowManager
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.TrackMixingApplication
-import com.smascaro.trackmixing.common.di.main.MainComponent
+import com.smascaro.trackmixing.common.di.main.MainComponentProvider
 import com.smascaro.trackmixing.common.view.ui.BaseActivity
 import com.smascaro.trackmixing.main.components.player.controller.TrackPlayerController
 import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvc
@@ -38,12 +37,13 @@ class MainActivity : BaseActivity() {
 
     @Inject
     lateinit var bottomProgressViewMvc: BottomProgressViewMvc
-    lateinit var mainComponent: MainComponent
     private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        mainComponent =
-            (application as TrackMixingApplication).appComponent.mainComponent().create(this)
+        // mainComponent =
+        //     (application as TrackMixingApplication).appComponent.mainComponent().create(this)
+        // mainComponent.inject(this)
+        val mainComponent = (application as MainComponentProvider).provideMainComponent()
         mainComponent.inject(this)
         window.setFlags(
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,

@@ -1,10 +1,10 @@
 package com.smascaro.trackmixing.search.model.repository.datasource
 
 import com.smascaro.trackmixing.R
+import com.smascaro.trackmixing.base.network.youtube.api.YoutubeApi
+import com.smascaro.trackmixing.base.network.youtube.model.SearchResultResponseSchema
 import com.smascaro.trackmixing.common.utils.ResourcesWrapper
 import com.smascaro.trackmixing.search.model.SearchResult
-import com.smascaro.trackmixing.search.model.SearchResultResponseSchema
-import com.smascaro.trackmixing.search.model.repository.YoutubeApi
 import javax.inject.Inject
 
 class SearchResultsNetworkDataSource @Inject constructor(

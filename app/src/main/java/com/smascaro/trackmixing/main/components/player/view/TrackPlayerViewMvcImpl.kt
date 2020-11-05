@@ -10,12 +10,12 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.view.children
 import com.google.android.material.textview.MaterialTextView
 import com.smascaro.trackmixing.R
+import com.smascaro.trackmixing.base.time.Seconds
+import com.smascaro.trackmixing.base.time.TimeHelper
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager
 import com.smascaro.trackmixing.common.utils.ResourcesWrapper
 import com.smascaro.trackmixing.common.utils.SharedPreferencesFactory
 import com.smascaro.trackmixing.common.utils.TrackVolumeBundle
-import com.smascaro.trackmixing.common.utils.time.Seconds
-import com.smascaro.trackmixing.common.utils.time.TimeHelper
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
 import com.smascaro.trackmixing.main.components.player.model.TrackPlayerData
 import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvcImpl.MotionState.FullscreenPlayer

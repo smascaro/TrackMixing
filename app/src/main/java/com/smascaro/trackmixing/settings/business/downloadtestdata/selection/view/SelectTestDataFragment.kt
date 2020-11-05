@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.settings.business.downloadtestdata.DownloadTestDataActivity
+import com.smascaro.trackmixing.common.di.settings.SettingsComponentProvider
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.controller.SelectTestDataController
 import javax.inject.Inject
 
@@ -19,7 +19,7 @@ class SelectTestDataFragment : Fragment() {
     lateinit var viewMvc: SelectTestDataViewMvc
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        (activity as DownloadTestDataActivity).settingsComponent.inject(this)
+        (requireActivity().application as SettingsComponentProvider).provideSettingsComponent().inject(this)
     }
 
     override fun onCreateView(

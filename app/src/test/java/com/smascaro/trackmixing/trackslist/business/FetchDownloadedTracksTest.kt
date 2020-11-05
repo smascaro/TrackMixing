@@ -1,7 +1,7 @@
 package com.smascaro.trackmixing.trackslist.business
 
+import com.smascaro.trackmixing.base.model.Track
 import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepository
-import com.smascaro.trackmixing.common.data.model.Track
 import com.smascaro.trackmixing.common.models.TestModels
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
@@ -18,14 +18,15 @@ class FetchDownloadedTracksTest {
 
     // region constants
     val testTracksList = TestModels.getDownloadEntityList()
-    val maxLength = testTracksList.maxBy { it.secondsLong }?.secondsLong ?: -1
-    val minLength = testTracksList.minBy { it.secondsLong }?.secondsLong ?: Int.MAX_VALUE
-    val firstAlphabetically = testTracksList.minBy { it.title }?.title
-    val lastAlphabetically = testTracksList.maxBy { it.title }?.title
+    val maxLength = testTracksList.maxByOrNull { it.secondsLong }?.secondsLong ?: -1
+    val minLength = testTracksList.minByOrNull { it.secondsLong }?.secondsLong ?: Int.MAX_VALUE
+    val firstAlphabetically = testTracksList.minByOrNull { it.title }?.title
+    val lastAlphabetically = testTracksList.maxByOrNull { it.title }?.title
     // endregion constants
 
     // region helper fields
-    @Mock private lateinit var tracksRepository: TracksRepository
+    @Mock
+    private lateinit var tracksRepository: TracksRepository
     private lateinit var listener: FetchDownloadedTracksUseCaseListenerImpl
     // endregion helper fields
 

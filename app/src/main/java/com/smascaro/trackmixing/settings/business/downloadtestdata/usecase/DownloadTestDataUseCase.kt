@@ -1,18 +1,18 @@
 package com.smascaro.trackmixing.settings.business.downloadtestdata.usecase
 
+import com.smascaro.trackmixing.base.coroutine.IoCoroutineScope
+import com.smascaro.trackmixing.base.coroutine.MainCoroutineScope
+import com.smascaro.trackmixing.base.network.testdata.api.AwsContract
+import com.smascaro.trackmixing.base.network.testdata.api.TestDataApi
+import com.smascaro.trackmixing.base.network.testdata.api.TestDataFilesApi
+import com.smascaro.trackmixing.base.time.TimeHelper
 import com.smascaro.trackmixing.common.data.datasource.TrackDownloader
 import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepository
-import com.smascaro.trackmixing.common.data.network.api.AwsContract
-import com.smascaro.trackmixing.common.di.coroutines.IoCoroutineScope
-import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
 import com.smascaro.trackmixing.common.utils.FilesStorageHelper
-import com.smascaro.trackmixing.common.utils.time.TimeHelper
 import com.smascaro.trackmixing.common.view.architecture.BaseObservable
 import com.smascaro.trackmixing.main.components.progress.model.UiProgressEvent
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.TestDataBundleInfo
 import com.smascaro.trackmixing.settings.business.downloadtestdata.selection.model.toModelList
-import com.smascaro.trackmixing.settings.business.downloadtestdata.usecase.data.TestDataApi
-import com.smascaro.trackmixing.settings.business.downloadtestdata.usecase.data.TestDataFilesApi
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import timber.log.Timber

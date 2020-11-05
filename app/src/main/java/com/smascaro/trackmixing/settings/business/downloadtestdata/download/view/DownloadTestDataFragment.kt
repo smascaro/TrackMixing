@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.smascaro.trackmixing.R
+import com.smascaro.trackmixing.common.di.settings.SettingsComponentProvider
 import com.smascaro.trackmixing.settings.business.downloadtestdata.DownloadTestDataActivity
 import com.smascaro.trackmixing.settings.business.downloadtestdata.download.controller.DownloadTestDataController
 import javax.inject.Inject
@@ -22,7 +23,7 @@ class DownloadTestDataFragment : Fragment(), DownloadTestDataController.Listener
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        (activity as DownloadTestDataActivity).settingsComponent.inject(this)
+        (requireActivity().application as SettingsComponentProvider).provideSettingsComponent().inject(this)
         (activity as DownloadTestDataActivity).setOnBackPressedListener(this)
     }
 

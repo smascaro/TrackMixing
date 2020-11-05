@@ -1,6 +1,6 @@
 package com.smascaro.trackmixing.search.model.repository.datasource
 
-import com.smascaro.trackmixing.common.utils.time.TimeHelper
+import com.smascaro.trackmixing.base.time.TimeHelper
 import timber.log.Timber
 import kotlin.math.max
 

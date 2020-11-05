@@ -6,11 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.transition.MaterialFadeThrough
 import com.google.android.material.transition.MaterialSharedAxis
 import com.smascaro.trackmixing.R
+import com.smascaro.trackmixing.common.di.search.SearchComponentProvider
 import com.smascaro.trackmixing.common.view.ui.BaseFragment
-import com.smascaro.trackmixing.main.view.MainActivity
 import com.smascaro.trackmixing.search.controller.SearchResultsController
 import javax.inject.Inject
 
@@ -24,15 +23,23 @@ class SongSearchFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true).apply {
-            duration=200
+            duration = 200
         }
         returnTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false).apply {
-            duration=200
+            duration = 200
         }
     }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        (activity as MainActivity).mainComponent.inject(this)
+        // (activity as MainActivity).mainComponent.inject(this)
+        // (activity.application as TrackMixingApplication).appComponent
+
+        // DaggerSearchComponent.builder()
+        //     .withBaseComponent(BaseApplication.baseComponent)
+        //     .build()
+        //     .inject(this)
+        (requireActivity().application as SearchComponentProvider).provideSearchComponent().inject(this)
     }
 
     override fun getFragmentTitle(): String {

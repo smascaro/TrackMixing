@@ -1,7 +1,7 @@
 package com.smascaro.trackmixing.playbackservice.model
 
+import com.smascaro.trackmixing.base.time.Milliseconds
 import com.smascaro.trackmixing.common.data.model.NotificationData
-import com.smascaro.trackmixing.common.utils.time.Milliseconds
 
 data class MixPlaybackState(
     var trackTitle: String = "",

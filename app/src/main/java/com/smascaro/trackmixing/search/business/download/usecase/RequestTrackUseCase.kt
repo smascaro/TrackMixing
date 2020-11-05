@@ -1,6 +1,6 @@
 package com.smascaro.trackmixing.search.business.download.usecase
 
-import com.smascaro.trackmixing.common.data.datasource.network.NodeApi
+import com.smascaro.trackmixing.base.network.node.api.NodeApi
 import timber.log.Timber
 import java.net.SocketTimeoutException
 import javax.inject.Inject

@@ -5,8 +5,8 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.textview.MaterialTextView
 import com.smascaro.trackmixing.R
+import com.smascaro.trackmixing.base.time.TimeHelper
 import com.smascaro.trackmixing.common.utils.ResourcesWrapper
-import com.smascaro.trackmixing.common.utils.time.TimeHelper
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
 import com.smascaro.trackmixing.search.model.SearchResult
 

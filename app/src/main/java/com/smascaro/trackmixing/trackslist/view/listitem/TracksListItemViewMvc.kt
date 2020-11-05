@@ -1,6 +1,6 @@
 package com.smascaro.trackmixing.trackslist.view.listitem
 
-import com.smascaro.trackmixing.common.data.model.Track
+import com.smascaro.trackmixing.base.model.Track
 import com.smascaro.trackmixing.common.view.architecture.ObservableViewMvc
 
 interface TracksListItemViewMvc :

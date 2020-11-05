@@ -1,9 +1,9 @@
 package com.smascaro.trackmixing.main.controller
 
 import android.content.Intent
+import com.smascaro.trackmixing.base.coroutine.IoCoroutineScope
+import com.smascaro.trackmixing.base.coroutine.MainCoroutineScope
 import com.smascaro.trackmixing.common.controller.BaseController
-import com.smascaro.trackmixing.common.di.coroutines.IoCoroutineScope
-import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager
 import com.smascaro.trackmixing.main.view.MainActivityViewMvc
 import com.smascaro.trackmixing.playbackservice.utils.PlaybackSession
@@ -13,7 +13,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class MainActivityController @Inject constructor(
-    private val playbackSession:PlaybackSession,
+    private val playbackSession: PlaybackSession,
     private val ui: MainCoroutineScope,
     private val io: IoCoroutineScope
 ) :

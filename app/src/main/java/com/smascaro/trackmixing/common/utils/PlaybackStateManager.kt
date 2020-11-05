@@ -1,10 +1,10 @@
 package com.smascaro.trackmixing.common.utils
 
 import android.content.Context
+import com.smascaro.trackmixing.base.coroutine.IoCoroutineScope
+import com.smascaro.trackmixing.base.model.Track
 import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepository
 import com.smascaro.trackmixing.common.data.datasource.repository.toModel
-import com.smascaro.trackmixing.common.data.model.Track
-import com.smascaro.trackmixing.common.di.coroutines.IoCoroutineScope
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject

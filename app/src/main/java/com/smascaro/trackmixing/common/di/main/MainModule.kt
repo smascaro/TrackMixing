@@ -1,28 +1,16 @@
 package com.smascaro.trackmixing.common.di.main
 
-import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvc
-import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvcImpl
-import com.smascaro.trackmixing.main.components.progress.view.BottomProgressViewMvc
-import com.smascaro.trackmixing.main.components.progress.view.BottomProgressViewMvcImpl
-import com.smascaro.trackmixing.trackslist.view.TracksListViewMvc
-import com.smascaro.trackmixing.trackslist.view.TracksListViewMvcImpl
+import com.smascaro.trackmixing.playbackservice.utils.PlaybackSession
+import com.smascaro.trackmixing.playbackservice.utils.PlaybackSessionImpl
 import dagger.Binds
 import dagger.Module
 
 @Module
 class MainModule {
     @Module
-    interface ViewMvcBindings {
+    interface Bindings {
         @MainScope
         @Binds
-        fun provideTracksListViewMvc(tracksListViewMvcImpl: TracksListViewMvcImpl): TracksListViewMvc
-
-        @MainScope
-        @Binds
-        fun provideBottomPlayerViewMvc(bottomPlayerViewMvcImpl: TrackPlayerViewMvcImpl): TrackPlayerViewMvc
-
-        @MainScope
-        @Binds
-        fun provideBottomProgressViewMvc(bottomProgressViewMvcImpl: BottomProgressViewMvcImpl): BottomProgressViewMvc
+        fun providePlaybackSession(playbackSessionImpl: PlaybackSessionImpl): PlaybackSession
     }
 }

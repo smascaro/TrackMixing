@@ -1,2 +1,3 @@
-rootProject.name='TrackMixing'
+include ':base'
+rootProject.name = 'TrackMixing'
 include ':app'

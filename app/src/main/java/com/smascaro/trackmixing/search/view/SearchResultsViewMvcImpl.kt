@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
 import com.smascaro.trackmixing.common.utils.ui.UiUtils
 import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
 import com.smascaro.trackmixing.search.business.download.TrackDownloadService
@@ -22,8 +21,7 @@ import javax.inject.Inject
 
 class SearchResultsViewMvcImpl @Inject constructor(
     private val searchResultsAdapter: SearchResultsAdapter,
-    private val uiUtils: UiUtils,
-    private val ui: MainCoroutineScope
+    private val uiUtils: UiUtils
 ) : BaseObservableViewMvc<SearchResultsViewMvc.Listener>(),
     SearchResultsAdapter.Listener,
     SearchResultsViewMvc {

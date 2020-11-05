@@ -3,9 +3,9 @@ package com.smascaro.trackmixing.playbackservice
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import com.smascaro.trackmixing.TrackMixingApplication
-import com.smascaro.trackmixing.common.data.model.Track
-import com.smascaro.trackmixing.common.utils.time.Seconds
+import com.smascaro.trackmixing.base.model.Track
+import com.smascaro.trackmixing.base.time.Seconds
+import com.smascaro.trackmixing.common.di.main.MainComponentProvider
 import com.smascaro.trackmixing.playbackservice.controller.MixPlayerServiceController
 import com.smascaro.trackmixing.playbackservice.controller.MixPlayerServiceController.ActionArgs
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
@@ -71,7 +71,7 @@ class MixPlayerService : BaseService() {
     lateinit var controller: MixPlayerServiceController
 
     override fun onCreate() {
-        (application as TrackMixingApplication).appComponent.playerComponent().create().inject(this)
+        (application as MainComponentProvider).provideMainComponent().inject(this)
         super.onCreate()
         controller.onCreate()
         initializeControllerServiceCallbacks()

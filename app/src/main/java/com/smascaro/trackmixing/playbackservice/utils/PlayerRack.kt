@@ -1,10 +1,10 @@
 package com.smascaro.trackmixing.playbackservice.utils
 
-import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
+import com.smascaro.trackmixing.base.coroutine.MainCoroutineScope
+import com.smascaro.trackmixing.base.time.Milliseconds
+import com.smascaro.trackmixing.base.time.Seconds
+import com.smascaro.trackmixing.base.time.asMillis
 import com.smascaro.trackmixing.common.utils.TrackVolumeBundle
-import com.smascaro.trackmixing.common.utils.time.Milliseconds
-import com.smascaro.trackmixing.common.utils.time.Seconds
-import com.smascaro.trackmixing.common.utils.time.asMillis
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll

@@ -13,10 +13,10 @@ import android.support.v4.media.session.PlaybackStateCompat.ACTION_SEEK_TO
 import androidx.core.app.NotificationCompat
 import com.bumptech.glide.RequestManager
 import com.smascaro.trackmixing.R
+import com.smascaro.trackmixing.base.coroutine.MainCoroutineScope
+import com.smascaro.trackmixing.base.time.asMillis
 import com.smascaro.trackmixing.common.data.model.NotificationData
-import com.smascaro.trackmixing.common.di.coroutines.MainCoroutineScope
 import com.smascaro.trackmixing.common.error.WrongArgumentType
-import com.smascaro.trackmixing.common.utils.time.asMillis
 import com.smascaro.trackmixing.common.utils.ui.NotificationHelper
 import com.smascaro.trackmixing.common.utils.ui.loadBitmap
 import com.smascaro.trackmixing.main.view.MainActivity
