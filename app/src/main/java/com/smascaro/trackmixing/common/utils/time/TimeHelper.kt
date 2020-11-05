@@ -47,19 +47,6 @@ class TimeHelper {
                         seconds = components[2].toInt()
                     }
                 }
-//                components.forEachIndexed { index, s ->
-//                    when (components.size) {
-//                        2 -> when (index) {
-//                            0 -> minutes = s.toInt()
-//                            1 -> seconds = s.toInt()
-//                        }
-//                        3 -> when (index) {
-//                            0 -> hours = s.toInt()
-//                            1 -> minutes = s.toInt()
-//                            2 -> seconds = s.toInt()
-//                        }
-//                    }
-//                }
                 return (seconds + (60 * minutes) + (60 * 60 * hours))
             }
         }
@@ -74,6 +61,26 @@ class TimeHelper {
 
         fun fromString(time: String): StringRepresentation {
             return StringRepresentation(time)
+        }
+
+        private const val THRESHOLD_SECOND = 1000L
+        private const val THRESHOLD_MINUTE = 60 * THRESHOLD_SECOND
+        private const val THRESHOLD_HOUR = THRESHOLD_MINUTE * 60
+        private const val THRESHOLD_DAY = THRESHOLD_HOUR * 24
+        private const val THRESHOLD_WEEK = THRESHOLD_DAY * 7
+        private const val THRESHOLD_MONTH = THRESHOLD_DAY * 30
+        private const val THRESHOLD_YEAR = THRESHOLD_DAY * 365
+        fun elapsedTime(millis: Long): String {
+            val elapsedMillis = System.currentTimeMillis() - millis
+            return when {
+                elapsedMillis >= THRESHOLD_YEAR -> "${(elapsedMillis / THRESHOLD_YEAR).toInt()}y ago"
+                elapsedMillis >= THRESHOLD_MONTH -> "${(elapsedMillis / THRESHOLD_MONTH).toInt()}mo ago"
+                elapsedMillis >= THRESHOLD_WEEK -> "${(elapsedMillis / THRESHOLD_WEEK).toInt()}w ago"
+                elapsedMillis >= THRESHOLD_DAY -> "${(elapsedMillis / THRESHOLD_DAY).toInt()}d ago"
+                elapsedMillis >= THRESHOLD_HOUR -> "${(elapsedMillis / THRESHOLD_HOUR).toInt()}h ago"
+                elapsedMillis >= THRESHOLD_MINUTE -> "${(elapsedMillis / THRESHOLD_MINUTE).toInt()}m ago"
+                else -> "${(elapsedMillis / THRESHOLD_SECOND).toInt()}s ago"
+            }
         }
     }
 }
