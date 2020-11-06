@@ -6,8 +6,8 @@ import com.smascaro.trackmixing.trackslist.components.toolbar.view.ToolbarViewMv
 import com.smascaro.trackmixing.trackslist.view.TracksListFragmentDirections
 import javax.inject.Inject
 
-class ToolbarController @Inject constructor(p_navigationHelper: NavigationHelper) :
-    BaseNavigatorController<ToolbarViewMvc>(p_navigationHelper),
+class ToolbarController @Inject constructor(navigationHelper: NavigationHelper) :
+    BaseNavigatorController<ToolbarViewMvc>(navigationHelper),
     ToolbarViewMvc.Listener {
     fun onStart() {
         viewMvc.registerListener(this)
@@ -18,17 +18,15 @@ class ToolbarController @Inject constructor(p_navigationHelper: NavigationHelper
     }
 
     override fun onSettingsMenuButtonClicked() {
-        // navigationHelper.toSettings()
-        navigationHelper.navigate(TracksListFragmentDirections.actionDestinationTracksListToDestinationSettings())
-        // TODO("Manage navigation")
+        navigationHelper.navigate(
+            TracksListFragmentDirections.actionDestinationTracksListToDestinationSettings()
+        )
     }
 
     override fun onSearchMenuButtonClicked() {
-        // navigationHelper.toSearch()
         navigationHelper.navigate(
             TracksListFragmentDirections.actionDestinationTracksListToDestinationSearch()
         )
-        // TODO("Manage navigation")
     }
 
     override fun dispose() {

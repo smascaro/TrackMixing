@@ -7,13 +7,13 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.base.data.model.Track
 import com.smascaro.trackmixing.base.time.TimeHelper
-import com.smascaro.trackmixing.base.utils.ResourcesWrapper
 import com.smascaro.trackmixing.base.ui.architecture.view.BaseObservableViewMvc
+import com.smascaro.trackmixing.base.utils.ResourcesWrapper
 import javax.inject.Inject
 
 class TracksListItemViewMvcImpl @Inject constructor(
-    val glide: RequestManager,
-    val resources: ResourcesWrapper
+    private val glide: RequestManager,
+    private val resources: ResourcesWrapper
 ) :
     BaseObservableViewMvc<TracksListItemViewMvc.Listener>(),
     TracksListItemViewMvc {

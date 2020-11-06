@@ -24,9 +24,6 @@ class MainActivityController @Inject constructor(
         viewMvc.unregisterListener(this)
     }
 
-    fun isYoutubeValidUrl(url: CharSequence): Boolean =
-        YoutubeUrlValidator(url.toString()).isValid()
-
     override fun onPlayerStateChanged() {
         updateBackgroundColor()
     }

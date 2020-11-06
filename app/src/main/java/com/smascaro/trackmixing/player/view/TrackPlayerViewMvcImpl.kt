@@ -33,11 +33,11 @@ class TrackPlayerViewMvcImpl @Inject constructor(
     TrackPlayerViewMvc,
     SharedPreferences.OnSharedPreferenceChangeListener {
     private sealed class MotionState {
-        class Initial : MotionState()
-        class PlayerVisible : MotionState()
-        class FullscreenPlayer : MotionState()
-        class PreSwipeOut : MotionState()
-        class SwipedOut : MotionState()
+        object Initial : MotionState()
+        object PlayerVisible : MotionState()
+        object FullscreenPlayer : MotionState()
+        object PreSwipeOut : MotionState()
+        object SwipedOut : MotionState()
     }
 
     //Views
@@ -68,7 +68,7 @@ class TrackPlayerViewMvcImpl @Inject constructor(
         resources.getLong(R.integer.animation_slide_out_top_duration)
     private var currentShownData: TrackPlayerData? = null
     private lateinit var sharedPreferences: SharedPreferences
-    private var currentMotionState: MotionState = Initial()
+    private var currentMotionState: MotionState = Initial
     private var blockTimestampUpdates: Boolean = false
 
     override fun onCreate() {
@@ -78,7 +78,7 @@ class TrackPlayerViewMvcImpl @Inject constructor(
         }
     }
 
-    fun isServiceRunning(): Boolean {
+    private fun isServiceRunning(): Boolean {
         return serviceChecker.ping()
     }
 
@@ -129,6 +129,7 @@ class TrackPlayerViewMvcImpl @Inject constructor(
     private fun initializeMotionLayoutListener() {
         motionLayout.setTransitionListener(object : MotionLayout.TransitionListener {
             override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
+                // Do nothing
             }
 
             override fun onTransitionChange(
@@ -152,18 +153,19 @@ class TrackPlayerViewMvcImpl @Inject constructor(
             }
 
             override fun onTransitionTrigger(p0: MotionLayout?, p1: Int, p2: Boolean, p3: Float) {
+                // Do nothing
             }
         })
     }
 
     private fun getMotionStateByResourceId(id: Int): MotionState {
         return when (id) {
-            R.id.player_hidden -> Initial()
-            R.id.player_visible -> PlayerVisible()
-            R.id.fullscreen -> FullscreenPlayer()
-            R.id.pre_swipe_out -> PreSwipeOut()
-            R.id.swiped_out -> SwipedOut()
-            else -> Initial()
+            R.id.player_hidden -> Initial
+            R.id.player_visible -> PlayerVisible
+            R.id.fullscreen -> FullscreenPlayer
+            R.id.pre_swipe_out -> PreSwipeOut
+            R.id.swiped_out -> SwipedOut
+            else -> Initial
         }
     }
 
@@ -204,7 +206,7 @@ class TrackPlayerViewMvcImpl @Inject constructor(
             R.id.player_hidden -> "player_hidden"
             R.id.player_visible -> "player_visible"
             R.id.fullscreen -> "fullscreen"
-            else -> "unkown"
+            else -> "unknown"
         }
     }
 
@@ -256,7 +258,9 @@ class TrackPlayerViewMvcImpl @Inject constructor(
 
     private fun setupSharedPreferences() {
         sharedPreferences =
-            com.smascaro.trackmixing.playback.utils.SharedPreferencesFactory.getPlaybackSharedPreferencesFactory(getContext()!!)
+            com.smascaro.trackmixing.playback.utils.SharedPreferencesFactory.getPlaybackSharedPreferencesFactory(
+                getContext()!!
+            )
         sharedPreferences.registerOnSharedPreferenceChangeListener(this)
     }
 

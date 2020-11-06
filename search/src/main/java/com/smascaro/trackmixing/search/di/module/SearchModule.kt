@@ -25,33 +25,5 @@ class SearchModule {
         @MainScope
         @Binds
         fun provideSearchResultsViewMvc(searchResultsViewMvcImpl: SearchResultsViewMvcImpl): SearchResultsViewMvc
-        //
-        // @MainScope
-        // @Binds
-        // fun provideNavigationHelper(navigationHelperImpl: NavigationHelperImpl): NavigationHelper
     }
 }
-// @Module
-// class SearchCoroutineScopes {
-//     @MainScope
-//     @Provides
-//     fun provideMainCoroutineScope(): MainCoroutineScope {
-//         return object : MainCoroutineScope {
-//             override val coroutineContext = Job() + Dispatchers.Main
-//         }
-//     }
-//
-//     @MainScope
-//     @Provides
-//     fun provideIoCoroutineScope(): IoCoroutineScope {
-//         return object : IoCoroutineScope {
-//             override val coroutineContext = Job() + Dispatchers.IO
-//         }
-//     }
-//     // @MainScope
-//     // @Provides
-//     // fun provideGlideInstance(context: Context): RequestManager {
-//     //     return Glide.with(context)
-//     // }
-//
-// }

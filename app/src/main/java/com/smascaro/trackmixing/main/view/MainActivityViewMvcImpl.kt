@@ -9,10 +9,10 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Toast
 import androidx.core.animation.doOnEnd
 import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.playback.utils.PlaybackStateManager
-import com.smascaro.trackmixing.base.utils.ResourcesWrapper
-import com.smascaro.trackmixing.playback.utils.SharedPreferencesFactory
 import com.smascaro.trackmixing.base.ui.architecture.view.BaseObservableViewMvc
+import com.smascaro.trackmixing.base.utils.ResourcesWrapper
+import com.smascaro.trackmixing.playback.utils.PlaybackStateManager
+import com.smascaro.trackmixing.playback.utils.SharedPreferencesFactory
 import javax.inject.Inject
 
 class MainActivityViewMvcImpl @Inject constructor(
@@ -38,12 +38,12 @@ class MainActivityViewMvcImpl @Inject constructor(
 
     private fun setupSharedPreferences() {
         sharedPreferences =
-            com.smascaro.trackmixing.playback.utils.SharedPreferencesFactory.getPlaybackSharedPreferencesFactory(getContext()!!)
+            SharedPreferencesFactory.getPlaybackSharedPreferencesFactory(getContext()!!)
         sharedPreferences.registerOnSharedPreferenceChangeListener(this)
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        if (key != null && key == com.smascaro.trackmixing.playback.utils.PlaybackStateManager.SHARED_PREFERENCES_PLAYBACK_SONG_PLAYING || key == com.smascaro.trackmixing.playback.utils.PlaybackStateManager.SHARED_PREFERENCES_PLAYBACK_IS_PLAYING) {
+        if (key != null && key == PlaybackStateManager.SHARED_PREFERENCES_PLAYBACK_SONG_PLAYING || key == PlaybackStateManager.SHARED_PREFERENCES_PLAYBACK_IS_PLAYING) {
             getListeners().forEach {
                 it.onPlayerStateChanged()
             }

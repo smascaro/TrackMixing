@@ -46,7 +46,7 @@ class TracksListAdapter @Inject constructor(
     private var mTracks = mutableListOf<Track>()
 
     fun List<Int>.isConsecutive(): Boolean {
-        if (this.size == 0) {
+        if (this.isEmpty()) {
             return false
         } else {
             val previous = this[0]
@@ -91,12 +91,6 @@ class TracksListAdapter @Inject constructor(
 
     override fun onTrackClicked(track: Track) {
         listener?.onTrackClicked(track)
-    }
-
-    override fun onExpandOrCollapseDetailsRequest(
-        itemPosition: Int
-    ) {
-        notifyItemChanged(itemPosition)
     }
 
     override fun getItemCount(): Int {

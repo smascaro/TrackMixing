@@ -27,7 +27,6 @@ class FetchDownloadedTracks @Inject constructor(
             Sort.ALPHABETICALLY_DESC -> tracks.sortedByDescending { it.title }
             Sort.LONGEST_FIRST -> tracks.sortedByDescending { it.secondsLong.value }
             Sort.SHORTEST_FIRST -> tracks.sortedBy { it.secondsLong.value }
-            else -> tracks
         }
         getListeners().forEach {
             it.onTracksFetched(tracks)

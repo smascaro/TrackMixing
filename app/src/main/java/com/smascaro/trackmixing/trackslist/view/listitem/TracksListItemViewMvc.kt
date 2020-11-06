@@ -7,7 +7,6 @@ interface TracksListItemViewMvc :
     ObservableViewMvc<TracksListItemViewMvc.Listener> {
     interface Listener {
         fun onTrackClicked(track: Track)
-        fun onExpandOrCollapseDetailsRequest(itemPosition: Int)
     }
 
     fun bindTrack(track: Track)

@@ -40,9 +40,6 @@ class MainActivity : BaseActivity() {
     private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // mainComponent =
-        //     (application as TrackMixingApplication).appComponent.mainComponent().create(this)
-        // mainComponent.inject(this)
         val mainComponent = (application as MainComponentProvider).provideMainComponent()
         mainComponent.inject(this)
         window.setFlags(

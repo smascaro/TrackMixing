@@ -7,6 +7,8 @@ import com.smascaro.trackmixing.base.data.model.Track
 import com.smascaro.trackmixing.base.time.asSeconds
 import com.smascaro.trackmixing.base.ui.architecture.controller.BaseController
 import com.smascaro.trackmixing.playback.service.MixPlayerService
+import com.smascaro.trackmixing.playback.utils.PlaybackSession
+import com.smascaro.trackmixing.playback.utils.PlaybackStateManager
 import com.smascaro.trackmixing.player.model.TrackPlayerData
 import com.smascaro.trackmixing.player.view.TrackPlayerViewMvc
 import kotlinx.coroutines.launch
@@ -19,13 +21,13 @@ import javax.inject.Inject
 
 class TrackPlayerController @Inject constructor(
     private val eventBus: EventBus,
-    private val playbackSession: com.smascaro.trackmixing.playback.utils.PlaybackSession,
+    private val playbackSession: PlaybackSession,
     private val ui: MainCoroutineScope,
     private val io: IoCoroutineScope
 ) : BaseController<TrackPlayerViewMvc>(),
     TrackPlayerViewMvc.Listener {
     private var currentTrack: Track? = null
-    private var currentState: com.smascaro.trackmixing.playback.utils.PlaybackStateManager.PlaybackState? = null
+    private var currentState: PlaybackStateManager.PlaybackState? = null
     private var openPlayerIntentRequested: Boolean = false
     fun onCreate() {
         ensureViewMvcBound()
@@ -36,11 +38,11 @@ class TrackPlayerController @Inject constructor(
 
     private fun updateCurrentPlayingTrack() = ui.launch {
         currentState = playbackSession.getState()
-        if (currentState is com.smascaro.trackmixing.playback.utils.PlaybackStateManager.PlaybackState.Playing || currentState is com.smascaro.trackmixing.playback.utils.PlaybackStateManager.PlaybackState.Paused) {
+        if (currentState is PlaybackStateManager.PlaybackState.Playing || currentState is PlaybackStateManager.PlaybackState.Paused) {
             currentTrack = withContext(io.coroutineContext) { playbackSession.getTrack() }
             when (currentState) {
-                is com.smascaro.trackmixing.playback.utils.PlaybackStateManager.PlaybackState.Playing -> viewMvc.showPauseButton()
-                is com.smascaro.trackmixing.playback.utils.PlaybackStateManager.PlaybackState.Paused -> viewMvc.showPlayButton()
+                is PlaybackStateManager.PlaybackState.Playing -> viewMvc.showPauseButton()
+                is PlaybackStateManager.PlaybackState.Paused -> viewMvc.showPlayButton()
             }
             updateUi()
         }
@@ -81,10 +83,10 @@ class TrackPlayerController @Inject constructor(
     override fun onActionButtonClicked() {
         ui.launch {
             val currentState = playbackSession.getState()
-            if (currentState is com.smascaro.trackmixing.playback.utils.PlaybackStateManager.PlaybackState.Playing) {
+            if (currentState is PlaybackStateManager.PlaybackState.Playing) {
                 playbackSession.pause()
                 Timber.d("Sent a PauseMasterEvent")
-            } else if (currentState is com.smascaro.trackmixing.playback.utils.PlaybackStateManager.PlaybackState.Paused) {
+            } else if (currentState is PlaybackStateManager.PlaybackState.Paused) {
                 playbackSession.play()
                 Timber.d("Sent a PlayMasterEvent")
             }
@@ -109,7 +111,10 @@ class TrackPlayerController @Inject constructor(
         playbackSession.stopPlayback()
     }
 
-    override fun onTrackVolumeChanged(trackInstrument: com.smascaro.trackmixing.playback.model.TrackInstrument, volume: Int) {
+    override fun onTrackVolumeChanged(
+        trackInstrument: com.smascaro.trackmixing.playback.model.TrackInstrument,
+        volume: Int
+    ) {
         playbackSession.setTrackVolume(trackInstrument, volume)
     }
 
