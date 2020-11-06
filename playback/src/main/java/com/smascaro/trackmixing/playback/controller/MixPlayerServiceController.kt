@@ -28,7 +28,7 @@ import kotlin.concurrent.thread
 
 class MixPlayerServiceController @Inject constructor(
     private val bandPlaybackHelper: BandPlaybackHelper,
-    @PlayerNotificationHelperImplementation val notificationHelper: NotificationHelper,
+    @PlayerNotificationHelperImplementation private val notificationHelper: NotificationHelper,
     private val playbackStateManager: PlaybackStateManager,
     private val eventBus: EventBus,
     private val io: IoCoroutineScope,

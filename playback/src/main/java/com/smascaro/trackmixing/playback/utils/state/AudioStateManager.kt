@@ -9,7 +9,7 @@ import com.smascaro.trackmixing.base.ui.architecture.view.BaseObservable
 import timber.log.Timber
 import javax.inject.Inject
 
-class AudioStateManager @Inject constructor(private val context: Context) :
+class AudioStateManager @Inject constructor(context: Context) :
     BaseObservable<AudioStateManager.Listener>(),
     AudioManager.OnAudioFocusChangeListener {
     interface Listener {

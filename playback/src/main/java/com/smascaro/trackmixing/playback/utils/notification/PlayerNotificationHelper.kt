@@ -27,10 +27,10 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class PlayerNotificationHelper @Inject constructor(
-    context: Context,
-    val glide: RequestManager,
+    private val glide: RequestManager,
     private val ui: MainCoroutineScope,
-    private val playbackSession: PlaybackSession
+    private val playbackSession: PlaybackSession,
+    context: Context
 ) : NotificationHelper(context) {
     companion object {
         const val NOTIFICATION_ID = 2000
