@@ -17,8 +17,8 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class BottomProgressController @Inject constructor(
-    resources: ResourcesWrapper,
-    private val eventBus: EventBus
+    private val eventBus: EventBus,
+    resources: ResourcesWrapper
 ) :
     BaseController<BottomProgressViewMvc>() {
     private val delayBeforeHidingMillis =
