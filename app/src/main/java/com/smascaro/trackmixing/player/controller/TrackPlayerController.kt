@@ -7,8 +7,8 @@ import com.smascaro.trackmixing.base.data.model.Track
 import com.smascaro.trackmixing.base.time.asSeconds
 import com.smascaro.trackmixing.base.ui.architecture.controller.BaseController
 import com.smascaro.trackmixing.playback.service.MixPlayerService
-import com.smascaro.trackmixing.playback.utils.PlaybackSession
-import com.smascaro.trackmixing.playback.utils.PlaybackStateManager
+import com.smascaro.trackmixing.playback.utils.media.PlaybackSession
+import com.smascaro.trackmixing.playback.utils.state.PlaybackStateManager
 import com.smascaro.trackmixing.player.model.TrackPlayerData
 import com.smascaro.trackmixing.player.view.TrackPlayerViewMvc
 import kotlinx.coroutines.launch

@@ -9,10 +9,13 @@ import com.smascaro.trackmixing.common.models.DOWNLOAD_ENTITY_1_TITLE
 import com.smascaro.trackmixing.common.models.TRACK_VIDEO_KEY
 import com.smascaro.trackmixing.common.models.TestModels
 import com.smascaro.trackmixing.common.testdoubles.EventBusTd
+import com.smascaro.trackmixing.playback.model.TrackVolumeBundle
+import com.smascaro.trackmixing.playback.utils.media.PlaybackSession
+import com.smascaro.trackmixing.playback.utils.state.PlaybackStateManager
+import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
 import com.smascaro.trackmixing.player.controller.TrackPlayerController
 import com.smascaro.trackmixing.player.model.TrackPlayerData
 import com.smascaro.trackmixing.player.view.TrackPlayerViewMvc
-import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -41,10 +44,10 @@ class TrackPlayerControllerTest {
     // endregion constants
     // region helper fields
     @Mock
-    private lateinit var playbackStateManager: com.smascaro.trackmixing.playback.utils.PlaybackStateManager
+    private lateinit var playbackStateManager: PlaybackStateManager
 
     @Mock
-    private lateinit var playbackSession: com.smascaro.trackmixing.playback.utils.PlaybackSession
+    private lateinit var playbackSession: PlaybackSession
     private lateinit var viewMvc: TrackPlayerViewMvcTd
     private lateinit var eventBus: EventBusTd
     private lateinit var tracksRepository: TracksRepository
@@ -157,7 +160,7 @@ class TrackPlayerControllerTest {
         SUT.onPlayerStateChanged()
         // Assert
         assertTrue(viewMvc.isPlayerBarShown)
-        assertTrue(viewMvc.dataInPlayerBar?.state is com.smascaro.trackmixing.playback.utils.PlaybackStateManager.PlaybackState.Playing)
+        assertTrue(viewMvc.dataInPlayerBar?.state is PlaybackStateManager.PlaybackState.Playing)
         assertEquals(DOWNLOAD_ENTITY_1_TITLE, viewMvc.dataInPlayerBar?.title)
     }
 
@@ -179,7 +182,7 @@ class TrackPlayerControllerTest {
         SUT.onPlayerStateChanged()
         // Assert
         assertTrue(viewMvc.isPlayerBarShown)
-        assertTrue(viewMvc.dataInPlayerBar?.state is com.smascaro.trackmixing.playback.utils.PlaybackStateManager.PlaybackState.Paused)
+        assertTrue(viewMvc.dataInPlayerBar?.state is PlaybackStateManager.PlaybackState.Paused)
         assertEquals(DOWNLOAD_ENTITY_1_TITLE, viewMvc.dataInPlayerBar?.title)
     }
 
@@ -239,17 +242,17 @@ class TrackPlayerControllerTest {
     // region helper methods
     private fun setPlayingState() {
         `when`(playbackStateManager.getPlayingState())
-            .thenReturn(com.smascaro.trackmixing.playback.utils.PlaybackStateManager.PlaybackState.Playing())
+            .thenReturn(PlaybackStateManager.PlaybackState.Playing())
     }
 
     private fun setPausedState() {
         `when`(playbackStateManager.getPlayingState())
-            .thenReturn(com.smascaro.trackmixing.playback.utils.PlaybackStateManager.PlaybackState.Paused())
+            .thenReturn(PlaybackStateManager.PlaybackState.Paused())
     }
 
     private fun setStoppedState() {
         `when`(playbackStateManager.getPlayingState())
-            .thenReturn(com.smascaro.trackmixing.playback.utils.PlaybackStateManager.PlaybackState.Stopped())
+            .thenReturn(PlaybackStateManager.PlaybackState.Stopped())
     }
 
     private fun setPlaybackStateCurrentSongId() {
@@ -320,7 +323,7 @@ class TrackPlayerControllerTest {
 //            TODO("Not yet implemented")
         }
 
-        override fun bindVolumes(volumes: com.smascaro.trackmixing.playback.utils.TrackVolumeBundle) {
+        override fun bindVolumes(volumes: TrackVolumeBundle) {
 //            TODO("Not yet implemented")
         }
 

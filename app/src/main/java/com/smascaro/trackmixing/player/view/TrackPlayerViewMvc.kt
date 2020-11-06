@@ -2,6 +2,7 @@ package com.smascaro.trackmixing.player.view
 
 import com.smascaro.trackmixing.base.time.Seconds
 import com.smascaro.trackmixing.base.ui.architecture.view.ObservableViewMvc
+import com.smascaro.trackmixing.playback.model.TrackVolumeBundle
 import com.smascaro.trackmixing.player.model.TrackPlayerData
 
 interface TrackPlayerViewMvc :
@@ -13,7 +14,10 @@ interface TrackPlayerViewMvc :
         fun onServiceRunningCheck(running: Boolean)
         fun onPlayerSwipedOut()
         fun onSeekRequestEvent(progress: Int)
-        fun onTrackVolumeChanged(trackInstrument: com.smascaro.trackmixing.playback.model.TrackInstrument, volume: Int)
+        fun onTrackVolumeChanged(
+            trackInstrument: com.smascaro.trackmixing.playback.model.TrackInstrument,
+            volume: Int
+        )
     }
 
     fun onCreate()
@@ -22,7 +26,7 @@ interface TrackPlayerViewMvc :
     fun showPauseButton()
     fun updateTimestamp(newTimestamp: Int, totalLength: Int)
     fun bindTrackDuration(length: Seconds)
-    fun bindVolumes(volumes: com.smascaro.trackmixing.playback.utils.TrackVolumeBundle)
+    fun bindVolumes(volumes: TrackVolumeBundle)
     fun openPlayer()
     fun onBackPressed(): Boolean
 }

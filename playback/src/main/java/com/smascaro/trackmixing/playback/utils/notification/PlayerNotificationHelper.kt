@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.playback.utils
+package com.smascaro.trackmixing.playback.utils.notification
 
 import android.app.PendingIntent
 import android.content.Context
@@ -18,9 +18,10 @@ import com.smascaro.trackmixing.base.service.NotificationData
 import com.smascaro.trackmixing.base.time.asMillis
 import com.smascaro.trackmixing.base.utils.NotificationHelper
 import com.smascaro.trackmixing.base.utils.loadBitmap
-import com.smascaro.trackmixing.playback.service.MixPlayerService
 import com.smascaro.trackmixing.playback.R
 import com.smascaro.trackmixing.playback.model.MixPlaybackState
+import com.smascaro.trackmixing.playback.service.MixPlayerService
+import com.smascaro.trackmixing.playback.utils.media.PlaybackSession
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -67,24 +68,8 @@ class PlayerNotificationHelper @Inject constructor(
                     MEDIA_SESSION_TAG
                 )
         }
-        val mediaMetadataBuilder = MediaMetadataCompat.Builder().apply {
-            putString(MediaMetadataCompat.METADATA_KEY_ARTIST, data.author)
-            putString(MediaMetadataCompat.METADATA_KEY_TITLE, data.trackTitle)
-            putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, data.trackThumbnailUrl)
-            putLong(MediaMetadataCompat.METADATA_KEY_DURATION, data.duration.value)
-        }
-        val playbackStateBuilder = PlaybackStateCompat.Builder().apply {
-            setActions(ACTION_PLAY or ACTION_PAUSE or ACTION_SEEK_TO)
-            setState(
-                when (data.isMasterPlaying) {
-                    true -> PlaybackStateCompat.STATE_PLAYING
-                    false -> PlaybackStateCompat.STATE_PAUSED
-                },
-                data.currentPosition.value,
-                1f
-            )
-
-        }
+        val mediaMetadataBuilder = buildMediaMetadataBuilder(data)
+        val playbackStateBuilder = buildPlaybackStateBuilder(data)
         mMediaSession?.setMetadata(mediaMetadataBuilder.build())
         mMediaSession?.setPlaybackState(playbackStateBuilder.build())
         mMediaSession?.setCallback(object : MediaSessionCompat.Callback() {
@@ -115,9 +100,33 @@ class PlayerNotificationHelper @Inject constructor(
         notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
     }
 
+    private fun buildPlaybackStateBuilder(
+        data: MixPlaybackState
+    ): PlaybackStateCompat.Builder {
+        return PlaybackStateCompat.Builder().apply {
+            setActions(ACTION_PLAY or ACTION_PAUSE or ACTION_SEEK_TO)
+            setState(
+                when (data.isMasterPlaying) {
+                    true -> PlaybackStateCompat.STATE_PLAYING
+                    false -> PlaybackStateCompat.STATE_PAUSED
+                },
+                data.currentPosition.value,
+                1f
+            )
+        }
+    }
+
+    private fun buildMediaMetadataBuilder(data: MixPlaybackState): MediaMetadataCompat.Builder {
+        return MediaMetadataCompat.Builder().apply {
+            putString(MediaMetadataCompat.METADATA_KEY_ARTIST, data.author)
+            putString(MediaMetadataCompat.METADATA_KEY_TITLE, data.trackTitle)
+            putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, data.trackThumbnailUrl)
+            putLong(MediaMetadataCompat.METADATA_KEY_DURATION, data.duration.value)
+        }
+    }
+
     private fun createTapIntent(): PendingIntent? {
         val intent = Intent(MixPlayerService.ACTION_LAUNCH_PLAYER)
-        // intent.action = MixPlayerService.ACTION_LAUNCH_PLAYER
         return PendingIntent.getActivity(context, 3, intent, PendingIntent.FLAG_CANCEL_CURRENT)
     }
 
@@ -125,13 +134,12 @@ class PlayerNotificationHelper @Inject constructor(
         val intent = Intent(context, MixPlayerService::class.java)
         intent.action =
             MixPlayerService.ACTION_STOP_SERVICE
-        val pendingIntent = PendingIntent.getService(
+        return PendingIntent.getService(
             context,
             2,
             intent,
             PendingIntent.FLAG_CANCEL_CURRENT
         )
-        return pendingIntent
     }
 
     private fun createIntentMaster(isPlaying: Boolean): PendingIntent {
@@ -142,12 +150,11 @@ class PlayerNotificationHelper @Inject constructor(
         }
 
         intent.action = action
-        val pendingIntent = PendingIntent.getService(
+        return PendingIntent.getService(
             context,
             2,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT
         )
-        return pendingIntent
     }
 }

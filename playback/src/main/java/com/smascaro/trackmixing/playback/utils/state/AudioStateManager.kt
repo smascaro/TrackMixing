@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.playback.utils
+package com.smascaro.trackmixing.playback.utils.state
 
 import android.content.Context
 import android.media.AudioAttributes
@@ -58,7 +58,7 @@ class AudioStateManager @Inject constructor(private val context: Context) :
 
     fun abandonAudioFocus() {
         if (focusRequest != null) {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 audioManager.abandonAudioFocusRequest(focusRequest)
             }
         } else {

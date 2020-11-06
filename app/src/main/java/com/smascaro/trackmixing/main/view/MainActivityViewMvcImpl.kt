@@ -11,8 +11,8 @@ import androidx.core.animation.doOnEnd
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.base.ui.architecture.view.BaseObservableViewMvc
 import com.smascaro.trackmixing.base.utils.ResourcesWrapper
-import com.smascaro.trackmixing.playback.utils.PlaybackStateManager
-import com.smascaro.trackmixing.playback.utils.SharedPreferencesFactory
+import com.smascaro.trackmixing.playback.utils.state.PlaybackStateManager
+import com.smascaro.trackmixing.playback.utils.state.SharedPreferencesFactory
 import javax.inject.Inject
 
 class MainActivityViewMvcImpl @Inject constructor(

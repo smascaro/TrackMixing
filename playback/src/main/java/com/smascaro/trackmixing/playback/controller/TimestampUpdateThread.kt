@@ -4,7 +4,7 @@ import com.smascaro.trackmixing.base.time.Milliseconds
 import com.smascaro.trackmixing.base.time.TimeHelper
 import com.smascaro.trackmixing.base.time.asMillis
 import com.smascaro.trackmixing.playback.model.TimestampChangedEvent
-import com.smascaro.trackmixing.playback.utils.BandPlaybackHelper
+import com.smascaro.trackmixing.playback.utils.media.BandPlaybackHelper
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job

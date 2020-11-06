@@ -1,7 +1,7 @@
 package com.smascaro.trackmixing.main.controller
 
-import com.smascaro.trackmixing.playback.utils.PlaybackStateManager
 import com.smascaro.trackmixing.main.view.MainActivityViewMvc
+import com.smascaro.trackmixing.playback.utils.state.PlaybackStateManager
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -18,9 +18,11 @@ class MainActivityControllerTest {
     // endregion constants
 
     // region helper fields
-    @Mock lateinit var playbackStateManager: com.smascaro.trackmixing.playback.utils.PlaybackStateManager
+    @Mock
+    lateinit var playbackStateManager: PlaybackStateManager
 
-    @Mock lateinit var viewMvc: MainActivityViewMvc
+    @Mock
+    lateinit var viewMvc: MainActivityViewMvc
     // endregion helper fields
 
     @Before

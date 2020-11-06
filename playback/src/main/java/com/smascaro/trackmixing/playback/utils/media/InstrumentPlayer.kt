@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.playback.utils
+package com.smascaro.trackmixing.playback.utils.media
 
 import android.content.Context
 import com.google.android.exoplayer2.DefaultRenderersFactory

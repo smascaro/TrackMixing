@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.playback.utils
+package com.smascaro.trackmixing.playback.model
 
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName

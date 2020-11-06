@@ -4,7 +4,8 @@ import com.smascaro.trackmixing.base.coroutine.IoCoroutineScope
 import com.smascaro.trackmixing.base.coroutine.MainCoroutineScope
 import com.smascaro.trackmixing.base.ui.architecture.controller.BaseController
 import com.smascaro.trackmixing.main.view.MainActivityViewMvc
-import com.smascaro.trackmixing.playback.utils.PlaybackSession
+import com.smascaro.trackmixing.playback.utils.media.PlaybackSession
+import com.smascaro.trackmixing.playback.utils.state.PlaybackStateManager
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -30,7 +31,7 @@ class MainActivityController @Inject constructor(
 
     private fun updateBackgroundColor() = ui.launch {
         val state = playbackSession.getState()
-        if (state is com.smascaro.trackmixing.playback.utils.PlaybackStateManager.PlaybackState.Stopped) {
+        if (state is PlaybackStateManager.PlaybackState.Stopped) {
             viewMvc.updateBackgroundColorToDefault()
         } else {
             val playingTrack =

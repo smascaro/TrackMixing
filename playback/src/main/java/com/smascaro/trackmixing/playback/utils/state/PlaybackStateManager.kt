@@ -1,10 +1,11 @@
-package com.smascaro.trackmixing.playback.utils
+package com.smascaro.trackmixing.playback.utils.state
 
 import android.content.Context
 import com.smascaro.trackmixing.base.coroutine.IoCoroutineScope
 import com.smascaro.trackmixing.base.data.model.Track
 import com.smascaro.trackmixing.base.data.repository.TracksRepository
 import com.smascaro.trackmixing.base.data.repository.toModel
+import com.smascaro.trackmixing.playback.model.TrackVolumeBundle
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
@@ -32,9 +33,9 @@ class PlaybackStateManager @Inject constructor(
 
     sealed class PlaybackState(protected val value: Int) {
         companion object {
-            val PLAYBACK_STATE_PLAYING: Int = 0
-            val PLAYBACK_STATE_PAUSED = 1
-            val PLAYBACK_STATE_STOPPED = 2
+            const val PLAYBACK_STATE_PLAYING = 0
+            const val PLAYBACK_STATE_PAUSED = 1
+            const val PLAYBACK_STATE_STOPPED = 2
             fun parse(stateValue: Int): PlaybackState {
                 return when (stateValue) {
                     PLAYBACK_STATE_PLAYING -> Playing()

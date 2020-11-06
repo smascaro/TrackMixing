@@ -1,14 +1,14 @@
-package com.smascaro.trackmixing.playback.utils
+package com.smascaro.trackmixing.playback.utils.media
 
 import com.smascaro.trackmixing.base.coroutine.MainCoroutineScope
 import com.smascaro.trackmixing.base.time.Milliseconds
 import com.smascaro.trackmixing.base.time.Seconds
 import com.smascaro.trackmixing.base.time.asMillis
 import com.smascaro.trackmixing.playback.model.TrackInstrument
+import com.smascaro.trackmixing.playback.model.TrackVolumeBundle
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
-import kotlin.system.measureTimeMillis
 
 class PlayerRack(private val ui: MainCoroutineScope) : PlayerActions {
     private val rack: HashMap<TrackInstrument, InstrumentPlayer> = hashMapOf()
@@ -81,18 +81,16 @@ class PlayerRack(private val ui: MainCoroutineScope) : PlayerActions {
 
     suspend fun getCurrentPositionsReport(cb: (report: List<Pair<TrackInstrument, Milliseconds>>) -> Unit) =
         ui.launch {
-            var report = listOf<Pair<TrackInstrument, Milliseconds>>()
-            val millisGetPositions = measureTimeMillis {
-                val asyncJobVocals =
-                    async { TrackInstrument.VOCALS to rack[TrackInstrument.VOCALS]!!.getCurrentPosition() }
-                val asyncJobOther =
-                    async { TrackInstrument.OTHER to rack[TrackInstrument.OTHER]!!.getCurrentPosition() }
-                val asyncJobBass =
-                    async { TrackInstrument.BASS to rack[TrackInstrument.BASS]!!.getCurrentPosition() }
-                val asyncJobDrums =
-                    async { TrackInstrument.DRUMS to rack[TrackInstrument.DRUMS]!!.getCurrentPosition() }
-                report = awaitAll(asyncJobVocals, asyncJobBass, asyncJobOther, asyncJobDrums)
-            }
+            val report: List<Pair<TrackInstrument, Milliseconds>>
+            val asyncJobVocals =
+                async { TrackInstrument.VOCALS to rack[TrackInstrument.VOCALS]!!.getCurrentPosition() }
+            val asyncJobOther =
+                async { TrackInstrument.OTHER to rack[TrackInstrument.OTHER]!!.getCurrentPosition() }
+            val asyncJobBass =
+                async { TrackInstrument.BASS to rack[TrackInstrument.BASS]!!.getCurrentPosition() }
+            val asyncJobDrums =
+                async { TrackInstrument.DRUMS to rack[TrackInstrument.DRUMS]!!.getCurrentPosition() }
+            report = awaitAll(asyncJobVocals, asyncJobBass, asyncJobOther, asyncJobDrums)
             cb(report)
         }
 }

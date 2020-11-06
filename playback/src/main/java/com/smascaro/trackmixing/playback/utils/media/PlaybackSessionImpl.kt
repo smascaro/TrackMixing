@@ -1,10 +1,12 @@
-package com.smascaro.trackmixing.playback.utils
+package com.smascaro.trackmixing.playback.utils.media
 
 import android.content.Context
 import com.smascaro.trackmixing.base.data.model.Track
 import com.smascaro.trackmixing.base.time.Seconds
-import com.smascaro.trackmixing.playback.service.MixPlayerService
 import com.smascaro.trackmixing.playback.model.TrackInstrument
+import com.smascaro.trackmixing.playback.model.TrackVolumeBundle
+import com.smascaro.trackmixing.playback.service.MixPlayerService
+import com.smascaro.trackmixing.playback.utils.state.PlaybackStateManager
 import javax.inject.Inject
 
 class PlaybackSessionImpl @Inject constructor(

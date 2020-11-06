@@ -4,7 +4,7 @@ import com.smascaro.trackmixing.base.coroutine.IoCoroutineScope
 import com.smascaro.trackmixing.base.data.model.Track
 import com.smascaro.trackmixing.base.utils.navigation.BaseNavigatorController
 import com.smascaro.trackmixing.base.utils.navigation.NavigationHelper
-import com.smascaro.trackmixing.playback.utils.PlaybackSession
+import com.smascaro.trackmixing.playback.utils.media.PlaybackSession
 import com.smascaro.trackmixing.trackslist.business.FetchDownloadedTracks
 import com.smascaro.trackmixing.trackslist.model.RefreshListEvent
 import com.smascaro.trackmixing.trackslist.view.TracksListFragmentDirections

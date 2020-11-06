@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.playback.utils
+package com.smascaro.trackmixing.playback.utils.media
 
 import com.smascaro.trackmixing.base.time.Milliseconds
 import com.smascaro.trackmixing.base.time.Seconds

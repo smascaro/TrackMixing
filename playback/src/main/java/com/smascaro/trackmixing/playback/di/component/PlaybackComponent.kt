@@ -5,7 +5,7 @@ import com.smascaro.trackmixing.base.di.component.BaseComponent
 import com.smascaro.trackmixing.playback.di.SessionScope
 import com.smascaro.trackmixing.playback.di.module.PlaybackModule
 import com.smascaro.trackmixing.playback.service.MixPlayerService
-import com.smascaro.trackmixing.playback.utils.PlaybackSession
+import com.smascaro.trackmixing.playback.utils.media.PlaybackSession
 import dagger.BindsInstance
 import dagger.Component
 

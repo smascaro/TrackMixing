@@ -1,11 +1,11 @@
 package com.smascaro.trackmixing.trackslist.controller
 
 import com.smascaro.trackmixing.base.data.repository.toModel
+import com.smascaro.trackmixing.base.utils.navigation.NavigationHelper
 import com.smascaro.trackmixing.common.models.TestModels
 import com.smascaro.trackmixing.common.testdoubles.EventBusTd
-import com.smascaro.trackmixing.base.utils.navigation.NavigationHelper
 import com.smascaro.trackmixing.helpers.MockitoHelper
-import com.smascaro.trackmixing.playback.utils.PlaybackSession
+import com.smascaro.trackmixing.playback.utils.media.PlaybackSession
 import com.smascaro.trackmixing.trackslist.business.FetchDownloadedTracks
 import com.smascaro.trackmixing.trackslist.view.TracksListViewMvc
 import kotlinx.coroutines.runBlocking
@@ -35,7 +35,7 @@ class TracksListControllerTest {
     @Mock
     private lateinit var fetchDownloadedTracksUseCase: FetchDownloadedTracks
     @Mock
-    private lateinit var playbackSession: com.smascaro.trackmixing.playback.utils.PlaybackSession
+    private lateinit var playbackSession: PlaybackSession
     @Mock
     private lateinit var navigationHelper: NavigationHelper
     // endregion helper fields

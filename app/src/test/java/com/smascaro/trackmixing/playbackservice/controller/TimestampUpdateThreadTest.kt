@@ -2,8 +2,8 @@ package com.smascaro.trackmixing.playbackservice.controller
 
 import com.smascaro.trackmixing.common.models.TestModels
 import com.smascaro.trackmixing.common.testdoubles.EventBusTd
+import com.smascaro.trackmixing.playback.utils.media.BandPlaybackHelper
 import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
-import com.smascaro.trackmixing.playback.utils.BandPlaybackHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.ObsoleteCoroutinesApi
@@ -35,7 +35,7 @@ class TimestampUpdateThreadTest {
     // endregion constants
     // region helper fields
     @Mock
-    private lateinit var bandPlaybackHelper: com.smascaro.trackmixing.playback.utils.BandPlaybackHelper
+    private lateinit var bandPlaybackHelper: BandPlaybackHelper
     private lateinit var eventBusTd: EventBusTd
     private val mainThreadSurrogate = newSingleThreadContext("UI thread")
     // endregion helper fields

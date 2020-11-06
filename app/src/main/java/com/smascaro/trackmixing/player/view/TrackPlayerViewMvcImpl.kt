@@ -15,7 +15,10 @@ import com.smascaro.trackmixing.base.time.TimeHelper
 import com.smascaro.trackmixing.base.ui.architecture.view.BaseObservableViewMvc
 import com.smascaro.trackmixing.base.ui.widget.PivotableSeekbar
 import com.smascaro.trackmixing.base.utils.ResourcesWrapper
+import com.smascaro.trackmixing.playback.model.TrackVolumeBundle
 import com.smascaro.trackmixing.playback.service.MixPlayerServiceChecker
+import com.smascaro.trackmixing.playback.utils.state.PlaybackStateManager
+import com.smascaro.trackmixing.playback.utils.state.SharedPreferencesFactory
 import com.smascaro.trackmixing.player.model.TrackPlayerData
 import com.smascaro.trackmixing.player.view.TrackPlayerViewMvcImpl.MotionState.FullscreenPlayer
 import com.smascaro.trackmixing.player.view.TrackPlayerViewMvcImpl.MotionState.Initial
@@ -221,7 +224,7 @@ class TrackPlayerViewMvcImpl @Inject constructor(
     }
 
     override fun bindVolumes(
-        volumes: com.smascaro.trackmixing.playback.utils.TrackVolumeBundle
+        volumes: TrackVolumeBundle
     ) {
         vocalsVolumeSeekbar.progress = volumes.vocals
         otherVolumeSeekbar.progress = volumes.other
@@ -258,7 +261,7 @@ class TrackPlayerViewMvcImpl @Inject constructor(
 
     private fun setupSharedPreferences() {
         sharedPreferences =
-            com.smascaro.trackmixing.playback.utils.SharedPreferencesFactory.getPlaybackSharedPreferencesFactory(
+            SharedPreferencesFactory.getPlaybackSharedPreferencesFactory(
                 getContext()!!
             )
         sharedPreferences.registerOnSharedPreferenceChangeListener(this)
@@ -295,7 +298,7 @@ class TrackPlayerViewMvcImpl @Inject constructor(
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        if (key != null && key == com.smascaro.trackmixing.playback.utils.PlaybackStateManager.SHARED_PREFERENCES_PLAYBACK_SONG_PLAYING || key == com.smascaro.trackmixing.playback.utils.PlaybackStateManager.SHARED_PREFERENCES_PLAYBACK_IS_PLAYING) {
+        if (key != null && key == PlaybackStateManager.SHARED_PREFERENCES_PLAYBACK_SONG_PLAYING || key == PlaybackStateManager.SHARED_PREFERENCES_PLAYBACK_IS_PLAYING) {
             getListeners().forEach {
                 it.onPlayerStateChanged()
             }

@@ -9,12 +9,12 @@ import com.smascaro.trackmixing.base.service.ForegroundNotification
 import com.smascaro.trackmixing.base.service.ServiceCallbackHandler
 import com.smascaro.trackmixing.base.time.asSeconds
 import com.smascaro.trackmixing.base.utils.NotificationHelper
-import com.smascaro.trackmixing.playback.service.MixPlayerService
 import com.smascaro.trackmixing.playback.model.TrackInstrument
-import com.smascaro.trackmixing.playback.utils.BandPlaybackHelper
-import com.smascaro.trackmixing.playback.utils.PlaybackStateManager
-import com.smascaro.trackmixing.playback.utils.PlayerNotificationHelper
-import com.smascaro.trackmixing.playback.utils.TrackVolumeBundle
+import com.smascaro.trackmixing.playback.model.TrackVolumeBundle
+import com.smascaro.trackmixing.playback.service.MixPlayerService
+import com.smascaro.trackmixing.playback.utils.media.BandPlaybackHelper
+import com.smascaro.trackmixing.playback.utils.notification.PlayerNotificationHelper
+import com.smascaro.trackmixing.playback.utils.state.PlaybackStateManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

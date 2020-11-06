@@ -1,4 +1,4 @@
-package com.smascaro.trackmixing.playback.utils
+package com.smascaro.trackmixing.playback.utils.state
 
 import android.content.Context
 import android.content.SharedPreferences
