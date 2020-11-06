@@ -15,13 +15,7 @@ class SettingsActivity : BaseActivity() {
     lateinit var controller: SettingsActivityController
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // (application as AppComponentProvider).provideAppComponent().inject(this)
         (application as SettingsComponentProvider).provideSettingsComponent().inject(this)
-        // (application as TrackMixingApplication)
-        //     .appComponent
-        //     .settingsComponent()
-        //     .create()
-        //     .inject(this)
         super.onCreate(savedInstanceState)
         val rootView = LayoutInflater.from(this).inflate(R.layout.activity_settings, null, false)
         viewMvc.bindRootView(rootView)

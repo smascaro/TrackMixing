@@ -17,6 +17,10 @@ import dagger.Component
 )
 @MainScope
 interface SettingsComponent {
+    fun inject(settingsActivity: SettingsActivity)
+    fun inject(downloadTestDataActivity: DownloadTestDataActivity)
+    fun inject(selectTestDataFragment: SelectTestDataFragment)
+    fun inject(downloadTestDataFragment: DownloadTestDataFragment)
 
     @Component.Builder
     interface Builder {
@@ -24,9 +28,4 @@ interface SettingsComponent {
         fun withBaseComponent(baseComponent: BaseComponent): Builder
         fun build(): SettingsComponent
     }
-
-    fun inject(settingsActivity: SettingsActivity)
-    fun inject(downloadTestDataActivity: DownloadTestDataActivity)
-    fun inject(selectTestDataFragment: SelectTestDataFragment)
-    fun inject(downloadTestDataFragment: DownloadTestDataFragment)
 }

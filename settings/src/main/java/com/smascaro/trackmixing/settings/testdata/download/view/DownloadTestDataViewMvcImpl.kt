@@ -53,9 +53,9 @@ class DownloadTestDataViewMvcImpl @Inject constructor() :
         downloadingProgressBar.visibility = View.INVISIBLE
     }
 
-    override fun notifyTrackFailure(title: String, reason: String) {
-        val message = "Track $title failed. Reason: $reason"
-        Timber.w(message)
-        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show()
+    override fun notifyTrackFailure(title: String, message: String) {
+        val messageText = "Track $title failed. Reason: $message"
+        Timber.w(messageText)
+        Toast.makeText(getContext(), messageText, Toast.LENGTH_SHORT).show()
     }
 }

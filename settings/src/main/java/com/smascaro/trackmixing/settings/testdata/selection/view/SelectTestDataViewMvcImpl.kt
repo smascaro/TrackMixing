@@ -75,7 +75,7 @@ class SelectTestDataViewMvcImpl @Inject constructor(
 
     override fun bindAvailableSpace(availableBytes: Long) {
         this.availableBytes = availableBytes
-        var text = ""
+        val text: String
         if (availableBytes > 1 * 1000 * 1000 * 1000) {
             text = availableBytes.asGB
         } else if (availableBytes > 1 * 1000 * 1000) {

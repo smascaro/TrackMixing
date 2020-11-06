@@ -14,9 +14,9 @@ import javax.inject.Inject
 class DownloadTestDataController @Inject constructor(
     private val downloadTestDataUseCase: DownloadTestDataUseCase,
     private val io: IoCoroutineScope,
-    p_navigationHelper: NavigationHelper
+    navigationHelper: NavigationHelper
 ) :
-    BaseNavigatorController<DownloadTestDataViewMvc>(p_navigationHelper),
+    BaseNavigatorController<DownloadTestDataViewMvc>(navigationHelper),
     DownloadTestDataViewMvc.Listener, DownloadTestDataUseCase.Listener {
     interface Listener {
         fun onFinishedFlow()

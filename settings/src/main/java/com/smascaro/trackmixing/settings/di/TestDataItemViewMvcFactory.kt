@@ -10,8 +10,6 @@ class TestDataItemViewMvcFactory @Inject constructor(
     private val glide: RequestManager
 ) : ItemViewMvcFactory<SelectTestDataItemViewMvc> {
     override fun create(): SelectTestDataItemViewMvc {
-        return SelectTestDataItemViewMvcImpl(
-            glide
-        )
+        return SelectTestDataItemViewMvcImpl()
     }
 }

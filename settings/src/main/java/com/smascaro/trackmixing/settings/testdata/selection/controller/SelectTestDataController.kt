@@ -18,9 +18,9 @@ class SelectTestDataController @Inject constructor(
     private val diskSpaceHelper: DiskSpaceHelper,
     private val ui: MainCoroutineScope,
     private val io: IoCoroutineScope,
-    p_navigationHelper: NavigationHelper
+    navigationHelper: NavigationHelper
 ) :
-    BaseNavigatorController<SelectTestDataViewMvc>(p_navigationHelper),
+    BaseNavigatorController<SelectTestDataViewMvc>(navigationHelper),
     SelectTestDataViewMvc.Listener {
     private var totalDownloadBytes = 0
     private var tracksToDownload =

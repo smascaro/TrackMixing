@@ -1,6 +1,5 @@
 package com.smascaro.trackmixing.settings.testdata.selection.view.testdataitem
 
-import com.bumptech.glide.RequestManager
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.textview.MaterialTextView
 import com.smascaro.trackmixing.base.ui.architecture.view.BaseObservableViewMvc
@@ -9,7 +8,7 @@ import com.smascaro.trackmixing.settings.R
 import com.smascaro.trackmixing.settings.testdata.selection.model.TestDataBundleInfo
 import javax.inject.Inject
 
-class SelectTestDataItemViewMvcImpl @Inject constructor(private val glide: RequestManager) :
+class SelectTestDataItemViewMvcImpl @Inject constructor() :
     BaseObservableViewMvc<SelectTestDataItemViewMvc.Listener>(),
     SelectTestDataItemViewMvc {
     private lateinit var data: TestDataBundleInfo
