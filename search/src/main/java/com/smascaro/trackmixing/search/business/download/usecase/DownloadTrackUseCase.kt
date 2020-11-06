@@ -76,7 +76,7 @@ class DownloadTrackUseCase @Inject constructor(
     override fun onDownloadFinished(videoId: String) {
         Timber.i("Track $videoId finished downloading")
         trackDownloader.unregisterListener(this)
-        eventBus.post(DownloadEvents.FinishedDownloading())
+        eventBus.post(DownloadEvents.FinishedDownloading)
     }
 
     override fun onDownloadError(videoId: String, e: Exception) {

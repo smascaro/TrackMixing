@@ -36,14 +36,13 @@ class FetchProgressUseCase @Inject constructor(
             EventBus.getDefault().post(progressUpdateEvent)
             Timber.d("ProgressUpdate event posted")
         }
-        lastProgressState = progressUpdateEvent
         if (shouldKeepFetchingProgress(response)) {
             Timber.d("Sleep for $waitingTimeMillis ms")
             delay(waitingTimeMillis)
             Timber.d("Time to check progress again")
             executeInternal(videoId, waitingTimeMillis)
         } else if (response.body.status_code == "FINISHED") {
-            EventBus.getDefault().post(DownloadEvents.FinishedProcessing())
+            EventBus.getDefault().post(DownloadEvents.FinishedProcessing)
         } else if (response.body.status_code == "ERROR") {
             EventBus.getDefault()
                 .post(DownloadEvents.ErrorOccurred("Error occurred during track processing"))
