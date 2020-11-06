@@ -10,12 +10,12 @@ import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.base.events.ApplicationEvent
 import com.smascaro.trackmixing.base.events.ApplicationEvent.AppState
 import com.smascaro.trackmixing.base.ui.BaseActivity
-import com.smascaro.trackmixing.common.di.main.MainComponentProvider
-import com.smascaro.trackmixing.main.components.player.controller.TrackPlayerController
-import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvc
+import com.smascaro.trackmixing.di.MainComponentProvider
 import com.smascaro.trackmixing.main.components.progress.controller.BottomProgressController
 import com.smascaro.trackmixing.main.components.progress.view.BottomProgressViewMvc
 import com.smascaro.trackmixing.main.controller.MainActivityController
+import com.smascaro.trackmixing.player.controller.TrackPlayerController
+import com.smascaro.trackmixing.player.view.TrackPlayerViewMvc
 import org.greenrobot.eventbus.EventBus
 import javax.inject.Inject
 

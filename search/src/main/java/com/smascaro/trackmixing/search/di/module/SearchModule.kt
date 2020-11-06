@@ -4,8 +4,6 @@ import android.content.Context
 import com.smascaro.trackmixing.base.di.MainScope
 import com.smascaro.trackmixing.base.di.module.notification.DownloadNotificationHelperImplementation
 import com.smascaro.trackmixing.base.utils.NotificationHelper
-import com.smascaro.trackmixing.base.utils.navigation.NavigationHelper
-import com.smascaro.trackmixing.base.utils.navigation.NavigationHelperImpl
 import com.smascaro.trackmixing.search.business.download.utils.DownloadNotificationHelper
 import com.smascaro.trackmixing.search.view.SearchResultsViewMvc
 import com.smascaro.trackmixing.search.view.SearchResultsViewMvcImpl
@@ -27,10 +25,10 @@ class SearchModule {
         @MainScope
         @Binds
         fun provideSearchResultsViewMvc(searchResultsViewMvcImpl: SearchResultsViewMvcImpl): SearchResultsViewMvc
-
-        @MainScope
-        @Binds
-        fun provideNavigationHelper(navigationHelperImpl: NavigationHelperImpl): NavigationHelper
+        //
+        // @MainScope
+        // @Binds
+        // fun provideNavigationHelper(navigationHelperImpl: NavigationHelperImpl): NavigationHelper
     }
 }
 // @Module

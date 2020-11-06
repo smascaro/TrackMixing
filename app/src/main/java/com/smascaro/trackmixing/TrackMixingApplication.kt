@@ -4,13 +4,14 @@ import android.app.Application
 import com.smascaro.trackmixing.base.di.component.BaseComponent
 import com.smascaro.trackmixing.base.di.component.BaseComponentProvider
 import com.smascaro.trackmixing.base.di.component.DaggerBaseComponent
-import com.smascaro.trackmixing.common.di.AppComponent
-import com.smascaro.trackmixing.common.di.AppComponentProvider
-import com.smascaro.trackmixing.common.di.DaggerAppComponent
-import com.smascaro.trackmixing.common.di.main.DaggerMainComponent
-import com.smascaro.trackmixing.common.di.main.MainComponent
-import com.smascaro.trackmixing.common.di.main.MainComponentProvider
+import com.smascaro.trackmixing.di.DaggerMainComponent
+import com.smascaro.trackmixing.di.MainComponent
+import com.smascaro.trackmixing.di.MainComponentProvider
+import com.smascaro.trackmixing.playback.di.component.DaggerPlaybackComponent
+import com.smascaro.trackmixing.playback.di.component.PlaybackComponent
+import com.smascaro.trackmixing.playback.di.component.PlaybackComponentProvider
 import com.smascaro.trackmixing.search.di.component.DaggerSearchComponent
+import com.smascaro.trackmixing.search.di.component.SearchComponentProvider
 import com.smascaro.trackmixing.settings.di.component.DaggerSettingsComponent
 import com.smascaro.trackmixing.settings.di.component.SettingsComponent
 import com.smascaro.trackmixing.settings.di.component.SettingsComponentProvider
@@ -19,9 +20,9 @@ import timber.log.Timber
 class TrackMixingApplication :
     Application(),
     BaseComponentProvider,
-    AppComponentProvider,
     MainComponentProvider,
-    com.smascaro.trackmixing.search.di.component.SearchComponentProvider,
+    SearchComponentProvider,
+    PlaybackComponentProvider,
     SettingsComponentProvider {
     override fun onCreate() {
         super.onCreate()
@@ -31,7 +32,9 @@ class TrackMixingApplication :
     }
 
     override fun provideBaseComponent(): BaseComponent {
-        return DaggerBaseComponent.builder().withContext(applicationContext).build()
+        return DaggerBaseComponent.builder()
+            .withContext(applicationContext)
+            .build()
     }
 
     override fun provideSearchComponent(): com.smascaro.trackmixing.search.di.component.SearchComponent {
@@ -44,12 +47,8 @@ class TrackMixingApplication :
     override fun provideMainComponent(): MainComponent {
         return DaggerMainComponent.builder()
             .withBaseComponent(provideBaseComponent())
+            .withPlaybackComponent(providePlaybackComponent())
             .withContext(applicationContext)
-            .build()
-    }
-
-    override fun provideAppComponent(): AppComponent {
-        return DaggerAppComponent.builder().baseComponent(provideBaseComponent())
             .build()
     }
 
@@ -58,6 +57,12 @@ class TrackMixingApplication :
             .withBaseComponent(provideBaseComponent())
             .withContext(applicationContext)
             .build()
+    }
 
+    override fun providePlaybackComponent(): PlaybackComponent {
+        return DaggerPlaybackComponent.builder()
+            .withBaseComponent(provideBaseComponent())
+            .withContext(applicationContext)
+            .build()
     }
 }

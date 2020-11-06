@@ -9,6 +9,7 @@ import com.smascaro.trackmixing.base.data.repository.TracksRepository
 import com.smascaro.trackmixing.base.di.module.coroutine.CoroutineScopesModule
 import com.smascaro.trackmixing.base.di.module.eventbus.EventBusModule
 import com.smascaro.trackmixing.base.di.module.glide.GlideModule
+import com.smascaro.trackmixing.base.di.module.navigation.NavigationModule
 import com.smascaro.trackmixing.base.di.module.network.NetworkModule
 import com.smascaro.trackmixing.base.di.module.repository.RepositoryModule
 import com.smascaro.trackmixing.base.di.module.utils.UtilsModule
@@ -18,6 +19,7 @@ import com.smascaro.trackmixing.base.network.testdata.api.TestDataApi
 import com.smascaro.trackmixing.base.network.testdata.api.TestDataFilesApi
 import com.smascaro.trackmixing.base.network.youtube.api.YoutubeApi
 import com.smascaro.trackmixing.base.utils.FilesStorageHelper
+import com.smascaro.trackmixing.base.utils.navigation.NavigationHelper
 import dagger.BindsInstance
 import dagger.Component
 import org.greenrobot.eventbus.EventBus
@@ -32,7 +34,8 @@ import javax.inject.Singleton
         RepositoryModule::class,
         RepositoryModule.Bindings::class,
         EventBusModule::class,
-        UtilsModule::class
+        UtilsModule::class,
+        NavigationModule::class
     ]
 )
 interface BaseComponent {
@@ -67,4 +70,7 @@ interface BaseComponent {
 
     // Utils
     val filesStorageHelper: FilesStorageHelper
+
+    // Navigation
+    val navigationHelper: NavigationHelper
 }

@@ -1,8 +1,6 @@
 package com.smascaro.trackmixing.settings.di.module
 
 import com.smascaro.trackmixing.base.di.MainScope
-import com.smascaro.trackmixing.base.utils.navigation.NavigationHelper
-import com.smascaro.trackmixing.settings.controller.SettingsNavigationHelper
 import com.smascaro.trackmixing.settings.testdata.download.view.DownloadTestDataViewMvcImpl
 import com.smascaro.trackmixing.settings.testdata.selection.view.SelectTestDataViewMvc
 import com.smascaro.trackmixing.settings.testdata.selection.view.SelectTestDataViewMvcImpl
@@ -28,9 +26,5 @@ class SettingsModule {
         @MainScope
         @Binds
         fun provideSettingsActivityViewMvcImpl(settingsActivityViewMvcImpl: SettingsActivityViewMvcImpl): SettingsActivityViewMvc
-
-        @MainScope
-        @Binds
-        fun provideNavigationHelper(settingsNavigationHelper: SettingsNavigationHelper): NavigationHelper
     }
 }

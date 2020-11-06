@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.base.data.model.Track
-import com.smascaro.trackmixing.common.di.main.TracksListItemViewMvcFactory
+import com.smascaro.trackmixing.di.TracksListItemViewMvcFactory
 import com.smascaro.trackmixing.trackslist.view.listitem.TracksListItemViewMvc
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
