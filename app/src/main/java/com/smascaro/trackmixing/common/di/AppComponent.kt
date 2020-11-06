@@ -1,9 +1,8 @@
 package com.smascaro.trackmixing.common.di
 
 import android.content.Context
+import com.smascaro.trackmixing.base.di.MainScope
 import com.smascaro.trackmixing.base.di.component.BaseComponent
-import com.smascaro.trackmixing.common.di.main.MainScope
-import com.smascaro.trackmixing.search.business.download.TrackDownloadService
 import dagger.BindsInstance
 import dagger.Component
 
@@ -28,5 +27,4 @@ interface AppComponent {
 
     // fun playerComponent(): PlayerComponent.Factory
 // fun settingsComponent(): SettingsComponent.Factory
-    fun inject(trackDownloadService: TrackDownloadService)
 }

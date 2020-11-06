@@ -4,13 +4,14 @@ import android.os.Bundle
 import com.smascaro.trackmixing.base.coroutine.IoCoroutineScope
 import com.smascaro.trackmixing.base.coroutine.MainCoroutineScope
 import com.smascaro.trackmixing.base.data.model.Track
+import com.smascaro.trackmixing.base.service.ServiceCallbackHandler
 import com.smascaro.trackmixing.base.time.asSeconds
-import com.smascaro.trackmixing.common.data.model.ForegroundNotification
-import com.smascaro.trackmixing.common.di.PlayerNotificationHelperImplementation
+import com.smascaro.trackmixing.base.service.ForegroundNotification
+import com.smascaro.trackmixing.base.di.module.notification.PlayerNotificationHelperImplementation
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager.PlaybackState
 import com.smascaro.trackmixing.common.utils.TrackVolumeBundle
-import com.smascaro.trackmixing.common.utils.ui.NotificationHelper
+import com.smascaro.trackmixing.base.utils.NotificationHelper
 import com.smascaro.trackmixing.playbackservice.MixPlayerService
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
 import com.smascaro.trackmixing.playbackservice.utils.BandPlaybackHelper

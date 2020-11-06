@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.base.data.model.Track
-import com.smascaro.trackmixing.common.utils.DaggerViewMvcFactory
+import com.smascaro.trackmixing.common.di.main.TracksListItemViewMvcFactory
 import com.smascaro.trackmixing.trackslist.view.listitem.TracksListItemViewMvc
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class TracksListAdapter @Inject constructor(
-    private val viewMvcFactory: DaggerViewMvcFactory
+    private val viewMvcFactory: TracksListItemViewMvcFactory
 ) : RecyclerView.Adapter<TracksListAdapter.ViewHolder>(), TracksListItemViewMvc.Listener {
     interface Listener {
         fun onTrackClicked(track: Track)
@@ -33,7 +33,7 @@ class TracksListAdapter @Inject constructor(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val viewMvc = viewMvcFactory.getTracksListItemViewMvc()
+        val viewMvc = viewMvcFactory.create()
         viewMvc.bindRootView(
             LayoutInflater.from(parent.context).inflate(R.layout.item_track, parent, false)
         )

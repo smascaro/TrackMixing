@@ -2,7 +2,7 @@ package com.smascaro.trackmixing.main.components.player.view
 
 import com.smascaro.trackmixing.base.time.Seconds
 import com.smascaro.trackmixing.common.utils.TrackVolumeBundle
-import com.smascaro.trackmixing.common.view.architecture.ObservableViewMvc
+import com.smascaro.trackmixing.base.ui.architecture.view.ObservableViewMvc
 import com.smascaro.trackmixing.main.components.player.model.TrackPlayerData
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
 

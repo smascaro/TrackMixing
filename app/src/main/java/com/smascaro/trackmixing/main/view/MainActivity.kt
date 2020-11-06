@@ -7,15 +7,15 @@ import android.view.WindowManager
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.smascaro.trackmixing.R
+import com.smascaro.trackmixing.base.events.ApplicationEvent
+import com.smascaro.trackmixing.base.events.ApplicationEvent.AppState
+import com.smascaro.trackmixing.base.ui.BaseActivity
 import com.smascaro.trackmixing.common.di.main.MainComponentProvider
-import com.smascaro.trackmixing.common.view.ui.BaseActivity
 import com.smascaro.trackmixing.main.components.player.controller.TrackPlayerController
 import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvc
 import com.smascaro.trackmixing.main.components.progress.controller.BottomProgressController
 import com.smascaro.trackmixing.main.components.progress.view.BottomProgressViewMvc
 import com.smascaro.trackmixing.main.controller.MainActivityController
-import com.smascaro.trackmixing.search.business.download.model.ApplicationEvent
-import com.smascaro.trackmixing.search.business.download.model.ApplicationEvent.AppState
 import org.greenrobot.eventbus.EventBus
 import javax.inject.Inject
 
@@ -55,7 +55,6 @@ class MainActivity : BaseActivity() {
 
         mainViewMvc.bindRootView(rootView)
         mainActivityController.bindViewMvc(mainViewMvc)
-        mainActivityController.handleIntent(intent)
 
         trackPlayerViewMvc.bindRootView(rootView)
         trackPlayerController.bindViewMvc(trackPlayerViewMvc)

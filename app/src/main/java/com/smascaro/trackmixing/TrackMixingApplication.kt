@@ -10,12 +10,10 @@ import com.smascaro.trackmixing.common.di.DaggerAppComponent
 import com.smascaro.trackmixing.common.di.main.DaggerMainComponent
 import com.smascaro.trackmixing.common.di.main.MainComponent
 import com.smascaro.trackmixing.common.di.main.MainComponentProvider
-import com.smascaro.trackmixing.common.di.search.DaggerSearchComponent
-import com.smascaro.trackmixing.common.di.search.SearchComponent
-import com.smascaro.trackmixing.common.di.search.SearchComponentProvider
-import com.smascaro.trackmixing.common.di.settings.DaggerSettingsComponent
-import com.smascaro.trackmixing.common.di.settings.SettingsComponent
-import com.smascaro.trackmixing.common.di.settings.SettingsComponentProvider
+import com.smascaro.trackmixing.search.di.component.DaggerSearchComponent
+import com.smascaro.trackmixing.settings.di.component.DaggerSettingsComponent
+import com.smascaro.trackmixing.settings.di.component.SettingsComponent
+import com.smascaro.trackmixing.settings.di.component.SettingsComponentProvider
 import timber.log.Timber
 
 class TrackMixingApplication :
@@ -23,7 +21,7 @@ class TrackMixingApplication :
     BaseComponentProvider,
     AppComponentProvider,
     MainComponentProvider,
-    SearchComponentProvider,
+    com.smascaro.trackmixing.search.di.component.SearchComponentProvider,
     SettingsComponentProvider {
     override fun onCreate() {
         super.onCreate()
@@ -36,7 +34,7 @@ class TrackMixingApplication :
         return DaggerBaseComponent.builder().withContext(applicationContext).build()
     }
 
-    override fun provideSearchComponent(): SearchComponent {
+    override fun provideSearchComponent(): com.smascaro.trackmixing.search.di.component.SearchComponent {
         return DaggerSearchComponent.builder()
             .withBaseComponent(provideBaseComponent())
             .withContext(applicationContext)
@@ -60,5 +58,6 @@ class TrackMixingApplication :
             .withBaseComponent(provideBaseComponent())
             .withContext(applicationContext)
             .build()
+
     }
 }

@@ -1,15 +1,13 @@
 package com.smascaro.trackmixing.main.controller
 
-import android.content.Intent
 import com.smascaro.trackmixing.base.coroutine.IoCoroutineScope
 import com.smascaro.trackmixing.base.coroutine.MainCoroutineScope
-import com.smascaro.trackmixing.common.controller.BaseController
+import com.smascaro.trackmixing.base.ui.architecture.controller.BaseController
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager
 import com.smascaro.trackmixing.main.view.MainActivityViewMvc
 import com.smascaro.trackmixing.playbackservice.utils.PlaybackSession
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 import javax.inject.Inject
 
 class MainActivityController @Inject constructor(
@@ -25,18 +23,6 @@ class MainActivityController @Inject constructor(
 
     fun onStop() {
         viewMvc.unregisterListener(this)
-    }
-
-    fun handleIntent(intent: Intent) {
-        if (intent.action == Intent.ACTION_SEND) {
-            val url = if (intent.clipData != null && intent.clipData!!.itemCount > 0) {
-                intent.clipData?.getItemAt(0)!!.text
-            } else ""
-            Timber.d(intent.toString())
-            if (isYoutubeValidUrl(url)) {
-                viewMvc.startProcessingRequest(url.toString())
-            }
-        }
     }
 
     fun isYoutubeValidUrl(url: CharSequence): Boolean =

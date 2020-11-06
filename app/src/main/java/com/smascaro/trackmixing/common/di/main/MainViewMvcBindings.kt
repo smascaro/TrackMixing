@@ -1,5 +1,6 @@
 package com.smascaro.trackmixing.common.di.main
 
+import com.smascaro.trackmixing.base.di.MainScope
 import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvc
 import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvcImpl
 import com.smascaro.trackmixing.main.components.progress.view.BottomProgressViewMvc

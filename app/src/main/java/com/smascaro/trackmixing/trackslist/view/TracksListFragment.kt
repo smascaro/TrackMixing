@@ -10,7 +10,7 @@ import com.google.android.material.transition.MaterialFadeThrough
 import com.google.android.material.transition.MaterialSharedAxis
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.di.main.MainComponentProvider
-import com.smascaro.trackmixing.common.view.ui.BaseFragment
+import com.smascaro.trackmixing.base.ui.BaseFragment
 import com.smascaro.trackmixing.trackslist.components.toolbar.controller.ToolbarController
 import com.smascaro.trackmixing.trackslist.components.toolbar.view.ToolbarViewMvc
 import com.smascaro.trackmixing.trackslist.controller.TracksListController

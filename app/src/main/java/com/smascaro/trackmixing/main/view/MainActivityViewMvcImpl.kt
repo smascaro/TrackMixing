@@ -10,9 +10,9 @@ import android.widget.Toast
 import androidx.core.animation.doOnEnd
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager
-import com.smascaro.trackmixing.common.utils.ResourcesWrapper
+import com.smascaro.trackmixing.base.utils.ResourcesWrapper
 import com.smascaro.trackmixing.common.utils.SharedPreferencesFactory
-import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
+import com.smascaro.trackmixing.base.ui.architecture.view.BaseObservableViewMvc
 import com.smascaro.trackmixing.search.business.download.TrackDownloadService
 import javax.inject.Inject
 import kotlin.concurrent.thread
@@ -54,14 +54,6 @@ class MainActivityViewMvcImpl @Inject constructor(
 
     override fun showMessage(text: String) {
         Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show()
-    }
-
-    override fun startProcessingRequest(url: String) {
-        if (getContext() != null) {
-            thread {
-                TrackDownloadService.start(getContext()!!, url)
-            }
-        }
     }
 
     override fun updateBackgroundColor(newBackgroundColor: Int) {

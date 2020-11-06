@@ -1,7 +1,7 @@
 package com.smascaro.trackmixing.main.components.bottomplayer.view
 
 import com.bumptech.glide.RequestManager
-import com.smascaro.trackmixing.common.utils.ResourcesWrapper
+import com.smascaro.trackmixing.base.utils.ResourcesWrapper
 import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvc
 import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvcImpl
 import com.smascaro.trackmixing.playbackservice.MixPlayerServiceChecker

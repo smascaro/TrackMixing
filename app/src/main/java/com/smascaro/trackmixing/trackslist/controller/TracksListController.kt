@@ -1,11 +1,12 @@
 package com.smascaro.trackmixing.trackslist.controller
 
 import com.smascaro.trackmixing.base.data.model.Track
-import com.smascaro.trackmixing.common.controller.BaseNavigatorController
-import com.smascaro.trackmixing.common.utils.navigation.NavigationHelper
+import com.smascaro.trackmixing.base.utils.navigation.BaseNavigatorController
+import com.smascaro.trackmixing.base.utils.navigation.NavigationHelper
 import com.smascaro.trackmixing.playbackservice.utils.PlaybackSession
 import com.smascaro.trackmixing.trackslist.business.FetchDownloadedTracks
 import com.smascaro.trackmixing.trackslist.model.RefreshListEvent
+import com.smascaro.trackmixing.trackslist.view.TracksListFragmentDirections
 import com.smascaro.trackmixing.trackslist.view.TracksListViewMvc
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -41,7 +42,9 @@ class TracksListController @Inject constructor(
 
     private fun navigateToSearch() {
         navigationListener?.beforeNavigationToSearch()
-        navigationHelper.toSearch()
+        // navigationHelper.toSearch()
+        navigationHelper.navigate(TracksListFragmentDirections.actionDestinationTracksListToDestinationSearch())
+        // TODO("Manage navigation")
     }
 
     private fun loadTracks() {

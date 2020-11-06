@@ -1,9 +1,9 @@
 package com.smascaro.trackmixing.main.components.progress.controller
 
 import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.common.controller.BaseController
-import com.smascaro.trackmixing.common.utils.ResourcesWrapper
-import com.smascaro.trackmixing.main.components.progress.model.UiProgressEvent
+import com.smascaro.trackmixing.base.ui.architecture.controller.BaseController
+import com.smascaro.trackmixing.base.utils.ResourcesWrapper
+import com.smascaro.trackmixing.base.events.UiProgressEvent
 import com.smascaro.trackmixing.main.components.progress.view.BottomProgressViewMvc
 import com.smascaro.trackmixing.trackslist.model.RefreshListEvent
 import kotlinx.coroutines.CoroutineScope

@@ -1,6 +1,6 @@
 package com.smascaro.trackmixing.common.di
 
-import com.smascaro.trackmixing.common.di.main.MainScope
+import com.smascaro.trackmixing.base.di.MainScope
 import com.smascaro.trackmixing.main.view.MainActivityViewMvc
 import com.smascaro.trackmixing.main.view.MainActivityViewMvcImpl
 import com.smascaro.trackmixing.trackslist.view.listitem.TracksListItemViewMvc

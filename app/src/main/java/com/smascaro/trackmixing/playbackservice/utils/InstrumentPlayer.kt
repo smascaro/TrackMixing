@@ -13,7 +13,7 @@ import com.smascaro.trackmixing.base.data.model.Track
 import com.smascaro.trackmixing.base.time.Milliseconds
 import com.smascaro.trackmixing.base.time.Seconds
 import com.smascaro.trackmixing.base.time.asMillis
-import com.smascaro.trackmixing.common.view.architecture.BaseObservable
+import com.smascaro.trackmixing.base.ui.architecture.view.BaseObservable
 import com.smascaro.trackmixing.playbackservice.model.TrackInstrument
 import timber.log.Timber
 import kotlin.math.ln

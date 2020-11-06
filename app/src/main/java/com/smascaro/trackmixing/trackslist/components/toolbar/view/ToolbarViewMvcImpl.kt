@@ -1,8 +1,8 @@
 package com.smascaro.trackmixing.trackslist.components.toolbar.view
 
 import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.common.utils.ui.UiUtils
-import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
+import com.smascaro.trackmixing.base.utils.UiUtils
+import com.smascaro.trackmixing.base.ui.architecture.view.BaseObservableViewMvc
 import javax.inject.Inject
 
 class ToolbarViewMvcImpl @Inject constructor(

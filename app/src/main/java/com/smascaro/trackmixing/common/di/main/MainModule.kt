@@ -1,5 +1,6 @@
 package com.smascaro.trackmixing.common.di.main
 
+import com.smascaro.trackmixing.base.di.MainScope
 import com.smascaro.trackmixing.playbackservice.utils.PlaybackSession
 import com.smascaro.trackmixing.playbackservice.utils.PlaybackSessionImpl
 import dagger.Binds

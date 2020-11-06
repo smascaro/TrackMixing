@@ -5,7 +5,7 @@ import android.media.AudioAttributes
 import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.os.Build
-import com.smascaro.trackmixing.common.view.architecture.BaseObservable
+import com.smascaro.trackmixing.base.ui.architecture.view.BaseObservable
 import timber.log.Timber
 import javax.inject.Inject
 

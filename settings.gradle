@@ -1,3 +1,7 @@
+include ':playback'
+include ':search'
+include ':main'
+include ':settings'
 include ':base'
 rootProject.name = 'TrackMixing'
 include ':app'

@@ -1,7 +1,6 @@
 package com.smascaro.trackmixing.main.controller
 
 import com.smascaro.trackmixing.common.utils.PlaybackStateManager
-import com.smascaro.trackmixing.common.utils.navigation.NavigationHelperImpl
 import com.smascaro.trackmixing.main.view.MainActivityViewMvc
 import org.junit.Before
 import org.junit.Test

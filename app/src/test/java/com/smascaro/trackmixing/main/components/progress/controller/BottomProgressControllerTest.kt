@@ -2,8 +2,8 @@ package com.smascaro.trackmixing.main.components.progress.controller
 
 import com.nhaarman.mockitokotlin2.validateMockitoUsage
 import com.smascaro.trackmixing.common.testdoubles.EventBusTd
-import com.smascaro.trackmixing.common.utils.ResourcesWrapper
-import com.smascaro.trackmixing.main.components.progress.model.UiProgressEvent
+import com.smascaro.trackmixing.base.utils.ResourcesWrapper
+import com.smascaro.trackmixing.base.events.UiProgressEvent
 import com.smascaro.trackmixing.main.components.progress.view.BottomProgressViewMvc
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.resetMain
