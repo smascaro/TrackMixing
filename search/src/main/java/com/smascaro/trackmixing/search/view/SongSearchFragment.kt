@@ -32,13 +32,6 @@ class SongSearchFragment : BaseFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        // (activity as MainActivity).mainComponent.inject(this)
-        // (activity.application as TrackMixingApplication).appComponent
-
-        // DaggerSearchComponent.builder()
-        //     .withBaseComponent(BaseApplication.baseComponent)
-        //     .build()
-        //     .inject(this)
         (requireActivity().application as SearchComponentProvider).provideSearchComponent().inject(this)
     }
 

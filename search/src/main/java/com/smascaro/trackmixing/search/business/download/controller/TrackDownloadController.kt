@@ -3,12 +3,12 @@ package com.smascaro.trackmixing.search.business.download.controller
 import com.smascaro.trackmixing.base.coroutine.IoCoroutineScope
 import com.smascaro.trackmixing.base.coroutine.MainCoroutineScope
 import com.smascaro.trackmixing.base.di.module.notification.DownloadNotificationHelperImplementation
+import com.smascaro.trackmixing.base.events.ApplicationEvent
+import com.smascaro.trackmixing.base.events.ApplicationEvent.AppState
 import com.smascaro.trackmixing.base.events.UiProgressEvent
 import com.smascaro.trackmixing.base.service.ForegroundNotification
 import com.smascaro.trackmixing.base.service.ServiceCallbackHandler
 import com.smascaro.trackmixing.base.utils.NotificationHelper
-import com.smascaro.trackmixing.base.events.ApplicationEvent
-import com.smascaro.trackmixing.base.events.ApplicationEvent.AppState
 import com.smascaro.trackmixing.search.business.download.model.DownloadEvents
 import com.smascaro.trackmixing.search.business.download.model.FetchSteps
 import com.smascaro.trackmixing.search.business.download.model.evaluateOverallProgress
@@ -26,7 +26,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class TrackDownloadController @Inject constructor(
-    @DownloadNotificationHelperImplementation val notificationHelper: NotificationHelper,
+    @DownloadNotificationHelperImplementation private val notificationHelper: NotificationHelper,
     private val requestTrackUseCase: RequestTrackUseCase,
     private val fetchProgressUseCase: FetchProgressUseCase,
     private val downloadTrackUseCase: DownloadTrackUseCase,

@@ -11,14 +11,14 @@ sealed class DownloadEvents {
         override fun equals(other: Any?): Boolean {
             if (other == null || other !is ProgressUpdate) return false
             return this.trackTitle == other.trackTitle &&
-                    this.progress == other.progress &&
-                    this.message == other.message &&
-                    this.step::class.java == other.step::class.java
+                this.progress == other.progress &&
+                this.message == other.message &&
+                this.step::class.java == other.step::class.java
         }
     }
 
-    class FinishedProcessing : DownloadEvents()
-    class FinishedDownloading : DownloadEvents()
+    object FinishedProcessing : DownloadEvents()
+    object FinishedDownloading : DownloadEvents()
     class ErrorOccurred(val message: String) : DownloadEvents()
 }
 

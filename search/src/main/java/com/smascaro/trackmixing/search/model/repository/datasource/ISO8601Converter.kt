@@ -47,7 +47,5 @@ class ISO8601Converter {
             }
             return ((valueS + 60 * valueM + 3600 * valueH) * 1000).toLong()
         }
-
-        class Result(val value: String)
     }
 }

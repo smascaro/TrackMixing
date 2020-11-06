@@ -19,16 +19,15 @@ class DownloadNotificationHelper(context: Context) : NotificationHelper(context)
         if (data !is DownloadProgressState) {
             throw WrongArgumentType("Argument for download notification must be of type DownloadProgressState")
         }
-        val progressState = data
         notificationBuilder.apply {
             setSmallIcon(R.drawable.ic_note)
-            setContentTitle(progressState.trackTitle)
+            setContentTitle(data.trackTitle)
             setOnlyAlertOnce(true)
             setShowWhen(true)
             setOngoing(true)
             setStyle(
                 NotificationCompat.BigTextStyle()
-                    .bigText("${progressState.statusMessage} - ${progressState.progress}%")
+                    .bigText("${data.statusMessage} - ${data.progress}%")
             )
             priority = NotificationCompat.PRIORITY_HIGH
         }

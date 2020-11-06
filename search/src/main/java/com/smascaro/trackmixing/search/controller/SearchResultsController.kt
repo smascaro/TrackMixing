@@ -17,8 +17,8 @@ class SearchResultsController @Inject constructor(
     private val io: IoCoroutineScope,
     private val ui: MainCoroutineScope,
     resourcesWrapper: ResourcesWrapper,
-    p_navigationHelper: NavigationHelper
-) : BaseNavigatorController<SearchResultsViewMvc>(p_navigationHelper),
+    navigationHelper: NavigationHelper
+) : BaseNavigatorController<SearchResultsViewMvc>(navigationHelper),
     SearchResultsViewMvc.Listener {
     private val maxVideoDuration =
         resourcesWrapper.getInteger(R.integer.youtube_api_results_max_duration_minutes) * 60

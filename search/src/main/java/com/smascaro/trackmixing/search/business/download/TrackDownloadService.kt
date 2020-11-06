@@ -28,7 +28,6 @@ class TrackDownloadService : BaseService() {
     lateinit var controller: TrackDownloadController
 
     override fun onCreate() {
-        // (application as TrackMixingApplication).appComponent.inject(this)
         (application as SearchComponentProvider).provideSearchComponent().inject(this)
         super.onCreate()
         controller.onCreate()
