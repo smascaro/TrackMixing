@@ -1,6 +1,5 @@
 package com.smascaro.trackmixing.base.service
 
-
 open class ServiceCallbackHandler {
     protected var handleStopService: () -> Unit = {}
     protected var handleStartForeground: (ForegroundNotification) -> Unit = {}

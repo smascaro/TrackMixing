@@ -72,14 +72,14 @@ class MainActivity : BaseActivity() {
         super.onStart()
         mainActivityController.onStart()
         bottomProgressController.onStart()
-        EventBus.getDefault().post(ApplicationEvent(AppState.Foreground()))
+        EventBus.getDefault().post(ApplicationEvent(AppState.Foreground))
     }
 
     override fun onStop() {
         super.onStop()
         mainActivityController.onStop()
         bottomProgressController.onStop()
-        EventBus.getDefault().post(ApplicationEvent(AppState.Background()))
+        EventBus.getDefault().post(ApplicationEvent(AppState.Background))
     }
 
     override fun onDestroy() {

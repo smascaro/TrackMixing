@@ -9,13 +9,13 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 import javax.inject.Inject
 
-class FilesStorageHelper @Inject constructor(private val mContext: Context) {
+class FilesStorageHelper @Inject constructor(private val context: Context) {
     fun getBaseDirectory(): String {
-        return mContext.filesDir.path
+        return context.filesDir.path
     }
 
     fun getBaseDirectoryByVideoId(videoId: String): String {
-        return "${mContext.filesDir}/$videoId"
+        return "${context.filesDir}/$videoId"
     }
 
     fun writeFileToStorage(baseDirectory: String, videoId: String, stream: InputStream): String {
@@ -43,9 +43,9 @@ class FilesStorageHelper @Inject constructor(private val mContext: Context) {
             }
             val countFiles = directoryToCheck.listFiles { _, file ->
                 file.startsWith("vocals.") ||
-                        file.startsWith("bass.") ||
-                        file.startsWith("other.") ||
-                        file.startsWith("drums.")
+                    file.startsWith("bass.") ||
+                    file.startsWith("other.") ||
+                    file.startsWith("drums.")
             }?.count()
 
             return if (countFiles == null) {

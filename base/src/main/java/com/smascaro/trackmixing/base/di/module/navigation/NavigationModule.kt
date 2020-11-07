@@ -7,7 +7,7 @@ import dagger.Module
 import javax.inject.Singleton
 
 @Module
-interface NavigationModule{
+interface NavigationModule {
     @Singleton
     @Binds
     fun provideNavigationHelper(navigationHelperImpl: NavigationHelperImpl): NavigationHelper

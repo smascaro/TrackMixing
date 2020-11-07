@@ -35,7 +35,7 @@ class TrackDownloadController @Inject constructor(
     private val ui: MainCoroutineScope
 ) : ServiceCallbackHandler() {
 
-    private var applicationState: AppState = AppState.Foreground()
+    private var applicationState: AppState = AppState.Foreground
     private var lastProgressEvent: DownloadEvents.ProgressUpdate =
         DownloadEvents.ProgressUpdate("Waiting for data...", 0, "", FetchSteps.ServerProcessStep())
     private var currentRequestedTrackId: String? = null
@@ -65,13 +65,13 @@ class TrackDownloadController @Inject constructor(
     }
 
     private fun goBackground() {
-        applicationState = AppState.Background()
+        applicationState = AppState.Background
         notificationHelper.updateNotification(lastProgressEvent.toNotificationData())
         notifyStartForeground()
     }
 
     private fun goForeground() {
-        applicationState = AppState.Foreground()
+        applicationState = AppState.Foreground
         notifyStopForeground(true)
         eventBus.post(lastProgressEvent)
     }
@@ -120,7 +120,7 @@ class TrackDownloadController @Inject constructor(
         Timber.d("Received event of type FinishedDownloading")
 
         if (applicationState is AppState.Foreground) {
-            eventBus.post(UiProgressEvent.ProgressFinished())
+            eventBus.post(UiProgressEvent.ProgressFinished)
         }
         eventBus.unregister(this)
         notifyStopForeground(true)

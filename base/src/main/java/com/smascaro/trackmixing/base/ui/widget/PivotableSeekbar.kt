@@ -12,7 +12,7 @@ import com.smascaro.trackmixing.base.R
 
 class PivotableSeekbar(context: Context, attributeSet: AttributeSet) :
     AppCompatSeekBar(context, attributeSet) {
-    enum class Position { CENTER_FIXED, DYNAMIC_TRESPASS, DYNAMIC_NO_TRESSPASS }
+    enum class Position { CENTER_FIXED, DYNAMIC_TRESPASS, DYNAMIC_NO_TRESPASS }
     enum class Orientation { HORIZONTAL, VERTICAL }
 
     private val FLAG_TRESPASS_START = 1
@@ -105,7 +105,7 @@ class PivotableSeekbar(context: Context, attributeSet: AttributeSet) :
         when (progressPosition) {
             Position.CENTER_FIXED -> determineTextPositionCenterFixed()
             Position.DYNAMIC_TRESPASS -> determineTextPositionDynamicTrespassing()
-            Position.DYNAMIC_NO_TRESSPASS -> determineTextPositionDynamicNoTrespassing()
+            Position.DYNAMIC_NO_TRESPASS -> determineTextPositionDynamicNoTrespassing()
         }
     }
 

@@ -26,10 +26,10 @@ class PlaybackModule {
         playbackSession: PlaybackSession
     ): NotificationHelper {
         return PlayerNotificationHelper(
-            context,
             requestManager,
             ui,
-            playbackSession
+            playbackSession,
+            context
         )
     }
     @Module

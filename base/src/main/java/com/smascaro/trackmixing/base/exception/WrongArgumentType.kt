@@ -1,3 +1,3 @@
 package com.smascaro.trackmixing.base.exception
 
-class WrongArgumentType(message: String) : Exception()
+class WrongArgumentType(message: String) : Exception(message)

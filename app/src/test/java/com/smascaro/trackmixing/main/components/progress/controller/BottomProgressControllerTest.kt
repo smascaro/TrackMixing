@@ -1,11 +1,15 @@
 package com.smascaro.trackmixing.main.components.progress.controller
 
 import com.nhaarman.mockitokotlin2.validateMockitoUsage
-import com.smascaro.trackmixing.common.testdoubles.EventBusTd
-import com.smascaro.trackmixing.base.utils.ResourcesWrapper
 import com.smascaro.trackmixing.base.events.UiProgressEvent
+import com.smascaro.trackmixing.base.utils.ResourcesWrapper
+import com.smascaro.trackmixing.common.testdoubles.EventBusTd
 import com.smascaro.trackmixing.main.components.progress.view.BottomProgressViewMvc
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.After
@@ -27,8 +31,10 @@ class BottomProgressControllerTest {
     // endregion constants
 
     // region helper fields
-    @Mock private lateinit var resourcesWrapper: ResourcesWrapper
-    @Mock private lateinit var viewMvc: BottomProgressViewMvc
+    @Mock
+    private lateinit var resourcesWrapper: ResourcesWrapper
+    @Mock
+    private lateinit var viewMvc: BottomProgressViewMvc
     private lateinit var eventBus: EventBusTd
     private val mainThreadSurrogate = newSingleThreadContext("UI thread")
     // endregion helper fields
@@ -103,7 +109,7 @@ class BottomProgressControllerTest {
     @Test
     fun onProgressFinishedEvent_updatesView() = runBlocking {
         // Arrange
-        val event = UiProgressEvent.ProgressFinished()
+        val event = UiProgressEvent.ProgressFinished
         // Act
         SUT.onMessageEvent(event)
         // Assert

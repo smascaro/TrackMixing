@@ -7,7 +7,7 @@ import javax.inject.Inject
 class NavigationHelperImpl @Inject constructor() :
     NavigationHelper {
     private var navController: NavController? = null
-    override fun navigate(action:NavDirections) {
+    override fun navigate(action: NavDirections) {
         navController?.navigate(action)
     }
 

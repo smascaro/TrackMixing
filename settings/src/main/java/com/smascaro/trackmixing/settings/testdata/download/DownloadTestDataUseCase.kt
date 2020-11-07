@@ -73,7 +73,7 @@ class DownloadTestDataUseCase @Inject constructor(
         ui.launch {
             if (!cancellationFlag.get()) {
                 //If it is marked for cancellation, do not post Ui event
-                eventBus.post(UiProgressEvent.ProgressFinished())
+                eventBus.post(UiProgressEvent.ProgressFinished)
             }
             getListeners().forEach {
                 it.onFinishedItemDownload(videoId)

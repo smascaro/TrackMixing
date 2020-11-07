@@ -35,12 +35,6 @@ class SongSearchFragment : BaseFragment() {
         (requireActivity().application as SearchComponentProvider).provideSearchComponent().inject(this)
     }
 
-    override fun getFragmentTitle(): String {
-        return "Search a song"
-    }
-
-    override fun isBackNavigable() = true
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

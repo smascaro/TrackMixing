@@ -1,11 +1,10 @@
 package com.smascaro.trackmixing.base.ui.architecture.view
 
 import java.util.*
-import kotlin.collections.HashSet
 
 abstract class BaseObservableViewMvc<ListenerType> : BaseViewMvc(),
     ObservableViewMvc<ListenerType> {
-    private var mListeners: MutableSet<ListenerType> = HashSet<ListenerType>()
+    private var mListeners: MutableSet<ListenerType> = hashSetOf()
     override fun registerListener(listener: ListenerType) {
         mListeners.add(listener)
     }
