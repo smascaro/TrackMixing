@@ -7,16 +7,15 @@ import android.view.WindowManager
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.TrackMixingApplication
-import com.smascaro.trackmixing.common.di.main.MainComponent
-import com.smascaro.trackmixing.common.view.ui.BaseActivity
-import com.smascaro.trackmixing.main.components.player.controller.TrackPlayerController
-import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvc
+import com.smascaro.trackmixing.base.events.ApplicationEvent
+import com.smascaro.trackmixing.base.events.ApplicationEvent.AppState
+import com.smascaro.trackmixing.base.ui.BaseActivity
+import com.smascaro.trackmixing.di.MainComponentProvider
 import com.smascaro.trackmixing.main.components.progress.controller.BottomProgressController
 import com.smascaro.trackmixing.main.components.progress.view.BottomProgressViewMvc
 import com.smascaro.trackmixing.main.controller.MainActivityController
-import com.smascaro.trackmixing.search.business.download.model.ApplicationEvent
-import com.smascaro.trackmixing.search.business.download.model.ApplicationEvent.AppState
+import com.smascaro.trackmixing.player.controller.TrackPlayerController
+import com.smascaro.trackmixing.player.view.TrackPlayerViewMvc
 import org.greenrobot.eventbus.EventBus
 import javax.inject.Inject
 
@@ -38,12 +37,10 @@ class MainActivity : BaseActivity() {
 
     @Inject
     lateinit var bottomProgressViewMvc: BottomProgressViewMvc
-    lateinit var mainComponent: MainComponent
     private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        mainComponent =
-            (application as TrackMixingApplication).appComponent.mainComponent().create(this)
+        val mainComponent = (application as MainComponentProvider).provideMainComponent()
         mainComponent.inject(this)
         window.setFlags(
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
@@ -55,7 +52,6 @@ class MainActivity : BaseActivity() {
 
         mainViewMvc.bindRootView(rootView)
         mainActivityController.bindViewMvc(mainViewMvc)
-        mainActivityController.handleIntent(intent)
 
         trackPlayerViewMvc.bindRootView(rootView)
         trackPlayerController.bindViewMvc(trackPlayerViewMvc)
@@ -76,14 +72,14 @@ class MainActivity : BaseActivity() {
         super.onStart()
         mainActivityController.onStart()
         bottomProgressController.onStart()
-        EventBus.getDefault().post(ApplicationEvent(AppState.Foreground()))
+        EventBus.getDefault().post(ApplicationEvent(AppState.Foreground))
     }
 
     override fun onStop() {
         super.onStop()
         mainActivityController.onStop()
         bottomProgressController.onStop()
-        EventBus.getDefault().post(ApplicationEvent(AppState.Background()))
+        EventBus.getDefault().post(ApplicationEvent(AppState.Background))
     }
 
     override fun onDestroy() {

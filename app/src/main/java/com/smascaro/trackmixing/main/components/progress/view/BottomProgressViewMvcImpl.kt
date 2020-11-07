@@ -6,8 +6,8 @@ import android.widget.LinearLayout
 import android.widget.TextSwitcher
 import androidx.core.view.children
 import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.common.utils.ResourcesWrapper
-import com.smascaro.trackmixing.common.view.architecture.BaseViewMvc
+import com.smascaro.trackmixing.base.ui.architecture.view.BaseViewMvc
+import com.smascaro.trackmixing.base.utils.ResourcesWrapper
 import timber.log.Timber
 import javax.inject.Inject
 

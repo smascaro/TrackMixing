@@ -2,8 +2,8 @@ package com.smascaro.trackmixing.playbackservice.controller
 
 import com.smascaro.trackmixing.common.models.TestModels
 import com.smascaro.trackmixing.common.testdoubles.EventBusTd
+import com.smascaro.trackmixing.playback.utils.media.BandPlaybackHelper
 import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
-import com.smascaro.trackmixing.playbackservice.utils.BandPlaybackHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.ObsoleteCoroutinesApi
@@ -26,7 +26,7 @@ import org.mockito.junit.MockitoJUnitRunner
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class TimestampUpdateThreadTest {
-    private lateinit var SUT: TimestampUpdateThread
+    private lateinit var SUT: com.smascaro.trackmixing.playback.controller.TimestampUpdateThread
 
     // region constants
     private val playingtrack = TestModels.getTrack()
@@ -44,7 +44,8 @@ class TimestampUpdateThreadTest {
         eventBusTd = EventBusTd()
         mockPlaybackHelperGetTrack()
         mockPlaybackHelperGetTimestampMillis()
-        SUT = TimestampUpdateThread(bandPlaybackHelper, eventBusTd)
+        SUT =
+            com.smascaro.trackmixing.playback.controller.TimestampUpdateThread(bandPlaybackHelper, eventBusTd)
         Dispatchers.setMain(mainThreadSurrogate)
     }
 

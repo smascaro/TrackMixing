@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.smascaro.trackmixing.common.view.ui.ClickableMotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.smascaro.trackmixing.base.ui.widget.ClickableMotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/motion_layout_main_activity"
     android:layout_width="match_parent"
@@ -10,7 +10,7 @@
     <include
         android:id="@+id/v_background_gradient"
         layout="@layout/layout_gradient_background" />
-
+t
     <fragment xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/nav_host_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
@@ -54,7 +54,7 @@
         app:layout_constraintBottom_toTopOf="@id/layout_player"
         app:layout_constraintStart_toStartOf="@id/layout_player" />
 
-    <com.smascaro.trackmixing.main.components.player.view.widget.InheritingTextSwitcher
+    <com.smascaro.trackmixing.base.ui.widget.InheritingTextSwitcher
         android:id="@+id/tv_track_title_player_bottom"
         style="@style/MainTrackPlayerTitleTextSwitcherStyle"
         android:layout_width="wrap_content"
@@ -66,7 +66,7 @@
         <com.google.android.material.textview.MaterialTextView style="@style/AppTheme.TM.PlayerBar.Track.TitleTextAppearance" />
 
         <com.google.android.material.textview.MaterialTextView style="@style/AppTheme.TM.PlayerBar.Track.TitleTextAppearance" />
-    </com.smascaro.trackmixing.main.components.player.view.widget.InheritingTextSwitcher>
+    </com.smascaro.trackmixing.base.ui.widget.InheritingTextSwitcher>
 
     <ImageView
         android:id="@+id/iv_action_button_player_bottom"
@@ -103,4 +103,4 @@
 
         <include layout="@layout/layout_faders" />
     </FrameLayout>
-</com.smascaro.trackmixing.common.view.ui.ClickableMotionLayout>
+</com.smascaro.trackmixing.base.ui.widget.ClickableMotionLayout>

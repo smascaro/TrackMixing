@@ -1,9 +1,9 @@
 package com.smascaro.trackmixing.trackslist.business
 
-import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepository
-import com.smascaro.trackmixing.common.data.datasource.repository.toModel
-import com.smascaro.trackmixing.common.data.model.Track
-import com.smascaro.trackmixing.common.view.architecture.BaseObservable
+import com.smascaro.trackmixing.base.data.model.Track
+import com.smascaro.trackmixing.base.data.repository.TracksRepository
+import com.smascaro.trackmixing.base.data.repository.toModel
+import com.smascaro.trackmixing.base.ui.architecture.view.BaseObservable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -27,7 +27,6 @@ class FetchDownloadedTracks @Inject constructor(
             Sort.ALPHABETICALLY_DESC -> tracks.sortedByDescending { it.title }
             Sort.LONGEST_FIRST -> tracks.sortedByDescending { it.secondsLong.value }
             Sort.SHORTEST_FIRST -> tracks.sortedBy { it.secondsLong.value }
-            else -> tracks
         }
         getListeners().forEach {
             it.onTracksFetched(tracks)

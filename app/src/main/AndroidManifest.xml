@@ -17,37 +17,18 @@
         android:theme="@style/AppTheme.TM.NoActionBar">
         <activity
             android:name=".main.view.MainActivity"
-            android:theme="@style/AppTheme.TM.NoActionBar.TranslucentStatusBar"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.TM.NoActionBar.TranslucentStatusBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.SEND" />
+                <action android:name="ACTION_LAUNCH_PLAYER" />
                 <category android:name="android.intent.category.DEFAULT" />
-
-                <data
-                    android:host="m.youtube.com"
-                    android:mimeType="text/plain" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data
-                    android:host="www.youtube.com"
-                    android:mimeType="text/*" />
             </intent-filter>
         </activity>
-        <activity android:name=".settings.view.SettingsActivity" />
-        <activity
-            android:name="com.smascaro.trackmixing.settings.business.downloadtestdata.DownloadTestDataActivity"
-            android:theme="@style/Theme.MaterialComponents.Dialog" />
-
-        <service android:name=".playbackservice.MixPlayerService" />
-        <service android:name=".search.business.download.TrackDownloadService" />
     </application>
 
 

@@ -1,13 +1,14 @@
 package com.smascaro.trackmixing.trackslist.controller
 
-import com.smascaro.trackmixing.common.controller.BaseNavigatorController
-import com.smascaro.trackmixing.common.data.model.Track
-import com.smascaro.trackmixing.common.utils.navigation.NavigationHelper
-import com.smascaro.trackmixing.playbackservice.utils.PlaybackSession
+import com.smascaro.trackmixing.base.coroutine.IoCoroutineScope
+import com.smascaro.trackmixing.base.data.model.Track
+import com.smascaro.trackmixing.base.utils.navigation.BaseNavigatorController
+import com.smascaro.trackmixing.base.utils.navigation.NavigationHelper
+import com.smascaro.trackmixing.playback.utils.media.PlaybackSession
 import com.smascaro.trackmixing.trackslist.business.FetchDownloadedTracks
 import com.smascaro.trackmixing.trackslist.model.RefreshListEvent
+import com.smascaro.trackmixing.trackslist.view.TracksListFragmentDirections
 import com.smascaro.trackmixing.trackslist.view.TracksListViewMvc
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -18,6 +19,7 @@ class TracksListController @Inject constructor(
     private val mFetchDownloadedTracks: FetchDownloadedTracks,
     private val playbackSession: PlaybackSession,
     private val eventBus: EventBus,
+    private val io: IoCoroutineScope,
     navigationHelper: NavigationHelper
 ) : BaseNavigatorController<TracksListViewMvc>(navigationHelper),
     TracksListViewMvc.Listener,
@@ -26,7 +28,7 @@ class TracksListController @Inject constructor(
         fun beforeNavigationToSearch()
     }
 
-    var navigationListener: NavigationListener? = null
+    private var navigationListener: NavigationListener? = null
     fun registerNavigationListener(listener: NavigationListener) {
         navigationListener = listener
     }
@@ -41,11 +43,11 @@ class TracksListController @Inject constructor(
 
     private fun navigateToSearch() {
         navigationListener?.beforeNavigationToSearch()
-        navigationHelper.toSearch()
+        navigationHelper.navigate(TracksListFragmentDirections.actionDestinationTracksListToDestinationSearch())
     }
 
     private fun loadTracks() {
-        GlobalScope.launch {
+        io.launch {
             mFetchDownloadedTracks.fetchTracksAndNotify(FetchDownloadedTracks.Sort.ALPHABETICALLY_ASC)
         }
     }

@@ -1,15 +1,13 @@
 package com.smascaro.trackmixing.trackslist.components.toolbar.view
 
+import androidx.appcompat.widget.Toolbar
 import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.common.utils.ui.UiUtils
-import com.smascaro.trackmixing.common.view.architecture.BaseObservableViewMvc
+import com.smascaro.trackmixing.base.ui.architecture.view.BaseObservableViewMvc
 import javax.inject.Inject
 
-class ToolbarViewMvcImpl @Inject constructor(
-    private val uiUtils: UiUtils,
-) : ToolbarViewMvc,
+class ToolbarViewMvcImpl @Inject constructor() : ToolbarViewMvc,
     BaseObservableViewMvc<ToolbarViewMvc.Listener>() {
-    private lateinit var toolbar: androidx.appcompat.widget.Toolbar
+    private lateinit var toolbar: Toolbar
 
     override fun initialize() {
         super.initialize()

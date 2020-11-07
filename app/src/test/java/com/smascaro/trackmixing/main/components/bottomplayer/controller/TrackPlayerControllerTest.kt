@@ -1,22 +1,21 @@
 package com.smascaro.trackmixing.main.components.bottomplayer.controller
 
 import android.view.View
+import com.smascaro.trackmixing.base.data.model.DownloadEntity
+import com.smascaro.trackmixing.base.data.repository.TracksRepository
 import com.smascaro.trackmixing.common.coroutines.IoCoroutineScopeFactory
 import com.smascaro.trackmixing.common.coroutines.MainCoroutineScopeFactory
-import com.smascaro.trackmixing.common.data.datasource.repository.TracksRepository
-import com.smascaro.trackmixing.common.data.model.DownloadEntity
 import com.smascaro.trackmixing.common.models.DOWNLOAD_ENTITY_1_TITLE
 import com.smascaro.trackmixing.common.models.TRACK_VIDEO_KEY
 import com.smascaro.trackmixing.common.models.TestModels
 import com.smascaro.trackmixing.common.testdoubles.EventBusTd
-import com.smascaro.trackmixing.common.utils.PlaybackStateManager
-import com.smascaro.trackmixing.common.utils.TrackVolumeBundle
-import com.smascaro.trackmixing.main.components.player.controller.TrackPlayerController
-import com.smascaro.trackmixing.main.components.player.model.TrackPlayerData
-import com.smascaro.trackmixing.main.components.player.view.TrackPlayerViewMvc
+import com.smascaro.trackmixing.playback.model.TrackVolumeBundle
+import com.smascaro.trackmixing.playback.utils.media.PlaybackSession
+import com.smascaro.trackmixing.playback.utils.state.PlaybackStateManager
 import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
-import com.smascaro.trackmixing.playbackservice.model.TimestampChangedEvent
-import com.smascaro.trackmixing.playbackservice.utils.PlaybackSession
+import com.smascaro.trackmixing.player.controller.TrackPlayerController
+import com.smascaro.trackmixing.player.model.TrackPlayerData
+import com.smascaro.trackmixing.player.view.TrackPlayerViewMvc
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -24,7 +23,10 @@ import kotlinx.coroutines.test.TestCoroutineScope
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.After
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -228,7 +230,7 @@ class TrackPlayerControllerTest {
     @Test
     fun onTimestampChangedEvent_timestampIsUpdatedInView() {
         // Arrange
-        val event = TimestampChangedEvent(120, 240)
+        val event = com.smascaro.trackmixing.playback.model.TimestampChangedEvent(120, 240)
         // Act
         SUT.onMessageEvent(event)
         // Assert
