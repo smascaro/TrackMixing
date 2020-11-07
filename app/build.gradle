@@ -58,7 +58,9 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
 
     //Timber
-    implementation 'com.jakewharton.timber:timber:4.7.1'
+//    implementation 'com.jakewharton.timber:timber:4.7.1'
+
+    implementation "$Artifacts.timber:$Versions.timber"
 
     // Jetpack
     implementation 'androidx.navigation:navigation-ui:2.3.1'

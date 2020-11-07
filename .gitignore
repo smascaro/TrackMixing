@@ -9,6 +9,7 @@
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
 .DS_Store
+build/
 /build
 /captures
 .externalNativeBuild
@@ -18,3 +19,4 @@
 /keys
 /design
 /app/src/main/res/values/keys.xml
+/build/lint.patch
