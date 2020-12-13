@@ -1,38 +1,37 @@
-package com.smascaro.trackmixing.player.controller
+package com.smascaro.trackmixing.main.components.bottomplayer.controller
 
 import android.content.Intent
+import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.base.coroutine.IoCoroutineScope
 import com.smascaro.trackmixing.base.coroutine.MainCoroutineScope
 import com.smascaro.trackmixing.base.data.model.Track
-import com.smascaro.trackmixing.base.time.asSeconds
-import com.smascaro.trackmixing.base.ui.architecture.controller.BaseController
+import com.smascaro.trackmixing.base.utils.navigation.BaseNavigatorController
+import com.smascaro.trackmixing.base.utils.navigation.NavigationHelper
+import com.smascaro.trackmixing.main.components.bottomplayer.view.BottomPlayerViewMvc
 import com.smascaro.trackmixing.playback.service.MixPlayerService
 import com.smascaro.trackmixing.playback.utils.media.PlaybackSession
 import com.smascaro.trackmixing.playback.utils.state.PlaybackStateManager
-import com.smascaro.trackmixing.player.model.TrackPlayerData
-import com.smascaro.trackmixing.player.view.TrackPlayerViewMvc
+import com.smascaro.trackmixing.search.view.SongSearchFragmentDirections
+import com.smascaro.trackmixing.trackslist.view.TracksListFragmentDirections
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import timber.log.Timber
 import javax.inject.Inject
 
-class TrackPlayerController @Inject constructor(
-    private val eventBus: EventBus,
+class BottomPlayerController @Inject constructor(
     private val playbackSession: PlaybackSession,
     private val ui: MainCoroutineScope,
-    private val io: IoCoroutineScope
-) : BaseController<TrackPlayerViewMvc>(),
-    TrackPlayerViewMvc.Listener {
+    private val io: IoCoroutineScope,
+    navigationHelper: NavigationHelper
+) : BaseNavigatorController<BottomPlayerViewMvc>(navigationHelper),
+    BottomPlayerViewMvc.Listener {
+    private var appearanceBlocked: Boolean = false
     private var currentTrack: Track? = null
     private var currentState: PlaybackStateManager.PlaybackState? = null
     private var openPlayerIntentRequested: Boolean = false
     fun onCreate() {
         ensureViewMvcBound()
         viewMvc.registerListener(this)
-        eventBus.register(this)
         viewMvc.onCreate()
     }
 
@@ -48,20 +47,22 @@ class TrackPlayerController @Inject constructor(
         }
     }
 
-    private suspend fun updateUi() {
-        viewMvc.showPlayerBar(
-            makeBottomPlayerData()
-        )
-        viewMvc.bindTrackDuration(currentTrack!!.secondsLong)
-        val volumesBundle = withContext(io.coroutineContext) { playbackSession.getVolumes() }
-        viewMvc.bindVolumes(volumesBundle)
-        if (openPlayerIntentRequested) {
-            navigateToPlayer()
+    private fun updateUi() {
+        if (!appearanceBlocked) {
+            viewMvc.showPlayerBar(
+                makeBottomPlayerData()
+            )
+            // viewMvc.bindTrackDuration(currentTrack!!.secondsLong)
+            // val volumesBundle = withContext(io.coroutineContext) { playbackSession.getVolumes() }
+            // viewMvc.bindVolumes(volumesBundle)
+            if (openPlayerIntentRequested) {
+                navigateToPlayer()
+            }
         }
     }
 
-    private fun makeBottomPlayerData(): TrackPlayerData {
-        return TrackPlayerData(
+    private fun makeBottomPlayerData(): com.smascaro.trackmixing.player.model.TrackPlayerData {
+        return com.smascaro.trackmixing.player.model.TrackPlayerData(
             currentTrack!!.title,
             currentTrack!!.author,
             currentState!!,
@@ -69,14 +70,18 @@ class TrackPlayerController @Inject constructor(
         )
     }
 
-    override fun onLayoutClick() {
+    override fun onBottomPlayerClick() {
         navigateToPlayer()
     }
 
     private fun navigateToPlayer() {
         if (currentTrack != null) {
             openPlayerIntentRequested = false
-            viewMvc.openPlayer()
+            viewMvc.hidePlayerBar()
+            when (navigationHelper.currentDestination?.id) {
+                R.id.destination_tracks_list -> navigationHelper.navigate(TracksListFragmentDirections.actionDestinationTracksListToPlayerFragment())
+                R.id.destination_search -> navigationHelper.navigate(SongSearchFragmentDirections.actionDestinationSearchToDestinationPlayer())
+            }
         }
     }
 
@@ -93,10 +98,6 @@ class TrackPlayerController @Inject constructor(
         }
     }
 
-    override fun onSeekRequestEvent(progress: Int) {
-        playbackSession.seek(progress.asSeconds())
-    }
-
     override fun onPlayerStateChanged() {
         updateCurrentPlayingTrack()
     }
@@ -111,22 +112,6 @@ class TrackPlayerController @Inject constructor(
         playbackSession.stopPlayback()
     }
 
-    override fun onTrackVolumeChanged(
-        trackInstrument: com.smascaro.trackmixing.playback.model.TrackInstrument,
-        volume: Int
-    ) {
-        playbackSession.setTrackVolume(trackInstrument, volume)
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: com.smascaro.trackmixing.playback.model.TimestampChangedEvent) =
-        handleTimestampChanged(event.newTimestamp.value.toInt(), event.totalLength.value.toInt())
-
-    private fun handleTimestampChanged(newTimestamp: Int, totalLength: Int) {
-        Timber.d("Received timestamp event: $newTimestamp / $totalLength")
-        viewMvc.updateTimestamp(newTimestamp, totalLength)
-    }
-
     fun handleIntent(intent: Intent?) {
         if (intent?.action == MixPlayerService.ACTION_LAUNCH_PLAYER) {
             openPlayerIntentRequested = true
@@ -134,8 +119,15 @@ class TrackPlayerController @Inject constructor(
         }
     }
 
-    override fun dispose() {
-        viewMvc.unregisterListener(this)
-        eventBus.unregister(this)
+    fun checkIfPlayerShouldShow() {
+        updateCurrentPlayingTrack()
+    }
+
+    fun blockPlayerAppearance() {
+        this.appearanceBlocked = true
+    }
+
+    fun unblockPlayerAppearance() {
+        this.appearanceBlocked = false
     }
 }

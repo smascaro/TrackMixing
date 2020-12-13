@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <dimen name="track_player_fader_container_height">300dp</dimen>
-    <dimen name="track_player_fullscreen_title_margin_top">30dp</dimen>
-    <dimen name="track_player_fullscreen_action_button_margin_bottom">20dp</dimen>
-</resources>

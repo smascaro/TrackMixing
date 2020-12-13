@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.doOnPreDraw
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.transition.MaterialElevationScale
 import com.google.android.material.transition.MaterialFadeThrough
 import com.google.android.material.transition.MaterialSharedAxis
 import com.smascaro.trackmixing.R
@@ -36,13 +38,13 @@ class TracksListFragment : BaseFragment(), TracksListController.NavigationListen
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enterTransition = MaterialFadeThrough().apply {
-            duration = 300
+            duration = 200
         }
-        reenterTransition = MaterialFadeThrough().apply {
-            duration = 300
+        reenterTransition = MaterialElevationScale(true).apply {
+            duration = 200
         }
-        exitTransition = MaterialFadeThrough().apply {
-            duration = 300
+        exitTransition = MaterialElevationScale(false).apply {
+            duration = 200
         }
     }
 
@@ -90,6 +92,12 @@ class TracksListFragment : BaseFragment(), TracksListController.NavigationListen
         reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false).apply {
             duration = 200
         }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
+        view.doOnPreDraw { startPostponedEnterTransition() }
     }
 }
 

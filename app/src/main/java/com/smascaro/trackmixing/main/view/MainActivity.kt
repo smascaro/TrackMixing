@@ -11,11 +11,9 @@ import com.smascaro.trackmixing.base.events.ApplicationEvent
 import com.smascaro.trackmixing.base.events.ApplicationEvent.AppState
 import com.smascaro.trackmixing.base.ui.BaseActivity
 import com.smascaro.trackmixing.di.MainComponentProvider
-import com.smascaro.trackmixing.main.components.progress.controller.BottomProgressController
-import com.smascaro.trackmixing.main.components.progress.view.BottomProgressViewMvc
+import com.smascaro.trackmixing.main.components.bottomplayer.controller.BottomPlayerController
+import com.smascaro.trackmixing.main.components.bottomplayer.view.BottomPlayerViewMvc
 import com.smascaro.trackmixing.main.controller.MainActivityController
-import com.smascaro.trackmixing.player.controller.TrackPlayerController
-import com.smascaro.trackmixing.player.view.TrackPlayerViewMvc
 import org.greenrobot.eventbus.EventBus
 import javax.inject.Inject
 
@@ -27,16 +25,9 @@ class MainActivity : BaseActivity() {
     lateinit var mainViewMvc: MainActivityViewMvc
 
     @Inject
-    lateinit var trackPlayerController: TrackPlayerController
-
+    lateinit var bottomPlayerController: BottomPlayerController
     @Inject
-    lateinit var trackPlayerViewMvc: TrackPlayerViewMvc
-
-    @Inject
-    lateinit var bottomProgressController: BottomProgressController
-
-    @Inject
-    lateinit var bottomProgressViewMvc: BottomProgressViewMvc
+    lateinit var bottomPlayerViewMvc: BottomPlayerViewMvc
     private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,32 +44,34 @@ class MainActivity : BaseActivity() {
         mainViewMvc.bindRootView(rootView)
         mainActivityController.bindViewMvc(mainViewMvc)
 
-        trackPlayerViewMvc.bindRootView(rootView)
-        trackPlayerController.bindViewMvc(trackPlayerViewMvc)
-        trackPlayerController.handleIntent(intent)
+        bottomPlayerViewMvc.bindRootView(rootView)
+        bottomPlayerController.bindViewMvc(bottomPlayerViewMvc)
+        bottomPlayerController.handleIntent(intent)
 
-        bottomProgressViewMvc.bindRootView(rootView)
-        bottomProgressController.bindViewMvc(bottomProgressViewMvc)
-
-
-        bottomProgressController.onCreate()
-        trackPlayerController.onCreate()
+        bottomPlayerController.onCreate()
 
         setContentView(rootView)
         navController = findNavController(R.id.nav_host_fragment)
+        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+            if (destination.id != R.id.destination_player) {
+                bottomPlayerController.unblockPlayerAppearance()
+                bottomPlayerController.checkIfPlayerShouldShow()
+            } else {
+                bottomPlayerController.blockPlayerAppearance()
+            }
+        }
     }
 
     override fun onStart() {
         super.onStart()
         mainActivityController.onStart()
-        bottomProgressController.onStart()
+        bottomPlayerController.bindNavController(navController)
         EventBus.getDefault().post(ApplicationEvent(AppState.Foreground))
     }
 
     override fun onStop() {
         super.onStop()
         mainActivityController.onStop()
-        bottomProgressController.onStop()
         EventBus.getDefault().post(ApplicationEvent(AppState.Background))
     }
 
@@ -89,18 +82,10 @@ class MainActivity : BaseActivity() {
 
     private fun disposeControllers() {
         mainActivityController.dispose()
-        bottomProgressController.dispose()
-        trackPlayerController.dispose()
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        trackPlayerController.handleIntent(intent)
-    }
-
-    override fun onBackPressed() {
-        if (!trackPlayerViewMvc.onBackPressed()) {
-            super.onBackPressed()
-        }
+        bottomPlayerController.handleIntent(intent)
     }
 }

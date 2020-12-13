@@ -13,9 +13,6 @@ import com.smascaro.trackmixing.playback.model.TrackVolumeBundle
 import com.smascaro.trackmixing.playback.utils.media.PlaybackSession
 import com.smascaro.trackmixing.playback.utils.state.PlaybackStateManager
 import com.smascaro.trackmixing.playbackservice.model.PlaybackEvent
-import com.smascaro.trackmixing.player.controller.TrackPlayerController
-import com.smascaro.trackmixing.player.model.TrackPlayerData
-import com.smascaro.trackmixing.player.view.TrackPlayerViewMvc
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -38,7 +35,7 @@ import org.mockito.junit.MockitoJUnitRunner
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class TrackPlayerControllerTest {
-    private lateinit var SUT: TrackPlayerController
+    private lateinit var SUT: com.smascaro.trackmixing.player.controller.TrackPlayerController
 
     // region constants
     // endregion constants
@@ -62,7 +59,7 @@ class TrackPlayerControllerTest {
         eventBus = EventBusTd()
         tracksRepository = TracksRepositoryTd()
 
-        SUT = TrackPlayerController(
+        SUT = com.smascaro.trackmixing.player.controller.TrackPlayerController(
             playbackStateManager,
             tracksRepository,
             eventBus,
@@ -284,10 +281,10 @@ class TrackPlayerControllerTest {
         }
     }
 
-    class TrackPlayerViewMvcTd : TrackPlayerViewMvc {
+    class TrackPlayerViewMvcTd : com.smascaro.trackmixing.player.view.TrackPlayerViewMvc {
         var totalInteractions = 0
         var isPlayerBarShown: Boolean = false
-        var dataInPlayerBar: TrackPlayerData? = null
+        var dataInPlayerBar: com.smascaro.trackmixing.player.model.TrackPlayerData? = null
         var isPlayButtonShown: Boolean = false
         var isPauseButtonShown: Boolean = false
         var registeredListener: Any? = null
@@ -298,7 +295,7 @@ class TrackPlayerControllerTest {
             totalInteractions++
         }
 
-        override fun showPlayerBar(data: TrackPlayerData) {
+        override fun showPlayerBar(data: com.smascaro.trackmixing.player.model.TrackPlayerData) {
             dataInPlayerBar = data
             isPlayerBarShown = true
             totalInteractions++
@@ -336,12 +333,12 @@ class TrackPlayerControllerTest {
             return false
         }
 
-        override fun registerListener(listener: TrackPlayerViewMvc.Listener) {
+        override fun registerListener(listener: com.smascaro.trackmixing.player.view.TrackPlayerViewMvc.Listener) {
             registeredListener = listener
             totalInteractions++
         }
 
-        override fun unregisterListener(listener: TrackPlayerViewMvc.Listener) {
+        override fun unregisterListener(listener: com.smascaro.trackmixing.player.view.TrackPlayerViewMvc.Listener) {
             unregisteredListener = listener
             totalInteractions++
         }

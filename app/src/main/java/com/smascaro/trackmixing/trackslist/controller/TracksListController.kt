@@ -1,5 +1,6 @@
 package com.smascaro.trackmixing.trackslist.controller
 
+import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.base.coroutine.IoCoroutineScope
 import com.smascaro.trackmixing.base.data.model.Track
 import com.smascaro.trackmixing.base.utils.navigation.BaseNavigatorController
@@ -28,6 +29,7 @@ class TracksListController @Inject constructor(
         fun beforeNavigationToSearch()
     }
 
+    private lateinit var onPreNavigationAction: (destinationId: Int) -> Unit
     private var navigationListener: NavigationListener? = null
     fun registerNavigationListener(listener: NavigationListener) {
         navigationListener = listener
@@ -37,12 +39,17 @@ class TracksListController @Inject constructor(
         navigationListener = null
     }
 
+    fun setOnPreNavigationListener(action: (destinationId: Int) -> Unit) {
+        this.onPreNavigationAction = action
+    }
+
     override fun onSearchNavigationButtonClicked() {
         navigateToSearch()
     }
 
     private fun navigateToSearch() {
         navigationListener?.beforeNavigationToSearch()
+        onPreNavigationAction(R.id.destination_search)
         navigationHelper.navigate(TracksListFragmentDirections.actionDestinationTracksListToDestinationSearch())
     }
 

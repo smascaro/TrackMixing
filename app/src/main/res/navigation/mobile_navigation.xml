@@ -16,15 +16,26 @@
         <action
             android:id="@+id/action_destination_tracks_list_to_destination_settings"
             app:destination="@id/destination_settings" />
+        <action
+            android:id="@+id/action_destination_tracks_list_to_playerFragment"
+            app:destination="@id/destination_player" />
     </fragment>
     <fragment
         android:id="@+id/destination_search"
         android:name="com.smascaro.trackmixing.search.view.SongSearchFragment"
         android:label="fragment_song_search"
-        tools:layout="@layout/fragment_song_search" />
+        tools:layout="@layout/fragment_song_search">
+        <action
+            android:id="@+id/action_destination_search_to_destination_player"
+            app:destination="@id/destination_player" />
+    </fragment>
     <activity
         android:id="@+id/destination_settings"
         android:name="com.smascaro.trackmixing.settings.view.SettingsActivity"
         android:label="SettingsActivity" />
+    <fragment
+        android:id="@+id/destination_player"
+        android:name="com.smascaro.trackmixing.player.view.PlayerFragment"
+        android:label="fragment_player" />
 
 </navigation>

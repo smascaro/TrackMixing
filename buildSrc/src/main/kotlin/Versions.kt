@@ -6,7 +6,7 @@ object Versions {
         const val core = "1.3.2"
         const val constraintLayout = "2.0.4"
         const val recyclerView = "1.1.0"
-        const val navigation = "2.3.1"
+        const val navigation = "2.3.2"
         const val test = "1.3.0"
         const val testJunit = "1.1.2"
         const val palette = "1.0.0"
@@ -33,6 +33,6 @@ object Versions {
     object Plugins {
         const val safeargs = "2.3.1"
         const val gradle = "4.0.2"
-        const val checkDependencyUpdates="1.1.4"
+        const val checkDependencyUpdates = "1.1.4"
     }
 }

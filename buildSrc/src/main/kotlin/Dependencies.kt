@@ -143,7 +143,6 @@ fun DependencyHandler.retrofit() {
     implementation(Dependencies.Retrofit.converterGson)
 }
 
-
 fun DependencyHandler.glide() {
     api(Dependencies.Glide.glide)
     annotationProcessor(Dependencies.Glide.compiler)
@@ -183,6 +182,7 @@ fun DependencyHandler.exoplayer() {
 fun DependencyHandler.appModule() {
     androidModule(":base")
     androidModule(":playback")
+    androidModule(":player")
     androidModule(":search")
     androidModule(":settings")
     kotlin()
@@ -268,6 +268,19 @@ fun DependencyHandler.searchModule() {
     junit()
     androidxTest()
     espresso()
+}
+// endregion
+
+// region :player
+fun DependencyHandler.playerModule() {
+    androidModule(":base")
+    androidModule(":playback")
+    kotlin()
+    coreKtx()
+    coroutines()
+    material()
+    dagger()
+    timber()
 }
 // endregion
 // endregion

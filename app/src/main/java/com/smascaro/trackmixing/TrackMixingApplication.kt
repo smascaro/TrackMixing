@@ -10,6 +10,9 @@ import com.smascaro.trackmixing.di.MainComponentProvider
 import com.smascaro.trackmixing.playback.di.component.DaggerPlaybackComponent
 import com.smascaro.trackmixing.playback.di.component.PlaybackComponent
 import com.smascaro.trackmixing.playback.di.component.PlaybackComponentProvider
+import com.smascaro.trackmixing.player.di.DaggerPlayerComponent
+import com.smascaro.trackmixing.player.di.PlayerComponent
+import com.smascaro.trackmixing.player.di.PlayerComponentProvider
 import com.smascaro.trackmixing.search.di.component.DaggerSearchComponent
 import com.smascaro.trackmixing.search.di.component.SearchComponentProvider
 import com.smascaro.trackmixing.settings.di.component.DaggerSettingsComponent
@@ -23,7 +26,8 @@ class TrackMixingApplication :
     MainComponentProvider,
     SearchComponentProvider,
     PlaybackComponentProvider,
-    SettingsComponentProvider {
+    SettingsComponentProvider,
+    PlayerComponentProvider {
     override fun onCreate() {
         super.onCreate()
         if (BuildConfig.DEBUG) {
@@ -61,6 +65,14 @@ class TrackMixingApplication :
 
     override fun providePlaybackComponent(): PlaybackComponent {
         return DaggerPlaybackComponent.builder()
+            .withBaseComponent(provideBaseComponent())
+            .withContext(applicationContext)
+            .build()
+    }
+
+    override fun providePlayerComponent(): PlayerComponent {
+        return DaggerPlayerComponent.builder()
+            .withPlaybackComponent(providePlaybackComponent())
             .withBaseComponent(provideBaseComponent())
             .withContext(applicationContext)
             .build()

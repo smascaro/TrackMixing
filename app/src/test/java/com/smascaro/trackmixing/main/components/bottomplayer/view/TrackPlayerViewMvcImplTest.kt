@@ -3,8 +3,6 @@ package com.smascaro.trackmixing.main.components.bottomplayer.view
 import com.bumptech.glide.RequestManager
 import com.smascaro.trackmixing.base.utils.ResourcesWrapper
 import com.smascaro.trackmixing.playback.service.MixPlayerServiceChecker
-import com.smascaro.trackmixing.player.view.TrackPlayerViewMvc
-import com.smascaro.trackmixing.player.view.TrackPlayerViewMvcImpl
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -16,23 +14,26 @@ import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
 class TrackPlayerViewMvcImplTest {
-    private lateinit var SUT: TrackPlayerViewMvcImpl
+    private lateinit var SUT: com.smascaro.trackmixing.player.view.TrackPlayerViewMvcImpl
 
     // region constants
 
     // endregion constants
 
     // region helper fields
-    @Mock private lateinit var glide: RequestManager
-    @Mock private lateinit var resourcesWrapper: ResourcesWrapper
-    @Mock private lateinit var serviceChecker: MixPlayerServiceChecker
+    @Mock
+    private lateinit var glide: RequestManager
+    @Mock
+    private lateinit var resourcesWrapper: ResourcesWrapper
+    @Mock
+    private lateinit var serviceChecker: MixPlayerServiceChecker
     private lateinit var viewMvcListener: TrackPlayerViewMvcListenerImplementator
     // endregion helper fields
 
     @Before
     fun setup() {
         viewMvcListener = TrackPlayerViewMvcListenerImplementator()
-        SUT = TrackPlayerViewMvcImpl(serviceChecker, resourcesWrapper)
+        SUT = com.smascaro.trackmixing.player.view.TrackPlayerViewMvcImpl(serviceChecker, resourcesWrapper)
     }
 
     // region tests
@@ -94,7 +95,8 @@ class TrackPlayerViewMvcImplTest {
     // endregion helper methods
 
     // region helper classes
-    class TrackPlayerViewMvcListenerImplementator : TrackPlayerViewMvc.Listener {
+    class TrackPlayerViewMvcListenerImplementator :
+        com.smascaro.trackmixing.player.view.TrackPlayerViewMvc.Listener {
         var hasServiceBeenChecked: Boolean = false
         var serviceCheckResult: Boolean? = null
         override fun onLayoutClick() {
@@ -122,7 +124,10 @@ class TrackPlayerViewMvcImplTest {
             TODO("Not yet implemented")
         }
 
-        override fun onTrackVolumeChanged(trackInstrument: com.smascaro.trackmixing.playback.model.TrackInstrument, volume: Int) {
+        override fun onTrackVolumeChanged(
+            trackInstrument: com.smascaro.trackmixing.playback.model.TrackInstrument,
+            volume: Int
+        ) {
             TODO("Not yet implemented")
         }
     }

@@ -2,15 +2,24 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_player_faders"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:transitionGroup="true">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_track_player_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:paddingVertical="24dp" />
 
     <LinearLayout
         android:id="@+id/container_faders"
         android:layout_width="match_parent"
         android:layout_height="@dimen/track_player_fader_container_height"
-        android:layout_alignParentTop="true"
-        android:orientation="horizontal"
-        android:baselineAligned="false">
+        android:layout_below="@id/tv_track_player_title"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -103,5 +112,15 @@
             android:layout_below="@id/sb_track_player_timestamp"
             android:layout_alignEnd="@id/sb_track_player_timestamp"
             android:text="@string/track_player_progress_length_default_text" />
+
+        <ImageView
+            android:id="@+id/iv_player_play_pause_button"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_below="@id/tv_track_player_current_timestamp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/circular_shape"
+            android:src="@drawable/ic_play" />
+
     </RelativeLayout>
 </RelativeLayout>
