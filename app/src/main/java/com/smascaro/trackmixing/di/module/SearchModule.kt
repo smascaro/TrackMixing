@@ -5,9 +5,6 @@ import com.smascaro.trackmixing.base.di.MainScope
 import com.smascaro.trackmixing.base.di.module.notification.DownloadNotificationHelperImplementation
 import com.smascaro.trackmixing.base.utils.NotificationHelper
 import com.smascaro.trackmixing.search.business.download.utils.DownloadNotificationHelper
-import com.smascaro.trackmixing.search.view.SearchResultsViewMvc
-import com.smascaro.trackmixing.search.view.SearchResultsViewMvcImpl
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 
@@ -21,9 +18,5 @@ class SearchModule {
     }
 
     @Module
-    interface Bindings {
-        @MainScope
-        @Binds
-        fun provideSearchResultsViewMvc(searchResultsViewMvcImpl: SearchResultsViewMvcImpl): SearchResultsViewMvc
-    }
+    interface Bindings {}
 }

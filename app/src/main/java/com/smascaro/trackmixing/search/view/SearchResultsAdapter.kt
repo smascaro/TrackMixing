@@ -1,26 +1,22 @@
 package com.smascaro.trackmixing.search.view
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.di.SearchResultItemViewMvcFactory
+import com.smascaro.trackmixing.base.time.TimeHelper
 import com.smascaro.trackmixing.search.model.SearchResult
-import com.smascaro.trackmixing.search.view.resultitem.SearchResultsItemViewMvc
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class SearchResultsAdapter @Inject constructor(
-    private val viewMvcFactory: SearchResultItemViewMvcFactory,
-) : RecyclerView.Adapter<SearchResultsAdapter.ViewHolder>(), SearchResultsItemViewMvc.Listener {
-    interface Listener {
+class SearchResultsAdapter @Inject constructor() : RecyclerView.Adapter<SearchResultsAdapter.ViewHolder>() {
+    fun interface Listener {
         fun onSearchResultClicked(searchResult: SearchResult)
     }
-
-    class ViewHolder(val itemViewMvc: SearchResultsItemViewMvc) :
-        RecyclerView.ViewHolder(itemViewMvc.getRootView())
 
     private var listener: Listener? = null
     private var searchResults = mutableListOf<SearchResult>()
@@ -34,19 +30,13 @@ class SearchResultsAdapter @Inject constructor(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val itemViewMvc = viewMvcFactory.create()
-        itemViewMvc.bindRootView(
-            LayoutInflater.from(parent.context).inflate(R.layout.item_track, parent, false)
-        )
-        itemViewMvc.registerListener(this)
-        return ViewHolder(itemViewMvc)
+        val rootView = LayoutInflater.from(parent.context).inflate(R.layout.item_track, parent, false)
+        return ViewHolder(rootView)
     }
 
     fun bindResults(results: List<SearchResult>) {
         searchResults = results.toMutableList()
-        CoroutineScope(Dispatchers.Main).launch {
-            notifyDataSetChanged()
-        }
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {
@@ -54,11 +44,42 @@ class SearchResultsAdapter @Inject constructor(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.itemViewMvc.bindResult(searchResults[position])
-        holder.itemViewMvc.bindPosition(holder.adapterPosition)
+        holder.bindResult(searchResults[position])
     }
 
-    override fun onSearchResultClicked(result: SearchResult) {
-        listener?.onSearchResultClicked(result)
+    inner class ViewHolder(private val rootView: View) :
+        RecyclerView.ViewHolder(rootView) {
+        private lateinit var searchResult: SearchResult
+        private var searchResultThumbnailImageView: ImageView =
+            rootView.findViewById(R.id.iv_item_track_thumbnail)
+        private var searchResultTitleTextView: TextView = rootView.findViewById(R.id.tv_item_track_title)
+        private var searchResultDetailsTextView: TextView = rootView.findViewById(R.id.tv_item_track_details)
+
+        init {
+            rootView.setOnClickListener {
+                listener?.onSearchResultClicked(searchResult)
+            }
+        }
+
+        fun bindResult(result: SearchResult) {
+            this.searchResult = result
+            searchResultTitleTextView.text = this.searchResult.title
+            val authorText = this.searchResult.author
+            val durationText =
+                TimeHelper.fromSeconds(this.searchResult.secondsLong.toLong()).toStringRepresentation()
+            val statusText = "Tap to download"
+            searchResultDetailsTextView.text =
+                rootView.resources.getString(
+                    R.string.track_item_data_template,
+                    authorText,
+                    durationText,
+                    statusText
+                )
+            Glide.with(rootView)
+                .asBitmap()
+                .load(this.searchResult.thumbnailUrl)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .into(searchResultThumbnailImageView)
+        }
     }
 }
