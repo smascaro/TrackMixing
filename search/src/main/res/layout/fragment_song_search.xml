@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_song_search_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent"
+    android:transitionGroup="true"
+    tools:context=".search.view.SongSearchFragment">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/search_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="18dp"
+        android:background="@color/transparent"
+        app:elevation="0dp">
+
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:id="@+id/search_view_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <View
+                    android:id="@+id/iv_toolbar_back_button"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginEnd="16dp"
+                    android:background="?attr/homeAsUpIndicator" />
+
+                <EditText
+                    android:id="@+id/et_toolbar_search_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toStartOf="@id/iv_toolbar_search_clear"
+                    android:layout_toEndOf="@id/iv_toolbar_back_button"
+                    android:background="@null"
+                    android:hint="Try starting with your favorite song"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:textColor="@color/textOnPrimary"
+                    android:textSize="16sp" />
+
+                <View
+                    android:id="@+id/iv_toolbar_search_clear"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/ic_close_24dp"
+                    android:visibility="invisible" />
+            </RelativeLayout>
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_search_results"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/search_toolbar"
+        tools:listitem="@layout/item_track" />
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmer_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/search_toolbar"
+        android:visibility="gone"
+        app:shimmer_duration="900">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/layout_placeholder_item_track" />
+
+            <include layout="@layout/layout_placeholder_item_track" />
+
+            <include layout="@layout/layout_placeholder_item_track" />
+
+            <include layout="@layout/layout_placeholder_item_track" />
+
+            <include layout="@layout/layout_placeholder_item_track" />
+
+            <include layout="@layout/layout_placeholder_item_track" />
+
+            <include layout="@layout/layout_placeholder_item_track" />
+
+            <include layout="@layout/layout_placeholder_item_track" />
+
+            <include layout="@layout/layout_placeholder_item_track" />
+
+            <include layout="@layout/layout_placeholder_item_track" />
+
+            <include layout="@layout/layout_placeholder_item_track" />
+
+            <include layout="@layout/layout_placeholder_item_track" />
+
+            <include layout="@layout/layout_placeholder_item_track" />
+        </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+</RelativeLayout>

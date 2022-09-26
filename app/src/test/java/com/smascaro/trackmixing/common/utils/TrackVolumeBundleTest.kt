@@ -1,5 +1,6 @@
 package com.smascaro.trackmixing.common.utils
 
+import com.smascaro.trackmixing.playback.model.TrackVolumeBundle
 import org.junit.Test
 
 internal class TrackVolumeBundleTest {

@@ -1,44 +1,46 @@
 package com.smascaro.trackmixing.main.controller
 
-import android.content.Intent
-import com.smascaro.trackmixing.common.controller.BaseNavigatorController
-import com.smascaro.trackmixing.common.utils.NavigationHelper
+import com.smascaro.trackmixing.base.coroutine.IoCoroutineScope
+import com.smascaro.trackmixing.base.coroutine.MainCoroutineScope
+import com.smascaro.trackmixing.base.ui.architecture.controller.BaseController
 import com.smascaro.trackmixing.main.view.MainActivityViewMvc
-import timber.log.Timber
+import com.smascaro.trackmixing.playback.utils.media.PlaybackSession
+import com.smascaro.trackmixing.playback.utils.state.PlaybackStateManager
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class MainActivityController @Inject constructor(p_navigationHelper: NavigationHelper) :
-    BaseNavigatorController<MainActivityViewMvc>(p_navigationHelper), MainActivityViewMvc.Listener {
-
+class MainActivityController @Inject constructor(
+    private val playbackSession: PlaybackSession,
+    private val ui: MainCoroutineScope,
+    private val io: IoCoroutineScope
+) :
+    BaseController<MainActivityViewMvc>(), MainActivityViewMvc.Listener {
     fun onStart() {
         viewMvc.registerListener(this)
+        updateBackgroundColor()
     }
 
     fun onStop() {
         viewMvc.unregisterListener(this)
     }
 
-    fun handleIntent(intent: Intent) {
-        if (intent.action == Intent.ACTION_SEND) {
-            val url = if (intent.clipData != null && intent.clipData!!.itemCount > 0) {
-                intent.clipData?.getItemAt(0)!!.text
-            } else ""
-            Timber.d(intent.toString())
-            if (isYoutubeValidUrl(url)) {
-                viewMvc.startProcessingRequest(url.toString())
-            }
+    override fun onPlayerStateChanged() {
+        updateBackgroundColor()
+    }
+
+    private fun updateBackgroundColor() = ui.launch {
+        val state = playbackSession.getState()
+        if (state is PlaybackStateManager.PlaybackState.Stopped) {
+            viewMvc.updateBackgroundColorToDefault()
+        } else {
+            val playingTrack =
+                withContext(io.coroutineContext) { playbackSession.getTrack() }
+            viewMvc.updateBackgroundColor(playingTrack.backgroundColor)
         }
     }
 
-    fun isYoutubeValidUrl(url: CharSequence): Boolean =
-        YoutubeUrlValidator(url.toString()).isValid()
-
-    fun updateTitle(title: String, enableBackNavigation: Boolean) {
-        viewMvc.updateTitle(title, enableBackNavigation)
-    }
-
-    override fun onToolbarBackButtonPressed() {
-        viewMvc.cleanUp()
-        navigationHelper.back()
+    override fun dispose() {
+        viewMvc.unregisterListener(this)
     }
 }

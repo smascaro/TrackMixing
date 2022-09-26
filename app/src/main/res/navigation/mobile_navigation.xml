@@ -11,45 +11,20 @@
         android:label="fragment_tracks_list"
         tools:layout="@layout/fragment_tracks_list">
         <action
-            android:id="@+id/action_destination_tracks_list_to_destination_player"
-            app:destination="@id/destination_player" />
-        <action
-            android:id="@+id/action_destination_tracks_list_to_destination_track_details"
-            app:destination="@id/destination_track_details" />
-        <action
             android:id="@+id/action_destination_tracks_list_to_destination_search"
             app:destination="@id/destination_search" />
+        <action
+            android:id="@+id/action_destination_tracks_list_to_destination_settings"
+            app:destination="@id/destination_settings" />
     </fragment>
     <fragment
         android:id="@+id/destination_search"
         android:name="com.smascaro.trackmixing.search.view.SongSearchFragment"
         android:label="fragment_song_search"
-        tools:layout="@layout/fragment_song_search">
-        <action
-            android:id="@+id/action_destination_search_to_destination_player"
-            app:destination="@id/destination_player" />
-    </fragment>
+        tools:layout="@layout/fragment_song_search" />
     <activity
-        android:id="@+id/destination_player"
-        android:name="com.smascaro.trackmixing.player.view.TracksPlayerActivity"
-        android:label="TracksPlayerActivity"
-        tools:layout="@layout/activity_track_player">
-        <argument
-            android:name="track"
-            app:argType="com.smascaro.trackmixing.common.data.model.Track" />
-
-    </activity>
-    <fragment
-        android:id="@+id/destination_track_details"
-        android:name="com.smascaro.trackmixing.details.view.TrackDetailsFragment"
-        android:label="fragment_track_details"
-        tools:layout="@layout/fragment_track_details">
-        <argument
-            android:name="track"
-            app:argType="com.smascaro.trackmixing.common.data.model.Track" />
-        <action
-            android:id="@+id/action_destination_track_details_to_destination_player"
-            app:destination="@id/destination_player" />
-    </fragment>
+        android:id="@+id/destination_settings"
+        android:name="com.smascaro.trackmixing.settings.view.SettingsActivity"
+        android:label="SettingsActivity" />
 
 </navigation>

@@ -16,8 +16,10 @@ class TrackMixerSeekBarChangeListener(
     }
 
     override fun onStartTrackingTouch(seekBar: SeekBar?) {
+        // Nothing to do
     }
 
     override fun onStopTrackingTouch(seekBar: SeekBar?) {
+        // Nothing to do
     }
 }

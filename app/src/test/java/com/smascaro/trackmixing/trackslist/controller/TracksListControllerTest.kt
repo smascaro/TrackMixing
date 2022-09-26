@@ -1,10 +1,11 @@
 package com.smascaro.trackmixing.trackslist.controller
 
-import com.smascaro.trackmixing.common.data.datasource.repository.toModel
+import com.smascaro.trackmixing.base.data.repository.toModel
+import com.smascaro.trackmixing.base.utils.navigation.NavigationHelper
 import com.smascaro.trackmixing.common.models.TestModels
-import com.smascaro.trackmixing.common.utils.NavigationHelper
+import com.smascaro.trackmixing.common.testdoubles.EventBusTd
 import com.smascaro.trackmixing.helpers.MockitoHelper
-import com.smascaro.trackmixing.playbackservice.utils.PlaybackSession
+import com.smascaro.trackmixing.playback.utils.media.PlaybackSession
 import com.smascaro.trackmixing.trackslist.business.FetchDownloadedTracks
 import com.smascaro.trackmixing.trackslist.view.TracksListViewMvc
 import kotlinx.coroutines.runBlocking
@@ -13,9 +14,10 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito.*
+import org.mockito.Mockito.times
+import org.mockito.Mockito.validateMockitoUsage
+import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
-
 
 @RunWith(MockitoJUnitRunner::class)
 class TracksListControllerTest {
@@ -28,16 +30,25 @@ class TracksListControllerTest {
     // endregion constants
 
     // region helper fields
-    @Mock private lateinit var viewMvc: TracksListViewMvc
-    @Mock private lateinit var fetchDownloadedTracksUseCase: FetchDownloadedTracks
-    @Mock private lateinit var playbackSession: PlaybackSession
-    @Mock private lateinit var navigationHelper: NavigationHelper
+    @Mock
+    private lateinit var viewMvc: TracksListViewMvc
+    @Mock
+    private lateinit var fetchDownloadedTracksUseCase: FetchDownloadedTracks
+    @Mock
+    private lateinit var playbackSession: PlaybackSession
+    @Mock
+    private lateinit var navigationHelper: NavigationHelper
     // endregion helper fields
 
     @Before
     fun setup() {
         SUT =
-            TracksListController(fetchDownloadedTracksUseCase, playbackSession, navigationHelper)
+            TracksListController(
+                fetchDownloadedTracksUseCase,
+                playbackSession,
+                EventBusTd(),
+                navigationHelper
+            )
         SUT.bindViewMvc(viewMvc)
     }
 

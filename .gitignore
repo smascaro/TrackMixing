@@ -1,31 +1,7 @@
 *.iml
 .gradle
 /local.properties
-
-# IntelliJ
-.idea/workspace.xml
-.idea/tasks.xml
-.idea/gradle.xml
-.idea/assetWizardSettings.xml
-.idea/dictionaries
-.idea/libraries
-# Android Studio in .gitignore file.
-.idea/caches
-.idea/modules.xml
-.idea/misc.xml
-.idea/deploymentTargetDropDown.xml
-.idea/compiler.xml
-.idea/jarRepositories.xml
-.idea/vcs.xml
-# Comment next line if keeping position of elements in Navigation Editor is relevant for you
-.idea/navEditor.xml
-
-.idea/markdown-navigator.xml
-.idea/markdown-navigator/
-.idea/markdown-navigator-enh.xml
-
-.idea/perl5local.xml
-.idea/perl5shared.xml
+/.idea/*
 /.idea/caches
 /.idea/libraries
 /.idea/modules.xml
@@ -33,8 +9,15 @@
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
 .DS_Store
+build/
 /build
 /captures
 .externalNativeBuild
 .cxx
-build/
+/app/release
+/app/debug
+/keys
+/design
+/app/src/main/res/values/keys.xml
+/build/lint.patch
+/report/out_dependencies.txt

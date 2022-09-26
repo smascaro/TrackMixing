@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="download_progress_delay_before_hiding_millis">1000</integer>
+    <integer name="animation_slide_in_bottom_duration">200</integer>
+    <integer name="animation_slide_out_top_duration">100</integer>
+    <integer name="item_track_expand_arrow_initial_rotation">-180</integer>
+    <integer name="item_track_expand_arrow_back_rotation">180</integer>
+    <integer name="item_track_expand_arrow_animation_duration">200</integer>
+    <integer name="seekbar_volume_max_value">100</integer>
+    <integer name="youtube_api_results_max_duration_minutes">12</integer>
+</resources>

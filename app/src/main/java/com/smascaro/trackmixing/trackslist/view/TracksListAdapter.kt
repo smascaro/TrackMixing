@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.common.data.model.Track
-import com.smascaro.trackmixing.common.utils.DaggerViewMvcFactory
+import com.smascaro.trackmixing.base.data.model.Track
+import com.smascaro.trackmixing.di.TracksListItemViewMvcFactory
 import com.smascaro.trackmixing.trackslist.view.listitem.TracksListItemViewMvc
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class TracksListAdapter @Inject constructor(
-    private val viewMvcFactory: DaggerViewMvcFactory
+    private val viewMvcFactory: TracksListItemViewMvcFactory
 ) : RecyclerView.Adapter<TracksListAdapter.ViewHolder>(), TracksListItemViewMvc.Listener {
     interface Listener {
         fun onTrackClicked(track: Track)
@@ -24,7 +24,6 @@ class TracksListAdapter @Inject constructor(
 
     private var listener: Listener? = null
 
-
     fun setOnTrackClickedListener(listener: Listener) {
         this.listener = listener
     }
@@ -34,7 +33,7 @@ class TracksListAdapter @Inject constructor(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val viewMvc = viewMvcFactory.getTracksListItemViewMvc()
+        val viewMvc = viewMvcFactory.create()
         viewMvc.bindRootView(
             LayoutInflater.from(parent.context).inflate(R.layout.item_track, parent, false)
         )
@@ -47,11 +46,11 @@ class TracksListAdapter @Inject constructor(
     private var mTracks = mutableListOf<Track>()
 
     fun List<Int>.isConsecutive(): Boolean {
-        if (this.size == 0) {
+        if (this.isEmpty()) {
             return false
         } else {
             val previous = this[0]
-            for (i in 1..this.size) {
+            for (i in 1 until this.size) {
                 val current = this[i]
                 if (current != previous + 1) {
                     return false
@@ -94,19 +93,7 @@ class TracksListAdapter @Inject constructor(
         listener?.onTrackClicked(track)
     }
 
-    override fun onExpandOrCollapseDetailsRequest(
-        itemPosition: Int
-    ) {
-//        if(expandRequest) {
-//            Animations.expandDetails(layoutToExpand)
-//        } else {
-//            Animations.collapseDetails(layoutToExpand)
-//        }
-        notifyItemChanged(itemPosition)
-    }
-
     override fun getItemCount(): Int {
         return mTracks.size
     }
-
 }

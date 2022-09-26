@@ -6,8 +6,8 @@ import android.widget.LinearLayout
 import android.widget.TextSwitcher
 import androidx.core.view.children
 import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.common.utils.ResourcesWrapper
-import com.smascaro.trackmixing.common.view.architecture.BaseViewMvc
+import com.smascaro.trackmixing.base.ui.architecture.view.BaseViewMvc
+import com.smascaro.trackmixing.base.utils.ResourcesWrapper
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -19,7 +19,6 @@ class BottomProgressViewMvcImpl @Inject constructor(resources: ResourcesWrapper)
     private var currentProgressMessage: String = ""
     private lateinit var textSwitcherProgressValue: TextSwitcher
     private lateinit var textSwitcherProgressText: TextSwitcher
-
     private val progressBarVisibleHeight =
         resources.getDimension(R.dimen.download_progress_layout_visible_height)
     private val progressBarHiddenHeight =
@@ -28,12 +27,9 @@ class BottomProgressViewMvcImpl @Inject constructor(resources: ResourcesWrapper)
         resources.getLong(R.integer.animation_slide_in_bottom_duration)
     private val outAnimationDuration = resources.getLong(R.integer.animation_slide_out_top_duration)
     private var isProgressBarVisible: Boolean = false
-    override fun bindRootView(rootView: View?) {
-        super.bindRootView(rootView)
-        initialize()
-    }
 
-    private fun initialize() {
+    override fun initialize() {
+        super.initialize()
         progressBarWrapper = findViewById(R.id.layout_progress_container)
         LayoutInflater.from(getContext())
             .inflate(R.layout.layout_download_progress, progressBarWrapper, false)
@@ -85,7 +81,6 @@ class BottomProgressViewMvcImpl @Inject constructor(resources: ResourcesWrapper)
         progressBar.visibility = View.INVISIBLE
     }
 
-
     private fun setProgressBarVisibility(visibility: Int) {
         progressBar.visibility = visibility
     }
@@ -111,5 +106,4 @@ class BottomProgressViewMvcImpl @Inject constructor(resources: ResourcesWrapper)
         setProgressBarHeight(progressBarHiddenHeight.toInt())
         setProgressBarVisibility(View.INVISIBLE)
     }
-
 }

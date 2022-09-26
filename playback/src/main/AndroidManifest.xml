@@ -1,0 +1,7 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.smascaro.trackmixing.playback">
+
+    <application>
+        <service android:name="com.smascaro.trackmixing.playback.service.MixPlayerService" />
+    </application>
+</manifest>

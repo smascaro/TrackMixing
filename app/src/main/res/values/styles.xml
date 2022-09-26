@@ -10,9 +10,29 @@
         <item name="actionBarStyle">@style/AppTheme.TM.ActionBar</item>
     </style>
 
-    <style name="AppTheme.TM.NoActionBar">
-        <item name="windowActionBar">false</item>
+    <style name="AppTheme.TM.NoActionBar" parent="AppTheme.TM">
+        <item name="windowActionBar">true</item>
+        <item name="actionBarStyle">@style/AppTheme.TM.ActionBarStyle</item>
+        <item name="windowActionBarOverlay">true</item>
+        <item name="android:actionBarStyle">@style/AppTheme.TM.ActionBarStyle</item>
+        <item name="android:windowActionBarOverlay">true</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.TM.ActionBarStyle" parent="Widget.AppCompat.ActionBar.Solid">
+        <item name="background">@color/translucent</item>
+        <item name="android:background">@color/translucent</item>
+    </style>
+
+    <style name="AppTheme.TM.NoActionBar.Fullscreen" parent="AppTheme.TM.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="AppTheme.TM.NoActionBar.TranslucentStatusBar" parent="AppTheme.TM.NoActionBar">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:statusBarColor">@color/translucent</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -20,11 +40,109 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="AppTheme.TM.ActionBar" parent="Theme.MaterialComponents.Light.DarkActionBar">
-        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:background">@color/transparent</item>
     </style>
 
     <style name="AppTheme.TM.ActionBar.TitleTextStyle" parent="@style/TextAppearance.AppCompat.Title">
         <item name="android:textColor">@color/textOnPrimary</item>¡
         <item name="android:text">@string/app_name</item>
+    </style>
+
+    <style name="AppTheme.TM.PlayerBar" />
+
+    <style name="AppTheme.TM.PlayerBar.Track" parent="AppTheme.TM.PlayerBar" />
+
+    <style name="AppTheme.TM.PlayerBar.Track.TitleTextAppearance" parent="AppTheme.TM.PlayerBar.Track">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:marqueeRepeatLimit">marquee_forever</item>
+        <item name="android:gravity">start|center_vertical</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/textOnAccent</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:text">@string/player_bottom_title</item>
+        <item name="android:textSize">8sp</item>
+    </style>
+
+    <style name="MainTrackPlayerProgressIndicatorStyle">
+        <item name="android:layout_width">1px</item>
+        <item name="android:layout_height">4dp</item>
+        <item name="android:paddingRight">@dimen/track_player_inner_padding</item>
+        <item name="android:paddingLeft">@dimen/track_player_inner_padding</item>
+        <item name="cardBackgroundColor">@color/track_player_progress_indicator_color</item>
+        <item name="contentPadding">0dp</item>
+    </style>
+
+    <style name="MainTrackPlayerTitleTextSwitcherStyle">
+        <item name="android:padding">@dimen/track_player_inner_padding</item>
+        <item name="android:textAlignment">center</item>
+        <item name="childrenTextColor">@color/textOnSecondary</item>
+        <item name="childrenTextSize">8sp</item>
+    </style>
+
+    <style name="MainTrackPlayerActionButtonStyle">
+        <item name="android:layout_marginEnd">16dp</item>
+        <item name="android:src">@drawable/ic_play</item>
+        <item name="android:contentDescription">@string/track_player_action_button_content_description</item>
+    </style>
+
+    <style name="MainTrackPlayerActionButtonBackgroundStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:alpha">0</item>
+        <item name="android:background">@drawable/circular_shape</item>
+    </style>
+
+    <style name="MainTrackPlayerDraggableAreaStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:padding">@dimen/track_player_inner_padding</item>
+    </style>
+
+    <style name="MainTrackPlayerFadersLayoutStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:alpha">0</item>
+    </style>
+
+    <style name="TrackPlayerFadersSeekBarStyle">
+        <item name="android:layout_width">@dimen/track_player_fader_width</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_alignParentTop">true</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:max">@integer/seekbar_volume_max_value</item>
+        <item name="android:maxHeight">200dp</item>
+        <item name="android:progress">@integer/seekbar_volume_max_value</item>
+        <item name="android:progressDrawable">@drawable/seekbar_volume_progress</item>
+        <item name="android:splitTrack">false</item>
+        <item name="android:thumb">@drawable/seekbar_volume_thumb</item>
+        <item name="showNumericProgress">true</item>
+        <item name="progress_position">dynamic_trespass</item>
+        <item name="trespass_mode">end</item>
+        <item name="suffixText">%</item>
+        <item name="orientation">vertical</item>
+        <item name="textSize">18sp</item>
+    </style>
+
+    <style name="TrackPlayerFadersLabel">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_marginBottom">32dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:textColor">@color/textOnPrimary</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TrackPlayerFadersProgressSeekBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">24dp</item>
+        <item name="android:layout_marginRight">24dp</item>
+        <item name="android:layout_marginTop">12dp</item>
+        <item name="android:layout_marginBottom">12dp</item>
+        <item name="android:layout_centerInParent">true</item>
     </style>
 </resources>
