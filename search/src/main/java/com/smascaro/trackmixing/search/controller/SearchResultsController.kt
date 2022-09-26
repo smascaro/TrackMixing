@@ -5,7 +5,7 @@ import com.smascaro.trackmixing.base.coroutine.MainCoroutineScope
 import com.smascaro.trackmixing.base.utils.ResourcesWrapper
 import com.smascaro.trackmixing.base.utils.navigation.BaseNavigatorController
 import com.smascaro.trackmixing.base.utils.navigation.NavigationHelper
-import com.smascaro.trackmixing.search.R
+import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.search.business.search.SearchYoutubeVideosUseCase
 import com.smascaro.trackmixing.search.model.SearchResult
 import com.smascaro.trackmixing.search.view.SearchResultsViewMvc

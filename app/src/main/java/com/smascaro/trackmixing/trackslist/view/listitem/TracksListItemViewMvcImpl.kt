@@ -17,7 +17,7 @@ class TracksListItemViewMvcImpl @Inject constructor(
 ) :
     BaseObservableViewMvc<TracksListItemViewMvc.Listener>(),
     TracksListItemViewMvc {
-    private lateinit var track: Track
+    private lateinit var track: com.smascaro.trackmixing.base.data.model.Track
     private lateinit var trackTitleTxt: TextView
     private lateinit var trackDetailsTxt: TextView
     private lateinit var trackThumbnailImg: ImageView
@@ -44,7 +44,7 @@ class TracksListItemViewMvcImpl @Inject constructor(
         }
     }
 
-    override fun bindTrack(track: Track) {
+    override fun bindTrack(track: com.smascaro.trackmixing.base.data.model.Track) {
         this.track = track
         trackTitleTxt.text = track.title
         val authorText = track.author

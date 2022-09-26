@@ -108,8 +108,8 @@ class FetchDownloadedTracksTest {
 
     // region helper classes
     class FetchDownloadedTracksUseCaseListenerImpl : FetchDownloadedTracks.Listener {
-        var lastFetchedTracks: List<Track>? = null
-        override fun onTracksFetched(tracks: List<Track>) {
+        var lastFetchedTracks: List<com.smascaro.trackmixing.base.data.model.Track>? = null
+        override fun onTracksFetched(tracks: List<com.smascaro.trackmixing.base.data.model.Track>) {
             lastFetchedTracks = tracks
         }
     }

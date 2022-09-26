@@ -3,11 +3,11 @@ package com.smascaro.trackmixing.search.view.resultitem
 import android.widget.ImageView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.google.android.material.textview.MaterialTextView
+
 import com.smascaro.trackmixing.base.time.TimeHelper
 import com.smascaro.trackmixing.base.ui.architecture.view.BaseObservableViewMvc
 import com.smascaro.trackmixing.base.utils.ResourcesWrapper
-import com.smascaro.trackmixing.search.R
+import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.search.model.SearchResult
 
 class SearchResultsItemViewMvcImpl(
@@ -19,8 +19,8 @@ class SearchResultsItemViewMvcImpl(
     private lateinit var searchResult: SearchResult
     private var position: Int = -1
     private lateinit var searchResultThumbnailImageView: ImageView
-    private lateinit var searchResultTitleTextView: MaterialTextView
-    private lateinit var searchResultDetailsTextView: MaterialTextView
+    private lateinit var searchResultTitleTextView: TextView
+    private lateinit var searchResultDetailsTextView: TextView
 
     override fun initialize() {
         super.initialize()

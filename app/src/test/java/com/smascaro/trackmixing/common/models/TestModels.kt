@@ -5,8 +5,8 @@ import com.smascaro.trackmixing.base.data.model.Track
 
 class TestModels {
     companion object {
-        fun getTrack(): Track {
-            return Track(
+        fun getTrack(): com.smascaro.trackmixing.base.data.model.Track {
+            return com.smascaro.trackmixing.base.data.model.Track(
                 TRACK_TITLE,
                 TRACK_AUTHOR,
                 TRACK_VIDEO_KEY,
@@ -17,8 +17,8 @@ class TestModels {
             )
         }
 
-        fun getDownloadEntity(): DownloadEntity {
-            return DownloadEntity(
+        fun getDownloadEntity(): com.smascaro.trackmixing.base.data.model.DownloadEntity {
+            return com.smascaro.trackmixing.base.data.model.DownloadEntity(
                 DOWNLOAD_ENTITY_1_ID,
                 DOWNLOAD_ENTITY_1_VIDEO_KEY,
                 DOWNLOAD_ENTITY_1_QUALITY,
@@ -32,9 +32,9 @@ class TestModels {
             )
         }
 
-        fun getDownloadEntityList(): List<DownloadEntity> {
+        fun getDownloadEntityList(): List<com.smascaro.trackmixing.base.data.model.DownloadEntity> {
             return listOf(
-                DownloadEntity(
+                com.smascaro.trackmixing.base.data.model.DownloadEntity(
                     DOWNLOAD_ENTITY_1_ID,
                     DOWNLOAD_ENTITY_1_VIDEO_KEY,
                     DOWNLOAD_ENTITY_1_QUALITY,
@@ -46,7 +46,7 @@ class TestModels {
                     DOWNLOAD_ENTITY_1_STATUS,
                     DOWNLOAD_ENTITY_1_SECONDS_LONG
                 ),
-                DownloadEntity(
+                com.smascaro.trackmixing.base.data.model.DownloadEntity(
                     DOWNLOAD_ENTITY_2_ID,
                     DOWNLOAD_ENTITY_2_VIDEO_KEY,
                     DOWNLOAD_ENTITY_2_QUALITY,
@@ -58,7 +58,7 @@ class TestModels {
                     DOWNLOAD_ENTITY_2_STATUS,
                     DOWNLOAD_ENTITY_2_SECONDS_LONG
                 ),
-                DownloadEntity(
+                com.smascaro.trackmixing.base.data.model.DownloadEntity(
                     DOWNLOAD_ENTITY_3_ID,
                     DOWNLOAD_ENTITY_3_VIDEO_KEY,
                     DOWNLOAD_ENTITY_3_QUALITY,
@@ -70,7 +70,7 @@ class TestModels {
                     DOWNLOAD_ENTITY_3_STATUS,
                     DOWNLOAD_ENTITY_3_SECONDS_LONG
                 ),
-                DownloadEntity(
+                com.smascaro.trackmixing.base.data.model.DownloadEntity(
                     DOWNLOAD_ENTITY_4_ID,
                     DOWNLOAD_ENTITY_4_VIDEO_KEY,
                     DOWNLOAD_ENTITY_4_QUALITY,

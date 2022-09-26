@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.transition.MaterialSharedAxis
 import com.smascaro.trackmixing.base.ui.BaseFragment
-import com.smascaro.trackmixing.search.R
+import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.search.controller.SearchResultsController
 import com.smascaro.trackmixing.search.di.component.SearchComponentProvider
 import javax.inject.Inject

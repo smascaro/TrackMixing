@@ -6,15 +6,16 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextSwitcher
+import android.widget.TextView
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.view.children
-import com.google.android.material.textview.MaterialTextView
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.base.time.Seconds
 import com.smascaro.trackmixing.base.time.TimeHelper
 import com.smascaro.trackmixing.base.ui.architecture.view.BaseObservableViewMvc
 import com.smascaro.trackmixing.base.ui.widget.PivotableSeekbar
 import com.smascaro.trackmixing.base.utils.ResourcesWrapper
+import com.smascaro.trackmixing.playback.model.TrackInstrument
 import com.smascaro.trackmixing.playback.model.TrackVolumeBundle
 import com.smascaro.trackmixing.playback.service.MixPlayerServiceChecker
 import com.smascaro.trackmixing.playback.utils.state.PlaybackStateManager
@@ -49,8 +50,8 @@ class TrackPlayerViewMvcImpl @Inject constructor(
     private lateinit var bottomBarTextSwitcher: TextSwitcher
     private lateinit var bottomBarActionButton: ImageView
     private lateinit var timestampProgressIndicatorView: View
-    private lateinit var currentTimestampTextView: MaterialTextView
-    private lateinit var totalLengthTextView: MaterialTextView
+    private lateinit var currentTimestampTextView: TextView
+    private lateinit var totalLengthTextView: TextView
     private lateinit var songProgressSeekbar: SeekBar
 
     //SeekBars
@@ -119,10 +120,10 @@ class TrackPlayerViewMvcImpl @Inject constructor(
             }
         }
 
-        vocalsVolumeSeekbar.setOnSeekBarChangeListener(makeSeekbarChangeListenerFor(com.smascaro.trackmixing.playback.model.TrackInstrument.VOCALS))
-        otherVolumeSeekbar.setOnSeekBarChangeListener(makeSeekbarChangeListenerFor(com.smascaro.trackmixing.playback.model.TrackInstrument.OTHER))
-        bassVolumeSeekbar.setOnSeekBarChangeListener(makeSeekbarChangeListenerFor(com.smascaro.trackmixing.playback.model.TrackInstrument.BASS))
-        drumsVolumeSeekbar.setOnSeekBarChangeListener(makeSeekbarChangeListenerFor(com.smascaro.trackmixing.playback.model.TrackInstrument.DRUMS))
+        vocalsVolumeSeekbar.setOnSeekBarChangeListener(makeSeekbarChangeListenerFor(TrackInstrument.VOCALS))
+        otherVolumeSeekbar.setOnSeekBarChangeListener(makeSeekbarChangeListenerFor(TrackInstrument.OTHER))
+        bassVolumeSeekbar.setOnSeekBarChangeListener(makeSeekbarChangeListenerFor(TrackInstrument.BASS))
+        drumsVolumeSeekbar.setOnSeekBarChangeListener(makeSeekbarChangeListenerFor(TrackInstrument.DRUMS))
 
         initializeMotionLayoutListener()
 
@@ -194,7 +195,7 @@ class TrackPlayerViewMvcImpl @Inject constructor(
         songProgressSeekbar.setOnSeekBarChangeListener(progressChangeListener)
     }
 
-    private fun makeSeekbarChangeListenerFor(trackInstrument: com.smascaro.trackmixing.playback.model.TrackInstrument): TrackMixerSeekBarChangeListener {
+    private fun makeSeekbarChangeListenerFor(trackInstrument: TrackInstrument): TrackMixerSeekBarChangeListener {
         return TrackMixerSeekBarChangeListener { progress ->
             getListeners().forEach { listener ->
                 listener.onTrackVolumeChanged(trackInstrument, progress)

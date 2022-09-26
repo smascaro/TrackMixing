@@ -34,7 +34,7 @@ class TracksListViewMvcImpl @Inject constructor(
         mRecyclerViewTracks.adapter = this.tracksListAdapter
     }
 
-    override fun bindTracks(tracks: List<Track>) {
+    override fun bindTracks(tracks: List<com.smascaro.trackmixing.base.data.model.Track>) {
         this.tracksListAdapter.bindTracks(tracks)
     }
 
@@ -42,7 +42,7 @@ class TracksListViewMvcImpl @Inject constructor(
         tracksListAdapter.notifyDataSetChanged()
     }
 
-    override fun onTrackClicked(track: Track) {
+    override fun onTrackClicked(track: com.smascaro.trackmixing.base.data.model.Track) {
         getListeners().forEach {
             it.onTrackClicked(track)
         }

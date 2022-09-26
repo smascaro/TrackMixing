@@ -6,6 +6,8 @@ import com.smascaro.trackmixing.base.coroutine.MainCoroutineScope
 import com.smascaro.trackmixing.base.data.model.Track
 import com.smascaro.trackmixing.base.time.asSeconds
 import com.smascaro.trackmixing.base.ui.architecture.controller.BaseController
+import com.smascaro.trackmixing.playback.model.TimestampChangedEvent
+import com.smascaro.trackmixing.playback.model.TrackInstrument
 import com.smascaro.trackmixing.playback.service.MixPlayerService
 import com.smascaro.trackmixing.playback.utils.media.PlaybackSession
 import com.smascaro.trackmixing.playback.utils.state.PlaybackStateManager
@@ -22,11 +24,11 @@ import javax.inject.Inject
 class TrackPlayerController @Inject constructor(
     private val eventBus: EventBus,
     private val playbackSession: PlaybackSession,
-    private val ui: MainCoroutineScope,
-    private val io: IoCoroutineScope
+    private val ui: com.smascaro.trackmixing.base.coroutine.MainCoroutineScope,
+    private val io: com.smascaro.trackmixing.base.coroutine.IoCoroutineScope
 ) : BaseController<TrackPlayerViewMvc>(),
     TrackPlayerViewMvc.Listener {
-    private var currentTrack: Track? = null
+    private var currentTrack: com.smascaro.trackmixing.base.data.model.Track? = null
     private var currentState: PlaybackStateManager.PlaybackState? = null
     private var openPlayerIntentRequested: Boolean = false
     fun onCreate() {
@@ -112,14 +114,14 @@ class TrackPlayerController @Inject constructor(
     }
 
     override fun onTrackVolumeChanged(
-        trackInstrument: com.smascaro.trackmixing.playback.model.TrackInstrument,
+        trackInstrument: TrackInstrument,
         volume: Int
     ) {
         playbackSession.setTrackVolume(trackInstrument, volume)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: com.smascaro.trackmixing.playback.model.TimestampChangedEvent) =
+    fun onMessageEvent(event: TimestampChangedEvent) =
         handleTimestampChanged(event.newTimestamp.value.toInt(), event.totalLength.value.toInt())
 
     private fun handleTimestampChanged(newTimestamp: Int, totalLength: Int) {

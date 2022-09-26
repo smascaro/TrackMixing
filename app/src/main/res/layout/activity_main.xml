@@ -63,9 +63,9 @@ t
         app:layout_constraintStart_toStartOf="@id/layout_player"
         app:layout_constraintTop_toTopOf="@id/layout_player">
 
-        <com.google.android.material.textview.MaterialTextView style="@style/AppTheme.TM.PlayerBar.Track.TitleTextAppearance" />
+        <TextView style="@style/AppTheme.TM.PlayerBar.Track.TitleTextAppearance" />
 
-        <com.google.android.material.textview.MaterialTextView style="@style/AppTheme.TM.PlayerBar.Track.TitleTextAppearance" />
+        <TextView style="@style/AppTheme.TM.PlayerBar.Track.TitleTextAppearance" />
     </com.smascaro.trackmixing.base.ui.widget.InheritingTextSwitcher>
 
     <ImageView

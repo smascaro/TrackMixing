@@ -2,6 +2,7 @@ package com.smascaro.trackmixing.main.components.bottomplayer.view
 
 import com.bumptech.glide.RequestManager
 import com.smascaro.trackmixing.base.utils.ResourcesWrapper
+import com.smascaro.trackmixing.playback.model.TrackInstrument
 import com.smascaro.trackmixing.playback.service.MixPlayerServiceChecker
 import com.smascaro.trackmixing.player.view.TrackPlayerViewMvc
 import com.smascaro.trackmixing.player.view.TrackPlayerViewMvcImpl
@@ -122,7 +123,7 @@ class TrackPlayerViewMvcImplTest {
             TODO("Not yet implemented")
         }
 
-        override fun onTrackVolumeChanged(trackInstrument: com.smascaro.trackmixing.playback.model.TrackInstrument, volume: Int) {
+        override fun onTrackVolumeChanged(trackInstrument: TrackInstrument, volume: Int) {
             TODO("Not yet implemented")
         }
     }

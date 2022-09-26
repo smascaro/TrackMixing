@@ -9,6 +9,7 @@ import com.smascaro.trackmixing.common.models.DOWNLOAD_ENTITY_1_TITLE
 import com.smascaro.trackmixing.common.models.TRACK_VIDEO_KEY
 import com.smascaro.trackmixing.common.models.TestModels
 import com.smascaro.trackmixing.common.testdoubles.EventBusTd
+import com.smascaro.trackmixing.playback.model.TimestampChangedEvent
 import com.smascaro.trackmixing.playback.model.TrackVolumeBundle
 import com.smascaro.trackmixing.playback.utils.media.PlaybackSession
 import com.smascaro.trackmixing.playback.utils.state.PlaybackStateManager
@@ -230,7 +231,7 @@ class TrackPlayerControllerTest {
     @Test
     fun onTimestampChangedEvent_timestampIsUpdatedInView() {
         // Arrange
-        val event = com.smascaro.trackmixing.playback.model.TimestampChangedEvent(120, 240)
+        val event = TimestampChangedEvent(120, 240)
         // Act
         SUT.onMessageEvent(event)
         // Assert
@@ -264,18 +265,18 @@ class TrackPlayerControllerTest {
     // region helper classes
     class TracksRepositoryTd : TracksRepository {
         val entity = TestModels.getDownloadEntity()
-        override suspend fun get(videoId: String): DownloadEntity {
+        override suspend fun get(videoId: String): com.smascaro.trackmixing.base.data.model.DownloadEntity {
             return entity
         }
 
-        override suspend fun getAll(): List<DownloadEntity> {
+        override suspend fun getAll(): List<com.smascaro.trackmixing.base.data.model.DownloadEntity> {
             TODO()
         }
 
-        override suspend fun update(entity: DownloadEntity) {
+        override suspend fun update(entity: com.smascaro.trackmixing.base.data.model.DownloadEntity) {
         }
 
-        override suspend fun insert(entity: DownloadEntity): Long {
+        override suspend fun insert(entity: com.smascaro.trackmixing.base.data.model.DownloadEntity): Long {
             TODO()
         }
 

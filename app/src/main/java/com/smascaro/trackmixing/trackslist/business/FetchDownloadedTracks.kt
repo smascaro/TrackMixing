@@ -13,7 +13,7 @@ class FetchDownloadedTracks @Inject constructor(
 ) :
     BaseObservable<FetchDownloadedTracks.Listener>() {
     interface Listener {
-        fun onTracksFetched(tracks: List<Track>)
+        fun onTracksFetched(tracks: List<com.smascaro.trackmixing.base.data.model.Track>)
     }
 
     enum class Sort {

@@ -6,9 +6,9 @@ import com.smascaro.trackmixing.base.ui.architecture.view.ObservableViewMvc
 interface TracksListItemViewMvc :
     ObservableViewMvc<TracksListItemViewMvc.Listener> {
     interface Listener {
-        fun onTrackClicked(track: Track)
+        fun onTrackClicked(track: com.smascaro.trackmixing.base.data.model.Track)
     }
 
-    fun bindTrack(track: Track)
+    fun bindTrack(track: com.smascaro.trackmixing.base.data.model.Track)
     fun bindPosition(position: Int)
 }

@@ -2,6 +2,7 @@ package com.smascaro.trackmixing.player.view
 
 import com.smascaro.trackmixing.base.time.Seconds
 import com.smascaro.trackmixing.base.ui.architecture.view.ObservableViewMvc
+import com.smascaro.trackmixing.playback.model.TrackInstrument
 import com.smascaro.trackmixing.playback.model.TrackVolumeBundle
 import com.smascaro.trackmixing.player.model.TrackPlayerData
 
@@ -15,7 +16,7 @@ interface TrackPlayerViewMvc :
         fun onPlayerSwipedOut()
         fun onSeekRequestEvent(progress: Int)
         fun onTrackVolumeChanged(
-            trackInstrument: com.smascaro.trackmixing.playback.model.TrackInstrument,
+            trackInstrument: TrackInstrument,
             volume: Int
         )
     }

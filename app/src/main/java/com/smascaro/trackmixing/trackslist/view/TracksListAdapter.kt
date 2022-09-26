@@ -16,7 +16,7 @@ class TracksListAdapter @Inject constructor(
     private val viewMvcFactory: TracksListItemViewMvcFactory
 ) : RecyclerView.Adapter<TracksListAdapter.ViewHolder>(), TracksListItemViewMvc.Listener {
     interface Listener {
-        fun onTrackClicked(track: Track)
+        fun onTrackClicked(track: com.smascaro.trackmixing.base.data.model.Track)
     }
 
     class ViewHolder(val mViewMvc: TracksListItemViewMvc) :
@@ -43,7 +43,7 @@ class TracksListAdapter @Inject constructor(
         )
     }
 
-    private var mTracks = mutableListOf<Track>()
+    private var mTracks = mutableListOf<com.smascaro.trackmixing.base.data.model.Track>()
 
     fun List<Int>.isConsecutive(): Boolean {
         if (this.isEmpty()) {
@@ -60,7 +60,7 @@ class TracksListAdapter @Inject constructor(
         }
     }
 
-    fun bindTracks(tracks: List<Track>) {
+    fun bindTracks(tracks: List<com.smascaro.trackmixing.base.data.model.Track>) {
         val insertedIndexes = findInsertedItems(tracks).sorted()
         mTracks = tracks.toMutableList()
         CoroutineScope(Dispatchers.Main).launch {
@@ -74,7 +74,7 @@ class TracksListAdapter @Inject constructor(
         }
     }
 
-    private fun findInsertedItems(newTracks: List<Track>): List<Int> {
+    private fun findInsertedItems(newTracks: List<com.smascaro.trackmixing.base.data.model.Track>): List<Int> {
         val newIndexes = mutableListOf<Int>()
         newTracks.forEachIndexed { index, track ->
             if (!mTracks.any { it.videoKey == track.videoKey }) {
@@ -89,7 +89,7 @@ class TracksListAdapter @Inject constructor(
         holder.mViewMvc.bindPosition(holder.adapterPosition)
     }
 
-    override fun onTrackClicked(track: Track) {
+    override fun onTrackClicked(track: com.smascaro.trackmixing.base.data.model.Track) {
         listener?.onTrackClicked(track)
     }
 

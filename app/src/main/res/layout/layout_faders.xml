@@ -22,7 +22,7 @@
                 style="@style/TrackPlayerFadersSeekBarStyle"
                 android:layout_alignBottom="@id/tv_track_player_vocals" />
 
-            <com.google.android.material.textview.MaterialTextView
+            <TextView
                 android:id="@+id/tv_track_player_vocals"
                 style="@style/TrackPlayerFadersLabel"
                 android:text="@string/track_player_faders_vocals_label" />
@@ -38,7 +38,7 @@
                 style="@style/TrackPlayerFadersSeekBarStyle"
                 android:layout_alignBottom="@id/tv_track_player_other" />
 
-            <com.google.android.material.textview.MaterialTextView
+            <TextView
                 android:id="@+id/tv_track_player_other"
                 style="@style/TrackPlayerFadersLabel"
                 android:text="@string/track_player_faders_other_label" />
@@ -54,7 +54,7 @@
                 style="@style/TrackPlayerFadersSeekBarStyle"
                 android:layout_alignBottom="@id/tv_track_player_bass" />
 
-            <com.google.android.material.textview.MaterialTextView
+            <TextView
                 android:id="@+id/tv_track_player_bass"
                 style="@style/TrackPlayerFadersLabel"
                 android:text="@string/track_player_faders_bass_label" />
@@ -70,7 +70,7 @@
                 style="@style/TrackPlayerFadersSeekBarStyle"
                 android:layout_alignBottom="@id/tv_track_player_drums" />
 
-            <com.google.android.material.textview.MaterialTextView
+            <TextView
                 android:id="@+id/tv_track_player_drums"
                 style="@style/TrackPlayerFadersLabel"
                 android:text="@string/track_player_faders_drums_label" />
@@ -88,7 +88,7 @@
             android:id="@+id/sb_track_player_timestamp"
             style="@style/TrackPlayerFadersProgressSeekBar" />
 
-        <com.google.android.material.textview.MaterialTextView
+        <TextView
             android:id="@+id/tv_track_player_current_timestamp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -96,7 +96,7 @@
             android:layout_alignStart="@id/sb_track_player_timestamp"
             android:text="@string/track_player_progress_current_timestamp_default_text" />
 
-        <com.google.android.material.textview.MaterialTextView
+        <TextView
             android:id="@+id/tv_track_player_length"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

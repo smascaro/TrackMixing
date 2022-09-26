@@ -19,7 +19,7 @@ class TracksListController @Inject constructor(
     private val mFetchDownloadedTracks: FetchDownloadedTracks,
     private val playbackSession: PlaybackSession,
     private val eventBus: EventBus,
-    private val io: IoCoroutineScope,
+    private val io: com.smascaro.trackmixing.base.coroutine.IoCoroutineScope,
     navigationHelper: NavigationHelper
 ) : BaseNavigatorController<TracksListViewMvc>(navigationHelper),
     TracksListViewMvc.Listener,
@@ -65,11 +65,11 @@ class TracksListController @Inject constructor(
         mFetchDownloadedTracks.unregisterListener(this)
     }
 
-    override fun onTrackClicked(track: Track) {
+    override fun onTrackClicked(track: com.smascaro.trackmixing.base.data.model.Track) {
         playbackSession.startPlayback(track)
     }
 
-    override fun onTracksFetched(tracks: List<Track>) {
+    override fun onTracksFetched(tracks: List<com.smascaro.trackmixing.base.data.model.Track>) {
         viewMvc.bindTracks(tracks)
     }
 

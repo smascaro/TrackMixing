@@ -4,7 +4,7 @@ import android.content.Context
 import com.smascaro.trackmixing.base.di.MainScope
 import com.smascaro.trackmixing.base.di.component.BaseComponent
 import com.smascaro.trackmixing.main.view.MainActivity
-import com.smascaro.trackmixing.playback.di.component.PlaybackComponent
+import com.smascaro.trackmixing.di.component.PlaybackComponent
 import com.smascaro.trackmixing.trackslist.view.TracksListFragment
 import dagger.BindsInstance
 import dagger.Component

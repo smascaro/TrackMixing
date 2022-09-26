@@ -12,8 +12,8 @@ import javax.inject.Inject
 
 class MainActivityController @Inject constructor(
     private val playbackSession: PlaybackSession,
-    private val ui: MainCoroutineScope,
-    private val io: IoCoroutineScope
+    private val ui: com.smascaro.trackmixing.base.coroutine.MainCoroutineScope,
+    private val io: com.smascaro.trackmixing.base.coroutine.IoCoroutineScope
 ) :
     BaseController<MainActivityViewMvc>(), MainActivityViewMvc.Listener {
     fun onStart() {

@@ -3,7 +3,7 @@ package com.smascaro.trackmixing.search.view
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.smascaro.trackmixing.search.R
+import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.search.di.SearchResultItemViewMvcFactory
 import com.smascaro.trackmixing.search.model.SearchResult
 import com.smascaro.trackmixing.search.view.resultitem.SearchResultsItemViewMvc
