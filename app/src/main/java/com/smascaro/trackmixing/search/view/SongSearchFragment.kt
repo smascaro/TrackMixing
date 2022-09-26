@@ -7,31 +7,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.EditText
 import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.transition.MaterialSharedAxis
-import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.base.ui.BaseFragment
 import com.smascaro.trackmixing.base.ui.getSearchComponent
 import com.smascaro.trackmixing.base.utils.KeyboardUtils
+import com.smascaro.trackmixing.databinding.FragmentSongSearchBinding
 import com.smascaro.trackmixing.di.component.SearchComponentProvider
 import com.smascaro.trackmixing.search.business.download.TrackDownloadService
+import com.smascaro.trackmixing.utilities.nullifyOnDestroy
 
 class SongSearchFragment : BaseFragment() {
+    private var binding: FragmentSongSearchBinding by nullifyOnDestroy()
+
     private val viewModel: SearchViewModel by viewModels {
         getSearchComponent().viewModelsFactory()
     }
-
-    private lateinit var searchInput: EditText
-    private lateinit var clearInputButton: View
-    private lateinit var resultsRecyclerView: RecyclerView
-    private lateinit var backButton: View
-    private lateinit var shimmerContainer: ShimmerFrameLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,21 +45,22 @@ class SongSearchFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         super.onCreateView(inflater, container, savedInstanceState)
-        return inflater.inflate(R.layout.fragment_song_search, container, false)
+        binding = FragmentSongSearchBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initializeViews(view)
+        initializeBindings()
         setupObservers()
     }
 
     private fun setupObservers() {
         viewModel.searchResult.observe(viewLifecycleOwner) { searchResults ->
             clearKeyboard()
-            (resultsRecyclerView.adapter as? SearchResultsAdapter)?.bindResults(searchResults)
+            (binding.rvSearchResults.adapter as? SearchResultsAdapter)?.bindResults(searchResults)
         }
         viewModel.onError.observe(viewLifecycleOwner) {
             clearKeyboard()
@@ -77,22 +72,16 @@ class SongSearchFragment : BaseFragment() {
         }
         viewModel.onProgress.observe(viewLifecycleOwner) { progress ->
             if (progress) {
-                shimmerContainer.visibility = View.VISIBLE
-                shimmerContainer.startShimmer()
+                binding.shimmerContainer.visibility = View.VISIBLE
+                binding.shimmerContainer.startShimmer()
             } else {
-                shimmerContainer.visibility = View.GONE
-                shimmerContainer.stopShimmer()
+                binding.shimmerContainer.visibility = View.GONE
+                binding.shimmerContainer.stopShimmer()
             }
         }
     }
 
-    private fun initializeViews(fragment: View) {
-        resultsRecyclerView = fragment.findViewById(R.id.rv_search_results)
-        searchInput = fragment.findViewById(R.id.et_toolbar_search_input)
-        clearInputButton = fragment.findViewById(R.id.iv_toolbar_search_clear)
-        backButton = fragment.findViewById(R.id.iv_toolbar_back_button)
-        shimmerContainer = fragment.findViewById(R.id.shimmer_container)
-
+    private fun initializeBindings() {
         initializeBackButton()
         initializeSearchInput()
         initializeRecyclerView()
@@ -101,22 +90,22 @@ class SongSearchFragment : BaseFragment() {
     }
 
     private fun initializeBackButton() {
-        backButton.setOnClickListener {
+        binding.ivToolbarBackButton.setOnClickListener {
             navigationHelper.back()
         }
     }
 
     private fun initializeSearchInput() {
-        clearInputButton.setOnClickListener {
-            searchInput.setText("")
+        binding.ivToolbarSearchClear.setOnClickListener {
+            binding.etToolbarSearchInput.setText("")
         }
-        searchInput.setOnEditorActionListener { _, actionId, event ->
+        binding.etToolbarSearchInput.setOnEditorActionListener { _, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 onSearchClicked()
                 true
             } else false
         }
-        searchInput.doOnTextChanged { text, _, _, _ ->
+        binding.etToolbarSearchInput.doOnTextChanged { text, _, _, _ ->
             text?.let {
                 handleQueryTextChange(it.toString())
             }
@@ -124,16 +113,16 @@ class SongSearchFragment : BaseFragment() {
     }
 
     private fun handleQueryTextChange(it: String) {
-        if (it.isNotEmpty() && clearInputButton.visibility != View.VISIBLE) {
-            clearInputButton.visibility = View.VISIBLE
-        } else if (it.isEmpty() && clearInputButton.visibility == View.VISIBLE) {
-            clearInputButton.visibility = View.INVISIBLE
+        if (it.isNotEmpty() && binding.ivToolbarSearchClear.visibility != View.VISIBLE) {
+            binding.ivToolbarSearchClear.visibility = View.VISIBLE
+        } else if (it.isEmpty() && binding.ivToolbarSearchClear.visibility == View.VISIBLE) {
+            binding.ivToolbarSearchClear.visibility = View.INVISIBLE
         }
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initializeRecyclerView() {
-        resultsRecyclerView.layoutManager = LinearLayoutManager(getContext())
+        binding.rvSearchResults.layoutManager = LinearLayoutManager(getContext())
         val adapter = SearchResultsAdapter()
         adapter.setOnSearchResultClickedListener { searchResult ->
             clearKeyboard()
@@ -141,17 +130,17 @@ class SongSearchFragment : BaseFragment() {
             TrackDownloadService.start(requireContext(), "https://youtu.be/${searchResult.videoId}")
             navigationHelper.back()
         }
-        resultsRecyclerView.adapter = adapter
+        binding.rvSearchResults.adapter = adapter
 
-        resultsRecyclerView.setOnTouchListener { _, _ ->
+        binding.rvSearchResults.setOnTouchListener { _, _ ->
             clearKeyboard()
             return@setOnTouchListener false
         }
     }
 
     private fun clearKeyboard() {
-        searchInput.clearFocus()
-        KeyboardUtils.hide(searchInput)
+        binding.etToolbarSearchInput.clearFocus()
+        KeyboardUtils.hide(binding)
     }
 
     private fun showMessage(message: String) {
@@ -159,10 +148,10 @@ class SongSearchFragment : BaseFragment() {
     }
 
     private fun focusSearchInput() {
-        KeyboardUtils.show(searchInput)
+        KeyboardUtils.show(binding)
     }
 
     private fun onSearchClicked() {
-        viewModel.search(searchInput.text.toString())
+        viewModel.search(binding.etToolbarSearchInput.text.toString())
     }
 }
