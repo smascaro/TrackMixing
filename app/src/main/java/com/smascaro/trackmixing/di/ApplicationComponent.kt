@@ -2,15 +2,14 @@ package com.smascaro.trackmixing.di
 
 import android.content.Context
 import com.smascaro.trackmixing.TrackMixingApplication
-import com.smascaro.trackmixing.di.module.ViewModelFactoryModule
 import com.smascaro.trackmixing.di.module.CoroutineScopesModule
 import com.smascaro.trackmixing.di.module.EventBusModule
 import com.smascaro.trackmixing.di.module.GlideModule
-import com.smascaro.trackmixing.di.module.network.NetworkModule
+import com.smascaro.trackmixing.di.module.PlaybackModule
 import com.smascaro.trackmixing.di.module.RepositoryModule
 import com.smascaro.trackmixing.di.module.UtilsModule
-import com.smascaro.trackmixing.di.module.PlaybackModule
-import com.smascaro.trackmixing.di.settings.SettingsModule
+import com.smascaro.trackmixing.di.module.ViewModelFactoryModule
+import com.smascaro.trackmixing.di.module.network.NetworkModule
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
@@ -32,7 +31,6 @@ import javax.inject.Singleton
         UtilsModule::class,
         PlaybackModule::class,
         PlaybackModule.Bindings::class,
-        SettingsModule.Bindings::class,
     ]
 )
 interface ApplicationComponent : AndroidInjector<TrackMixingApplication> {
