@@ -5,25 +5,30 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.navArgs
+import androidx.lifecycle.ViewModelProvider
 import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.di.component.SettingsComponentProvider
+import com.smascaro.trackmixing.di.ViewModelProviderFactory
+import com.smascaro.trackmixing.base.ui.BaseFragment
+import com.smascaro.trackmixing.settings.testdata.selection.view.TestDataViewModel
 import com.smascaro.trackmixing.settingsOld.testdata.download.controller.DownloadTestDataController
 import com.smascaro.trackmixing.settingsOld.testdata.download.view.DownloadTestDataViewMvc
 import javax.inject.Inject
 
-class DownloadTestDataFragment : Fragment(), DownloadTestDataController.Listener,
+class DownloadTestDataFragment : BaseFragment(), DownloadTestDataController.Listener,
     DownloadTestDataActivity.BackPressedListener {
+
+    @Inject
+    lateinit var providerFactory: ViewModelProviderFactory
+
+    private lateinit var viewModel: TestDataViewModel
+
     @Inject
     lateinit var controller: DownloadTestDataController
     @Inject
     lateinit var viewMvc: DownloadTestDataViewMvc
-    private val arguments: DownloadTestDataFragmentArgs by navArgs()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        (requireActivity().application as com.smascaro.trackmixing.di.component.SettingsComponentProvider).provideSettingsComponent().inject(this)
         (activity as DownloadTestDataActivity).setOnBackPressedListener(this)
     }
 
@@ -34,9 +39,21 @@ class DownloadTestDataFragment : Fragment(), DownloadTestDataController.Listener
     ): View? {
         viewMvc.bindRootView(inflater.inflate(R.layout.fragment_download_test_data, null, false))
         controller.bindViewMvc(viewMvc)
-        controller.bindTracksToDownload(arguments.dataToDownload)
         controller.onCreate()
         return viewMvc.getRootView()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(requireActivity().viewModelStore, providerFactory)[TestDataViewModel::class.java]
+
+        setupObservers()
+    }
+
+    private fun setupObservers() {
+        viewModel.tracksToDownload.observe(viewLifecycleOwner){
+            controller.bindTracksToDownload(it.toTypedArray())
+        }
     }
 
     override fun onStart() {

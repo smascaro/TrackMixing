@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import com.smascaro.trackmixing.base.ui.BaseActivity
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.settings.controller.SettingsActivityController
-import com.smascaro.trackmixing.di.component.SettingsComponentProvider
 import javax.inject.Inject
 
 class SettingsActivity : BaseActivity() {
@@ -15,7 +14,6 @@ class SettingsActivity : BaseActivity() {
     lateinit var controller: SettingsActivityController
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        (application as com.smascaro.trackmixing.di.component.SettingsComponentProvider).provideSettingsComponent().inject(this)
         super.onCreate(savedInstanceState)
         val rootView = LayoutInflater.from(this).inflate(R.layout.activity_settings, null, false)
         viewMvc.bindRootView(rootView)

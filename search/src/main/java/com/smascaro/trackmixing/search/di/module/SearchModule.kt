@@ -13,7 +13,6 @@ import dagger.Provides
 
 @Module
 class SearchModule {
-    @MainScope
     @Provides
     @DownloadNotificationHelperImplementation
     fun provideDownloadNotificationHelper(context: Context): NotificationHelper {
@@ -22,7 +21,6 @@ class SearchModule {
 
     @Module
     interface Bindings {
-        @MainScope
         @Binds
         fun provideSearchResultsViewMvc(searchResultsViewMvcImpl: SearchResultsViewMvcImpl): SearchResultsViewMvc
     }

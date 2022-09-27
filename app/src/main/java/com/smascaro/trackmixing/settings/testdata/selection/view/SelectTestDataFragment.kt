@@ -6,25 +6,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.smascaro.trackmixing.R
+import com.smascaro.trackmixing.di.ViewModelProviderFactory
 import com.smascaro.trackmixing.base.ui.BaseFragment
-import com.smascaro.trackmixing.base.ui.getSettingsComponent
 import com.smascaro.trackmixing.base.utils.asGB
 import com.smascaro.trackmixing.base.utils.asKB
 import com.smascaro.trackmixing.base.utils.asMB
 import com.smascaro.trackmixing.databinding.FragmentSelectTestDataBinding
 import com.smascaro.trackmixing.settings.testdata.selection.view.SelectTestDataFragmentDirections.Companion.actionDestinationSelectTestDataToDownloadTestDataFragment
 import com.smascaro.trackmixing.utilities.nullifyOnDestroy
+import javax.inject.Inject
 
 class SelectTestDataFragment : BaseFragment() {
     private var binding: FragmentSelectTestDataBinding by nullifyOnDestroy()
 
-    private val viewModel: TestDataViewModel by viewModels {
-        getSettingsComponent().viewModelFactory()
-    }
+    @Inject
+    lateinit var providerFactory: ViewModelProviderFactory
+
+    private lateinit var viewModel: TestDataViewModel
 
     private var defaultMaterialTextColor: Int = 0
 
@@ -39,6 +41,9 @@ class SelectTestDataFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel = ViewModelProvider(requireActivity().viewModelStore, providerFactory)[TestDataViewModel::class.java]
+
         initializeBindings()
         setupObservers()
     }
@@ -68,7 +73,7 @@ class SelectTestDataFragment : BaseFragment() {
         viewModel.bytesToBeDownloaded.observe(viewLifecycleOwner, ::updateSizeToDownload)
         viewModel.availableBytes.observe(viewLifecycleOwner, ::updateAvailableBytes)
         viewModel.onNavigateToDownload.observe(viewLifecycleOwner) {
-            navigationHelper.navigate(actionDestinationSelectTestDataToDownloadTestDataFragment(it.toTypedArray()))
+            navigationHelper.navigate(actionDestinationSelectTestDataToDownloadTestDataFragment())
         }
     }
 

@@ -2,6 +2,7 @@ package com.smascaro.trackmixing.settings.testdata.selection.view
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.smascaro.trackmixing.base.data.repository.TracksRepository
@@ -10,6 +11,7 @@ import com.smascaro.trackmixing.settings.testdata.selection.controller.DiskSpace
 import com.smascaro.trackmixing.settings.testdata.selection.model.TestDataBundleInfo
 import com.smascaro.trackmixing.utilities.SingleLiveEvent
 import com.smascaro.trackmixing.utilities.launchIO
+import timber.log.Timber
 import javax.inject.Inject
 
 class TestDataViewModel @Inject constructor(
@@ -32,9 +34,12 @@ class TestDataViewModel @Inject constructor(
     private val _availableSpaceBytes = MutableLiveData<Long>()
     val availableBytes: LiveData<Long> = _availableSpaceBytes
 
-    val onNavigateToDownload = SingleLiveEvent<List<TestDataBundleInfo>>()
+    val onNavigateToDownload = SingleLiveEvent<Unit>()
 
-    var tracksToDownload = mutableListOf<TestDataBundleInfo>()
+    private val _tracksToDownload = MutableLiveData<MutableList<TestDataBundleInfo>>(mutableListOf())
+    val tracksToDownload: LiveData<List<TestDataBundleInfo>> = Transformations.map(_tracksToDownload) {
+        it as List<TestDataBundleInfo>
+    }
 
     fun onStart() {
         viewModelScope.launchIO {
@@ -56,19 +61,23 @@ class TestDataViewModel @Inject constructor(
     }
 
     fun onItemSelected(item: TestDataBundleInfo) {
-        tracksToDownload.add(item)
+        val current = _tracksToDownload.value ?: mutableListOf()
+        current.add(item)
+        _tracksToDownload.value = current
         val previousValue = _bytesToBeDownloaded.value ?: 0L
         _bytesToBeDownloaded.value = previousValue + item.size
     }
 
     fun onItemUnselected(item: TestDataBundleInfo) {
-        tracksToDownload.remove(item)
+        val current = _tracksToDownload.value ?: return
+        current.remove(item)
+        _tracksToDownload.value = current
         val previousValue = _bytesToBeDownloaded.value ?: 0L
         _bytesToBeDownloaded.value = (previousValue - item.size).coerceAtLeast(0)
     }
 
     fun onDownloadButtonClicked() {
-        onNavigateToDownload.value = tracksToDownload
+        onNavigateToDownload.call()
     }
 
     enum class ErrorType {

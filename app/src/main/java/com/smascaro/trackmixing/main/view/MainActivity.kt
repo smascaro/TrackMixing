@@ -10,7 +10,6 @@ import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.base.events.ApplicationEvent
 import com.smascaro.trackmixing.base.events.ApplicationEvent.AppState
 import com.smascaro.trackmixing.base.ui.BaseActivity
-import com.smascaro.trackmixing.di.MainComponentProvider
 import com.smascaro.trackmixing.main.components.progress.controller.BottomProgressController
 import com.smascaro.trackmixing.main.components.progress.view.BottomProgressViewMvc
 import com.smascaro.trackmixing.main.controller.MainActivityController
@@ -40,8 +39,6 @@ class MainActivity : BaseActivity() {
     private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val mainComponent = (application as MainComponentProvider).provideMainComponent()
-        mainComponent.inject(this)
         window.setFlags(
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS

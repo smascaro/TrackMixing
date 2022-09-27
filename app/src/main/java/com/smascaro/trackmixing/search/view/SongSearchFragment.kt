@@ -8,22 +8,24 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialSharedAxis
+import com.smascaro.trackmixing.di.ViewModelProviderFactory
 import com.smascaro.trackmixing.base.ui.BaseFragment
-import com.smascaro.trackmixing.base.ui.getSearchComponent
 import com.smascaro.trackmixing.base.utils.KeyboardUtils
 import com.smascaro.trackmixing.databinding.FragmentSongSearchBinding
 import com.smascaro.trackmixing.search.business.download.TrackDownloadService
 import com.smascaro.trackmixing.utilities.nullifyOnDestroy
+import javax.inject.Inject
 
 class SongSearchFragment : BaseFragment() {
     private var binding: FragmentSongSearchBinding by nullifyOnDestroy()
 
-    private val viewModel: SearchViewModel by viewModels {
-        getSearchComponent().viewModelsFactory()
-    }
+    @Inject
+    lateinit var providerFactory: ViewModelProviderFactory
+
+    private lateinit var viewModel: SearchViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +48,9 @@ class SongSearchFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel = ViewModelProvider(requireActivity().viewModelStore, providerFactory)[SearchViewModel::class.java]
+
         initializeBindings()
         setupObservers()
     }

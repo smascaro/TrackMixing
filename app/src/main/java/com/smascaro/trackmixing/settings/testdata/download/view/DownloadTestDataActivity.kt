@@ -2,10 +2,9 @@ package com.smascaro.trackmixing.settings.testdata.download.view
 
 import android.os.Bundle
 import androidx.navigation.findNavController
+import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.base.ui.BaseActivity
 import com.smascaro.trackmixing.base.utils.navigation.NavigationHelper
-import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.di.component.SettingsComponentProvider
 import javax.inject.Inject
 
 class DownloadTestDataActivity : BaseActivity() {
@@ -27,7 +26,6 @@ class DownloadTestDataActivity : BaseActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        (application as com.smascaro.trackmixing.di.component.SettingsComponentProvider).provideSettingsComponent().inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_download_test_data)
         title = "Confirm download"

@@ -1,7 +1,6 @@
 package com.smascaro.trackmixing.di
 
 import com.bumptech.glide.RequestManager
-import com.smascaro.trackmixing.base.di.ItemViewMvcFactory
 import com.smascaro.trackmixing.base.utils.ResourcesWrapper
 import com.smascaro.trackmixing.trackslist.view.listitem.TracksListItemViewMvc
 import com.smascaro.trackmixing.trackslist.view.listitem.TracksListItemViewMvcImpl

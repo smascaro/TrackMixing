@@ -3,12 +3,10 @@ package com.smascaro.trackmixing.playback.service
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import com.smascaro.trackmixing.base.data.model.Track
 import com.smascaro.trackmixing.base.service.BaseService
 import com.smascaro.trackmixing.base.time.Seconds
 import com.smascaro.trackmixing.playback.controller.MixPlayerServiceController
 import com.smascaro.trackmixing.playback.controller.MixPlayerServiceController.ActionArgs
-import com.smascaro.trackmixing.di.component.PlaybackComponentProvider
 import com.smascaro.trackmixing.playback.model.TrackInstrument
 import timber.log.Timber
 import javax.inject.Inject
@@ -72,7 +70,6 @@ class MixPlayerService : BaseService() {
     lateinit var controller: MixPlayerServiceController
 
     override fun onCreate() {
-        (application as com.smascaro.trackmixing.di.component.PlaybackComponentProvider).providePlaybackComponent().inject(this)
         super.onCreate()
         controller.onCreate()
         initializeControllerServiceCallbacks()

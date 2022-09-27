@@ -4,7 +4,7 @@ import android.os.Bundle
 import com.smascaro.trackmixing.base.coroutine.IoCoroutineScope
 import com.smascaro.trackmixing.base.coroutine.MainCoroutineScope
 import com.smascaro.trackmixing.base.data.model.Track
-import com.smascaro.trackmixing.base.di.module.notification.PlayerNotificationHelperImplementation
+import com.smascaro.trackmixing.di.module.notification.PlayerNotificationHelperImplementation
 import com.smascaro.trackmixing.base.service.ForegroundNotification
 import com.smascaro.trackmixing.base.service.ServiceCallbackHandler
 import com.smascaro.trackmixing.base.time.asSeconds

@@ -10,7 +10,6 @@ import com.google.android.material.transition.MaterialFadeThrough
 import com.google.android.material.transition.MaterialSharedAxis
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.base.ui.BaseFragment
-import com.smascaro.trackmixing.di.MainComponentProvider
 import com.smascaro.trackmixing.trackslist.components.toolbar.controller.ToolbarController
 import com.smascaro.trackmixing.trackslist.components.toolbar.view.ToolbarViewMvc
 import com.smascaro.trackmixing.trackslist.controller.TracksListController
@@ -28,10 +27,6 @@ class TracksListFragment : BaseFragment(), TracksListController.NavigationListen
 
     @Inject
     lateinit var toolbarViewMvc: ToolbarViewMvc
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        (requireActivity().application as MainComponentProvider).provideMainComponent().inject(this)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

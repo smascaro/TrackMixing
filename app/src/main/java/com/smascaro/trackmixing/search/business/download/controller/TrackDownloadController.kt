@@ -2,7 +2,7 @@ package com.smascaro.trackmixing.search.business.download.controller
 
 import com.smascaro.trackmixing.base.coroutine.IoCoroutineScope
 import com.smascaro.trackmixing.base.coroutine.MainCoroutineScope
-import com.smascaro.trackmixing.base.di.module.notification.DownloadNotificationHelperImplementation
+import com.smascaro.trackmixing.di.module.notification.DownloadNotificationHelperImplementation
 import com.smascaro.trackmixing.base.events.ApplicationEvent
 import com.smascaro.trackmixing.base.events.ApplicationEvent.AppState
 import com.smascaro.trackmixing.base.events.UiProgressEvent

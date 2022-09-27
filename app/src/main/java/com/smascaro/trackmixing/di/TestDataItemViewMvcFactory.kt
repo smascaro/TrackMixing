@@ -1,7 +1,6 @@
 package com.smascaro.trackmixing.di
 
 import com.bumptech.glide.RequestManager
-import com.smascaro.trackmixing.base.di.ItemViewMvcFactory
 import com.smascaro.trackmixing.settings.testdata.selection.view.testdataitem.SelectTestDataItemViewMvc
 import com.smascaro.trackmixing.settings.testdata.selection.view.testdataitem.SelectTestDataItemViewMvcImpl
 import javax.inject.Inject

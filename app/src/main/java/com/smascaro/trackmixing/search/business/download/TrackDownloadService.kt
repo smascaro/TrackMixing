@@ -7,7 +7,6 @@ import android.widget.Toast
 import com.smascaro.trackmixing.base.service.BaseService
 import com.smascaro.trackmixing.search.business.download.controller.TrackDownloadController
 import com.smascaro.trackmixing.search.business.download.utils.DownloadNotificationHelper
-import com.smascaro.trackmixing.di.component.SearchComponentProvider
 import javax.inject.Inject
 
 class TrackDownloadService : BaseService() {
@@ -28,7 +27,6 @@ class TrackDownloadService : BaseService() {
     lateinit var controller: TrackDownloadController
 
     override fun onCreate() {
-        (application as SearchComponentProvider).provideSearchComponent().inject(this)
         super.onCreate()
         controller.onCreate()
         initializeServiceCallbacks()

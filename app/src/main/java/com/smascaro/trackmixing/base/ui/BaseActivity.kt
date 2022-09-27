@@ -1,5 +1,5 @@
 package com.smascaro.trackmixing.base.ui
 
-import androidx.appcompat.app.AppCompatActivity
+import dagger.android.support.DaggerAppCompatActivity
 
-open class BaseActivity : AppCompatActivity()
+open class BaseActivity : DaggerAppCompatActivity()
