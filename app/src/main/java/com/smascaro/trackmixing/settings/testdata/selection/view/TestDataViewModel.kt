@@ -2,7 +2,6 @@ package com.smascaro.trackmixing.settings.testdata.selection.view
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.smascaro.trackmixing.base.data.repository.TracksRepository
@@ -11,6 +10,7 @@ import com.smascaro.trackmixing.settings.testdata.selection.controller.DiskSpace
 import com.smascaro.trackmixing.settings.testdata.selection.model.TestDataBundleInfo
 import com.smascaro.trackmixing.utilities.SingleLiveEvent
 import com.smascaro.trackmixing.utilities.launchIO
+import kotlinx.coroutines.delay
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -36,10 +36,16 @@ class TestDataViewModel @Inject constructor(
 
     val onNavigateToDownload = SingleLiveEvent<Unit>()
 
-    private val _tracksToDownload = MutableLiveData<MutableList<TestDataBundleInfo>>(mutableListOf())
-    val tracksToDownload: LiveData<List<TestDataBundleInfo>> = Transformations.map(_tracksToDownload) {
-        it as List<TestDataBundleInfo>
-    }
+    private val tracksToDownload = mutableListOf<TestDataBundleInfo>()
+
+    private val _downloadProgress = MutableLiveData<DownloadProgressState>()
+    val downloadProgress: LiveData<DownloadProgressState> = _downloadProgress
+
+    val onDownloadsFinished = SingleLiveEvent<Unit>()
+    val onDownloadsCancelled = SingleLiveEvent<Unit>()
+
+    var cancellationFlag = false
+    var finishedDownloads = 0
 
     fun onStart() {
         viewModelScope.launchIO {
@@ -61,17 +67,13 @@ class TestDataViewModel @Inject constructor(
     }
 
     fun onItemSelected(item: TestDataBundleInfo) {
-        val current = _tracksToDownload.value ?: mutableListOf()
-        current.add(item)
-        _tracksToDownload.value = current
+        tracksToDownload.add(item)
         val previousValue = _bytesToBeDownloaded.value ?: 0L
         _bytesToBeDownloaded.value = previousValue + item.size
     }
 
     fun onItemUnselected(item: TestDataBundleInfo) {
-        val current = _tracksToDownload.value ?: return
-        current.remove(item)
-        _tracksToDownload.value = current
+        tracksToDownload.remove(item)
         val previousValue = _bytesToBeDownloaded.value ?: 0L
         _bytesToBeDownloaded.value = (previousValue - item.size).coerceAtLeast(0)
     }
@@ -80,7 +82,48 @@ class TestDataViewModel @Inject constructor(
         onNavigateToDownload.call()
     }
 
-    enum class ErrorType {
-        NO_TRACKS_FOUND
+    fun startDownloads() {
+        finishedDownloads = 0
+        _downloadProgress.value = DownloadProgressState(finishedDownloads, tracksToDownload.size)
+        downloadTestDataUseCase.registerListener(object : DownloadTestDataUseCase.Listener {
+            override fun onFinishedItemDownload(videoKey: String) {
+                finishedDownloads++
+                Timber.w("onFinishedItemDownload \"$videoKey\" - finished (incl.) = $finishedDownloads out of ${tracksToDownload.size} | cancelled=$cancellationFlag")
+                if (!cancellationFlag) {
+                    _downloadProgress.value = _downloadProgress.value?.copy(downloaded = finishedDownloads)
+                }
+                if (finishedDownloads == tracksToDownload.size) {
+                    if (cancellationFlag) {
+                        downloadTestDataUseCase.rollbackDownloads(tracksToDownload)
+                    }
+                    viewModelScope.launchIO {
+                        delay(300)
+                        onDownloadsFinished.postValue(Unit)
+                    }
+                }
+            }
+
+            override fun onItemDownloadFailed(trackId: String, throwable: Throwable) {
+                finishedDownloads++
+                Timber.w("onItemDownloadFailed \"$trackId\" - finished (incl.) = $finishedDownloads out of ${tracksToDownload.size} | cancelled=$cancellationFlag")
+                onError.value = ErrorType.TRACK_DOWNLOAD_FAILED
+                _downloadProgress.value = _downloadProgress.value?.copy(downloaded = finishedDownloads)
+            }
+        })
+        tracksToDownload.forEach {
+            downloadTestDataUseCase.downloadItemBundle(it)
+        }
     }
+
+    fun cancelDownloads() {
+        downloadTestDataUseCase.markForCancellation()
+        onDownloadsCancelled.call()
+        cancellationFlag = true
+    }
+
+    enum class ErrorType {
+        NO_TRACKS_FOUND, TRACK_DOWNLOAD_FAILED
+    }
+
+    data class DownloadProgressState(val downloaded: Int, val totalDownloads: Int)
 }

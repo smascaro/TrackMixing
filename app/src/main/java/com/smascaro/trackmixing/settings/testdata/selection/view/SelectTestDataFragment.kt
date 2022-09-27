@@ -64,6 +64,7 @@ class SelectTestDataFragment : BaseFragment() {
             showMessage(
                 when (it) {
                     TestDataViewModel.ErrorType.NO_TRACKS_FOUND -> "No test tracks found."
+                    TestDataViewModel.ErrorType.TRACK_DOWNLOAD_FAILED -> return@observe
                 }
             )
         }

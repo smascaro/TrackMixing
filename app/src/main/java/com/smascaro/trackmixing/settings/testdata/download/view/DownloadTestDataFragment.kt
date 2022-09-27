@@ -5,78 +5,79 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
-import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.di.ViewModelProviderFactory
 import com.smascaro.trackmixing.base.ui.BaseFragment
+import com.smascaro.trackmixing.databinding.FragmentDownloadTestDataBinding
+import com.smascaro.trackmixing.di.ViewModelProviderFactory
 import com.smascaro.trackmixing.settings.testdata.selection.view.TestDataViewModel
-import com.smascaro.trackmixing.settingsOld.testdata.download.controller.DownloadTestDataController
-import com.smascaro.trackmixing.settingsOld.testdata.download.view.DownloadTestDataViewMvc
+import com.smascaro.trackmixing.utilities.nullifyOnDestroy
 import javax.inject.Inject
 
-class DownloadTestDataFragment : BaseFragment(), DownloadTestDataController.Listener,
-    DownloadTestDataActivity.BackPressedListener {
+class DownloadTestDataFragment : BaseFragment(), DownloadTestDataActivity.BackPressedListener {
+
+    private var binding: FragmentDownloadTestDataBinding by nullifyOnDestroy()
 
     @Inject
     lateinit var providerFactory: ViewModelProviderFactory
 
     private lateinit var viewModel: TestDataViewModel
 
-    @Inject
-    lateinit var controller: DownloadTestDataController
-    @Inject
-    lateinit var viewMvc: DownloadTestDataViewMvc
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        (activity as DownloadTestDataActivity).setOnBackPressedListener(this)
+        (activity as? DownloadTestDataActivity)?.setOnBackPressedListener(this)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        viewMvc.bindRootView(inflater.inflate(R.layout.fragment_download_test_data, null, false))
-        controller.bindViewMvc(viewMvc)
-        controller.onCreate()
-        return viewMvc.getRootView()
+    ): View {
+        binding = FragmentDownloadTestDataBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(requireActivity().viewModelStore, providerFactory)[TestDataViewModel::class.java]
 
+        viewModel.startDownloads()
         setupObservers()
     }
 
     private fun setupObservers() {
-        viewModel.tracksToDownload.observe(viewLifecycleOwner){
-            controller.bindTracksToDownload(it.toTypedArray())
+        viewModel.onError.observe(viewLifecycleOwner) {
+            when (it) {
+                TestDataViewModel.ErrorType.TRACK_DOWNLOAD_FAILED -> notifyTrackFailure()
+                TestDataViewModel.ErrorType.NO_TRACKS_FOUND -> {
+                    /* nothing to do */
+                }
+            }
+        }
+        viewModel.downloadProgress.observe(viewLifecycleOwner) { (downloaded, total) ->
+            binding.tvDownloadTestDataDownloadingProgress.text = "($downloaded/$total)"
+            binding.sbDownloadTestDataProgress.max = total
+            binding.sbDownloadTestDataProgress.progress = downloaded
+        }
+        viewModel.onDownloadsCancelled.observe(viewLifecycleOwner) {
+            binding.tvDownloadTestDataDownloadingTitle.text = "Cancelling downloads..."
+        }
+        viewModel.onDownloadsFinished.observe(viewLifecycleOwner) {
+            activity?.finish()
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        controller.registerListener(this)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        controller.unregisterListener()
-    }
-
-    override fun onFinishedFlow() {
-        controller.unregisterListener()
-        activity?.finish()
+    private fun notifyTrackFailure() {
+        Toast.makeText(context, "A track failed to download", Toast.LENGTH_SHORT).show()
     }
 
     override fun onBackPressed(): Boolean {
-        return controller.cancelDownloads()
+        viewModel.cancelDownloads()
+        return true
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        controller.dispose()
+        // controller.dispose()
     }
 }
