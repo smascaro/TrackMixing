@@ -3,30 +3,19 @@ package com.smascaro.trackmixing.settings.testdata.selection.view
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.di.TestDataItemViewMvcFactory
+import com.smascaro.trackmixing.base.utils.asMB
+import com.smascaro.trackmixing.databinding.ItemTestDataSelectionBinding
 import com.smascaro.trackmixing.settings.testdata.selection.model.TestDataBundleInfo
-import com.smascaro.trackmixing.settings.testdata.selection.view.testdataitem.SelectTestDataItemViewMvc
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class TestDataListAdapter @Inject constructor(
-    private val viewMvcFactory: com.smascaro.trackmixing.di.TestDataItemViewMvcFactory,
-) : RecyclerView.Adapter<TestDataListAdapter.ViewHolder>(), SelectTestDataItemViewMvc.Listener {
-    interface Listener {
-        fun onItemSelectionChanged(
-            item: TestDataBundleInfo,
-            selected: Boolean
-        )
+class TestDataListAdapter @Inject constructor() : RecyclerView.Adapter<TestDataListAdapter.ViewHolder>() {
+    fun interface Listener {
+        fun onItemSelectionChanged(item: TestDataBundleInfo, selected: Boolean)
     }
-
-    class ViewHolder(val viewMvc: SelectTestDataItemViewMvc) :
-        RecyclerView.ViewHolder(viewMvc.getRootView())
 
     private var listener: Listener? = null
     private var testDataList: List<TestDataBundleInfo> = mutableListOf()
+
     fun setAdapterListener(listener: Listener) {
         this.listener = listener
     }
@@ -36,13 +25,8 @@ class TestDataListAdapter @Inject constructor(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val viewMvc = viewMvcFactory.create()
-        viewMvc.bindRootView(
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_test_data_selection, parent, false)
-        )
-        viewMvc.registerListener(this)
-        return ViewHolder(viewMvc)
+        val binding = ItemTestDataSelectionBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
@@ -50,29 +34,42 @@ class TestDataListAdapter @Inject constructor(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.viewMvc.bindData(testDataList[position])
-        holder.viewMvc.bindPosition(position)
-    }
-
-    override fun onSelectionCheckChanged(
-        item: TestDataBundleInfo,
-        checked: Boolean
-    ) {
-        listener?.onItemSelectionChanged(item, checked)
+        holder.bindData(testDataList[position])
     }
 
     fun bindData(data: List<TestDataBundleInfo>) {
         testDataList = data
-        CoroutineScope(Dispatchers.Main).launch {
-            notifyDataSetChanged()
-        }
+        notifyDataSetChanged()
     }
 
-    fun bindAlreadyDownloadedData(downloadedTestData: List<TestDataBundleInfo>) {
-        downloadedTestData.forEach {
-            val idx = testDataList.indexOfFirst { it2 -> it.videoKey == it2.videoKey }
-            testDataList[idx].isPresentInDatabase = true
-            notifyItemChanged(idx)
+    inner class ViewHolder(private val binding: ItemTestDataSelectionBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        private lateinit var data: TestDataBundleInfo
+
+        private fun setCheckboxListener() {
+            binding.cbItemTestDataSelectionSelected.setOnCheckedChangeListener { buttonView, isChecked ->
+                listener?.onItemSelectionChanged(data, isChecked)
+            }
+        }
+
+        private fun removeCheckboxListener() {
+            binding.cbItemTestDataSelectionSelected.setOnCheckedChangeListener(null)
+        }
+
+        fun bindData(data: TestDataBundleInfo) {
+            this.data = data
+            binding.tvItemTestDataSelectionTitle.text = data.title
+            binding.tvItemTestDataSelectionAuthor.text = data.author
+            binding.tvItemTestDataSelectionSize.text = data.size.asMB
+            removeCheckboxListener()
+            if (data.isPresentInDatabase) {
+                binding.cbItemTestDataSelectionSelected.isChecked = true
+                binding.cbItemTestDataSelectionSelected.isEnabled = false
+            } else {
+                binding.cbItemTestDataSelectionSelected.isChecked = false
+                binding.cbItemTestDataSelectionSelected.isEnabled = true
+            }
+            setCheckboxListener()
         }
     }
 }

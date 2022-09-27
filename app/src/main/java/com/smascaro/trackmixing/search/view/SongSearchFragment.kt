@@ -1,7 +1,6 @@
 package com.smascaro.trackmixing.search.view
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +15,6 @@ import com.smascaro.trackmixing.base.ui.BaseFragment
 import com.smascaro.trackmixing.base.ui.getSearchComponent
 import com.smascaro.trackmixing.base.utils.KeyboardUtils
 import com.smascaro.trackmixing.databinding.FragmentSongSearchBinding
-import com.smascaro.trackmixing.di.component.SearchComponentProvider
 import com.smascaro.trackmixing.search.business.download.TrackDownloadService
 import com.smascaro.trackmixing.utilities.nullifyOnDestroy
 
@@ -35,11 +33,6 @@ class SongSearchFragment : BaseFragment() {
         returnTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false).apply {
             duration = 200
         }
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        (requireActivity().application as SearchComponentProvider).provideSearchComponent().inject(this)
     }
 
     override fun onCreateView(

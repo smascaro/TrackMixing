@@ -1,50 +1,127 @@
 package com.smascaro.trackmixing.settings.testdata.selection.view
 
-import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
+import android.widget.Toast
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.smascaro.trackmixing.R
-import com.smascaro.trackmixing.di.component.SettingsComponentProvider
-import com.smascaro.trackmixing.settings.testdata.selection.controller.SelectTestDataController
-import javax.inject.Inject
+import com.smascaro.trackmixing.base.ui.BaseFragment
+import com.smascaro.trackmixing.base.ui.getSettingsComponent
+import com.smascaro.trackmixing.base.utils.asGB
+import com.smascaro.trackmixing.base.utils.asKB
+import com.smascaro.trackmixing.base.utils.asMB
+import com.smascaro.trackmixing.databinding.FragmentSelectTestDataBinding
+import com.smascaro.trackmixing.settings.testdata.selection.view.SelectTestDataFragmentDirections.Companion.actionDestinationSelectTestDataToDownloadTestDataFragment
+import com.smascaro.trackmixing.utilities.nullifyOnDestroy
 
-class SelectTestDataFragment : Fragment() {
-    @Inject
-    lateinit var controller: SelectTestDataController
-    @Inject
-    lateinit var viewMvc: SelectTestDataViewMvc
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        (requireActivity().application as com.smascaro.trackmixing.di.component.SettingsComponentProvider).provideSettingsComponent().inject(this)
+class SelectTestDataFragment : BaseFragment() {
+    private var binding: FragmentSelectTestDataBinding by nullifyOnDestroy()
+
+    private val viewModel: TestDataViewModel by viewModels {
+        getSettingsComponent().viewModelFactory()
     }
+
+    private var defaultMaterialTextColor: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        viewMvc.bindRootView(inflater.inflate(R.layout.fragment_select_test_data, null, false))
-        controller.bindViewMvc(viewMvc)
-        controller.bindNavController(findNavController())
-        return viewMvc.getRootView()
+    ): View {
+        binding = FragmentSelectTestDataBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initializeBindings()
+        setupObservers()
+    }
+
+    private fun setupObservers() {
+        viewModel.onProgress.observe(viewLifecycleOwner) { show ->
+            binding.shimmerContainerTestData.apply {
+                if (show) {
+                    visibility = View.VISIBLE
+                    startShimmer()
+                } else {
+                    visibility = View.GONE
+                    stopShimmer()
+                }
+            }
+        }
+        viewModel.onError.observe(viewLifecycleOwner) {
+            showMessage(
+                when (it) {
+                    TestDataViewModel.ErrorType.NO_TRACKS_FOUND -> "No test tracks found."
+                }
+            )
+        }
+        viewModel.availableTracks.observe(viewLifecycleOwner) {
+            (binding.rvSelectTestDataTracks.adapter as? TestDataListAdapter)?.bindData(it)
+        }
+        viewModel.bytesToBeDownloaded.observe(viewLifecycleOwner, ::updateSizeToDownload)
+        viewModel.availableBytes.observe(viewLifecycleOwner, ::updateAvailableBytes)
+        viewModel.onNavigateToDownload.observe(viewLifecycleOwner) {
+            navigationHelper.navigate(actionDestinationSelectTestDataToDownloadTestDataFragment(it.toTypedArray()))
+        }
+    }
+
+    private fun initializeBindings() {
+        binding.rvSelectTestDataTracks.apply {
+            layoutManager = LinearLayoutManager(context)
+            (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+            setHasFixedSize(true)
+            adapter = TestDataListAdapter().apply {
+                setAdapterListener { data, checked ->
+                    if (checked) {
+                        viewModel.onItemSelected(data)
+                    } else {
+                        viewModel.onItemUnselected(data)
+                    }
+                }
+            }
+        }
+        defaultMaterialTextColor = binding.tvSelectTestDataTotalSize.textColors.defaultColor
+        binding.btnSelectTestDataStartDownload.setOnClickListener { viewModel.onDownloadButtonClicked() }
+        binding.tvSelectTestDataAvailableSpace.text = ""
+        updateTotalSize(0)
+    }
+
+    private fun updateAvailableBytes(bytes: Long) {
+        val text = when {
+            bytes > 1 * 1000 * 1000 * 1000 -> bytes.asGB
+            bytes > 1 * 1000 * 1000 -> bytes.asMB
+            bytes > 1 * 1000 -> bytes.asKB
+            else -> "$bytes bytes"
+        }
+
+        binding.tvSelectTestDataAvailableSpace.text =
+            getString(R.string.select_test_data_available_space, text)
+    }
+
+    private fun updateSizeToDownload(bytesToDownload: Long) {
+        updateTotalSize(bytesToDownload)
+        val availableBytes = viewModel.availableBytes.value ?: Long.MAX_VALUE
+        val textColor = if (bytesToDownload > availableBytes) Color.RED else defaultMaterialTextColor
+        binding.tvSelectTestDataTotalSize.setTextColor(textColor)
+    }
+
+    private fun updateTotalSize(bytes: Long) {
+        binding.tvSelectTestDataTotalSize.text = bytes.asMB
     }
 
     override fun onStart() {
         super.onStart()
-        controller.onStart()
+        viewModel.onStart()
     }
 
-    override fun onStop() {
-        super.onStop()
-        controller.onStop()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        controller.dispose()
+    private fun showMessage(message: String) {
+        Toast.makeText(context, "Error: $message", Toast.LENGTH_SHORT).show()
     }
 }

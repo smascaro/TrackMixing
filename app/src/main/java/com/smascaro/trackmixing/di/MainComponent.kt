@@ -3,6 +3,7 @@ package com.smascaro.trackmixing.di
 import android.content.Context
 import com.smascaro.trackmixing.base.di.MainScope
 import com.smascaro.trackmixing.base.di.component.BaseComponent
+import com.smascaro.trackmixing.base.ui.BaseFragment
 import com.smascaro.trackmixing.main.view.MainActivity
 import com.smascaro.trackmixing.di.component.PlaybackComponent
 import com.smascaro.trackmixing.trackslist.view.TracksListFragment
@@ -15,6 +16,7 @@ import dagger.Component
 )
 @MainScope
 interface MainComponent {
+    fun inject(baseFragment: BaseFragment)
     fun inject(mainActivity: MainActivity)
     fun inject(tracksListFragment: TracksListFragment)
 
