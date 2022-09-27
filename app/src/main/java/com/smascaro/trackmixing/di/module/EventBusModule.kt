@@ -7,7 +7,6 @@ import javax.inject.Singleton
 
 @Module
 class EventBusModule {
-    @Singleton
     @Provides
     fun provideEventBus(): EventBus {
         return EventBus.getDefault()

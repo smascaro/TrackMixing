@@ -4,6 +4,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.os.Build
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
@@ -127,18 +128,28 @@ class PlayerNotificationHelper @Inject constructor(
 
     private fun createTapIntent(): PendingIntent? {
         val intent = Intent(MixPlayerService.ACTION_LAUNCH_PLAYER)
-        return PendingIntent.getActivity(context, 3, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        } else {
+            PendingIntent.FLAG_CANCEL_CURRENT
+        }
+        return PendingIntent.getActivity(context, 3, intent, flags)
     }
 
     private fun createDeleteIntent(): PendingIntent? {
         val intent = Intent(context, MixPlayerService::class.java)
         intent.action =
             MixPlayerService.ACTION_STOP_SERVICE
+        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        } else {
+            PendingIntent.FLAG_CANCEL_CURRENT
+        }
         return PendingIntent.getService(
             context,
             2,
             intent,
-            PendingIntent.FLAG_CANCEL_CURRENT
+            flags
         )
     }
 
@@ -150,11 +161,16 @@ class PlayerNotificationHelper @Inject constructor(
         }
 
         intent.action = action
+        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        } else {
+            PendingIntent.FLAG_UPDATE_CURRENT
+        }
         return PendingIntent.getService(
             context,
             2,
             intent,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            flags
         )
     }
 }

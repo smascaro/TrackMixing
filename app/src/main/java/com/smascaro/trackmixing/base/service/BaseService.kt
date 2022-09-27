@@ -1,10 +1,10 @@
 package com.smascaro.trackmixing.base.service
 
-import android.app.Service
 import android.content.Intent
 import android.os.IBinder
+import dagger.android.DaggerService
 
-open class BaseService : Service() {
+open class BaseService : DaggerService() {
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }

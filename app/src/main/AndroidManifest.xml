@@ -40,6 +40,7 @@
         <activity
             android:name=".settings.testdata.download.view.DownloadTestDataActivity"
             android:theme="@style/Theme.MaterialComponents.Dialog" />
+        <service android:name="com.smascaro.trackmixing.playback.service.MixPlayerService" />
     </application>
 
 

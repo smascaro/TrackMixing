@@ -22,6 +22,7 @@ import javax.inject.Singleton
         AndroidInjectionModule::class,
         ViewModelFactoryModule::class,
         ActivityBuildersModule::class,
+        ServiceBuildersModule::class,
         CoroutineScopesModule::class,
         EventBusModule::class,
         GlideModule::class,
@@ -29,7 +30,6 @@ import javax.inject.Singleton
         RepositoryModule::class,
         RepositoryModule.Bindings::class,
         UtilsModule::class,
-        PlaybackModule::class,
         PlaybackModule.Bindings::class,
     ]
 )
