@@ -3,24 +3,19 @@ package com.smascaro.trackmixing.trackslist.view
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.base.data.model.Track
-import com.smascaro.trackmixing.di.TracksListItemViewMvcFactory
-import com.smascaro.trackmixing.trackslist.view.listitem.TracksListItemViewMvc
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import javax.inject.Inject
+import com.smascaro.trackmixing.base.time.TimeHelper
+import com.smascaro.trackmixing.databinding.ItemTrackBinding
 
-class TracksListAdapter @Inject constructor(
-    private val viewMvcFactory: TracksListItemViewMvcFactory
-) : RecyclerView.Adapter<TracksListAdapter.ViewHolder>(), TracksListItemViewMvc.Listener {
-    interface Listener {
-        fun onTrackClicked(track: com.smascaro.trackmixing.base.data.model.Track)
+class TracksListAdapter : RecyclerView.Adapter<TracksListAdapter.ViewHolder>() {
+    fun interface Listener {
+        fun onTrackClicked(track: Track)
     }
 
-    class ViewHolder(val mViewMvc: TracksListItemViewMvc) :
-        RecyclerView.ViewHolder(mViewMvc.getRootView())
+    private var mTracks = mutableListOf<Track>()
 
     private var listener: Listener? = null
 
@@ -33,48 +28,21 @@ class TracksListAdapter @Inject constructor(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val viewMvc = viewMvcFactory.create()
-        viewMvc.bindRootView(
-            LayoutInflater.from(parent.context).inflate(R.layout.item_track, parent, false)
-        )
-        viewMvc.registerListener(this)
-        return ViewHolder(
-            viewMvc
-        )
+        val binding = ItemTrackBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
     }
 
-    private var mTracks = mutableListOf<com.smascaro.trackmixing.base.data.model.Track>()
-
-    fun List<Int>.isConsecutive(): Boolean {
-        if (this.isEmpty()) {
-            return false
-        } else {
-            val previous = this[0]
-            for (i in 1 until this.size) {
-                val current = this[i]
-                if (current != previous + 1) {
-                    return false
-                }
-            }
-            return true
-        }
-    }
-
-    fun bindTracks(tracks: List<com.smascaro.trackmixing.base.data.model.Track>) {
+    fun bindTracks(tracks: List<Track>) {
         val insertedIndexes = findInsertedItems(tracks).sorted()
         mTracks = tracks.toMutableList()
-        CoroutineScope(Dispatchers.Main).launch {
-            if (insertedIndexes.size == 1) {
-                notifyItemInserted(insertedIndexes.first())
-            } else if (insertedIndexes.isConsecutive()) {
-                notifyItemRangeInserted(insertedIndexes.first(), insertedIndexes.size)
-            } else {
-                notifyDataSetChanged()
+        if (insertedIndexes.any()) {
+            insertedIndexes.forEach {
+                notifyItemInserted(it)
             }
-        }
+        } else notifyDataSetChanged()
     }
 
-    private fun findInsertedItems(newTracks: List<com.smascaro.trackmixing.base.data.model.Track>): List<Int> {
+    private fun findInsertedItems(newTracks: List<Track>): List<Int> {
         val newIndexes = mutableListOf<Int>()
         newTracks.forEachIndexed { index, track ->
             if (!mTracks.any { it.videoKey == track.videoKey }) {
@@ -85,15 +53,49 @@ class TracksListAdapter @Inject constructor(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.mViewMvc.bindTrack(mTracks[position])
-        holder.mViewMvc.bindPosition(holder.adapterPosition)
-    }
-
-    override fun onTrackClicked(track: com.smascaro.trackmixing.base.data.model.Track) {
-        listener?.onTrackClicked(track)
+        holder.bindTrack(mTracks[position])
     }
 
     override fun getItemCount(): Int {
         return mTracks.size
+    }
+
+    inner class ViewHolder(private val binding: ItemTrackBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        private var track: Track? = null
+
+        init {
+            binding.root.setOnClickListener {
+                track?.let {
+                    listener?.onTrackClicked(it)
+                }
+            }
+
+            binding.root.setOnLongClickListener {
+                it.isSelected = true
+                true
+            }
+        }
+
+        fun bindTrack(track: Track) {
+            this.track = track
+            binding.tvItemTrackTitle.text = track.title
+            val authorText = track.author
+            val durationText = TimeHelper.fromSeconds(track.secondsLong.value).toStringRepresentation()
+            val stateText = TimeHelper.elapsedTime(track.requestedTimestamp)
+            binding.tvItemTrackDetails.text =
+                binding.root.context.getString(
+                    R.string.track_item_data_template,
+                    authorText,
+                    durationText,
+                    stateText
+                )
+            Glide.with(binding.root)
+                .asBitmap()
+                .load(track.thumbnailUrl)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .into(binding.ivItemTrackThumbnail)
+            binding.tvItemTrackTitle.transitionName = track.title
+        }
     }
 }

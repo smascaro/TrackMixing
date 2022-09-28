@@ -18,7 +18,7 @@ class PlaybackSessionImpl @Inject constructor(
 
     override fun isSessionInitialized() = isServiceStarted
 
-    override fun startPlayback(track: com.smascaro.trackmixing.base.data.model.Track): Boolean {
+    override fun startPlayback(track: Track): Boolean {
         isServiceStarted = MixPlayerService.start(context, track)
         return isSessionInitialized()
     }
@@ -47,7 +47,7 @@ class PlaybackSessionImpl @Inject constructor(
         return playbackStateManager.getPlayingState()
     }
 
-    override suspend fun getTrack(): com.smascaro.trackmixing.base.data.model.Track {
+    override suspend fun getTrack(): Track {
         return playbackStateManager.getCurrentTrack()
     }
 

@@ -10,7 +10,7 @@
     <include
         android:id="@+id/v_background_gradient"
         layout="@layout/layout_gradient_background" />
-t
+
     <fragment xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/nav_host_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"

@@ -1,26 +1,31 @@
 package com.smascaro.trackmixing.trackslist.view
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.google.android.material.transition.MaterialFadeThrough
 import com.google.android.material.transition.MaterialSharedAxis
-import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.base.ui.BaseFragment
+import com.smascaro.trackmixing.databinding.FragmentTracksListBinding
+import com.smascaro.trackmixing.di.ViewModelProviderFactory
 import com.smascaro.trackmixing.trackslist.components.toolbar.controller.ToolbarController
 import com.smascaro.trackmixing.trackslist.components.toolbar.view.ToolbarViewMvc
-import com.smascaro.trackmixing.trackslist.controller.TracksListController
+import com.smascaro.trackmixing.trackslist.controller.TracksListViewModel
+import com.smascaro.trackmixing.utilities.nullifyOnDestroy
 import javax.inject.Inject
 
-class TracksListFragment : BaseFragment(), TracksListController.NavigationListener {
-    @Inject
-    lateinit var tracksListController: TracksListController
+class TracksListFragment : BaseFragment() {
+    private var binding: FragmentTracksListBinding by nullifyOnDestroy()
+
+    private lateinit var viewModel: TracksListViewModel
 
     @Inject
-    lateinit var viewMvc: TracksListViewMvc
+    lateinit var providerFactory: ViewModelProviderFactory
 
     @Inject
     lateinit var toolbarController: ToolbarController
@@ -42,43 +47,65 @@ class TracksListFragment : BaseFragment(), TracksListController.NavigationListen
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         super.onCreateView(inflater, container, savedInstanceState)
-        viewMvc.bindRootView(inflater.inflate(R.layout.fragment_tracks_list, null, false))
-
-
-        toolbarViewMvc.bindRootView(viewMvc.getRootView())
+        binding = FragmentTracksListBinding.inflate(inflater, container, false)
+        toolbarViewMvc.bindRootView(binding.root)
         toolbarController.bindViewMvc(toolbarViewMvc)
 
-        tracksListController.bindViewMvc(viewMvc)
-        tracksListController.bindNavController(findNavController())
-        return viewMvc.getRootView()
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(viewModelStore, providerFactory)[TracksListViewModel::class.java]
+        initializeRecyclerView()
+        setupObservers()
+    }
+
+    private fun initializeRecyclerView() {
+        val layoutManagerWrapper = object : LinearLayoutManager(context) {
+            override fun supportsPredictiveItemAnimations(): Boolean {
+                return false
+            }
+        }
+        binding.rvTracks.layoutManager = layoutManagerWrapper
+        (binding.rvTracks.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+        binding.rvTracks.setHasFixedSize(true)
+
+        binding.rvTracks.adapter = TracksListAdapter().apply {
+            setOnTrackClickedListener(viewModel::onTrackClicked)
+        }
+    }
+
+    private fun setupObservers() {
+        viewModel.tracks.observe(viewLifecycleOwner) { tracks ->
+            (binding.rvTracks.adapter as? TracksListAdapter)?.bindTracks(tracks)
+        }
     }
 
     override fun onStart() {
         super.onStart()
-        tracksListController.onStart()
-        tracksListController.registerNavigationListener(this)
+        viewModel.onStart()
         toolbarController.bindNavController(findNavController())
         toolbarController.onStart()
     }
 
     override fun onStop() {
         super.onStop()
-        tracksListController.onStop()
-        tracksListController.unregisterNavigationListener()
+        viewModel.onStop()
         toolbarController.onStop()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        tracksListController.dispose()
         toolbarController.dispose()
     }
 
-    override fun beforeNavigationToSearch() {
+    fun beforeNavigationToSearch() {
         exitTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true).apply {
             duration = 200
         }

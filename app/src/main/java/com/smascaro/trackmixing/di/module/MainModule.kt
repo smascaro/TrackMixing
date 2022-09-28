@@ -9,8 +9,6 @@ import com.smascaro.trackmixing.player.view.TrackPlayerViewMvc
 import com.smascaro.trackmixing.player.view.TrackPlayerViewMvcImpl
 import com.smascaro.trackmixing.trackslist.components.toolbar.view.ToolbarViewMvc
 import com.smascaro.trackmixing.trackslist.components.toolbar.view.ToolbarViewMvcImpl
-import com.smascaro.trackmixing.trackslist.view.TracksListViewMvc
-import com.smascaro.trackmixing.trackslist.view.TracksListViewMvcImpl
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -25,9 +23,6 @@ abstract class MainModule {
     interface Bindings {
         @Binds
         fun provideMainActivityViewMvc(mainActivityViewMvcImpl: MainActivityViewMvcImpl): MainActivityViewMvc
-
-        @Binds
-        fun provideTracksListViewMvc(tracksListViewMvcImpl: TracksListViewMvcImpl): TracksListViewMvc
 
         @Binds
         fun provideBottomPlayerViewMvc(bottomPlayerViewMvcImpl: TrackPlayerViewMvcImpl): TrackPlayerViewMvc

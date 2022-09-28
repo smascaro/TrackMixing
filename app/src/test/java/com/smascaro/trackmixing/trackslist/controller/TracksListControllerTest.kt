@@ -7,7 +7,6 @@ import com.smascaro.trackmixing.common.testdoubles.EventBusTd
 import com.smascaro.trackmixing.helpers.MockitoHelper
 import com.smascaro.trackmixing.playback.utils.media.PlaybackSession
 import com.smascaro.trackmixing.trackslist.business.FetchDownloadedTracks
-import com.smascaro.trackmixing.trackslist.view.TracksListViewMvc
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
@@ -21,7 +20,7 @@ import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
 class TracksListControllerTest {
-    private lateinit var SUT: TracksListController
+    private lateinit var SUT: TracksListViewModel
 
     // region constants
     val fetchedTracksList = TestModels.getDownloadEntityList().map { it.toModel() }
@@ -30,8 +29,8 @@ class TracksListControllerTest {
     // endregion constants
 
     // region helper fields
-    @Mock
-    private lateinit var viewMvc: TracksListViewMvc
+    // @Mock
+    // private lateinit var viewMvc: TracksListViewMvc
     @Mock
     private lateinit var fetchDownloadedTracksUseCase: FetchDownloadedTracks
     @Mock
@@ -43,11 +42,10 @@ class TracksListControllerTest {
     @Before
     fun setup() {
         SUT =
-            TracksListController(
+            TracksListViewModel(
                 fetchDownloadedTracksUseCase,
                 playbackSession,
-                EventBusTd(),
-                navigationHelper
+                EventBusTd()
             )
         SUT.bindViewMvc(viewMvc)
     }
