@@ -107,8 +107,6 @@
     </style>
 
     <style name="TrackPlayerFadersSeekBarStyle">
-        <item name="android:layout_width">@dimen/track_player_fader_width</item>
-        <item name="android:layout_height">match_parent</item>
         <item name="android:layout_alignParentTop">true</item>
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:max">@integer/seekbar_volume_max_value</item>

@@ -28,6 +28,5 @@ interface TrackPlayerViewMvc :
     fun updateTimestamp(newTimestamp: Int, totalLength: Int)
     fun bindTrackDuration(length: Seconds)
     fun bindVolumes(volumes: TrackVolumeBundle)
-    fun openPlayer()
     fun onBackPressed(): Boolean
 }

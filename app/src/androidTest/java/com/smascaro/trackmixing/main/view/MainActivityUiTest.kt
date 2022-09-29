@@ -20,7 +20,7 @@ class MainActivityUiTest : UiTest() {
 
     @Test
     fun mainActivity_runs_and_is_displayed() {
-        onView(withId(R.id.motion_layout_main_activity)).check(matches(isDisplayed()))
+        onView(withId(R.id.layout_main_activity)).check(matches(isDisplayed()))
     }
 
     @Test

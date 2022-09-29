@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_destination_tracks_list_to_destination_settings"
             app:destination="@id/destination_settings" />
+        <action
+            android:id="@+id/action_destination_tracks_list_to_destination_player"
+            app:destination="@id/destination_player"/>
     </fragment>
     <fragment
         android:id="@+id/destination_search"
@@ -26,5 +29,9 @@
         android:id="@+id/destination_settings"
         android:name="com.smascaro.trackmixing.settings.view.SettingsActivity"
         android:label="SettingsActivity" />
+    <activity
+        android:id="@+id/destination_player"
+        android:name="com.smascaro.trackmixing.player.PlayerActivity"
+        android:label="PlayerActivity" />
 
 </navigation>

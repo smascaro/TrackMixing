@@ -30,10 +30,10 @@ class BottomProgressViewMvcImpl @Inject constructor(resources: ResourcesWrapper)
 
     override fun initialize() {
         super.initialize()
-        progressBarWrapper = findViewById(R.id.layout_progress_container)
+        progressBarWrapper = findViewById(R.id.included_download_progress)
         LayoutInflater.from(getContext())
             .inflate(R.layout.layout_download_progress, progressBarWrapper, false)
-        progressBar = progressBarWrapper.findViewById(R.id.layout_progress_container)
+        progressBar = progressBarWrapper.findViewById(R.id.included_download_progress)
         removeProgressBarWithoutAnimation()
         textSwitcherProgressValue = progressBarWrapper.findViewById(R.id.ts_progress_value)
         textSwitcherProgressText = progressBarWrapper.findViewById(R.id.ts_progress_message)

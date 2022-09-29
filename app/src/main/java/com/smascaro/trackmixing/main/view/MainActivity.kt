@@ -63,6 +63,10 @@ class MainActivity : BaseActivity() {
 
         setContentView(rootView)
         navController = findNavController(R.id.nav_host_fragment)
+        trackPlayerController.bindNavController(navController)
+        trackPlayerController.onNavigatingToPlayerCallback = {
+            overridePendingTransition(R.anim.slide_in_top, R.anim.stay)
+        }
     }
 
     override fun onStart() {

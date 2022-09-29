@@ -31,6 +31,9 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".player.PlayerActivity"
+            android:theme="@style/AppTheme.TM.NoActionBar.TranslucentStatusBar" />
+        <activity
             android:name=".settings.view.SettingsActivity"
             android:exported="false">
             <intent-filter>

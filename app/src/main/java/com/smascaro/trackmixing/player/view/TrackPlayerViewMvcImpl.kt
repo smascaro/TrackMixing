@@ -1,32 +1,20 @@
 package com.smascaro.trackmixing.player.view
 
 import android.content.SharedPreferences
-import android.view.View
-import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.SeekBar
 import android.widget.TextSwitcher
-import android.widget.TextView
-import androidx.constraintlayout.motion.widget.MotionLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import com.smascaro.trackmixing.R
 import com.smascaro.trackmixing.base.time.Seconds
-import com.smascaro.trackmixing.base.time.TimeHelper
 import com.smascaro.trackmixing.base.ui.architecture.view.BaseObservableViewMvc
-import com.smascaro.trackmixing.base.ui.widget.PivotableSeekbar
 import com.smascaro.trackmixing.base.utils.ResourcesWrapper
-import com.smascaro.trackmixing.playback.model.TrackInstrument
 import com.smascaro.trackmixing.playback.model.TrackVolumeBundle
 import com.smascaro.trackmixing.playback.service.MixPlayerServiceChecker
 import com.smascaro.trackmixing.playback.utils.state.PlaybackStateManager
 import com.smascaro.trackmixing.playback.utils.state.SharedPreferencesFactory
 import com.smascaro.trackmixing.player.model.TrackPlayerData
-import com.smascaro.trackmixing.player.view.TrackPlayerViewMvcImpl.MotionState.FullscreenPlayer
 import com.smascaro.trackmixing.player.view.TrackPlayerViewMvcImpl.MotionState.Initial
-import com.smascaro.trackmixing.player.view.TrackPlayerViewMvcImpl.MotionState.PlayerVisible
-import com.smascaro.trackmixing.player.view.TrackPlayerViewMvcImpl.MotionState.PreSwipeOut
-import com.smascaro.trackmixing.player.view.TrackPlayerViewMvcImpl.MotionState.SwipedOut
-import timber.log.Timber
 import javax.inject.Inject
 
 class TrackPlayerViewMvcImpl @Inject constructor(
@@ -45,20 +33,9 @@ class TrackPlayerViewMvcImpl @Inject constructor(
     }
 
     //Views
-    private lateinit var bottomBar: FrameLayout
-    private lateinit var motionLayout: MotionLayout
+    private lateinit var bottomBar: ConstraintLayout
     private lateinit var bottomBarTextSwitcher: TextSwitcher
     private lateinit var bottomBarActionButton: ImageView
-    private lateinit var timestampProgressIndicatorView: View
-    private lateinit var currentTimestampTextView: TextView
-    private lateinit var totalLengthTextView: TextView
-    private lateinit var songProgressSeekbar: SeekBar
-
-    //SeekBars
-    private lateinit var vocalsVolumeSeekbar: PivotableSeekbar
-    private lateinit var otherVolumeSeekbar: PivotableSeekbar
-    private lateinit var bassVolumeSeekbar: PivotableSeekbar
-    private lateinit var drumsVolumeSeekbar: PivotableSeekbar
 
     //Private fields
     private var isBottomBarShown = false
@@ -88,25 +65,13 @@ class TrackPlayerViewMvcImpl @Inject constructor(
 
     override fun initialize() {
         super.initialize()
-        motionLayout = findViewById(R.id.motion_layout_main_activity)
-        bottomBar = motionLayout.findViewById(R.id.layout_player)
-        bottomBarTextSwitcher = motionLayout.findViewById(R.id.tv_track_title_player_bottom)
-        bottomBarActionButton = motionLayout.findViewById(R.id.iv_action_button_player_bottom)
-        timestampProgressIndicatorView =
-            motionLayout.findViewById(R.id.v_bottom_player_progress_indicator)
+        bottomBar = findViewById(R.id.layout_bottom_player)
+        bottomBarTextSwitcher = findViewById(R.id.tv_track_title_player_bottom)
+        bottomBarActionButton = findViewById(R.id.iv_action_button_player_bottom)
 
         bottomBarTextSwitcher.isSelected = true
         bottomBarTextSwitcher.setInAnimation(getContext(), R.anim.slide_in_right)
         bottomBarTextSwitcher.setOutAnimation(getContext(), R.anim.slide_out_left)
-
-        currentTimestampTextView = findViewById(R.id.tv_track_player_current_timestamp)
-        totalLengthTextView = findViewById(R.id.tv_track_player_length)
-        songProgressSeekbar = findViewById(R.id.sb_track_player_timestamp)
-
-        vocalsVolumeSeekbar = findViewById(R.id.sb_track_player_vocals)
-        otherVolumeSeekbar = findViewById(R.id.sb_track_player_other)
-        bassVolumeSeekbar = findViewById(R.id.sb_track_player_bass)
-        drumsVolumeSeekbar = findViewById(R.id.sb_track_player_drums)
 
         initializeMarquee()
         setupSharedPreferences()
@@ -120,56 +85,10 @@ class TrackPlayerViewMvcImpl @Inject constructor(
             }
         }
 
-        vocalsVolumeSeekbar.setOnSeekBarChangeListener(makeSeekbarChangeListenerFor(TrackInstrument.VOCALS))
-        otherVolumeSeekbar.setOnSeekBarChangeListener(makeSeekbarChangeListenerFor(TrackInstrument.OTHER))
-        bassVolumeSeekbar.setOnSeekBarChangeListener(makeSeekbarChangeListenerFor(TrackInstrument.BASS))
-        drumsVolumeSeekbar.setOnSeekBarChangeListener(makeSeekbarChangeListenerFor(TrackInstrument.DRUMS))
-
-        initializeMotionLayoutListener()
-
         initializeProgressSeekBarListener()
-    }
 
-    private fun initializeMotionLayoutListener() {
-        motionLayout.setTransitionListener(object : MotionLayout.TransitionListener {
-            override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
-                // Do nothing
-            }
-
-            override fun onTransitionChange(
-                p0: MotionLayout?,
-                beginState: Int,
-                endState: Int,
-                progress: Float
-            ) {
-                val beginStateName = getStateName(beginState)
-                val endStateName = getStateName(endState)
-                Timber.d("MotionLayout: onTransitionChange - from $beginStateName to $endStateName (${progress * 100f}%")
-            }
-
-            override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {
-                val state = getStateName(currentId)
-                Timber.d("MotionLayout: onTransitionCompleted - $state")
-                when (currentId) {
-                    R.id.swiped_out -> handleSwipeOut()
-                }
-                currentMotionState = getMotionStateByResourceId(currentId)
-            }
-
-            override fun onTransitionTrigger(p0: MotionLayout?, p1: Int, p2: Boolean, p3: Float) {
-                // Do nothing
-            }
-        })
-    }
-
-    private fun getMotionStateByResourceId(id: Int): MotionState {
-        return when (id) {
-            R.id.player_hidden -> Initial
-            R.id.player_visible -> PlayerVisible
-            R.id.fullscreen -> FullscreenPlayer
-            R.id.pre_swipe_out -> PreSwipeOut
-            R.id.swiped_out -> SwipedOut
-            else -> Initial
+        bottomBar.setOnClickListener {
+            getListeners().forEach { it.onLayoutClick() }
         }
     }
 
@@ -189,75 +108,22 @@ class TrackPlayerViewMvcImpl @Inject constructor(
             }
         }
 
-        progressChangeListener.setOnProgressChanged { _, progress, _ ->
-            currentTimestampTextView.text = transformSecondsToTimeRepresentation(progress)
-        }
-        songProgressSeekbar.setOnSeekBarChangeListener(progressChangeListener)
-    }
-
-    private fun makeSeekbarChangeListenerFor(trackInstrument: TrackInstrument): TrackMixerSeekBarChangeListener {
-        return TrackMixerSeekBarChangeListener { progress ->
-            getListeners().forEach { listener ->
-                listener.onTrackVolumeChanged(trackInstrument, progress)
-            }
-        }
-    }
-
-    private fun getStateName(currentId: Int): String {
-        return when (currentId) {
-            R.id.swiped_out -> "swiped_out"
-            R.id.pre_swipe_out -> "pre_swipe_out"
-            R.id.player_hidden -> "player_hidden"
-            R.id.player_visible -> "player_visible"
-            R.id.fullscreen -> "fullscreen"
-            else -> "unknown"
-        }
     }
 
     private fun initializeMarquee() {
         bottomBarTextSwitcher.children.forEach { it.isSelected = true }
     }
 
-    override fun bindTrackDuration(length: Seconds) {
-        totalLengthTextView.text =
-            transformSecondsToTimeRepresentation(length.value.toInt())
-        songProgressSeekbar.max = length.value.toInt()
-    }
+    override fun bindTrackDuration(length: Seconds) {}
 
     override fun bindVolumes(
         volumes: TrackVolumeBundle
     ) {
-        vocalsVolumeSeekbar.progress = volumes.vocals
-        otherVolumeSeekbar.progress = volumes.other
-        bassVolumeSeekbar.progress = volumes.bass
-        drumsVolumeSeekbar.progress = volumes.drums
-    }
-
-    override fun openPlayer() {
-        motionLayout.transitionToState(R.id.player_visible)
-        motionLayout.setTransition(R.id.open_player)
-        motionLayout.transitionToEnd()
+        /* nothing to do */
     }
 
     override fun onBackPressed(): Boolean {
-        return if (motionLayout.currentState == R.id.fullscreen) {
-            motionLayout.setTransition(R.id.open_player)
-            motionLayout.transitionToStart()
-            true
-        } else {
-            false
-        }
-    }
-
-    private fun transformSecondsToTimeRepresentation(seconds: Int): String {
-        return TimeHelper.fromSeconds(seconds.toLong()).toStringRepresentation()
-    }
-
-    private fun handleSwipeOut() {
-        getListeners().forEach {
-            it.onPlayerSwipedOut()
-        }
-        isBottomBarShown = false
+        return false
     }
 
     private fun setupSharedPreferences() {
@@ -276,11 +142,10 @@ class TrackPlayerViewMvcImpl @Inject constructor(
                 bottomBarTextSwitcher.setText(textToShow)
             } else {
                 bottomBarTextSwitcher.setText(textToShow)
-                Timber.d("MotionLayout: Should transition to player_visible state")
-                motionLayout.transitionToState(R.id.player_hidden)
-                motionLayout.transitionToState(R.id.player_visible)
-                motionLayout.progress = 0f
-                motionLayout.transitionToEnd()
+                bottomBar.layoutParams = (bottomBar.layoutParams as ConstraintLayout.LayoutParams).apply {
+                    topToBottom = ConstraintLayout.LayoutParams.UNSET
+                    bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
+                }
             }
             isBottomBarShown = true
             currentShownData = data
@@ -307,16 +172,6 @@ class TrackPlayerViewMvcImpl @Inject constructor(
     }
 
     override fun updateTimestamp(newTimestamp: Int, totalLength: Int) {
-        val percentage = (newTimestamp.toDouble() / totalLength.toDouble())
-        val totalWidth = motionLayout.right - motionLayout.left
-        //Set 1px as minimum width because 0 is interpreted as a weighted width => full width
-        val progressWidth = (totalWidth * percentage).coerceAtLeast(1.0)
-        timestampProgressIndicatorView.layoutParams.width = progressWidth.toInt()
-
-        if (currentMotionState is FullscreenPlayer && !blockTimestampUpdates) {
-            currentTimestampTextView.text =
-                transformSecondsToTimeRepresentation(newTimestamp)
-            songProgressSeekbar.progress = newTimestamp
-        }
+        /* nothing to do */
     }
 }

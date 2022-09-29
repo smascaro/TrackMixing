@@ -1,11 +1,9 @@
 package com.smascaro.trackmixing.player.controller
 
 import android.content.Intent
-import com.smascaro.trackmixing.base.coroutine.IoCoroutineScope
-import com.smascaro.trackmixing.base.coroutine.MainCoroutineScope
-import com.smascaro.trackmixing.base.data.model.Track
 import com.smascaro.trackmixing.base.time.asSeconds
-import com.smascaro.trackmixing.base.ui.architecture.controller.BaseController
+import com.smascaro.trackmixing.base.utils.navigation.BaseNavigatorController
+import com.smascaro.trackmixing.base.utils.navigation.NavigationHelper
 import com.smascaro.trackmixing.playback.model.TimestampChangedEvent
 import com.smascaro.trackmixing.playback.model.TrackInstrument
 import com.smascaro.trackmixing.playback.service.MixPlayerService
@@ -13,6 +11,7 @@ import com.smascaro.trackmixing.playback.utils.media.PlaybackSession
 import com.smascaro.trackmixing.playback.utils.state.PlaybackStateManager
 import com.smascaro.trackmixing.player.model.TrackPlayerData
 import com.smascaro.trackmixing.player.view.TrackPlayerViewMvc
+import com.smascaro.trackmixing.trackslist.view.TracksListFragmentDirections
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
@@ -25,8 +24,9 @@ class TrackPlayerController @Inject constructor(
     private val eventBus: EventBus,
     private val playbackSession: PlaybackSession,
     private val ui: com.smascaro.trackmixing.base.coroutine.MainCoroutineScope,
-    private val io: com.smascaro.trackmixing.base.coroutine.IoCoroutineScope
-) : BaseController<TrackPlayerViewMvc>(),
+    private val io: com.smascaro.trackmixing.base.coroutine.IoCoroutineScope,
+    navigationHelper: NavigationHelper
+) : BaseNavigatorController<TrackPlayerViewMvc>(navigationHelper),
     TrackPlayerViewMvc.Listener {
     private var currentTrack: com.smascaro.trackmixing.base.data.model.Track? = null
     private var currentState: PlaybackStateManager.PlaybackState? = null
@@ -75,10 +75,13 @@ class TrackPlayerController @Inject constructor(
         navigateToPlayer()
     }
 
+    var onNavigatingToPlayerCallback: () -> Unit = {}
+
     private fun navigateToPlayer() {
         if (currentTrack != null) {
             openPlayerIntentRequested = false
-            viewMvc.openPlayer()
+            navigationHelper.navigate(TracksListFragmentDirections.actionDestinationTracksListToDestinationPlayer())
+            onNavigatingToPlayerCallback()
         }
     }
 

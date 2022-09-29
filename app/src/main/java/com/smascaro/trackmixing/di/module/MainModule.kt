@@ -25,7 +25,7 @@ abstract class MainModule {
         fun provideMainActivityViewMvc(mainActivityViewMvcImpl: MainActivityViewMvcImpl): MainActivityViewMvc
 
         @Binds
-        fun provideBottomPlayerViewMvc(bottomPlayerViewMvcImpl: TrackPlayerViewMvcImpl): TrackPlayerViewMvc
+        fun provideTrackPlayerViewMvcImpl(trackPlayerViewMvcImpl: TrackPlayerViewMvcImpl): TrackPlayerViewMvc
 
         @Binds
         fun provideBottomProgressViewMvc(bottomProgressViewMvcImpl: BottomProgressViewMvcImpl): BottomProgressViewMvc
