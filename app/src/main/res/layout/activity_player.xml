@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_player_faders"
-    android:paddingTop="28dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -12,36 +11,38 @@
         style="@style/TrackPlayerFadersSeekBarStyle"
         android:layout_width="@dimen/track_player_fader_width"
         android:layout_height="@dimen/track_player_fader_height"
+        app:layout_constraintEnd_toStartOf="@id/sb_track_player_other"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/sb_track_player_other"/>
+        app:layout_constraintVertical_chainStyle="spread"
+        app:layout_constraintBottom_toTopOf="@id/sb_track_player_timestamp" />
 
     <TextView
         android:id="@+id/tv_track_player_vocals"
         style="@style/TrackPlayerFadersLabel"
-        app:layout_constraintTop_toBottomOf="@id/sb_track_player_vocals"
-        app:layout_constraintStart_toStartOf="@id/sb_track_player_vocals"
+        android:text="@string/track_player_faders_vocals_label"
         app:layout_constraintEnd_toEndOf="@id/sb_track_player_vocals"
-        android:text="@string/track_player_faders_vocals_label" />
+        app:layout_constraintStart_toStartOf="@id/sb_track_player_vocals"
+        app:layout_constraintTop_toBottomOf="@id/sb_track_player_vocals" />
 
 
     <com.smascaro.trackmixing.base.ui.widget.PivotableSeekbar
         android:id="@+id/sb_track_player_other"
         style="@style/TrackPlayerFadersSeekBarStyle"
         android:layout_width="@dimen/track_player_fader_width"
-        android:layout_height="@dimen/track_player_fader_height"
-        app:layout_constraintTop_toTopOf="@id/sb_track_player_vocals"
-        app:layout_constraintStart_toEndOf="@id/sb_track_player_vocals"
+        android:layout_height="wrap_content"
+        app:layout_constraintHeight_max="@dimen/track_player_fader_height"
         app:layout_constraintEnd_toStartOf="@id/sb_track_player_bass"
-        />
+        app:layout_constraintStart_toEndOf="@id/sb_track_player_vocals"
+        app:layout_constraintTop_toTopOf="@id/sb_track_player_vocals" />
 
     <TextView
         android:id="@+id/tv_track_player_other"
         style="@style/TrackPlayerFadersLabel"
-        app:layout_constraintTop_toBottomOf="@id/sb_track_player_other"
-        app:layout_constraintStart_toStartOf="@id/sb_track_player_other"
+        android:text="@string/track_player_faders_other_label"
         app:layout_constraintEnd_toEndOf="@id/sb_track_player_other"
-        android:text="@string/track_player_faders_other_label" />
+        app:layout_constraintStart_toStartOf="@id/sb_track_player_other"
+        app:layout_constraintTop_toBottomOf="@id/sb_track_player_other" />
 
 
     <com.smascaro.trackmixing.base.ui.widget.PivotableSeekbar
@@ -49,19 +50,17 @@
         style="@style/TrackPlayerFadersSeekBarStyle"
         android:layout_width="@dimen/track_player_fader_width"
         android:layout_height="@dimen/track_player_fader_height"
-        app:layout_constraintTop_toTopOf="@id/sb_track_player_other"
-        app:layout_constraintStart_toEndOf="@id/sb_track_player_other"
         app:layout_constraintEnd_toStartOf="@id/sb_track_player_drums"
-
-        />
+        app:layout_constraintStart_toEndOf="@id/sb_track_player_other"
+        app:layout_constraintTop_toTopOf="@id/sb_track_player_other" />
 
     <TextView
         android:id="@+id/tv_track_player_bass"
         style="@style/TrackPlayerFadersLabel"
-        app:layout_constraintTop_toBottomOf="@id/sb_track_player_bass"
-        app:layout_constraintStart_toStartOf="@id/sb_track_player_bass"
+        android:text="@string/track_player_faders_bass_label"
         app:layout_constraintEnd_toEndOf="@id/sb_track_player_bass"
-        android:text="@string/track_player_faders_bass_label" />
+        app:layout_constraintStart_toStartOf="@id/sb_track_player_bass"
+        app:layout_constraintTop_toBottomOf="@id/sb_track_player_bass" />
 
 
     <com.smascaro.trackmixing.base.ui.widget.PivotableSeekbar
@@ -69,56 +68,55 @@
         style="@style/TrackPlayerFadersSeekBarStyle"
         android:layout_width="@dimen/track_player_fader_width"
         android:layout_height="@dimen/track_player_fader_height"
-        app:layout_constraintTop_toTopOf="@id/sb_track_player_bass"
-        app:layout_constraintStart_toEndOf="@id/sb_track_player_bass"
         app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:layout_constraintStart_toEndOf="@id/sb_track_player_bass"
+        app:layout_constraintTop_toTopOf="@id/sb_track_player_bass" />
 
     <TextView
         android:id="@+id/tv_track_player_drums"
         style="@style/TrackPlayerFadersLabel"
-        app:layout_constraintTop_toBottomOf="@id/sb_track_player_drums"
-        app:layout_constraintStart_toStartOf="@id/sb_track_player_drums"
+        android:text="@string/track_player_faders_drums_label"
         app:layout_constraintEnd_toEndOf="@id/sb_track_player_drums"
-        android:text="@string/track_player_faders_drums_label" />
+        app:layout_constraintStart_toStartOf="@id/sb_track_player_drums"
+        app:layout_constraintTop_toBottomOf="@id/sb_track_player_drums" />
 
-
-    <RelativeLayout
-        android:id="@+id/container_progress"
-        android:layout_width="match_parent"
+    <SeekBar
+        android:id="@+id/sb_track_player_timestamp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tv_track_player_vocals">
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="18dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/btn_play_pause"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sb_track_player_vocals"/>
 
-        <SeekBar
-            android:id="@+id/sb_track_player_timestamp"
-            style="@style/TrackPlayerFadersProgressSeekBar" />
+    <TextView
+        android:id="@+id/tv_track_player_current_timestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/sb_track_player_timestamp"
+        android:text="@string/track_player_progress_current_timestamp_default_text"
+        app:layout_constraintStart_toStartOf="@id/sb_track_player_timestamp"
+        app:layout_constraintTop_toBottomOf="@id/sb_track_player_timestamp" />
 
-        <TextView
-            android:id="@+id/tv_track_player_current_timestamp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/sb_track_player_timestamp"
-            android:layout_alignStart="@id/sb_track_player_timestamp"
-            android:text="@string/track_player_progress_current_timestamp_default_text" />
-
-        <TextView
-            android:id="@+id/tv_track_player_length"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/sb_track_player_timestamp"
-            android:layout_alignEnd="@id/sb_track_player_timestamp"
-            android:text="@string/track_player_progress_length_default_text" />
-    </RelativeLayout>
+    <TextView
+        android:id="@+id/tv_track_player_length"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/track_player_progress_length_default_text"
+        app:layout_constraintEnd_toEndOf="@id/sb_track_player_timestamp"
+        app:layout_constraintTop_toBottomOf="@id/sb_track_player_timestamp" />
 
     <ImageButton
         android:id="@+id/btn_play_pause"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/container_progress"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:background="@drawable/ic_play"
-        android:backgroundTint="#ffffff" />
+        android:backgroundTint="#ffffff"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sb_track_player_timestamp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
